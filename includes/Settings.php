@@ -10,6 +10,21 @@ final class Settings {
 
 	private const MAX_SELECTORS = 50;
 
+	/** Keeps the bugspot_manage capability in line with the "management" roles whenever the option is written. */
+	public static function register_hooks(): void {
+		add_action( 'add_option_' . self::OPTION, array( self::class, 'sync_capabilities' ) );
+		add_action( 'update_option_' . self::OPTION, array( self::class, 'sync_capabilities' ) );
+	}
+
+	/** Hook callback: reads the option as just saved (administrator is always kept). */
+	public static function sync_capabilities(): void {
+		$roles = (array) self::get()['management']['roles'];
+		if ( ! in_array( 'administrator', $roles, true ) ) {
+			$roles[] = 'administrator';
+		}
+		Installer::sync_capabilities( $roles );
+	}
+
 	/** @return array<string,mixed> */
 	public static function defaults(): array {
 		$position = array(

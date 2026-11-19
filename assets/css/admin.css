@@ -32,3 +32,30 @@
 .bugspot-card-text{margin:6px 0;word-break:break-word}
 .bugspot-card-meta{margin:0;font-size:12px;word-break:break-all}
 .bugspot-more{margin:0;text-align:center}
+.bugspot-settings .bugspot-wide{min-width:320px;max-width:100%}
+.bugspot-settings .bugspot-sub{margin-top:8px}
+.bugspot-settings .bugspot-sub[hidden],.bugspot-settings tr[hidden]{display:none}
+.bugspot-settings .bugspot-inline-fields{border:1px solid #dcdcde;border-radius:4px;padding:8px 12px;max-width:640px}
+.bugspot-settings .bugspot-inline-fields legend{padding:0 4px;font-weight:600}
+.bugspot-settings .bugspot-inline-fields label{margin-right:4px}
+.bugspot-settings .bugspot-axis{display:inline-block;margin:4px 16px 4px 0}
+.bugspot-settings .bugspot-short{width:14em}
+.bugspot-settings .bugspot-medium{width:9em}
+.bugspot-icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:4px;max-width:520px}
+.bugspot-icon-grid[hidden]{display:none}
+.bugspot-icon-choice.button{display:flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0}
+.bugspot-icon-choice[aria-pressed="true"]{background:#2271b1;border-color:#2271b1;color:#fff}
+.bugspot-icon-choice[aria-pressed="true"]:hover,.bugspot-icon-choice[aria-pressed="true"]:focus{background:#135e96;color:#fff}
+.bugspot-svg-thumb{width:32px;height:32px;vertical-align:middle;border:1px solid #dcdcde;padding:4px;background:#fff}
+.bugspot-svg-thumb[hidden]{display:none}
+.bugspot-preview{position:sticky;top:40px;z-index:5;background:#f0f0f1;padding:8px 0 4px;margin-bottom:8px}
+.bugspot-preview[hidden]{display:none}
+.bugspot-preview-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.bugspot-preview-head h2{margin:0}
+.bugspot-preview-devices [aria-pressed="true"]{background:#dcdcde}
+.bugspot-preview-stage{margin-top:8px;border:1px solid #c3c4c7;border-radius:4px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.05);overflow:hidden}
+.bugspot-preview-frame{display:block;width:100%;height:260px;border:0;margin:0 auto}
+.bugspot-preview-stage.is-mobile{max-width:375px;margin-left:0}
+.bugspot-preview-stage.is-mobile .bugspot-preview-frame{height:420px}
+.bugspot-captcha-widget:not(:empty){margin:8px 0}
+@media (max-width:782px){.bugspot-preview{position:static}}

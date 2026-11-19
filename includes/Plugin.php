@@ -8,6 +8,7 @@ final class Plugin {
 
 	public static function boot(): void {
 		Installer::maybe_upgrade();
+		Settings::register_hooks();
 		Rest\Reports_Controller::register_hooks();
 		Frontend\Assets::register_hooks();
 		if ( is_admin() ) {
