@@ -170,6 +170,23 @@ final class Assets {
 			'errorRateLimit'     => __( 'Too many reports in a short time. Please try again later.', 'bug-spotter' ),
 			'errorCaptcha'       => __( 'The anti-spam check failed. Please try again.', 'bug-spotter' ),
 			'errorLoad'          => __( 'The bug reporter could not be loaded.', 'bug-spotter' ),
+			/* translators: %s: short description of the highlighted element, for example "button – Send". */
+			'inspectHighlighted' => __( 'Highlighted: %s. Press Enter to select it, or the Up arrow for its parent.', 'bug-spotter' ),
+			'reportTitle'        => __( 'Bug report', 'bug-spotter' ),
+			'contactEmail'       => __( 'Contact e-mail', 'bug-spotter' ),
+			'console'            => __( 'Console', 'bug-spotter' ),
+			'network'            => __( 'Failed requests', 'bug-spotter' ),
+			'generatedAt'        => __( 'Generated at', 'bug-spotter' ),
+			'capturing'          => __( 'Taking the screenshot…', 'bug-spotter' ),
+			'emailError'         => __( 'Please enter a valid e-mail address, or leave the field empty.', 'bug-spotter' ),
+			'errorCapture'       => __( 'The screenshot could not be taken. You can send the report without it.', 'bug-spotter' ),
+			'errorCaptureTooLarge' => __( 'The screenshot is too large (5 MB maximum). You can send the report without it.', 'bug-spotter' ),
+			'errorTooLarge'      => __( 'The screenshot is too large to be sent. Remove it or retake it, then try again.', 'bug-spotter' ),
+			'errorInvalid'       => __( 'The report was refused. Please check the form and try again.', 'bug-spotter' ),
+			'errorDisabled'      => __( 'Bug reporting is currently disabled on this site.', 'bug-spotter' ),
+			'errorCaptchaUnavailable' => __( 'The anti-spam check is unavailable right now. Please try again later.', 'bug-spotter' ),
+			'errorCaptchaRequired' => __( 'Please complete the anti-spam check.', 'bug-spotter' ),
+			'errorPageUrl'       => __( 'This page cannot be reported: its address is not a web address.', 'bug-spotter' ),
 		);
 	}
 }
