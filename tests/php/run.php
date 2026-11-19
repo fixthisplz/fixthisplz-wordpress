@@ -8,6 +8,9 @@ $filter        = isset( $args[0] ) ? (string) $args[0] : '';
 
 require_once __DIR__ . '/lib.php';
 
+// Assertions compare English source strings; the bench site runs in French and the plugin ships fr_FR.
+switch_to_locale( 'en_US' );
+
 foreach ( glob( __DIR__ . '/test-*.php' ) as $file ) {
 	if ( '' !== $filter && false === strpos( basename( $file ), $filter ) ) {
 		continue;

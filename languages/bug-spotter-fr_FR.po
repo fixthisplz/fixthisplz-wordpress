@@ -1,0 +1,1427 @@
+# Copyright (C) 2026 
+# French translation of Bug Spotter.
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Bug Spotter 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/bug-spotter\n"
+"Last-Translator: \n"
+"Language-Team: Français\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-11-19T23:31:09+00:00\n"
+"PO-Revision-Date: 2026-11-20 10:00+0000\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"Language: fr_FR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Domain: bug-spotter\n"
+
+#. Plugin Name of the plugin
+#: bug-spotter.php
+msgid "Bug Spotter"
+msgstr "Bug Spotter"
+
+#. Description of the plugin
+#: bug-spotter.php
+msgid "Lets visitors and editors report bugs from any page of a WordPress site."
+msgstr "Permet aux visiteurs et aux éditeurs de signaler des bugs depuis n’importe quelle page d’un site WordPress."
+
+#: includes/Admin/Bugs_Page.php:25
+msgid "Bugs per page"
+msgstr "Bugs par page"
+
+#: includes/Admin/Bugs_Page.php:126
+#: includes/Admin/Bugs_Page.php:137
+#: includes/Admin/Csv_Export.php:33
+#: includes/Admin/Detail_Page.php:63
+msgid "Sorry, you are not allowed to do that."
+msgstr "Désolé, vous n’avez pas l’autorisation d’effectuer cette action."
+
+#: includes/Admin/Bugs_Page.php:188
+msgid "Sorry, you are not allowed to access this page."
+msgstr "Désolé, vous n’avez pas l’autorisation d’accéder à cette page."
+
+#: includes/Admin/Bugs_Page.php:201
+#: includes/Admin/Detail_Page.php:77
+#: includes/Admin/Menu.php:28
+#: includes/Admin/Menu.php:61
+msgid "Bugs"
+msgstr "Bugs"
+
+#. translators: %d: number of reports.
+#: includes/Admin/Bugs_Page.php:233
+#, php-format
+msgid "%d report deleted."
+msgid_plural "%d reports deleted."
+msgstr[0] "%d signalement supprimé."
+msgstr[1] "%d signalements supprimés."
+
+#. translators: %d: number of reports.
+#: includes/Admin/Bugs_Page.php:235
+#, php-format
+msgid "%d report updated."
+msgid_plural "%d reports updated."
+msgstr[0] "%d signalement mis à jour."
+msgstr[1] "%d signalements mis à jour."
+
+#: includes/Admin/Bugs_Page.php:246
+msgid "List"
+msgstr "Liste"
+
+#: includes/Admin/Bugs_Page.php:252
+msgid "Kanban"
+msgstr "Kanban"
+
+#: includes/Admin/Bugs_Page.php:273
+msgid "From"
+msgstr "Du"
+
+#: includes/Admin/Bugs_Page.php:274
+msgid "To"
+msgstr "Au"
+
+#: includes/Admin/Bugs_Page.php:275
+#: includes/Admin/Csv_Export.php:72
+#: includes/Admin/Detail_Page.php:281
+#: includes/Admin/List_Table.php:39
+msgid "Priority"
+msgstr "Priorité"
+
+#: includes/Admin/Bugs_Page.php:276
+msgid "All priorities"
+msgstr "Toutes les priorités"
+
+#: includes/Admin/Bugs_Page.php:281
+msgid "Search reports"
+msgstr "Rechercher des signalements"
+
+#: includes/Admin/Bugs_Page.php:282
+msgid "Search description or URL"
+msgstr "Rechercher dans la description ou l’URL"
+
+#: includes/Admin/Bugs_Page.php:283
+msgid "Filter"
+msgstr "Filtrer"
+
+#: includes/Admin/Bugs_Page.php:284
+msgid "Export CSV"
+msgstr "Exporter en CSV"
+
+#: includes/Admin/Bugs_Page.php:302
+#: includes/Mailer.php:86
+msgid "Visitor"
+msgstr "Visiteur"
+
+#: includes/Admin/Csv_Export.php:42
+msgid "The export could not start because output was already sent."
+msgstr "L’export n’a pas pu démarrer car du contenu avait déjà été envoyé."
+
+#: includes/Admin/Csv_Export.php:69
+#: includes/Admin/List_Table.php:35
+msgid "No."
+msgstr "N°"
+
+#: includes/Admin/Csv_Export.php:70
+#: includes/Admin/List_Table.php:41
+#: includes/Privacy.php:50
+msgid "Date"
+msgstr "Date"
+
+#: includes/Admin/Csv_Export.php:71
+#: includes/Admin/Detail_Page.php:242
+#: includes/Admin/Detail_Page.php:274
+#: includes/Admin/Detail_Page.php:279
+#: includes/Admin/List_Table.php:40
+#: includes/Privacy.php:53
+msgid "Status"
+msgstr "Statut"
+
+#: includes/Admin/Csv_Export.php:73
+#: includes/Admin/Detail_Page.php:98
+#: includes/Admin/List_Table.php:37
+#: includes/Mailer.php:42
+#: includes/Privacy.php:51
+msgid "Page"
+msgstr "Page"
+
+#: includes/Admin/Csv_Export.php:74
+#: includes/Admin/Detail_Page.php:97
+#: includes/Admin/List_Table.php:38
+msgid "Reporter"
+msgstr "Déclarant"
+
+#: includes/Admin/Csv_Export.php:75
+#: includes/Admin/Detail_Page.php:94
+#: includes/Admin/List_Table.php:36
+#: includes/Frontend/Assets.php:153
+#: includes/Mailer.php:41
+#: includes/Privacy.php:52
+msgid "Description"
+msgstr "Description"
+
+#: includes/Admin/Detail_Page.php:78
+#: includes/Rest/Reports_Controller.php:312
+msgid "Report not found."
+msgstr "Signalement introuvable."
+
+#. translators: %d: report number.
+#: includes/Admin/Detail_Page.php:86
+#, php-format
+msgid "Bug #%d"
+msgstr "Bug n° %d"
+
+#: includes/Admin/Detail_Page.php:99
+msgid "Element"
+msgstr "Élément"
+
+#: includes/Admin/Detail_Page.php:100
+msgid "Browser"
+msgstr "Navigateur"
+
+#: includes/Admin/Detail_Page.php:101
+#: includes/Admin/Settings_Tabs.php:246
+msgid "Console errors"
+msgstr "Erreurs de la console"
+
+#: includes/Admin/Detail_Page.php:102
+#: includes/Admin/Settings_Tabs.php:250
+#: includes/Frontend/Assets.php:179
+msgid "Failed requests"
+msgstr "Requêtes en échec"
+
+#: includes/Admin/Detail_Page.php:103
+#: includes/Admin/Settings_Tabs.php:98
+#: includes/Admin/Settings_Tabs.php:200
+msgid "Screenshot"
+msgstr "Capture d’écran"
+
+#: includes/Admin/Detail_Page.php:104
+msgid "Raw data"
+msgstr "Données brutes"
+
+#: includes/Admin/Detail_Page.php:106
+msgid "Show the raw JSON"
+msgstr "Afficher le JSON brut"
+
+#: includes/Admin/Detail_Page.php:116
+msgid "Back to the list"
+msgstr "Retour à la liste"
+
+#: includes/Admin/Detail_Page.php:122
+msgid "Report updated."
+msgstr "Signalement mis à jour."
+
+#: includes/Admin/Detail_Page.php:124
+msgid "The report could not be updated."
+msgstr "Le signalement n’a pas pu être mis à jour."
+
+#: includes/Admin/Detail_Page.php:135
+#: includes/Admin/Settings_Button_Tab.php:157
+#: includes/Admin/Settings_Tabs.php:135
+msgid "None"
+msgstr "Aucun"
+
+#: includes/Admin/Detail_Page.php:160
+msgid "Contact e-mail:"
+msgstr "E-mail de contact :"
+
+#: includes/Admin/Detail_Page.php:172
+#: includes/Admin/Settings_Tabs.php:77
+msgid "Title"
+msgstr "Titre"
+
+#: includes/Admin/Detail_Page.php:173
+msgid "WordPress page"
+msgstr "Page WordPress"
+
+#: includes/Admin/Detail_Page.php:199
+msgid "Selector"
+msgstr "Sélecteur"
+
+#: includes/Admin/Detail_Page.php:200
+msgid "Tag"
+msgstr "Balise"
+
+#: includes/Admin/Detail_Page.php:201
+msgid "Role"
+msgstr "Rôle"
+
+#: includes/Admin/Detail_Page.php:202
+msgid "Name"
+msgstr "Nom"
+
+#: includes/Admin/Detail_Page.php:203
+#: includes/Admin/Settings_Button_Tab.php:110
+msgid "Text"
+msgstr "Texte"
+
+#: includes/Admin/Detail_Page.php:204
+#: includes/Admin/Settings_Button_Tab.php:192
+msgid "Position"
+msgstr "Position"
+
+#: includes/Admin/Detail_Page.php:213
+msgid "Language"
+msgstr "Langue"
+
+#: includes/Admin/Detail_Page.php:214
+msgid "Time zone"
+msgstr "Fuseau horaire"
+
+#: includes/Admin/Detail_Page.php:215
+msgid "User agent"
+msgstr "User-agent"
+
+#: includes/Admin/Detail_Page.php:216
+msgid "Viewport"
+msgstr "Zone d’affichage"
+
+#: includes/Admin/Detail_Page.php:217
+msgid "Plugin version"
+msgstr "Version de l’extension"
+
+#: includes/Admin/Detail_Page.php:227
+msgid "Level"
+msgstr "Niveau"
+
+#: includes/Admin/Detail_Page.php:227
+msgid "Message"
+msgstr "Message"
+
+#: includes/Admin/Detail_Page.php:227
+#: includes/Admin/Detail_Page.php:242
+msgid "Time"
+msgstr "Heure"
+
+#: includes/Admin/Detail_Page.php:242
+msgid "Method"
+msgstr "Méthode"
+
+#: includes/Admin/Detail_Page.php:242
+msgid "URL"
+msgstr "URL"
+
+#: includes/Admin/Detail_Page.php:259
+msgid "No screenshot was attached."
+msgstr "Aucune capture d’écran n’était jointe."
+
+#: includes/Admin/Detail_Page.php:267
+msgid "Screenshot of the page (click for full size)"
+msgstr "Capture d’écran de la page (cliquez pour l’agrandir)"
+
+#: includes/Admin/Detail_Page.php:283
+msgid "Update"
+msgstr "Mettre à jour"
+
+#: includes/Admin/Detail_Page.php:286
+msgid "Dates"
+msgstr "Dates"
+
+#: includes/Admin/Detail_Page.php:289
+msgid "Created"
+msgstr "Créé"
+
+#: includes/Admin/Detail_Page.php:290
+#: includes/Statuses.php:18
+msgid "Seen"
+msgstr "Vu"
+
+#: includes/Admin/Detail_Page.php:291
+msgid "Status changed"
+msgstr "Statut modifié"
+
+#: includes/Admin/Detail_Page.php:292
+msgid "Updated"
+msgstr "Mis à jour"
+
+#: includes/Admin/Detail_Page.php:297
+#: includes/Admin/List_Table.php:70
+#: includes/Admin/List_Table.php:154
+msgid "Delete"
+msgstr "Supprimer"
+
+#: includes/Admin/Detail_Page.php:298
+msgid "Delete this report permanently? This cannot be undone."
+msgstr "Supprimer définitivement ce signalement ? Cette action est irréversible."
+
+#: includes/Admin/Detail_Page.php:302
+msgid "Delete this report"
+msgstr "Supprimer ce signalement"
+
+#: includes/Admin/Kanban.php:24
+msgid "The report could not be moved. Please try again."
+msgstr "Le signalement n’a pas pu être déplacé. Veuillez réessayer."
+
+#: includes/Admin/Kanban.php:25
+msgid "Dismiss this notice."
+msgstr "Ignorer cette notification."
+
+#: includes/Admin/Kanban.php:64
+msgid "Show more"
+msgstr "Afficher plus"
+
+#: includes/Admin/Kanban.php:112
+msgid "Has a screenshot"
+msgstr "Contient une capture d’écran"
+
+#. translators: %s: human-readable time difference, e.g. "2 hours".
+#: includes/Admin/Kanban.php:119
+#, php-format
+msgid "%s ago"
+msgstr "il y a %s"
+
+#. translators: %s: status label.
+#: includes/Admin/List_Table.php:64
+#, php-format
+msgid "Set status: %s"
+msgstr "Définir le statut : %s"
+
+#. translators: %s: priority label.
+#: includes/Admin/List_Table.php:68
+#, php-format
+msgid "Set priority: %s"
+msgstr "Définir la priorité : %s"
+
+#: includes/Admin/List_Table.php:117
+msgid "All"
+msgstr "Tous"
+
+#: includes/Admin/List_Table.php:125
+msgid "No reports found."
+msgstr "Aucun signalement trouvé."
+
+#: includes/Admin/List_Table.php:149
+msgid "View"
+msgstr "Voir"
+
+#: includes/Admin/List_Table.php:153
+msgid "Delete this report permanently?"
+msgstr "Supprimer définitivement ce signalement ?"
+
+#: includes/Admin/Menu.php:38
+#: includes/Admin/Menu.php:39
+msgid "All bugs"
+msgstr "Tous les bugs"
+
+#: includes/Admin/Menu.php:47
+#: includes/Admin/Settings_Page.php:64
+msgid "Bug Spotter settings"
+msgstr "Réglages de Bug Spotter"
+
+#: includes/Admin/Menu.php:48
+msgid "Settings"
+msgstr "Réglages"
+
+#: includes/Admin/Settings_Assets.php:44
+#: includes/Admin/Settings_Button_Tab.php:111
+#: includes/Admin/Settings_Button_Tab.php:117
+#: includes/Admin/Settings_Tabs.php:78
+#: includes/Settings.php:141
+#: includes/Settings.php:148
+msgid "Report a bug"
+msgstr "Signaler un bug"
+
+#: includes/Admin/Settings_Assets.php:45
+msgid "Choose an SVG icon"
+msgstr "Choisir une icône SVG"
+
+#: includes/Admin/Settings_Assets.php:46
+msgid "Use this icon"
+msgstr "Utiliser cette icône"
+
+#: includes/Admin/Settings_Assets.php:47
+msgid "Please choose an SVG file."
+msgstr "Veuillez choisir un fichier SVG."
+
+#: includes/Admin/Settings_Assets.php:48
+#: includes/Admin/Settings_Button_Tab.php:280
+msgid "Button preview"
+msgstr "Aperçu du bouton"
+
+#: includes/Admin/Settings_Assets.php:49
+msgid "The preview could not be updated."
+msgstr "L’aperçu n’a pas pu être mis à jour."
+
+#: includes/Admin/Settings_Assets.php:50
+msgid "Loading the provider widget…"
+msgstr "Chargement du widget du fournisseur…"
+
+#: includes/Admin/Settings_Assets.php:51
+msgid "Complete the check below to finish the test."
+msgstr "Terminez la vérification ci-dessous pour finir le test."
+
+#: includes/Admin/Settings_Assets.php:52
+msgid "Checking the keys…"
+msgstr "Vérification des clés…"
+
+#: includes/Admin/Settings_Assets.php:53
+#: includes/Rest/Reports_Controller.php:137
+msgid "Keys are valid."
+msgstr "Les clés sont valides."
+
+#: includes/Admin/Settings_Assets.php:54
+msgid "The test failed."
+msgstr "Le test a échoué."
+
+#: includes/Admin/Settings_Assets.php:55
+msgid "The provider widget could not be loaded. Check the site key, the provider choice and your connection; reload the page before testing another Google key."
+msgstr "Le widget du fournisseur n’a pas pu être chargé. Vérifiez la clé du site, le choix du fournisseur et votre connexion ; rechargez la page avant de tester une autre clé Google."
+
+#: includes/Admin/Settings_Assets.php:56
+msgid "No answer from the check. Try again."
+msgstr "Aucune réponse de la vérification. Réessayez."
+
+#: includes/Admin/Settings_Assets.php:57
+#: includes/Rest/Reports_Controller.php:115
+msgid "Enter the site key first."
+msgstr "Saisissez d’abord la clé du site."
+
+#: includes/Admin/Settings_Button_Tab.php:55
+msgid "Icon"
+msgstr "Icône"
+
+#: includes/Admin/Settings_Button_Tab.php:56
+msgid "Icon type"
+msgstr "Type d’icône"
+
+#: includes/Admin/Settings_Button_Tab.php:57
+msgid "Dashicon"
+msgstr "Dashicon"
+
+#: includes/Admin/Settings_Button_Tab.php:58
+msgid "SVG image from the media library"
+msgstr "Image SVG de la médiathèque"
+
+#: includes/Admin/Settings_Button_Tab.php:69
+#: includes/Admin/Settings_Button_Tab.php:80
+msgid "Choose an icon"
+msgstr "Choisir une icône"
+
+#: includes/Admin/Settings_Button_Tab.php:92
+msgid "Choose an SVG"
+msgstr "Choisir un SVG"
+
+#: includes/Admin/Settings_Button_Tab.php:93
+#: includes/Frontend/Assets.php:159
+msgid "Remove"
+msgstr "Retirer"
+
+#: includes/Admin/Settings_Button_Tab.php:94
+msgid "Only SVG files already in the media library are listed. WordPress blocks SVG uploads by default; Bug Spotter does not change that. Without an SVG, the Dashicon is used."
+msgstr "Seuls les fichiers SVG déjà présents dans la médiathèque sont listés. WordPress bloque l’envoi de SVG par défaut ; Bug Spotter ne modifie pas ce comportement. Sans SVG, le Dashicon est utilisé."
+
+#: includes/Admin/Settings_Button_Tab.php:99
+msgid "Shape"
+msgstr "Forme"
+
+#: includes/Admin/Settings_Button_Tab.php:103
+msgid "Circle"
+msgstr "Rond"
+
+#: includes/Admin/Settings_Button_Tab.php:104
+msgid "Rounded square"
+msgstr "Carré arrondi"
+
+#: includes/Admin/Settings_Button_Tab.php:105
+msgid "Pill with text"
+msgstr "Pilule avec texte"
+
+#: includes/Admin/Settings_Button_Tab.php:112
+msgid "Shown inside the pill shape, and read by screen readers for every shape."
+msgstr "Affiché dans la forme pilule, et lu par les lecteurs d’écran pour toutes les formes."
+
+#: includes/Admin/Settings_Button_Tab.php:116
+msgid "Tooltip"
+msgstr "Infobulle"
+
+#: includes/Admin/Settings_Button_Tab.php:121
+msgid "Size"
+msgstr "Taille"
+
+#: includes/Admin/Settings_Button_Tab.php:125
+msgid "Small"
+msgstr "Petite"
+
+#: includes/Admin/Settings_Button_Tab.php:126
+#: includes/Admin/Settings_Button_Tab.php:159
+msgid "Medium"
+msgstr "Moyenne"
+
+#: includes/Admin/Settings_Button_Tab.php:127
+msgid "Large"
+msgstr "Grande"
+
+#: includes/Admin/Settings_Button_Tab.php:132
+msgid "Background color"
+msgstr "Couleur de fond"
+
+#: includes/Admin/Settings_Button_Tab.php:133
+msgid "Icon and text color"
+msgstr "Couleur de l’icône et du texte"
+
+#: includes/Admin/Settings_Button_Tab.php:134
+msgid "Background color on hover"
+msgstr "Couleur de fond au survol"
+
+#: includes/Admin/Settings_Button_Tab.php:152
+msgid "Shadow"
+msgstr "Ombre"
+
+#: includes/Admin/Settings_Button_Tab.php:158
+msgid "Light"
+msgstr "Légère"
+
+#: includes/Admin/Settings_Button_Tab.php:160
+msgid "Strong"
+msgstr "Forte"
+
+#: includes/Admin/Settings_Button_Tab.php:161
+#: includes/Admin/Settings_Button_Tab.php:184
+#: includes/Admin/Settings_Button_Tab.php:234
+msgid "Custom"
+msgstr "Personnalisée"
+
+#: includes/Admin/Settings_Button_Tab.php:164
+msgid "Custom shadow"
+msgstr "Ombre personnalisée"
+
+#: includes/Admin/Settings_Button_Tab.php:166
+msgid "Offset X (px)"
+msgstr "Décalage X (px)"
+
+#: includes/Admin/Settings_Button_Tab.php:167
+msgid "Offset Y (px)"
+msgstr "Décalage Y (px)"
+
+#: includes/Admin/Settings_Button_Tab.php:168
+msgid "Blur (px)"
+msgstr "Flou (px)"
+
+#: includes/Admin/Settings_Button_Tab.php:169
+msgid "Spread (px)"
+msgstr "Étalement (px)"
+
+#: includes/Admin/Settings_Button_Tab.php:171
+msgid "Color"
+msgstr "Couleur"
+
+#: includes/Admin/Settings_Button_Tab.php:173
+msgid "Hex color (#rrggbb) or rgba(red, green, blue, opacity), for example rgba(0,0,0,0.25)."
+msgstr "Couleur hexadécimale (#rrggbb) ou rgba(rouge, vert, bleu, opacité), par exemple rgba(0,0,0,0.25)."
+
+#: includes/Admin/Settings_Button_Tab.php:178
+msgid "Corner radius"
+msgstr "Arrondi des angles"
+
+#: includes/Admin/Settings_Button_Tab.php:183
+msgid "Set by the shape"
+msgstr "Défini par la forme"
+
+#: includes/Admin/Settings_Button_Tab.php:188
+msgid "Radius (px)"
+msgstr "Rayon (px)"
+
+#: includes/Admin/Settings_Button_Tab.php:195
+#: includes/Admin/Settings_Button_Tab.php:222
+msgid "Position on mobile"
+msgstr "Position sur mobile"
+
+#: includes/Admin/Settings_Button_Tab.php:196
+msgid "Use a different position on small screens (782 px wide or less)"
+msgstr "Utiliser une position différente sur les petits écrans (782 px de large ou moins)"
+
+#: includes/Admin/Settings_Button_Tab.php:203
+msgid "Stacking order (z-index)"
+msgstr "Ordre d’empilement (z-index)"
+
+#: includes/Admin/Settings_Button_Tab.php:205
+msgid "Raise it if a theme element covers the button."
+msgstr "Augmentez-le si un élément du thème recouvre le bouton."
+
+#: includes/Admin/Settings_Button_Tab.php:228
+msgid "Bottom right"
+msgstr "Bas droite"
+
+#: includes/Admin/Settings_Button_Tab.php:229
+msgid "Bottom left"
+msgstr "Bas gauche"
+
+#: includes/Admin/Settings_Button_Tab.php:230
+msgid "Top right"
+msgstr "Haut droite"
+
+#: includes/Admin/Settings_Button_Tab.php:231
+msgid "Top left"
+msgstr "Haut gauche"
+
+#: includes/Admin/Settings_Button_Tab.php:232
+msgid "Middle right"
+msgstr "Milieu droite"
+
+#: includes/Admin/Settings_Button_Tab.php:233
+msgid "Middle left"
+msgstr "Milieu gauche"
+
+#: includes/Admin/Settings_Button_Tab.php:242
+msgid "Custom position"
+msgstr "Position personnalisée"
+
+#: includes/Admin/Settings_Button_Tab.php:248
+msgid "Distance from the"
+msgstr "Distance depuis le bord"
+
+#: includes/Admin/Settings_Button_Tab.php:248
+msgid "and from the"
+msgstr "et depuis le bord"
+
+#: includes/Admin/Settings_Button_Tab.php:254
+msgid "left edge"
+msgstr "gauche"
+
+#: includes/Admin/Settings_Button_Tab.php:255
+msgid "right edge"
+msgstr "droit"
+
+#: includes/Admin/Settings_Button_Tab.php:258
+msgid "top edge"
+msgstr "haut"
+
+#: includes/Admin/Settings_Button_Tab.php:259
+msgid "bottom edge"
+msgstr "bas"
+
+#: includes/Admin/Settings_Button_Tab.php:262
+msgid "Horizontal distance"
+msgstr "Distance horizontale"
+
+#: includes/Admin/Settings_Button_Tab.php:262
+msgid "Vertical distance"
+msgstr "Distance verticale"
+
+#: includes/Admin/Settings_Button_Tab.php:264
+msgid "Unit"
+msgstr "Unité"
+
+#: includes/Admin/Settings_Button_Tab.php:268
+msgid "Percentages are relative to the browser window (0 to 100)."
+msgstr "Les pourcentages sont relatifs à la fenêtre du navigateur (0 à 100)."
+
+#: includes/Admin/Settings_Button_Tab.php:275
+msgid "Preview"
+msgstr "Aperçu"
+
+#: includes/Admin/Settings_Button_Tab.php:276
+msgid "Preview screen size"
+msgstr "Taille d’écran de l’aperçu"
+
+#: includes/Admin/Settings_Button_Tab.php:277
+msgid "Desktop"
+msgstr "Ordinateur"
+
+#: includes/Admin/Settings_Button_Tab.php:278
+#: includes/Admin/Settings_Tabs.php:60
+msgid "Mobile"
+msgstr "Mobile"
+
+#: includes/Admin/Settings_Button_Tab.php:281
+msgid "Updated as you change the settings below. The frame stands for a browser window; save to apply."
+msgstr "Mis à jour au fur et à mesure que vous modifiez les réglages ci-dessous. Le cadre représente une fenêtre de navigateur ; enregistrez pour appliquer."
+
+#: includes/Admin/Settings_Page.php:40
+msgid "Visibility"
+msgstr "Visibilité"
+
+#: includes/Admin/Settings_Page.php:41
+msgid "Button"
+msgstr "Bouton"
+
+#: includes/Admin/Settings_Page.php:42
+msgid "Dialog"
+msgstr "Fenêtre"
+
+#: includes/Admin/Settings_Page.php:43
+msgid "Anti-bot"
+msgstr "Anti-robot"
+
+#: includes/Admin/Settings_Page.php:44
+msgid "Notifications"
+msgstr "Notifications"
+
+#: includes/Admin/Settings_Page.php:45
+msgid "Protection"
+msgstr "Protection"
+
+#: includes/Admin/Settings_Page.php:46
+msgid "Collected context"
+msgstr "Contexte collecté"
+
+#: includes/Admin/Settings_Page.php:47
+msgid "Data and privacy"
+msgstr "Données et confidentialité"
+
+#: includes/Admin/Settings_Page.php:48
+msgid "Management"
+msgstr "Gestion"
+
+#: includes/Admin/Settings_Page.php:59
+msgid "Sorry, you are not allowed to manage these settings."
+msgstr "Désolé, vous n’avez pas l’autorisation de gérer ces réglages."
+
+#: includes/Admin/Settings_Page.php:67
+msgid "Settings sections"
+msgstr "Sections des réglages"
+
+#: includes/Admin/Settings_Page.php:127
+msgid "Guests (not logged in) can send bug reports, but no anti-bot check is configured. Expect spam."
+msgstr "Les visiteurs non connectés peuvent envoyer des signalements, mais aucune vérification anti-robot n’est configurée. Attendez-vous à du spam."
+
+#: includes/Admin/Settings_Page.php:136
+msgid "Configure an anti-bot provider"
+msgstr "Configurer un fournisseur anti-robot"
+
+#: includes/Admin/Settings_Tabs.php:17
+msgid "Bug reporting"
+msgstr "Signalement de bugs"
+
+#: includes/Admin/Settings_Tabs.php:18
+msgid "Show the bug report button"
+msgstr "Afficher le bouton de signalement de bug"
+
+#: includes/Admin/Settings_Tabs.php:21
+#: includes/Admin/Settings_Tabs.php:22
+msgid "Who sees the button"
+msgstr "Qui voit le bouton"
+
+#: includes/Admin/Settings_Tabs.php:27
+msgid "Guests (not logged in)"
+msgstr "Visiteurs (non connectés)"
+
+#: includes/Admin/Settings_Tabs.php:39
+msgid "Excluded pages"
+msgstr "Pages exclues"
+
+#: includes/Admin/Settings_Tabs.php:51
+msgid "Hold Ctrl (or Cmd) to select several pages, or to unselect one."
+msgstr "Maintenez Ctrl (ou Cmd) pour sélectionner plusieurs pages ou en désélectionner une."
+
+#: includes/Admin/Settings_Tabs.php:55
+msgid "Excluded URL prefixes"
+msgstr "Préfixes d’URL exclus"
+
+#: includes/Admin/Settings_Tabs.php:57
+msgid "One path per line, for example /checkout/ or /my-account/. The button is hidden on every URL that starts with one of them."
+msgstr "Un chemin par ligne, par exemple /commande/ ou /mon-compte/. Le bouton est masqué sur toutes les URL qui commencent par l’un d’eux."
+
+#: includes/Admin/Settings_Tabs.php:61
+msgid "Hide the button on small screens (782 px wide or less)"
+msgstr "Masquer le bouton sur les petits écrans (782 px de large ou moins)"
+
+#: includes/Admin/Settings_Tabs.php:64
+msgid "Administration"
+msgstr "Administration"
+
+#: includes/Admin/Settings_Tabs.php:65
+msgid "Also show the button in the WordPress administration"
+msgstr "Afficher aussi le bouton dans l’administration WordPress"
+
+#: includes/Admin/Settings_Tabs.php:82
+msgid "Instructions"
+msgstr "Consigne"
+
+#: includes/Admin/Settings_Tabs.php:83
+#: includes/Settings.php:143
+msgid "Describe what went wrong and what you expected to happen."
+msgstr "Décrivez ce qui n’a pas fonctionné et ce que vous attendiez."
+
+#: includes/Admin/Settings_Tabs.php:87
+msgid "Privacy notice"
+msgstr "Mention de confidentialité"
+
+#: includes/Admin/Settings_Tabs.php:88
+#: includes/Settings.php:145
+msgid "Your report includes technical details about this page and your browser."
+msgstr "Votre signalement inclut des détails techniques sur cette page et sur votre navigateur."
+
+#: includes/Admin/Settings_Tabs.php:93
+msgid "Privacy policy link"
+msgstr "Lien vers la politique de confidentialité"
+
+#: includes/Admin/Settings_Tabs.php:95
+msgid "Leave empty to use the privacy policy page set in Settings › Privacy."
+msgstr "Laissez vide pour utiliser la page de politique de confidentialité définie dans Réglages › Confidentialité."
+
+#: includes/Admin/Settings_Tabs.php:99
+msgid "Let reporters attach a screenshot of the page"
+msgstr "Permettre de joindre une capture d’écran de la page"
+
+#: includes/Admin/Settings_Tabs.php:102
+#: includes/Frontend/Assets.php:177
+#: includes/Privacy.php:56
+msgid "Contact e-mail"
+msgstr "E-mail de contact"
+
+#: includes/Admin/Settings_Tabs.php:103
+msgid "Ask guests for an optional contact e-mail address"
+msgstr "Demander aux visiteurs non connectés une adresse e-mail de contact facultative"
+
+#: includes/Admin/Settings_Tabs.php:106
+#: includes/Admin/Settings_Tabs.php:107
+msgid "Download formats"
+msgstr "Formats de téléchargement"
+
+#: includes/Admin/Settings_Tabs.php:110
+msgid "Markdown (.md)"
+msgstr "Markdown (.md)"
+
+#: includes/Admin/Settings_Tabs.php:111
+msgid "JSON (.json)"
+msgstr "JSON (.json)"
+
+#: includes/Admin/Settings_Tabs.php:112
+msgid "Plain text (.txt)"
+msgstr "Texte brut (.txt)"
+
+#: includes/Admin/Settings_Tabs.php:117
+msgid "Formats offered to download a copy of the report. If none is checked, all of them are offered."
+msgstr "Formats proposés pour télécharger une copie du signalement. Si aucun n’est coché, tous sont proposés."
+
+#: includes/Admin/Settings_Tabs.php:131
+msgid "Provider"
+msgstr "Fournisseur"
+
+#: includes/Admin/Settings_Tabs.php:136
+msgid "Cloudflare Turnstile"
+msgstr "Cloudflare Turnstile"
+
+#: includes/Admin/Settings_Tabs.php:137
+msgid "Google reCAPTCHA v2 (checkbox)"
+msgstr "Google reCAPTCHA v2 (case à cocher)"
+
+#: includes/Admin/Settings_Tabs.php:138
+msgid "Google reCAPTCHA v3 (score)"
+msgstr "Google reCAPTCHA v3 (score)"
+
+#: includes/Admin/Settings_Tabs.php:139
+msgid "hCaptcha"
+msgstr "hCaptcha"
+
+#: includes/Admin/Settings_Tabs.php:146
+msgid "Site key"
+msgstr "Clé du site"
+
+#: includes/Admin/Settings_Tabs.php:151
+msgid "Secret key"
+msgstr "Clé secrète"
+
+#: includes/Admin/Settings_Tabs.php:161
+msgid "Saved — leave blank to keep it"
+msgstr "Enregistrée — laissez vide pour la conserver"
+
+#: includes/Admin/Settings_Tabs.php:165
+msgid "Kept on the server only, never sent to visitors."
+msgstr "Conservée uniquement sur le serveur, jamais envoyée aux visiteurs."
+
+#: includes/Admin/Settings_Tabs.php:169
+msgid "Minimum score"
+msgstr "Score minimal"
+
+#: includes/Admin/Settings_Tabs.php:171
+msgid "Between 0 (accept everything) and 1 (strictest). Default: 0.5."
+msgstr "Entre 0 (tout accepter) et 1 (le plus strict). Par défaut : 0,5."
+
+#: includes/Admin/Settings_Tabs.php:174
+msgid "Test the keys"
+msgstr "Tester les clés"
+
+#: includes/Admin/Settings_Tabs.php:175
+msgid "Test"
+msgstr "Tester"
+
+#: includes/Admin/Settings_Tabs.php:177
+msgid "Uses the provider and keys typed above, even before saving. A blank secret key tests the saved one. Requires JavaScript."
+msgstr "Utilise le fournisseur et les clés saisis ci-dessus, même avant l’enregistrement. Une clé secrète vide teste celle qui est enregistrée. JavaScript est requis."
+
+#: includes/Admin/Settings_Tabs.php:188
+msgid "E-mail notification"
+msgstr "Notification par e-mail"
+
+#: includes/Admin/Settings_Tabs.php:189
+msgid "Send an e-mail for every new report"
+msgstr "Envoyer un e-mail pour chaque nouveau signalement"
+
+#: includes/Admin/Settings_Tabs.php:194
+msgid "Recipients"
+msgstr "Destinataires"
+
+#. translators: %s: the site administration e-mail address.
+#: includes/Admin/Settings_Tabs.php:197
+#, php-format
+msgid "Several addresses separated by commas. Empty: %s (site administration address)."
+msgstr "Plusieurs adresses séparées par des virgules. Vide : %s (adresse d’administration du site)."
+
+#: includes/Admin/Settings_Tabs.php:201
+msgid "Attach the screenshot to the e-mail"
+msgstr "Joindre la capture d’écran à l’e-mail"
+
+#: includes/Admin/Settings_Tabs.php:213
+msgid "Reports per hour"
+msgstr "Signalements par heure"
+
+#: includes/Admin/Settings_Tabs.php:215
+msgid "Maximum per IP address."
+msgstr "Maximum par adresse IP."
+
+#: includes/Admin/Settings_Tabs.php:219
+msgid "Reports per day"
+msgstr "Signalements par jour"
+
+#: includes/Admin/Settings_Tabs.php:221
+msgid "Maximum per IP address. A hidden honeypot field also stops basic bots; it is always active."
+msgstr "Maximum par adresse IP. Un champ pot de miel masqué arrête aussi les robots basiques ; il est toujours actif."
+
+#: includes/Admin/Settings_Tabs.php:225
+msgid "Trusted proxy header (advanced)"
+msgstr "En-tête de proxy de confiance (avancé)"
+
+#: includes/Admin/Settings_Tabs.php:230
+msgid "None: use the connection address (recommended)"
+msgstr "Aucun : utiliser l’adresse de connexion (recommandé)"
+
+#: includes/Admin/Settings_Tabs.php:235
+msgid "Only choose a header if every request reaches this site through a proxy or CDN that sets it. Otherwise anyone can forge it and get around the per-IP limits."
+msgstr "Ne choisissez un en-tête que si chaque requête atteint ce site via un proxy ou un CDN qui le définit. Sinon, n’importe qui peut le falsifier et contourner les limites par IP."
+
+#: includes/Admin/Settings_Tabs.php:247
+msgid "Attach recent browser console errors and warnings"
+msgstr "Joindre les erreurs et avertissements récents de la console du navigateur"
+
+#: includes/Admin/Settings_Tabs.php:251
+msgid "Attach recent failed network requests"
+msgstr "Joindre les requêtes réseau en échec récentes"
+
+#: includes/Admin/Settings_Tabs.php:255
+msgid "Extra sensitive elements"
+msgstr "Éléments sensibles supplémentaires"
+
+#: includes/Admin/Settings_Tabs.php:257
+msgid "One CSS selector per line. Matching elements are masked in screenshots and their text is never collected, in addition to form fields and the built-in list."
+msgstr "Un sélecteur CSS par ligne. Les éléments correspondants sont masqués dans les captures d’écran et leur texte n’est jamais collecté, en plus des champs de formulaire et de la liste intégrée."
+
+#: includes/Admin/Settings_Tabs.php:269
+msgid "Automatic deletion"
+msgstr "Suppression automatique"
+
+#: includes/Admin/Settings_Tabs.php:271
+msgid "months"
+msgstr "mois"
+
+#: includes/Admin/Settings_Tabs.php:272
+msgid "Reports marked Fixed, Won’t fix or Duplicate are deleted (with their screenshot) this many months after their last status change. 0 = never."
+msgstr "Les signalements marqués Corrigé, Ne sera pas corrigé ou Doublon sont supprimés (avec leur capture d’écran) ce nombre de mois après leur dernier changement de statut. 0 = jamais."
+
+#: includes/Admin/Settings_Tabs.php:275
+msgid "Uninstall"
+msgstr "Désinstallation"
+
+#: includes/Admin/Settings_Tabs.php:276
+msgid "Delete all reports, screenshots and settings when the plugin is deleted"
+msgstr "Supprimer tous les signalements, captures d’écran et réglages lors de la suppression de l’extension"
+
+#: includes/Admin/Settings_Tabs.php:287
+#: includes/Admin/Settings_Tabs.php:288
+msgid "Who can manage bugs"
+msgstr "Qui peut gérer les bugs"
+
+#: includes/Admin/Settings_Tabs.php:294
+msgid "These roles can see the reports, change their status and export them. Only administrators can change these settings."
+msgstr "Ces rôles peuvent voir les signalements, modifier leur statut et les exporter. Seuls les administrateurs peuvent modifier ces réglages."
+
+#: includes/Admin/Settings_Tabs.php:298
+msgid "Menu badge"
+msgstr "Pastille du menu"
+
+#: includes/Admin/Settings_Tabs.php:299
+msgid "Show the number of new reports next to the Bugs menu"
+msgstr "Afficher le nombre de nouveaux signalements à côté du menu Bugs"
+
+#. translators: %d: page ID.
+#: includes/Admin/Settings_Tabs.php:317
+#, php-format
+msgid "Page #%d (no title)"
+msgstr "Page n° %d (sans titre)"
+
+#: includes/Captcha/Siteverify_Provider.php:63
+msgid "The anti-bot check failed. Please try again."
+msgstr "La vérification anti-robot a échoué. Veuillez réessayer."
+
+#: includes/Captcha/Siteverify_Provider.php:67
+msgid "The anti-bot check is currently unavailable. Please try again later."
+msgstr "La vérification anti-robot est momentanément indisponible. Veuillez réessayer plus tard."
+
+#: includes/Context_Validator.php:22
+msgid "The report context is missing or malformed."
+msgstr "Le contexte du signalement est absent ou mal formé."
+
+#: includes/Context_Validator.php:27
+msgid "The report context needs a valid http(s) URL."
+msgstr "Le contexte du signalement doit contenir une URL http(s) valide."
+
+#: includes/Frontend/Assets.php:143
+msgid "Loading…"
+msgstr "Chargement…"
+
+#: includes/Frontend/Assets.php:144
+msgid "Close"
+msgstr "Fermer"
+
+#: includes/Frontend/Assets.php:145
+msgid "Cancel"
+msgstr "Annuler"
+
+#: includes/Frontend/Assets.php:146
+msgid "Submit"
+msgstr "Valider"
+
+#: includes/Frontend/Assets.php:147
+msgid "Sending…"
+msgstr "Envoi en cours…"
+
+#: includes/Frontend/Assets.php:148
+msgid "Whole page"
+msgstr "Toute la page"
+
+#: includes/Frontend/Assets.php:149
+msgid "Select"
+msgstr "Sélectionner"
+
+#: includes/Frontend/Assets.php:150
+msgid "Click the element that has a problem, or choose \"Whole page\". Press Escape to cancel."
+msgstr "Cliquez sur l’élément qui pose problème, ou choisissez « Toute la page ». Appuyez sur Échap pour annuler."
+
+#: includes/Frontend/Assets.php:151
+msgid "Change element"
+msgstr "Changer d’élément"
+
+#: includes/Frontend/Assets.php:152
+msgid "Selected element"
+msgstr "Élément sélectionné"
+
+#: includes/Frontend/Assets.php:154
+msgid "What went wrong?"
+msgstr "Qu’est-ce qui ne va pas ?"
+
+#: includes/Frontend/Assets.php:155
+msgid "Please describe the problem."
+msgstr "Veuillez décrire le problème."
+
+#: includes/Frontend/Assets.php:156
+msgid "Your e-mail (optional)"
+msgstr "Votre e-mail (facultatif)"
+
+#: includes/Frontend/Assets.php:157
+msgid "Attach a screenshot"
+msgstr "Joindre une capture d’écran"
+
+#: includes/Frontend/Assets.php:158
+msgid "Screenshot preview"
+msgstr "Aperçu de la capture d’écran"
+
+#: includes/Frontend/Assets.php:160
+msgid "Retake"
+msgstr "Refaire"
+
+#: includes/Frontend/Assets.php:161
+msgid "Technical details sent with your report"
+msgstr "Détails techniques joints à votre signalement"
+
+#: includes/Frontend/Assets.php:162
+msgid "Privacy policy"
+msgstr "Politique de confidentialité"
+
+#: includes/Frontend/Assets.php:163
+msgid "Report sent"
+msgstr "Signalement envoyé"
+
+#. translators: %s: report number, for example #42.
+#: includes/Frontend/Assets.php:165
+#, php-format
+msgid "Report %s sent."
+msgstr "Signalement %s envoyé."
+
+#: includes/Frontend/Assets.php:166
+msgid "Download"
+msgstr "Télécharger"
+
+#: includes/Frontend/Assets.php:167
+msgid "Download the screenshot"
+msgstr "Télécharger la capture d’écran"
+
+#: includes/Frontend/Assets.php:168
+msgid "Done"
+msgstr "Terminer"
+
+#: includes/Frontend/Assets.php:169
+msgid "The report could not be sent. Your text was kept; you can try again or download it."
+msgstr "Le signalement n’a pas pu être envoyé. Votre texte a été conservé ; vous pouvez réessayer ou le télécharger."
+
+#: includes/Frontend/Assets.php:170
+msgid "Too many reports in a short time. Please try again later."
+msgstr "Trop de signalements en peu de temps. Veuillez réessayer plus tard."
+
+#: includes/Frontend/Assets.php:171
+#: includes/Rest/Reports_Controller.php:210
+msgid "You are not allowed to send bug reports."
+msgstr "Vous n’êtes pas autorisé à envoyer des signalements."
+
+#: includes/Frontend/Assets.php:172
+msgid "The anti-spam check failed. Please try again."
+msgstr "La vérification anti-spam a échoué. Veuillez réessayer."
+
+#: includes/Frontend/Assets.php:173
+msgid "The bug reporter could not be loaded."
+msgstr "Le module de signalement de bugs n’a pas pu être chargé."
+
+#. translators: %s: short description of the highlighted element, for example "button – Send".
+#: includes/Frontend/Assets.php:175
+#, php-format
+msgid "Highlighted: %s. Press Enter to select it, or the Up arrow for its parent."
+msgstr "Surligné : %s. Appuyez sur Entrée pour le sélectionner, ou sur la flèche haut pour choisir son parent."
+
+#: includes/Frontend/Assets.php:176
+msgid "Bug report"
+msgstr "Signalement de bug"
+
+#: includes/Frontend/Assets.php:178
+msgid "Console"
+msgstr "Console"
+
+#: includes/Frontend/Assets.php:180
+msgid "Generated at"
+msgstr "Généré le"
+
+#: includes/Frontend/Assets.php:181
+msgid "Taking the screenshot…"
+msgstr "Capture d’écran en cours…"
+
+#: includes/Frontend/Assets.php:182
+msgid "Please enter a valid e-mail address, or leave the field empty."
+msgstr "Veuillez saisir une adresse e-mail valide, ou laisser le champ vide."
+
+#: includes/Frontend/Assets.php:183
+msgid "The screenshot could not be taken. You can send the report without it."
+msgstr "La capture d’écran n’a pas pu être réalisée. Vous pouvez envoyer le signalement sans elle."
+
+#: includes/Frontend/Assets.php:184
+msgid "The screenshot is too large (5 MB maximum). You can send the report without it."
+msgstr "La capture d’écran est trop volumineuse (5 Mo maximum). Vous pouvez envoyer le signalement sans elle."
+
+#: includes/Frontend/Assets.php:185
+msgid "The screenshot is too large to be sent. Remove it or retake it, then try again."
+msgstr "La capture d’écran est trop volumineuse pour être envoyée. Retirez-la ou refaites-la, puis réessayez."
+
+#: includes/Frontend/Assets.php:186
+msgid "The report was refused. Please check the form and try again."
+msgstr "Le signalement a été refusé. Veuillez vérifier le formulaire et réessayer."
+
+#: includes/Frontend/Assets.php:187
+msgid "Bug reporting is currently disabled on this site."
+msgstr "Le signalement de bugs est actuellement désactivé sur ce site."
+
+#: includes/Frontend/Assets.php:188
+msgid "The anti-spam check is unavailable right now. Please try again later."
+msgstr "La vérification anti-spam est indisponible pour le moment. Veuillez réessayer plus tard."
+
+#: includes/Frontend/Assets.php:189
+msgid "Please complete the anti-spam check."
+msgstr "Veuillez compléter la vérification anti-spam."
+
+#: includes/Frontend/Assets.php:190
+msgid "This page cannot be reported: its address is not a web address."
+msgstr "Cette page ne peut pas être signalée : son adresse n’est pas une adresse web."
+
+#. translators: 1: site name, 2: report number
+#: includes/Mailer.php:29
+#, php-format
+msgid "[%1$s] New bug #%2$d"
+msgstr "[%1$s] Nouveau bug n° %2$d"
+
+#: includes/Mailer.php:40
+msgid "Report"
+msgstr "Signalement"
+
+#: includes/Mailer.php:43
+msgid "Reported by"
+msgstr "Signalé par"
+
+#: includes/Mailer.php:44
+msgid "Open the report"
+msgstr "Ouvrir le signalement"
+
+#: includes/Privacy.php:21
+#: includes/Privacy.php:29
+msgid "Bug Spotter reports"
+msgstr "Signalements Bug Spotter"
+
+#: includes/Privacy.php:49
+msgid "Report number"
+msgstr "Numéro du signalement"
+
+#: includes/Privacy.php:59
+msgid "Screenshot attached"
+msgstr "Capture d’écran jointe"
+
+#: includes/Privacy.php:60
+msgid "Yes"
+msgstr "Oui"
+
+#: includes/Privacy.php:60
+msgid "No"
+msgstr "Non"
+
+#: includes/Privacy.php:65
+msgid "Bug reports"
+msgstr "Signalements de bugs"
+
+#: includes/Privacy.php:66
+msgid "Bug reports submitted from this site."
+msgstr "Signalements de bugs envoyés depuis ce site."
+
+#: includes/Privacy.php:97
+msgid "Some bug reports could not be deleted."
+msgstr "Certains signalements n’ont pas pu être supprimés."
+
+#: includes/Privacy.php:121
+msgid "Purpose: this site lets visitors and users report bugs they meet while browsing. Reports are used only to find and fix those problems."
+msgstr "Finalité : ce site permet aux visiteurs et aux utilisateurs de signaler les bugs qu’ils rencontrent en naviguant. Les signalements servent uniquement à trouver et corriger ces problèmes."
+
+#: includes/Privacy.php:122
+msgid "Data collected: the description you write, the address of the page, technical context (browser, screen size, language, errors and failed requests seen by the page), an optional screenshot, an optional contact e-mail address (stored encrypted), your account if you are logged in, and a keyed hash of your IP address used only against abuse. Your IP address itself is never stored. Values typed into the site's own forms and fields (including passwords) are never collected; only the description and optional contact e-mail typed into the bug report form are stored."
+msgstr "Données collectées : la description que vous rédigez, l’adresse de la page, le contexte technique (navigateur, taille d’écran, langue, erreurs et requêtes en échec observées par la page), une capture d’écran facultative, une adresse e-mail de contact facultative (stockée chiffrée), votre compte si vous êtes connecté, et une empreinte à clé de votre adresse IP, utilisée uniquement contre les abus. Votre adresse IP elle-même n’est jamais stockée. Les valeurs saisies dans les formulaires et champs du site (mots de passe compris) ne sont jamais collectées ; seuls la description et l’adresse e-mail de contact facultative saisies dans le formulaire de signalement sont conservées."
+
+#: includes/Privacy.php:123
+msgid "Anti-bot check: when an anti-bot provider is enabled (Cloudflare Turnstile, Google reCAPTCHA or hCaptcha), that provider receives your IP address and browser data when you send a report, under its own privacy policy."
+msgstr "Vérification anti-robot : lorsqu’un fournisseur anti-robot est activé (Cloudflare Turnstile, Google reCAPTCHA ou hCaptcha), ce fournisseur reçoit votre adresse IP et des données de votre navigateur lors de l’envoi d’un signalement, selon sa propre politique de confidentialité."
+
+#: includes/Privacy.php:124
+msgid "Retention: closed reports are deleted automatically after the retention period set by the site administrators; otherwise reports are kept until they are deleted."
+msgstr "Conservation : les signalements clos sont supprimés automatiquement à l’issue de la durée de conservation définie par les administrateurs du site ; sinon, les signalements sont conservés jusqu’à leur suppression."
+
+#: includes/Privacy.php:125
+msgid "Legal basis: legitimate interest in maintaining and improving the site."
+msgstr "Base légale : intérêt légitime à maintenir et à améliorer le site."
+
+#: includes/Privacy.php:126
+msgid "Recipients: only the site administrators and the people they authorise to manage bug reports."
+msgstr "Destinataires : uniquement les administrateurs du site et les personnes qu’ils autorisent à gérer les signalements de bugs."
+
+#: includes/Rest/Reports_Controller.php:103
+msgid "Choose an anti-bot provider to test."
+msgstr "Choisissez un fournisseur anti-robot à tester."
+
+#: includes/Rest/Reports_Controller.php:112
+msgid "The secret key is required."
+msgstr "La clé secrète est requise."
+
+#: includes/Rest/Reports_Controller.php:132
+#: includes/Rest/Reports_Controller.php:225
+msgid "The anti-bot check failed."
+msgstr "La vérification anti-robot a échoué."
+
+#: includes/Rest/Reports_Controller.php:182
+msgid "Bug reporting is disabled."
+msgstr "Le signalement de bugs est désactivé."
+
+#: includes/Rest/Reports_Controller.php:190
+#: includes/Rest/Reports_Controller.php:380
+#: includes/Screenshot_Store.php:30
+msgid "The screenshot is too large (5 MB maximum)."
+msgstr "La capture d’écran est trop volumineuse (5 Mo maximum)."
+
+#: includes/Rest/Reports_Controller.php:217
+msgid "Too many reports. Please try again later."
+msgstr "Trop de signalements. Veuillez réessayer plus tard."
+
+#: includes/Rest/Reports_Controller.php:230
+#: includes/Rest/Reports_Controller.php:234
+msgid "The description is required (5000 characters maximum)."
+msgstr "La description est requise (5 000 caractères maximum)."
+
+#: includes/Rest/Reports_Controller.php:242
+msgid "The contact e-mail address is not valid."
+msgstr "L’adresse e-mail de contact n’est pas valide."
+
+#: includes/Rest/Reports_Controller.php:249
+msgid "The report context is too large."
+msgstr "Le contexte du signalement est trop volumineux."
+
+#: includes/Rest/Reports_Controller.php:281
+#: includes/Rest/Reports_Controller.php:332
+msgid "The report could not be saved."
+msgstr "Le signalement n’a pas pu être enregistré."
+
+#. translators: %s: field name (status or priority)
+#: includes/Rest/Reports_Controller.php:324
+#, php-format
+msgid "Invalid value for \"%s\"."
+msgstr "Valeur invalide pour « %s »."
+
+#: includes/Rest/Reports_Controller.php:329
+msgid "Nothing to update: send a status and/or a priority."
+msgstr "Rien à mettre à jour : envoyez un statut et/ou une priorité."
+
+#: includes/Rest/Reports_Controller.php:352
+msgid "Screenshot not found."
+msgstr "Capture d’écran introuvable."
+
+#: includes/Rest/Reports_Controller.php:383
+msgid "The screenshot could not be uploaded."
+msgstr "La capture d’écran n’a pas pu être envoyée."
+
+#: includes/Screenshot_Store.php:113
+msgid "The screenshot must be a PNG or JPEG image."
+msgstr "La capture d’écran doit être une image PNG ou JPEG."
+
+#: includes/Screenshot_Store.php:117
+msgid "The screenshot could not be stored."
+msgstr "La capture d’écran n’a pas pu être stockée."
+
+#: includes/Statuses.php:17
+msgid "New"
+msgstr "Non vu"
+
+#: includes/Statuses.php:19
+msgid "Confirmed"
+msgstr "Confirmé"
+
+#: includes/Statuses.php:20
+msgid "In progress"
+msgstr "En cours"
+
+#: includes/Statuses.php:21
+msgid "Fixed"
+msgstr "Corrigé"
+
+#: includes/Statuses.php:22
+msgid "Won't fix"
+msgstr "Ne sera pas corrigé"
+
+#: includes/Statuses.php:23
+msgid "Duplicate"
+msgstr "Doublon"
+
+#: includes/Statuses.php:32
+msgid "Low"
+msgstr "Basse"
+
+#: includes/Statuses.php:33
+msgid "Normal"
+msgstr "Normale"
+
+#: includes/Statuses.php:34
+msgid "High"
+msgstr "Haute"
+
+#: includes/Statuses.php:35
+msgid "Critical"
+msgstr "Critique"
