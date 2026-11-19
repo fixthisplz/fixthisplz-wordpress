@@ -1,0 +1,90 @@
+<?php
+
+namespace Bug_Spotter\Admin;
+
+use Bug_Spotter\Installer;
+use Bug_Spotter\Reports_Repository;
+use Bug_Spotter\Settings;
+
+defined( 'ABSPATH' ) || exit;
+
+/** Registers the top-level "Bugs" menu and its sub-menus. */
+final class Menu {
+
+	public const SLUG          = 'bug-spotter';
+	public const SETTINGS_SLUG = 'bug-spotter-settings';
+
+	public static function register_hooks(): void {
+		add_action( 'admin_menu', array( self::class, 'register' ) );
+		add_action( 'admin_enqueue_scripts', array( self::class, 'enqueue_assets' ) );
+		add_filter( 'set_screen_option_' . Bugs_Page::PER_PAGE_OPTION, array( Bugs_Page::class, 'save_screen_option' ), 10, 3 );
+		Csv_Export::register_hooks();
+	}
+
+	public static function register(): void {
+		$hook = add_menu_page(
+			__( 'Bugs', 'bug-spotter' ),
+			self::menu_title(),
+			Installer::CAPABILITY,
+			self::SLUG,
+			array( Bugs_Page::class, 'render' ),
+			'dashicons-flag',
+			26
+		);
+		add_submenu_page(
+			self::SLUG,
+			__( 'All bugs', 'bug-spotter' ),
+			__( 'All bugs', 'bug-spotter' ),
+			Installer::CAPABILITY,
+			self::SLUG,
+			array( Bugs_Page::class, 'render' )
+		);
+		// Settings can change who may manage bugs, so they stay behind a core capability.
+		add_submenu_page(
+			self::SLUG,
+			__( 'Bug Spotter settings', 'bug-spotter' ),
+			__( 'Settings', 'bug-spotter' ),
+			'manage_options',
+			self::SETTINGS_SLUG,
+			array( self::class, 'render_settings' )
+		);
+
+		if ( is_string( $hook ) && '' !== $hook ) {
+			add_action( 'load-' . $hook, array( Bugs_Page::class, 'on_load' ) );
+		}
+	}
+
+	/** Menu label, with the "new reports" bubble when enabled and non-zero. */
+	public static function menu_title(): string {
+		$title = esc_html__( 'Bugs', 'bug-spotter' );
+		if ( empty( Settings::get()['management']['menu_badge'] ) ) {
+			return $title;
+		}
+		$new = ( new Reports_Repository() )->count_by_status( array() )['new'] ?? 0;
+		if ( $new < 1 ) {
+			return $title;
+		}
+		return sprintf(
+			'%1$s <span class="awaiting-mod count-%2$d"><span class="pending-count">%2$d</span></span>',
+			$title,
+			$new
+		);
+	}
+
+	public static function render_settings(): void {
+		if ( class_exists( 'Bug_Spotter\Admin\Settings_Page' ) ) {
+			Settings_Page::render();
+			return;
+		}
+		echo '<div class="wrap"><h1>' . esc_html__( 'Settings', 'bug-spotter' ) . '</h1>';
+		echo '<div class="notice notice-info inline"><p>' . esc_html__( 'The settings screen is not available yet.', 'bug-spotter' ) . '</p></div></div>';
+	}
+
+	public static function enqueue_assets(): void {
+		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen check.
+		if ( self::SLUG !== $page && self::SETTINGS_SLUG !== $page ) {
+			return;
+		}
+		wp_enqueue_style( 'bug-spotter-admin', BUGSPOT_URL . 'assets/css/admin.css', array(), BUGSPOT_VERSION );
+	}
+}

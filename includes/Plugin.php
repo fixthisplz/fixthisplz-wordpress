@@ -10,6 +10,9 @@ final class Plugin {
 		Installer::maybe_upgrade();
 		Rest\Reports_Controller::register_hooks();
 		Frontend\Assets::register_hooks();
+		if ( is_admin() ) {
+			Admin\Menu::register_hooks();
+		}
 		add_action( 'init', array( self::class, 'load_textdomain' ) );
 	}
 

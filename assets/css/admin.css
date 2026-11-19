@@ -1,0 +1,15 @@
+.bugspot-admin .bugspot-filter-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}
+.bugspot-admin .bugspot-filter-bar label{display:inline-flex;gap:4px;align-items:center}
+.bugspot-admin .nav-tab-wrapper{margin-bottom:8px}
+.bugspot-admin .column-id{width:64px}
+.bugspot-admin .column-priority,.bugspot-admin .column-status{width:110px}
+.bugspot-admin .column-created_at{width:150px}
+.bugspot-admin .column-page{width:18%;word-break:break-all}
+.bugspot-admin .bugspot-muted{color:#646970}
+.bugspot-pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;line-height:1.5;background:#f0f0f1;color:#1d2327;border:1px solid #dcdcde}
+.bugspot-priority-low{background:#f0f6fc;border-color:#c5d9ed}
+.bugspot-priority-high{background:#fcf0e1;border-color:#e6c28b;color:#704d00}
+.bugspot-priority-critical{background:#fcf0f1;border-color:#e0a0a6;color:#8a2424;font-weight:600}
+.bugspot-status-new{background:#e5f1ff;border-color:#9ec2e6;color:#0a4b78;font-weight:600}
+.bugspot-status-fixed{background:#edfaef;border-color:#a3d6ab;color:#0a5c1f}
+.bugspot-status-wont_fix,.bugspot-status-duplicate{color:#646970}
