@@ -331,6 +331,36 @@ bugspot_test(
 );
 
 bugspot_test(
+	'client_ip_xff_uses_rightmost_valid_entry',
+	function () {
+		$saved = array(
+			'REMOTE_ADDR'          => $_SERVER['REMOTE_ADDR'] ?? null,
+			'HTTP_X_FORWARDED_FOR' => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null,
+		);
+		try {
+			$_SERVER['REMOTE_ADDR'] = '198.51.100.1';
+
+			$_SERVER['HTTP_X_FORWARDED_FOR'] = '6.6.6.6, 203.0.113.7';
+			assert_same( '203.0.113.7', Client_Ip::get( 'x-forwarded-for' ), 'spoofed leftmost entry is ignored' );
+
+			$_SERVER['HTTP_X_FORWARDED_FOR'] = '203.0.113.7, garbage';
+			assert_same( '203.0.113.7', Client_Ip::get( 'x-forwarded-for' ), 'invalid rightmost entries are skipped' );
+
+			$_SERVER['HTTP_X_FORWARDED_FOR'] = 'garbage, also-bad';
+			assert_same( '198.51.100.1', Client_Ip::get( 'x-forwarded-for' ), 'no valid entry falls back to REMOTE_ADDR' );
+		} finally {
+			foreach ( $saved as $k => $v ) {
+				if ( null === $v ) {
+					unset( $_SERVER[ $k ] );
+				} else {
+					$_SERVER[ $k ] = $v;
+				}
+			}
+		}
+	}
+);
+
+bugspot_test(
 	'client_ip_uses_proxy_header_only_when_configured',
 	function () {
 		$saved = array(
@@ -344,7 +374,7 @@ bugspot_test(
 			$_SERVER['HTTP_CF_CONNECTING_IP'] = '2001:db8::1';
 
 			assert_same( '198.51.100.1', Client_Ip::get( '' ), 'header ignored when not configured' );
-			assert_same( '203.0.113.7', Client_Ip::get( 'x-forwarded-for' ), 'first valid entry' );
+			assert_same( '10.0.0.1', Client_Ip::get( 'x-forwarded-for' ), 'rightmost valid entry' );
 			assert_same( '2001:db8::1', Client_Ip::get( 'cf-connecting-ip' ) );
 
 			$_SERVER['HTTP_X_FORWARDED_FOR'] = 'not-an-ip';
