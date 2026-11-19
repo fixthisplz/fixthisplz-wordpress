@@ -26,3 +26,22 @@ function assert_wp_error( mixed $v, string $code ): void {
 		throw new RuntimeException( 'expected WP_Error code "' . $code . '", got "' . $v->get_error_code() . '"' );
 	}
 }
+
+/**
+ * Run $fn with the bugspot_settings option isolated: the original value (or its absence)
+ * is restored afterwards, so tests never wipe real settings on the test site.
+ */
+function with_settings_option( callable $fn ): void {
+	$missing  = new stdClass();
+	$original = get_option( 'bugspot_settings', $missing );
+	delete_option( 'bugspot_settings' );
+	try {
+		$fn();
+	} finally {
+		if ( $missing === $original ) {
+			delete_option( 'bugspot_settings' );
+		} else {
+			update_option( 'bugspot_settings', $original );
+		}
+	}
+}
