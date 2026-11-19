@@ -32,4 +32,7 @@ spl_autoload_register(
 	}
 );
 
+register_activation_hook( __FILE__, array( 'Bug_Spotter\\Installer', 'activate' ) );
+register_deactivation_hook( __FILE__, array( 'Bug_Spotter\\Installer', 'deactivate' ) );
+
 add_action( 'plugins_loaded', array( 'Bug_Spotter\\Plugin', 'boot' ) );
