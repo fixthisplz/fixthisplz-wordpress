@@ -1,0 +1,7 @@
+#bugspot-button{position:fixed;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;margin:0;border:0;font:600 14px/1 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer;transition:background-color .15s ease,transform .15s ease}
+#bugspot-button:focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 5px #1d2327}
+#bugspot-button[disabled]{opacity:.65;cursor:progress}
+#bugspot-button .dashicons{width:auto;height:auto;font-size:24px;line-height:1}
+#bugspot-button img{width:24px;height:24px;display:block}
+#bugspot-button .bugspot-label{white-space:nowrap}
+@media (prefers-reduced-motion:reduce){#bugspot-button{transition:none}}

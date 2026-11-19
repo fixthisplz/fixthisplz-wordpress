@@ -9,6 +9,7 @@ final class Plugin {
 	public static function boot(): void {
 		Installer::maybe_upgrade();
 		Rest\Reports_Controller::register_hooks();
+		Frontend\Assets::register_hooks();
 		add_action( 'init', array( self::class, 'load_textdomain' ) );
 	}
 
