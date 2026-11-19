@@ -11,6 +11,8 @@ final class Plugin {
 		Settings::register_hooks();
 		Rest\Reports_Controller::register_hooks();
 		Frontend\Assets::register_hooks();
+		Privacy::register_hooks();
+		Retention::register_hooks();
 		if ( is_admin() ) {
 			Admin\Menu::register_hooks();
 		}

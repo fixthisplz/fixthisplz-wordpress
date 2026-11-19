@@ -18,19 +18,7 @@ define( 'BUGSPOT_FILE', __FILE__ );
 define( 'BUGSPOT_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BUGSPOT_URL', plugin_dir_url( __FILE__ ) );
 
-spl_autoload_register(
-	static function ( string $class_name ): void {
-		$prefix = 'Bug_Spotter\\';
-		if ( 0 !== strpos( $class_name, $prefix ) ) {
-			return;
-		}
-		$relative = substr( $class_name, strlen( $prefix ) );
-		$path     = BUGSPOT_DIR . 'includes/' . str_replace( '\\', '/', $relative ) . '.php';
-		if ( is_readable( $path ) ) {
-			require_once $path;
-		}
-	}
-);
+require_once BUGSPOT_DIR . 'includes/autoload.php';
 
 register_activation_hook( __FILE__, array( 'Bug_Spotter\\Installer', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'Bug_Spotter\\Installer', 'deactivate' ) );
