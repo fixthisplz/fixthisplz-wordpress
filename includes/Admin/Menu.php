@@ -19,6 +19,7 @@ final class Menu {
 		add_action( 'admin_enqueue_scripts', array( self::class, 'enqueue_assets' ) );
 		add_filter( 'set_screen_option_' . Bugs_Page::PER_PAGE_OPTION, array( Bugs_Page::class, 'save_screen_option' ), 10, 3 );
 		Csv_Export::register_hooks();
+		Detail_Page::register_hooks();
 	}
 
 	public static function register(): void {
@@ -86,5 +87,11 @@ final class Menu {
 			return;
 		}
 		wp_enqueue_style( 'bug-spotter-admin', BUGSPOT_URL . 'assets/css/admin.css', array(), BUGSPOT_VERSION );
+
+		// The board script is only needed on the Kanban view of the list (not on a detail page).
+		$kanban = isset( $_GET['view'] ) && 'kanban' === $_GET['view'] && ! isset( $_GET['report'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen check.
+		if ( self::SLUG === $page && $kanban ) {
+			Kanban::enqueue_assets();
+		}
 	}
 }

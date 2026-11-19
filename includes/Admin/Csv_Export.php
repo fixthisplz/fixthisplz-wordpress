@@ -37,6 +37,14 @@ final class Csv_Export {
 		$filters                 = Bugs_Page::read_filters( $request );
 		list( $orderby, $order ) = Bugs_Page::read_sort( $request );
 
+		// Another plugin's notice or a stray buffer would corrupt the BOM / first row.
+		if ( headers_sent() ) {
+			wp_die( esc_html__( 'The export could not start because output was already sent.', 'bug-spotter' ) );
+		}
+		while ( ob_get_level() > 0 ) {
+			ob_end_clean();
+		}
+
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename="bugs-' . wp_date( 'Ymd-Hi' ) . '.csv"' );

@@ -36,6 +36,18 @@ final class Statuses {
 		);
 	}
 
+	/**
+	 * @return array<string,string> priority key => hex colour (white text stays readable on all of them).
+	 */
+	public static function priority_colors(): array {
+		return array(
+			'low'      => '#787c82',
+			'normal'   => '#2271b1',
+			'high'     => '#b26200',
+			'critical' => '#d63638',
+		);
+	}
+
 	public static function is_valid( string $status ): bool {
 		return array_key_exists( $status, self::all() );
 	}

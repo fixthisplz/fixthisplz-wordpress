@@ -25,7 +25,10 @@ final class Bugs_Page {
 			add_screen_option( 'per_page', array( 'label' => __( 'Bugs per page', 'bug-spotter' ), 'default' => self::DEFAULT_PER_PAGE, 'option' => self::PER_PAGE_OPTION ) );
 			add_filter( "manage_{$screen->id}_columns", array( List_Table::class, 'columns' ) );
 		}
-		self::handle_requests();
+		// A detail page carries its own _wpnonce / action parameters: never treat them as list actions.
+		if ( ! isset( $_GET['report'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			self::handle_requests();
+		}
 	}
 
 	public static function save_screen_option( mixed $keep, string $option, mixed $value ): int {
