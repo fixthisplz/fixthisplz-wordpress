@@ -59,7 +59,7 @@ final class Menu {
 	/** Menu label, with the "new reports" bubble when enabled and non-zero. */
 	public static function menu_title(): string {
 		$title = esc_html__( 'Bugs', 'bug-spotter' );
-		if ( empty( Settings::get()['management']['menu_badge'] ) ) {
+		if ( empty( Settings::get()['management']['menu_badge'] ) || ! current_user_can( 'bugspot_manage' ) ) {
 			return $title;
 		}
 		$new = ( new Reports_Repository() )->count_by_status( array() )['new'] ?? 0;
@@ -74,12 +74,7 @@ final class Menu {
 	}
 
 	public static function render_settings(): void {
-		if ( class_exists( 'Bug_Spotter\Admin\Settings_Page' ) ) {
-			Settings_Page::render();
-			return;
-		}
-		echo '<div class="wrap"><h1>' . esc_html__( 'Settings', 'bug-spotter' ) . '</h1>';
-		echo '<div class="notice notice-info inline"><p>' . esc_html__( 'The settings screen is not available yet.', 'bug-spotter' ) . '</p></div></div>';
+		Settings_Page::render();
 	}
 
 	public static function enqueue_assets(): void {

@@ -38,7 +38,11 @@ bugspot_test(
 		assert_true( ! in_array( 'bug-report-' . $other, $ids, true ), 'other reporter excluded' );
 		assert_same( 'bug-spotter', $res['data'][0]['group_id'] );
 		$names = array_column( $res['data'][0]['data'], 'name' );
-		assert_same( 5, count( $names ) );
+		assert_same( 7, count( $names ), 'five fields, contact e-mail, screenshot flag' );
+		assert_true( in_array( 'Contact e-mail', $names, true ) && in_array( 'Screenshot attached', $names, true ) );
+		assert_same( 'Priv-User@Example.test', $res['data'][0]['data'][5]['value'] );
+		assert_same( 'No', $res['data'][0]['data'][6]['value'] );
+		assert_same( 6, count( $res['data'][1]['data'] ), 'no contact e-mail line when none' );
 		$dump = wp_json_encode( $res );
 		assert_true( false === strpos( $dump, 'bbbbbbbb' ), 'ip hash must not be exported' );
 		assert_true( false === strpos( $dump, '"secret"' ), 'context internals must not be exported' );

@@ -267,3 +267,37 @@ bugspot_test(
 		);
 	}
 );
+
+bugspot_test(
+	'enqueue_privacy_url_falls_back_to_wp_privacy_page',
+	function () {
+		with_settings_option(
+			function () {
+				fe_with_clean_assets(
+					function () {
+						$prev = wp_get_current_user();
+						wp_set_current_user( 0 );
+						$fallback = static fn() => 'https://example.test/privacy-policy/';
+						add_filter( 'privacy_policy_url', $fallback );
+						$read = function ( array $dialog ): string {
+							update_option( Settings::OPTION, array( 'enabled' => true, 'visibility' => array( 'guests' => true ), 'dialog' => $dialog ) );
+							Assets::enqueue();
+							global $wp_scripts;
+							$js     = implode( "\n", (array) $wp_scripts->get_data( 'bugspot-loader', 'before' ) );
+							$config = json_decode( trim( substr( $js, strlen( 'window.bugSpotterConfig = ' ) ), "; \n" ), true );
+							return (string) $config['dialog']['privacyUrl'];
+						};
+						$empty = $read( array( 'privacy_url' => '' ) );
+						wp_dequeue_script( 'bugspot-loader' );
+						wp_deregister_script( 'bugspot-loader' );
+						$own = $read( array( 'privacy_url' => 'https://example.test/own/' ) );
+						remove_filter( 'privacy_policy_url', $fallback );
+						wp_set_current_user( $prev->ID );
+						assert_same( 'https://example.test/privacy-policy/', $empty );
+						assert_same( 'https://example.test/own/', $own );
+					}
+				);
+			}
+		);
+	}
+);

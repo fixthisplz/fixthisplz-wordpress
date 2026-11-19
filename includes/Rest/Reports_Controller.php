@@ -6,6 +6,7 @@ use Bug_Spotter\Captcha\Factory;
 use Bug_Spotter\Client_Ip;
 use Bug_Spotter\Context_Validator;
 use Bug_Spotter\Frontend\Button_Style;
+use Bug_Spotter\Frontend\Visibility;
 use Bug_Spotter\Mailer;
 use Bug_Spotter\Rate_Limiter;
 use Bug_Spotter\Reports_Repository;
@@ -202,6 +203,13 @@ final class Reports_Controller {
 			);
 		}
 
+		// Server-side half of the visibility rule (spec 6.1): roles/guests only. Page exclusions and mobile
+		// are front-end display choices and are not enforced here. Stale-nonce users count as anonymous.
+		$current = wp_get_current_user();
+		if ( ! Visibility::user_allowed( $settings, $current instanceof \WP_User ? $current : null ) ) {
+			return new \WP_Error( 'bugspot_not_allowed', __( 'You are not allowed to send bug reports.', 'bug-spotter' ), array( 'status' => 403 ) );
+		}
+
 		$protection = $settings['protection'];
 		$ip         = Client_Ip::get( (string) $protection['proxy_header'] );
 		$ip_hash    = Secret::hmac( $ip );
@@ -221,7 +229,10 @@ final class Reports_Controller {
 		if ( '' === $description || mb_strlen( $description ) > self::MAX_DESCRIPTION ) {
 			return self::invalid( __( 'The description is required (5000 characters maximum).', 'bug-spotter' ) );
 		}
-		$description = trim( sanitize_textarea_field( $description ) );
+		$description = self::clean_description( $description );
+		if ( '' === $description ) {
+			return self::invalid( __( 'The description is required (5000 characters maximum).', 'bug-spotter' ) );
+		}
 
 		$user_id = get_current_user_id();
 		$email   = '';
@@ -284,6 +295,13 @@ final class Reports_Controller {
 			),
 			201
 		);
+	}
+
+	/** Keeps the reporter's text as typed (outputs escape): valid UTF-8, no control chars, LF newlines. */
+	private static function clean_description( string $text ): string {
+		$text = wp_check_invalid_utf8( $text, true );
+		$text = (string) preg_replace( '/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $text );
+		return trim( str_replace( array( "\r\n", "\r" ), "\n", $text ) );
 	}
 
 	/** @return \WP_REST_Response|\WP_Error */

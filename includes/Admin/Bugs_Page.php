@@ -191,11 +191,7 @@ final class Bugs_Page {
 		$query = wp_unslash( $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only filters.
 
 		if ( isset( $query['report'] ) && is_scalar( $query['report'] ) ) {
-			if ( class_exists( 'Bug_Spotter\Admin\Detail_Page' ) ) {
-				Detail_Page::render( absint( $query['report'] ) );
-				return;
-			}
-			self::render_unavailable( __( 'The report detail screen is not available yet.', 'bug-spotter' ) );
+			Detail_Page::render( absint( $query['report'] ) );
 			return;
 		}
 
@@ -211,11 +207,7 @@ final class Bugs_Page {
 			echo '<form method="get" class="bugspot-filters">';
 			self::render_filter_form( $filters, $query, true );
 			echo '</form>';
-			if ( class_exists( 'Bug_Spotter\Admin\Kanban' ) ) {
-				Kanban::render( $filters );
-			} else {
-				echo '<div class="notice notice-info inline"><p>' . esc_html__( 'The kanban board is not available yet.', 'bug-spotter' ) . '</p></div>';
-			}
+			Kanban::render( $filters );
 			echo '</div>';
 			return;
 		}
@@ -228,12 +220,6 @@ final class Bugs_Page {
 		$table->views();
 		$table->display();
 		echo '</form></div>';
-	}
-
-	private static function render_unavailable( string $message ): void {
-		echo '<div class="wrap"><h1>' . esc_html__( 'Bugs', 'bug-spotter' ) . '</h1>';
-		echo '<div class="notice notice-info inline"><p>' . esc_html( $message ) . '</p></div>';
-		echo '<p><a href="' . esc_url( self::page_url() ) . '">' . esc_html__( 'Back to the list', 'bug-spotter' ) . '</a></p></div>';
 	}
 
 	private static function render_notice( array $query ): void {

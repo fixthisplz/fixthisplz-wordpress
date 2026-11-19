@@ -101,7 +101,7 @@ final class Assets {
 				'title'           => Settings::text( 'dialog.title' ),
 				'instructions'    => Settings::text( 'dialog.instructions' ),
 				'privacyText'     => Settings::text( 'dialog.privacy_text' ),
-				'privacyUrl'      => $dialog['privacy_url'],
+				'privacyUrl'      => '' !== $dialog['privacy_url'] ? $dialog['privacy_url'] : esc_url_raw( (string) get_privacy_policy_url() ),
 				'allowScreenshot' => (bool) $dialog['allow_screenshot'],
 				'askEmail'        => (bool) $dialog['ask_email_guests'] && ! $logged_in,
 				'formats'         => array_values( $dialog['formats'] ),
@@ -168,6 +168,7 @@ final class Assets {
 			'done'               => __( 'Done', 'bug-spotter' ),
 			'errorGeneric'       => __( 'The report could not be sent. Your text was kept; you can try again or download it.', 'bug-spotter' ),
 			'errorRateLimit'     => __( 'Too many reports in a short time. Please try again later.', 'bug-spotter' ),
+			'errorNotAllowed'    => __( 'You are not allowed to send bug reports.', 'bug-spotter' ),
 			'errorCaptcha'       => __( 'The anti-spam check failed. Please try again.', 'bug-spotter' ),
 			'errorLoad'          => __( 'The bug reporter could not be loaded.', 'bug-spotter' ),
 			/* translators: %s: short description of the highlighted element, for example "button – Send". */

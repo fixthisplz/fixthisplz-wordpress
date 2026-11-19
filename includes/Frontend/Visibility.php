@@ -36,10 +36,19 @@ final class Visibility {
 			}
 		}
 
+		return self::user_allowed( $settings, $user );
+	}
+
+	/**
+	 * Role part of the visibility rule (guests / checked roles), shared with the REST submit route.
+	 *
+	 * @param array<string,mixed> $settings Full plugin settings.
+	 */
+	public static function user_allowed( array $settings, ?\WP_User $user ): bool {
+		$v = is_array( $settings['visibility'] ?? null ) ? $settings['visibility'] : array();
 		if ( null === $user || 0 === (int) $user->ID ) {
 			return ! empty( $v['guests'] );
 		}
-
 		return array() !== array_intersect( (array) $user->roles, (array) ( $v['roles'] ?? array() ) );
 	}
 }

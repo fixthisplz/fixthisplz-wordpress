@@ -72,13 +72,24 @@ bugspot_test(
 	function () {
 		with_settings_option(
 			function () {
-				$expected = ( new Reports_Repository() )->count_by_status( array() )['new'] + 1;
-				bugspot_admin_insert( 'badge test' );
-				$title = Menu::menu_title();
-				assert_true( str_contains( $title, '<span class="awaiting-mod count-' . $expected . '"><span class="pending-count">' . $expected . '</span></span>' ), 'badge: ' . $title );
+				$prev = get_current_user_id();
+				try {
+					$expected = ( new Reports_Repository() )->count_by_status( array() )['new'] + 1;
+					bugspot_admin_insert( 'badge test' );
 
-				update_option( 'bugspot_settings', array( 'management' => array( 'menu_badge' => false ) ) );
-				assert_true( ! str_contains( Menu::menu_title(), 'awaiting-mod' ), 'badge must be hidden' );
+					wp_set_current_user( 0 );
+					assert_true( ! str_contains( Menu::menu_title(), 'awaiting-mod' ), 'no badge (and no count query) without the capability' );
+
+					$admins = get_users( array( 'role' => 'administrator', 'number' => 1, 'fields' => 'ID' ) );
+					wp_set_current_user( (int) $admins[0] );
+					$title = Menu::menu_title();
+					assert_true( str_contains( $title, '<span class="awaiting-mod count-' . $expected . '"><span class="pending-count">' . $expected . '</span></span>' ), 'badge: ' . $title );
+
+					update_option( 'bugspot_settings', array( 'management' => array( 'menu_badge' => false ) ) );
+					assert_true( ! str_contains( Menu::menu_title(), 'awaiting-mod' ), 'badge must be hidden' );
+				} finally {
+					wp_set_current_user( $prev );
+				}
 			}
 		);
 	}

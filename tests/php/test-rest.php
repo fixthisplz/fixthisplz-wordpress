@@ -98,7 +98,7 @@ function rest_env( callable $fn ): void {
 			);
 			$prev = get_current_user_id();
 			try {
-				rest_enable();
+				rest_enable( array( 'visibility' => array( 'guests' => true, 'roles' => array( 'administrator', 'editor', 'subscriber' ) ) ) );
 				$fn( $sent );
 			} finally {
 				remove_all_filters( 'pre_wp_mail' );
@@ -572,6 +572,61 @@ bugspot_test(
 				$res = rest_post();
 				assert_same( 201, $res->get_status() );
 				assert_true( null !== ( new Reports_Repository() )->find( $res->get_data()['id'] ), 'report stored' );
+			}
+		);
+	}
+);
+
+bugspot_test(
+	'rest: create_enforces_visibility_roles_and_guests',
+	function () {
+		rest_env(
+			function () {
+				global $wpdb;
+				$table = $wpdb->prefix . 'bugspot_reports';
+				$count = fn() => (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" ); // phpcs:ignore WordPress.DB
+
+				rest_enable( array( 'visibility' => array( 'guests' => false, 'roles' => array( 'administrator' ) ) ) );
+				wp_set_current_user( 0 );
+				$before = $count();
+				$res    = rest_post();
+				assert_same( 403, $res->get_status() );
+				assert_same( 'bugspot_not_allowed', $res->as_error()->get_error_code() );
+				assert_same( $before, $count(), 'nothing written for a refused guest' );
+
+				wp_set_current_user( rest_user( 'subscriber' ) );
+				$res = rest_post();
+				assert_same( 403, $res->get_status() );
+				assert_same( 'bugspot_not_allowed', $res->as_error()->get_error_code() );
+				assert_same( $before, $count(), 'nothing written for a role not checked' );
+
+				wp_set_current_user( rest_user( 'administrator' ) );
+				assert_same( 201, rest_post()->get_status(), 'checked role is allowed' );
+
+				rest_enable( array( 'visibility' => array( 'guests' => true ) ) );
+				wp_set_current_user( 0 );
+				assert_same( 201, rest_post()->get_status(), 'guests allowed when checked' );
+			}
+		);
+	}
+);
+
+bugspot_test(
+	'rest: create_keeps_description_as_typed',
+	function () {
+		rest_env(
+			function () {
+				wp_set_current_user( 0 );
+				$typed = 'The <h1> title overlaps <nav>. https://ex.test/a%20b 3<5 & ok';
+				$res   = rest_post( array( 'description' => $typed ) );
+				assert_same( 201, $res->get_status() );
+				assert_same( $typed, ( new Reports_Repository() )->find( $res->get_data()['id'] )['description'] );
+
+				$res = rest_post( array( 'description' => "line1\r\nline2\x01\x07 end" ) );
+				assert_same( 201, $res->get_status() );
+				assert_same( "line1\nline2 end", ( new Reports_Repository() )->find( $res->get_data()['id'] )['description'] );
+
+				assert_same( 422, rest_post( array( 'description' => "\x01\x02" ) )->get_status(), 'only control chars is empty' );
 			}
 		);
 	}

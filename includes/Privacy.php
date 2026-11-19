@@ -45,18 +45,27 @@ final class Privacy {
 			if ( null === $report ) {
 				continue;
 			}
+			$data = array(
+				array( 'name' => __( 'Report number', 'bug-spotter' ), 'value' => '#' . $report['id'] ),
+				array( 'name' => __( 'Date', 'bug-spotter' ), 'value' => wp_date( 'Y-m-d H:i', (int) strtotime( $report['created_at'] . ' UTC' ) ) ),
+				array( 'name' => __( 'Page', 'bug-spotter' ), 'value' => $report['page_url'] ),
+				array( 'name' => __( 'Description', 'bug-spotter' ), 'value' => $report['description'] ),
+				array( 'name' => __( 'Status', 'bug-spotter' ), 'value' => $stats[ $report['status'] ] ?? $report['status'] ),
+			);
+			if ( is_string( $report['reporter_email'] ) && '' !== $report['reporter_email'] ) {
+				$data[] = array( 'name' => __( 'Contact e-mail', 'bug-spotter' ), 'value' => $report['reporter_email'] );
+			}
+			$data[] = array(
+				'name'  => __( 'Screenshot attached', 'bug-spotter' ),
+				'value' => ! empty( $report['screenshot'] ) ? __( 'Yes', 'bug-spotter' ) : __( 'No', 'bug-spotter' ),
+			);
+
 			$items[] = array(
 				'group_id'          => self::GROUP_ID,
 				'group_label'       => __( 'Bug reports', 'bug-spotter' ),
 				'group_description' => __( 'Bug reports submitted from this site.', 'bug-spotter' ),
 				'item_id'           => 'bug-report-' . $report['id'],
-				'data'              => array(
-					array( 'name' => __( 'Report number', 'bug-spotter' ), 'value' => '#' . $report['id'] ),
-					array( 'name' => __( 'Date', 'bug-spotter' ), 'value' => wp_date( 'Y-m-d H:i', (int) strtotime( $report['created_at'] . ' UTC' ) ) ),
-					array( 'name' => __( 'Page', 'bug-spotter' ), 'value' => $report['page_url'] ),
-					array( 'name' => __( 'Description', 'bug-spotter' ), 'value' => $report['description'] ),
-					array( 'name' => __( 'Status', 'bug-spotter' ), 'value' => $stats[ $report['status'] ] ?? $report['status'] ),
-				),
+				'data'              => $data,
 			);
 		}
 
@@ -110,7 +119,8 @@ final class Privacy {
 		}
 		$paragraphs = array(
 			__( 'Purpose: this site lets visitors and users report bugs they meet while browsing. Reports are used only to find and fix those problems.', 'bug-spotter' ),
-			__( 'Data collected: the description you write, the address of the page, technical context (browser, screen size, language, errors and failed requests seen by the page), an optional screenshot, an optional contact e-mail address (stored encrypted), your account if you are logged in, and a keyed hash of your IP address used only against abuse. Your IP address itself is never stored. Values typed in form fields and passwords are never collected.', 'bug-spotter' ),
+			__( 'Data collected: the description you write, the address of the page, technical context (browser, screen size, language, errors and failed requests seen by the page), an optional screenshot, an optional contact e-mail address (stored encrypted), your account if you are logged in, and a keyed hash of your IP address used only against abuse. Your IP address itself is never stored. Values typed into the site\'s own forms and fields (including passwords) are never collected; only the description and optional contact e-mail typed into the bug report form are stored.', 'bug-spotter' ),
+			__( 'Anti-bot check: when an anti-bot provider is enabled (Cloudflare Turnstile, Google reCAPTCHA or hCaptcha), that provider receives your IP address and browser data when you send a report, under its own privacy policy.', 'bug-spotter' ),
 			__( 'Retention: closed reports are deleted automatically after the retention period set by the site administrators; otherwise reports are kept until they are deleted.', 'bug-spotter' ),
 			__( 'Legal basis: legitimate interest in maintaining and improving the site.', 'bug-spotter' ),
 			__( 'Recipients: only the site administrators and the people they authorise to manage bug reports.', 'bug-spotter' ),

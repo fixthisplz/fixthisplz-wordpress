@@ -243,6 +243,9 @@ export function openDialog({ config, element, onRetakeElement, onClose }) {
 		const serverText = body && typeof body.message === 'string' ? body.message : '';
 		switch (response.status) {
 			case 403:
+				if (code === 'bugspot_not_allowed') {
+					return t('errorNotAllowed');
+				}
 				return code === 'bugspot_captcha_failed' ? t('errorCaptcha') : t('errorGeneric');
 			case 404:
 				return code === 'bugspot_disabled' ? t('errorDisabled') : t('errorGeneric');
