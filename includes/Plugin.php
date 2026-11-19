@@ -1,0 +1,16 @@
+<?php
+
+namespace Bug_Spotter;
+
+defined( 'ABSPATH' ) || exit;
+
+final class Plugin {
+
+	public static function boot(): void {
+		add_action( 'init', array( self::class, 'load_textdomain' ) );
+	}
+
+	public static function load_textdomain(): void {
+		load_plugin_textdomain( 'bug-spotter', false, dirname( plugin_basename( BUGSPOT_FILE ) ) . '/languages' );
+	}
+}
