@@ -5,9 +5,14 @@
  *
  * Speed: the library clones and styles every node it is given. Only boxes that intersect the viewport (and
  * their ancestors) are cloned deeply; any other element is cloned alone (its computed width/height are copied,
- * so the layout does not move) with its children and its images dropped. */
+ * so the layout does not move) with its children and its images dropped, except inline-level boxes.
+ *
+ * Fidelity: the page's fonts are embedded (capture-fonts.js), icon fonts of pseudo-elements and cross-origin
+ * stylesheets included; text in another font wraps differently and moves what follows it. */
 
 import { encodeJpeg } from './jpeg.js';
+import { addFamilies, crossOriginSheets, embedCrossOriginFonts } from './capture-fonts.js';
+import { createPseudoRepair } from './pseudo-repair.js';
 
 // Images already on screen are loaded: do not wait for lazy images further down the page.
 const WAIT_FOR_LOAD_MS = 300;
@@ -192,11 +197,14 @@ function viewportTree(width, height) {
 /**
  * The library's filter. An element whose parent keeps its children but which is itself off-screen is cloned
  * alone (the library copies its computed width/height, so the layout holds): takeShallow() tells the very next
- * onCloneEachNode call that this clone is that lone element, since none of its children get cloned.
+ * onCloneEachNode call that this clone is that lone element, since none of its children get cloned. Inline-level
+ * boxes are the exception, cloned whole: emptied, an inline loses its text (the paragraph reflows) and an
+ * inline-block sits on its bottom edge instead of its text baseline (the whole line moves down).
  */
-export function createCutFilter({ visible, needed, ownerDocument }) {
+export function createCutFilter({ visible, needed, ownerDocument, isInline = (n) => getComputedStyle(n).display.startsWith('inline') }) {
 	let shallow = false;
-	const keepsChildren = (n) => visible.has(n) || needed.has(n);
+	const whole = new WeakSet();
+	const keepsChildren = (n) => visible.has(n) || needed.has(n) || whole.has(n);
 	return {
 		filter(node) {
 			if (node.nodeType === 1 && node.hasAttribute(UI_ATTR)) {
@@ -210,6 +218,12 @@ export function createCutFilter({ visible, needed, ownerDocument }) {
 			if (hasParent && isSvg(parent)) {
 				return true; // SVG content is never cut: <defs>, gradients, clip paths, masks have no box
 			}
+			if (hasParent && whole.has(parent)) {
+				if (node.nodeType === 1) {
+					whole.add(node);
+				}
+				return true;
+			}
 			if (hasParent && !keepsChildren(parent)) {
 				return false; // inside an off-screen box
 			}
@@ -221,6 +235,10 @@ export function createCutFilter({ visible, needed, ownerDocument }) {
 			}
 			if (hasParent && !visible.has(parent)) {
 				return false; // off-screen content next to a sprite path
+			}
+			if (isInline(node)) {
+				whole.add(node);
+				return true;
 			}
 			shallow = node.tagName !== 'IFRAME';
 			return true;
@@ -247,66 +265,19 @@ function stripResources(clone) {
 	}
 }
 
-const PSEUDO_ATTR = 'data-bugspot-pseudo';
-const MASKED_ATTR = 'data-bugspot-masked';
-const PSEUDO_ELEMENTS = ['::before', '::after'];
-// What the library copies right: a plain string. It writes any value as `content: '<value minus every quote>'`,
-// so url("data:…"), alt text ("x" / ""), counter() or attr() would be drawn as literal text.
-const isCopiedRight = (value) => !value || value === 'none' || value === 'normal' || /^"[^"'\\]*"$/.test(value);
-
 /**
- * Puts back, on the clone, the exact computed `content` of the ::before/::after the library mangled. enter() gets
- * every source element the filter keeps, leave() every clone from onCloneEachNode (it comes after the subtree, so a
- * stack pairs them); apply() writes the overrides once the tree is masked, into the library's own <style> (a <style>
- * inside the cloned tree doubles the embedding time when it holds images). <iframe> elements are never paired: the
- * library replaces them with the frame's document, whose clones belong to another document.
+ * Styles of the cloned <html>: pulled up and left by the page scroll with margins (a transform would make fixed
+ * boxes scroll away), on top of the page's own <html> margin (WordPress adds margin-top: 32px for the admin bar on
+ * the front end: overriding it would slide the content under the bar).
  */
-export function createPseudoRepair({ ownerDocument, getContent = (node, pseudo) => getComputedStyle(node, pseudo).content }) {
-	const sources = [];
-	const repairs = [];
-	const pairs = (node) => node.nodeType === 1 && node.ownerDocument === ownerDocument && node.tagName !== 'IFRAME';
+export function rootShift({ scrollX, scrollY, height, marginTop, marginLeft }) {
+	const px = (value) => parseFloat(value) || 0;
 	return {
-		enter(node) {
-			if (pairs(node)) {
-				sources.push(node);
-			}
-		},
-		leave(clone) {
-			if (!pairs(clone) || !sources.length) {
-				return; // the root (never filtered) or a frame document
-			}
-			const source = sources.pop();
-			if (clone.getAttribute('class') === source.getAttribute('class')) {
-				return; // the library added no pseudo-element class: nothing copied
-			}
-			for (const pseudo of PSEUDO_ELEMENTS) {
-				const value = getContent(source, pseudo);
-				if (!isCopiedRight(value)) {
-					clone.setAttribute(PSEUDO_ATTR, String(repairs.length));
-					repairs.push({ clone, pseudo, value });
-				}
-			}
-		},
-		/**
-		 * @param hidden clones filled as sensitive: no pseudo-element of theirs, or of their descendants, shows
-		 * anything (an explicit pseudo color would otherwise escape the inherited transparent text).
-		 */
-		apply(styleElement, hidden = []) {
-			if (!styleElement || (!repairs.length && !hidden.length)) {
-				return;
-			}
-			const masked = (clone) => hidden.some((h) => h === clone || (h.contains && h.contains(clone)));
-			const css = repairs.map(({ clone, pseudo, value }) => {
-				const id = clone.getAttribute(PSEUDO_ATTR);
-				return `[${PSEUDO_ATTR}="${id}"]${pseudo}{content:${masked(clone) ? '""' : value} !important}`;
-			});
-			if (hidden.length) {
-				hidden.forEach((h) => h.setAttribute(MASKED_ATTR, ''));
-				const all = PSEUDO_ELEMENTS.flatMap((p) => [`[${MASKED_ATTR}]${p}`, `[${MASKED_ATTR}] *${p}`]);
-				css.push(`${all.join(',')}{content:"" !important}`);
-			}
-			styleElement.appendChild(ownerDocument.createTextNode(`\n${css.join('\n')}\n`));
-		},
+		height: 'auto',
+		'min-height': `${scrollY + height}px`,
+		'margin-top': `${px(marginTop) - scrollY}px`,
+		'margin-left': `${px(marginLeft) - scrollX}px`,
+		overflow: 'visible',
 	};
 }
 
@@ -329,8 +300,8 @@ export async function captureVisible({ vendorUrl, mask = false, sensitiveSelecto
 	const { createContext, destroyContext, domToCanvas } = await loadVendor(vendorUrl);
 	const width = window.innerWidth;
 	const height = window.innerHeight;
-	const scrollX = window.scrollX;
-	const scrollY = window.scrollY;
+	const { marginTop, marginLeft } = getComputedStyle(document.documentElement);
+	const shift = rootShift({ scrollX: window.scrollX, scrollY: window.scrollY, height, marginTop, marginLeft });
 	const cut = createCutFilter({ ...viewportTree(width, height), ownerDocument: document });
 	const bodyTransforms = new WeakMap();
 	const pseudo = createPseudoRepair({ ownerDocument: document });
@@ -340,7 +311,6 @@ export async function captureVisible({ vendorUrl, mask = false, sensitiveSelecto
 		width,
 		height,
 		scale: 1,
-		font: false,
 		debug,
 		timeout: WAIT_FOR_LOAD_MS,
 		backgroundColor: pageBackground(),
@@ -365,24 +335,27 @@ export async function captureVisible({ vendorUrl, mask = false, sensitiveSelecto
 				stripResources(clone);
 			}
 		},
-		onCloneNode: (clone) => {
+		onCloneNode: async (clone) => {
 			const filled = maskTree(clone);
 			if (clone.nodeType !== 1) {
 				return;
 			}
 			pseudo.apply(context.svgStyleElement, filled); // filled with the copied pseudo-elements by now
-			// restoreScrollPosition also translated <body> by the page scroll: undo it, then shift the cloned
-			// document with margins instead (a transform would make fixed elements scroll away).
+			// The library embeds the readable @font-face rules of these families right after this hook.
+			pseudo.fonts.forEach((chars, family) => addFamilies(context.fontFamilies, family, [...chars].join('')));
+			await embedCrossOriginFonts({
+				hrefs: crossOriginSheets(document.styleSheets),
+				used: context.fontFamilies,
+				styleElement: context.svgStyleElement,
+				ownerDocument: document,
+			});
+			// restoreScrollPosition also translated <body> by the page scroll: undo it, rootShift() moves the document.
 			for (const child of Array.from(clone.children)) {
 				if (child.tagName === 'BODY') {
 					child.style.transform = bodyTransforms.get(child) || '';
 				}
 			}
-			important(clone, 'height', 'auto');
-			important(clone, 'min-height', `${scrollY + height}px`);
-			important(clone, 'margin-top', `${-scrollY}px`);
-			important(clone, 'margin-left', `${-scrollX}px`);
-			important(clone, 'overflow', 'visible');
+			Object.entries(shift).forEach(([name, value]) => important(clone, name, value));
 		},
 	});
 	context.timeout = ASSET_TIMEOUT_MS; // the short wait above was only for the page's own images
