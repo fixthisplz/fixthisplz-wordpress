@@ -4,6 +4,7 @@ namespace Bug_Spotter\Admin;
 
 use Bug_Spotter\Settings;
 use Bug_Spotter\Settings_Sanitizer;
+use Bug_Spotter\Status_Editor;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,6 +21,7 @@ final class Settings_Page {
 	public static function register_hooks(): void {
 		add_action( 'admin_init', array( self::class, 'register_setting' ) );
 		add_action( 'admin_notices', array( self::class, 'guest_warning' ) );
+		Status_Editor::register_hooks();
 	}
 
 	public static function register_setting(): void {
@@ -47,10 +49,11 @@ final class Settings_Page {
 			'context'       => __( 'Collected context', 'bug-spotter' ),
 			'data'          => __( 'Data and privacy', 'bug-spotter' ),
 			'management'    => __( 'Management', 'bug-spotter' ),
+			'statuses'      => __( 'Statuses', 'bug-spotter' ),
 		);
 	}
 
-	private static function current_tab(): string {
+	public static function current_tab(): string {
 		$tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- navigation only.
 		return array_key_exists( $tab, self::tabs() ) ? $tab : 'visibility';
 	}
@@ -105,6 +108,7 @@ final class Settings_Page {
 			'context'       => Settings_Tabs::context( $s ),
 			'data'          => Settings_Tabs::data( $s ),
 			'management'    => Settings_Tabs::management( $s ),
+			'statuses'      => Settings_Statuses_Tab::render( $s ),
 		};
 		submit_button();
 		echo '</form>';

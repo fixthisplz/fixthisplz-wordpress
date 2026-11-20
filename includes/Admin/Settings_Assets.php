@@ -17,6 +17,9 @@ final class Settings_Assets {
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_media();
 		wp_enqueue_script( self::SCRIPT, BUGSPOT_URL . 'assets/js/admin-settings.js', array( 'jquery', 'wp-color-picker', 'wp-api-fetch' ), BUGSPOT_VERSION, true );
+		if ( 'statuses' === Settings_Page::current_tab() ) {
+			wp_enqueue_script( 'bug-spotter-statuses', BUGSPOT_URL . 'assets/js/admin-statuses.js', array( 'jquery', 'jquery-ui-sortable', 'wp-color-picker' ), BUGSPOT_VERSION, true );
+		}
 
 		$script_urls = array();
 		foreach ( Factory::PROVIDERS as $provider ) {

@@ -12,6 +12,8 @@ final class Statuses {
 
 	public const MAX = 20;
 
+	public const KEY_MAX = 20;
+
 	/** Color of a status without a valid one, or unknown to the settings. */
 	public const FALLBACK_COLOR = '#8c8f94';
 
@@ -71,7 +73,7 @@ final class Statuses {
 		$optional = 0;
 		foreach ( $input as $entry ) {
 			$key = is_array( $entry ) && is_string( $entry['key'] ?? null ) ? $entry['key'] : '';
-			if ( 1 !== preg_match( '/^[a-z0-9_]{1,20}$/', $key ) || isset( $out[ $key ] ) ) {
+			if ( 1 !== preg_match( '/^[a-z0-9_]{1,' . self::KEY_MAX . '}$/', $key ) || isset( $out[ $key ] ) ) {
 				continue;
 			}
 			$required = in_array( $key, self::REQUIRED, true );
@@ -123,8 +125,8 @@ final class Statuses {
 		return self::$memo['list'];
 	}
 
-	/** Translated name of the built-in statuses, used while their label is left empty. */
-	private static function default_label( string $key ): string {
+	/** Translated name of the built-in statuses, used while their label is left empty (any other key: itself). */
+	public static function default_label( string $key ): string {
 		switch ( $key ) {
 			case 'new':
 				return __( 'New', 'bug-spotter' );

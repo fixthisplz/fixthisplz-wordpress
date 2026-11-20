@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-20T09:49:27+00:00\n"
+"POT-Creation-Date: 2026-11-20T11:39:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: bug-spotter\n"
@@ -28,18 +28,18 @@ msgstr ""
 msgid "Bugs per page"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:126
-#: includes/Admin/Bugs_Page.php:137
+#: includes/Admin/Bugs_Page.php:83
+#: includes/Admin/Bugs_Page.php:94
 #: includes/Admin/Csv_Export.php:33
 #: includes/Admin/Detail_Page.php:66
 msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:188
+#: includes/Admin/Bugs_Page.php:145
 msgid "Sorry, you are not allowed to access this page."
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:201
+#: includes/Admin/Bugs_Page.php:158
 #: includes/Admin/Detail_Page.php:80
 #: includes/Admin/Menu.php:28
 #: includes/Admin/Menu.php:61
@@ -47,7 +47,7 @@ msgid "Bugs"
 msgstr ""
 
 #. translators: %d: number of reports.
-#: includes/Admin/Bugs_Page.php:233
+#: includes/Admin/Bugs_Page.php:190
 #, php-format
 msgid "%d report deleted."
 msgid_plural "%d reports deleted."
@@ -55,53 +55,53 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of reports.
-#: includes/Admin/Bugs_Page.php:235
+#: includes/Admin/Bugs_Page.php:192
 #, php-format
 msgid "%d report updated."
 msgid_plural "%d reports updated."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/Admin/Bugs_Page.php:246
+#: includes/Admin/Bugs_Page.php:203
 msgid "List"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:252
+#: includes/Admin/Bugs_Page.php:209
 msgid "Kanban"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:273
+#: includes/Admin/Bugs_Page.php:230
 msgid "From"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:274
+#: includes/Admin/Bugs_Page.php:231
 msgid "To"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:275
+#: includes/Admin/Bugs_Page.php:232
 #: includes/Admin/Csv_Export.php:72
-#: includes/Admin/Detail_Page.php:290
+#: includes/Admin/Detail_Page.php:292
 #: includes/Admin/List_Table.php:40
 msgid "Priority"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:276
+#: includes/Admin/Bugs_Page.php:233
 msgid "All priorities"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:281
+#: includes/Admin/Bugs_Page.php:238
 msgid "Search reports"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:282
+#: includes/Admin/Bugs_Page.php:239
 msgid "Search description or URL"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:283
+#: includes/Admin/Bugs_Page.php:240
 msgid "Filter"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:284
+#: includes/Admin/Bugs_Page.php:241
 msgid "Export CSV"
 msgstr ""
 
@@ -116,7 +116,7 @@ msgstr ""
 
 #: includes/Admin/Csv_Export.php:70
 #: includes/Admin/List_Table.php:42
-#: includes/Privacy.php:50
+#: includes/Privacy.php:45
 msgid "Date"
 msgstr ""
 
@@ -125,15 +125,15 @@ msgstr ""
 #: includes/Admin/Detail_Page.php:282
 #: includes/Admin/Detail_Page.php:288
 #: includes/Admin/List_Table.php:41
-#: includes/Privacy.php:53
+#: includes/Privacy.php:48
 msgid "Status"
 msgstr ""
 
 #: includes/Admin/Csv_Export.php:73
 #: includes/Admin/Detail_Page.php:101
 #: includes/Admin/List_Table.php:38
-#: includes/Mailer.php:39
-#: includes/Privacy.php:51
+#: includes/Mailer.php:76
+#: includes/Privacy.php:46
 msgid "Page"
 msgstr ""
 
@@ -147,13 +147,13 @@ msgstr ""
 #: includes/Admin/Detail_Page.php:97
 #: includes/Admin/List_Table.php:37
 #: includes/Frontend/Assets.php:156
-#: includes/Mailer.php:38
-#: includes/Privacy.php:52
+#: includes/Mailer.php:75
+#: includes/Privacy.php:47
 msgid "Description"
 msgstr ""
 
 #: includes/Admin/Detail_Page.php:81
-#: includes/Rest/Reports_Controller.php:315
+#: includes/Rest/Reports_Controller.php:151
 msgid "Report not found."
 msgstr ""
 
@@ -186,7 +186,7 @@ msgstr ""
 #: includes/Admin/Settings_Tabs.php:98
 #: includes/Admin/Settings_Tabs.php:215
 #: includes/Frontend/Assets.php:189
-#: includes/Mailer.php:41
+#: includes/Mailer.php:78
 msgid "Screenshot"
 msgstr ""
 
@@ -211,7 +211,7 @@ msgid "The report could not be updated."
 msgstr ""
 
 #: includes/Admin/Detail_Page.php:138
-#: includes/Admin/Settings_Button_Tab.php:159
+#: includes/Admin/Settings_Button_Tab.php:162
 #: includes/Admin/Settings_Tabs.php:150
 msgid "None"
 msgstr ""
@@ -242,16 +242,17 @@ msgid "Role"
 msgstr ""
 
 #: includes/Admin/Detail_Page.php:205
+#: includes/Admin/Settings_Statuses_Tab.php:25
 msgid "Name"
 msgstr ""
 
 #: includes/Admin/Detail_Page.php:206
-#: includes/Admin/Settings_Button_Tab.php:111
+#: includes/Admin/Settings_Button_Tab.php:119
 msgid "Text"
 msgstr ""
 
 #: includes/Admin/Detail_Page.php:207
-#: includes/Admin/Settings_Button_Tab.php:194
+#: includes/Admin/Settings_Button_Tab.php:55
 msgid "Position"
 msgstr ""
 
@@ -304,42 +305,43 @@ msgstr ""
 msgid "Screenshot of the page (click for full size)"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:292
+#: includes/Admin/Detail_Page.php:294
 msgid "Update"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:297
+#: includes/Admin/Detail_Page.php:299
 msgid "Dates"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:300
+#: includes/Admin/Detail_Page.php:302
 msgid "Created"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:301
-#: includes/Statuses.php:18
+#: includes/Admin/Detail_Page.php:303
+#: includes/Statuses.php:134
 msgid "Seen"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:302
+#: includes/Admin/Detail_Page.php:304
 msgid "Status changed"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:303
+#: includes/Admin/Detail_Page.php:305
 msgid "Updated"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:309
+#: includes/Admin/Detail_Page.php:311
 #: includes/Admin/List_Table.php:71
 #: includes/Admin/List_Table.php:155
+#: includes/Admin/Settings_Statuses_Tab.php:97
 msgid "Delete"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:311
+#: includes/Admin/Detail_Page.php:313
 msgid "Delete this report permanently? This cannot be undone."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:315
+#: includes/Admin/Detail_Page.php:317
 msgid "Delete this report"
 msgstr ""
 
@@ -399,7 +401,7 @@ msgid "All bugs"
 msgstr ""
 
 #: includes/Admin/Menu.php:47
-#: includes/Admin/Settings_Page.php:64
+#: includes/Admin/Settings_Page.php:68
 msgid "Bug Spotter settings"
 msgstr ""
 
@@ -407,143 +409,143 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:44
-#: includes/Admin/Settings_Button_Tab.php:112
-#: includes/Admin/Settings_Button_Tab.php:118
+#: includes/Admin/Settings_Assets.php:47
+#: includes/Admin/Settings_Button_Tab.php:120
+#: includes/Admin/Settings_Button_Tab.php:126
 #: includes/Admin/Settings_Tabs.php:78
-#: includes/Settings.php:146
-#: includes/Settings.php:153
+#: includes/Settings.php:158
+#: includes/Settings.php:165
 msgid "Report a bug"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:45
+#: includes/Admin/Settings_Assets.php:48
 msgid "Choose an SVG icon"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:46
+#: includes/Admin/Settings_Assets.php:49
 msgid "Use this icon"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:47
+#: includes/Admin/Settings_Assets.php:50
 msgid "Please choose an SVG file."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:48
-#: includes/Admin/Settings_Button_Tab.php:282
+#: includes/Admin/Settings_Assets.php:51
+#: includes/Admin/Settings_Button_Tab.php:290
 msgid "Button preview"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:49
+#: includes/Admin/Settings_Assets.php:52
 msgid "The preview could not be updated."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:50
+#: includes/Admin/Settings_Assets.php:53
 msgid "Loading the provider widget…"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:51
+#: includes/Admin/Settings_Assets.php:54
 msgid "Complete the check below to finish the test."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:52
+#: includes/Admin/Settings_Assets.php:55
 msgid "Checking the keys…"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:53
-#: includes/Rest/Reports_Controller.php:138
+#: includes/Admin/Settings_Assets.php:56
+#: includes/Rest/Settings_Controller.php:91
 msgid "Keys are valid."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:54
+#: includes/Admin/Settings_Assets.php:57
 msgid "The test failed."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:55
+#: includes/Admin/Settings_Assets.php:58
 msgid "The provider widget could not be loaded. Check the site key, the provider choice and your connection; reload the page before testing another Google key."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:56
+#: includes/Admin/Settings_Assets.php:59
 msgid "No answer from the check. Try again."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:57
-#: includes/Rest/Reports_Controller.php:116
+#: includes/Admin/Settings_Assets.php:60
+#: includes/Rest/Settings_Controller.php:69
 msgid "Enter the site key first."
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:56
+#: includes/Admin/Settings_Button_Tab.php:32
+msgid "Shape"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:36
+msgid "Circle"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:37
+msgid "Rounded square"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:38
+msgid "Pill with text"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:43
+msgid "Size"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:47
+msgid "Small"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:48
+#: includes/Admin/Settings_Button_Tab.php:164
+msgid "Medium"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:49
+msgid "Large"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:64
 msgid "Icon"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:57
+#: includes/Admin/Settings_Button_Tab.php:65
 msgid "Icon type"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:58
+#: includes/Admin/Settings_Button_Tab.php:66
 msgid "Dashicon"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:59
+#: includes/Admin/Settings_Button_Tab.php:67
 msgid "SVG image from the media library"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:70
-#: includes/Admin/Settings_Button_Tab.php:81
+#: includes/Admin/Settings_Button_Tab.php:84
+#: includes/Admin/Settings_Button_Tab.php:95
 msgid "Choose an icon"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:93
+#: includes/Admin/Settings_Button_Tab.php:110
 msgid "Choose an SVG"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:94
+#: includes/Admin/Settings_Button_Tab.php:111
 #: includes/Frontend/Assets.php:162
 msgid "Remove"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:95
+#: includes/Admin/Settings_Button_Tab.php:112
 msgid "Only SVG files already in the media library are listed. WordPress blocks SVG uploads by default; Bug Spotter does not change that. Without an SVG, the Dashicon is used."
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:100
-msgid "Shape"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:104
-msgid "Circle"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:105
-msgid "Rounded square"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:106
-msgid "Pill with text"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:113
+#: includes/Admin/Settings_Button_Tab.php:121
 msgid "Shown inside the pill shape, and read by screen readers for every shape."
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:117
+#: includes/Admin/Settings_Button_Tab.php:125
 msgid "Tooltip"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:122
-msgid "Size"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:126
-msgid "Small"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:127
-#: includes/Admin/Settings_Button_Tab.php:161
-msgid "Medium"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:128
-msgid "Large"
 msgstr ""
 
 #: includes/Admin/Settings_Button_Tab.php:134
@@ -558,220 +560,274 @@ msgstr ""
 msgid "Background color on hover"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:154
+#: includes/Admin/Settings_Button_Tab.php:157
 msgid "Shadow"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:160
+#: includes/Admin/Settings_Button_Tab.php:163
 msgid "Light"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:162
+#: includes/Admin/Settings_Button_Tab.php:165
 msgid "Strong"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:163
-#: includes/Admin/Settings_Button_Tab.php:186
-#: includes/Admin/Settings_Button_Tab.php:236
+#: includes/Admin/Settings_Button_Tab.php:166
+#: includes/Admin/Settings_Button_Tab.php:192
+#: includes/Admin/Settings_Button_Tab.php:244
 msgid "Custom"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:166
+#: includes/Admin/Settings_Button_Tab.php:169
 msgid "Custom shadow"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:168
+#: includes/Admin/Settings_Button_Tab.php:171
 msgid "Offset X (px)"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:169
+#: includes/Admin/Settings_Button_Tab.php:172
 msgid "Offset Y (px)"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:170
+#: includes/Admin/Settings_Button_Tab.php:173
 msgid "Blur (px)"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:171
+#: includes/Admin/Settings_Button_Tab.php:174
 msgid "Spread (px)"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:173
+#: includes/Admin/Settings_Button_Tab.php:176
+#: includes/Admin/Settings_Statuses_Tab.php:26
 msgid "Color"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:175
+#: includes/Admin/Settings_Button_Tab.php:178
 msgid "Hex color (#rrggbb) or rgba(red, green, blue, opacity), for example rgba(0,0,0,0.25)."
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:180
+#: includes/Admin/Settings_Button_Tab.php:186
 msgid "Corner radius"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:185
+#: includes/Admin/Settings_Button_Tab.php:191
 msgid "Set by the shape"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:190
+#: includes/Admin/Settings_Button_Tab.php:196
 msgid "Radius (px)"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:197
-#: includes/Admin/Settings_Button_Tab.php:224
+#: includes/Admin/Settings_Button_Tab.php:204
+#: includes/Admin/Settings_Button_Tab.php:232
 msgid "Position on mobile"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:198
+#: includes/Admin/Settings_Button_Tab.php:205
 msgid "Use a different position on small screens (782 px wide or less)"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:205
+#: includes/Admin/Settings_Button_Tab.php:215
 msgid "Stacking order (z-index)"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:207
+#: includes/Admin/Settings_Button_Tab.php:217
 msgid "Raise it if a theme element covers the button."
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:230
+#: includes/Admin/Settings_Button_Tab.php:238
 msgid "Bottom right"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:231
+#: includes/Admin/Settings_Button_Tab.php:239
 msgid "Bottom left"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:232
+#: includes/Admin/Settings_Button_Tab.php:240
 msgid "Top right"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:233
+#: includes/Admin/Settings_Button_Tab.php:241
 msgid "Top left"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:234
+#: includes/Admin/Settings_Button_Tab.php:242
 msgid "Middle right"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:235
+#: includes/Admin/Settings_Button_Tab.php:243
 msgid "Middle left"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:244
+#: includes/Admin/Settings_Button_Tab.php:252
 msgid "Custom position"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:250
+#: includes/Admin/Settings_Button_Tab.php:258
 msgid "Distance from the"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:250
+#: includes/Admin/Settings_Button_Tab.php:258
 msgid "and from the"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:256
+#: includes/Admin/Settings_Button_Tab.php:264
 msgid "left edge"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:257
+#: includes/Admin/Settings_Button_Tab.php:265
 msgid "right edge"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:260
+#: includes/Admin/Settings_Button_Tab.php:268
 msgid "top edge"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:261
+#: includes/Admin/Settings_Button_Tab.php:269
 msgid "bottom edge"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:264
+#: includes/Admin/Settings_Button_Tab.php:272
 msgid "Horizontal distance"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:264
+#: includes/Admin/Settings_Button_Tab.php:272
 msgid "Vertical distance"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:266
+#: includes/Admin/Settings_Button_Tab.php:274
 msgid "Unit"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:270
+#: includes/Admin/Settings_Button_Tab.php:278
 msgid "Percentages are relative to the browser window (0 to 100)."
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:277
+#: includes/Admin/Settings_Button_Tab.php:285
 msgid "Preview"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:278
+#: includes/Admin/Settings_Button_Tab.php:286
 msgid "Preview screen size"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:279
+#: includes/Admin/Settings_Button_Tab.php:287
 msgid "Desktop"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:280
+#: includes/Admin/Settings_Button_Tab.php:288
 #: includes/Admin/Settings_Tabs.php:60
 msgid "Mobile"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:283
+#: includes/Admin/Settings_Button_Tab.php:291
 msgid "Updated as you change the settings below. The frame stands for a browser window; save to apply."
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:40
+#: includes/Admin/Settings_Page.php:43
 msgid "Visibility"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:41
+#: includes/Admin/Settings_Page.php:44
 msgid "Button"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:42
+#: includes/Admin/Settings_Page.php:45
 msgid "Dialog"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:43
+#: includes/Admin/Settings_Page.php:46
 msgid "Anti-bot"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:44
+#: includes/Admin/Settings_Page.php:47
 msgid "Notifications"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:45
+#: includes/Admin/Settings_Page.php:48
 msgid "Protection"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:46
+#: includes/Admin/Settings_Page.php:49
 msgid "Collected context"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:47
+#: includes/Admin/Settings_Page.php:50
 msgid "Data and privacy"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:48
+#: includes/Admin/Settings_Page.php:51
 msgid "Management"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:59
+#: includes/Admin/Settings_Page.php:52
+msgid "Statuses"
+msgstr ""
+
+#: includes/Admin/Settings_Page.php:63
 msgid "Sorry, you are not allowed to manage these settings."
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:67
+#: includes/Admin/Settings_Page.php:71
 msgid "Settings sections"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:127
+#: includes/Admin/Settings_Page.php:132
 msgid "Guests (not logged in) can send bug reports, but no anti-bot check is configured. Expect spam."
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:136
+#: includes/Admin/Settings_Page.php:141
 msgid "Configure an anti-bot provider"
+msgstr ""
+
+#: includes/Admin/Settings_Statuses_Tab.php:22
+msgid "Drag the rows to change the order of the Kanban columns and of the status lists. The original statuses keep their default name while their name is left empty. Reports with a \"Closed\" status are the ones the retention deletes (Data and privacy tab)."
+msgstr ""
+
+#: includes/Admin/Settings_Statuses_Tab.php:24
+msgid "Order"
+msgstr ""
+
+#: includes/Admin/Settings_Statuses_Tab.php:27
+#: includes/Admin/Settings_Statuses_Tab.php:93
+msgid "Closed"
+msgstr ""
+
+#: includes/Admin/Settings_Statuses_Tab.php:28
+msgid "Reports"
+msgstr ""
+
+#: includes/Admin/Settings_Statuses_Tab.php:29
+msgid "Actions"
+msgstr ""
+
+#: includes/Admin/Settings_Statuses_Tab.php:36
+msgid "Add a status"
+msgstr ""
+
+#: includes/Admin/Settings_Statuses_Tab.php:63
+msgid "Status name"
+msgstr ""
+
+#. translators: %d: number of reports that use the deleted status.
+#: includes/Admin/Settings_Statuses_Tab.php:73
+#, php-format
+msgid "Move its %d report to:"
+msgid_plural "Move its %d reports to:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Admin/Settings_Statuses_Tab.php:75
+msgid "Drag to reorder"
+msgstr ""
+
+#: includes/Admin/Settings_Statuses_Tab.php:86
+msgid "Status color"
+msgstr ""
+
+#: includes/Admin/Settings_Statuses_Tab.php:91
+msgid "Never"
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:17
@@ -824,7 +880,7 @@ msgid "Instructions"
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:83
-#: includes/Settings.php:148
+#: includes/Settings.php:160
 msgid "Describe what went wrong and what you expected to happen."
 msgstr ""
 
@@ -833,7 +889,7 @@ msgid "Privacy notice"
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:88
-#: includes/Settings.php:150
+#: includes/Settings.php:162
 msgid "Your report includes technical details about this page and your browser."
 msgstr ""
 
@@ -880,7 +936,7 @@ msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:117
 #: includes/Frontend/Assets.php:180
-#: includes/Privacy.php:56
+#: includes/Privacy.php:51
 msgid "Contact e-mail"
 msgstr ""
 
@@ -1193,7 +1249,7 @@ msgid "Too many reports in a short time. Please try again later."
 msgstr ""
 
 #: includes/Frontend/Assets.php:174
-#: includes/Rest/Reports_Controller.php:211
+#: includes/Report_Submission.php:66
 msgid "You are not allowed to send bug reports."
 msgstr ""
 
@@ -1289,15 +1345,15 @@ msgstr ""
 msgid "[%1$s] New bug #%2$d"
 msgstr ""
 
-#: includes/Mailer.php:37
+#: includes/Mailer.php:74
 msgid "Report"
 msgstr ""
 
-#: includes/Mailer.php:40
+#: includes/Mailer.php:77
 msgid "Reported by"
 msgstr ""
 
-#: includes/Mailer.php:42
+#: includes/Mailer.php:79
 msgid "Open the report"
 msgstr ""
 
@@ -1306,55 +1362,55 @@ msgstr ""
 msgid "Bug Spotter reports"
 msgstr ""
 
-#: includes/Privacy.php:49
+#: includes/Privacy.php:44
 msgid "Report number"
 msgstr ""
 
-#: includes/Privacy.php:59
+#: includes/Privacy.php:54
 msgid "Screenshot attached"
 msgstr ""
 
-#: includes/Privacy.php:60
+#: includes/Privacy.php:55
 msgid "Yes"
 msgstr ""
 
-#: includes/Privacy.php:60
+#: includes/Privacy.php:55
 msgid "No"
 msgstr ""
 
-#: includes/Privacy.php:65
+#: includes/Privacy.php:60
 msgid "Bug reports"
 msgstr ""
 
-#: includes/Privacy.php:66
+#: includes/Privacy.php:61
 msgid "Bug reports submitted from this site."
 msgstr ""
 
-#: includes/Privacy.php:97
+#: includes/Privacy.php:92
 msgid "Some bug reports could not be deleted."
 msgstr ""
 
-#: includes/Privacy.php:121
+#: includes/Privacy.php:116
 msgid "Purpose: this site lets visitors and users report bugs they meet while browsing. Reports are used only to find and fix those problems."
 msgstr ""
 
-#: includes/Privacy.php:122
+#: includes/Privacy.php:117
 msgid "Data collected: the description you write, the address of the page, technical context (browser, screen size, language, errors and failed requests seen by the page), an optional screenshot, an optional contact e-mail address (stored encrypted), your account if you are logged in, and a keyed hash of your IP address used only against abuse. Your IP address itself is never stored. Values typed into the site's own forms and fields (including passwords) are never collected; only the description and optional contact e-mail typed into the bug report form are stored."
 msgstr ""
 
-#: includes/Privacy.php:123
+#: includes/Privacy.php:118
 msgid "Anti-bot check: when an anti-bot provider is enabled (Cloudflare Turnstile, Google reCAPTCHA or hCaptcha), that provider receives your IP address and browser data when you send a report, under its own privacy policy."
 msgstr ""
 
-#: includes/Privacy.php:124
+#: includes/Privacy.php:119
 msgid "Retention: closed reports are deleted automatically after the retention period set by the site administrators; otherwise reports are kept until they are deleted."
 msgstr ""
 
-#: includes/Privacy.php:125
+#: includes/Privacy.php:120
 msgid "Legal basis: legitimate interest in maintaining and improving the site."
 msgstr ""
 
-#: includes/Privacy.php:126
+#: includes/Privacy.php:121
 msgid "Recipients: only the site administrators and the people they authorise to manage bug reports."
 msgstr ""
 
@@ -1362,62 +1418,62 @@ msgstr ""
 msgid "Visitor"
 msgstr ""
 
-#: includes/Rest/Reports_Controller.php:104
-msgid "Choose an anti-bot provider to test."
-msgstr ""
-
-#: includes/Rest/Reports_Controller.php:113
-msgid "The secret key is required."
-msgstr ""
-
-#: includes/Rest/Reports_Controller.php:133
-#: includes/Rest/Reports_Controller.php:226
-msgid "The anti-bot check failed."
-msgstr ""
-
-#: includes/Rest/Reports_Controller.php:183
-msgid "Bug reporting is disabled."
-msgstr ""
-
-#: includes/Rest/Reports_Controller.php:218
+#: includes/Report_Submission.php:72
 msgid "Too many reports. Please try again later."
 msgstr ""
 
+#: includes/Report_Submission.php:80
+#: includes/Rest/Settings_Controller.php:86
+msgid "The anti-bot check failed."
+msgstr ""
+
 #. translators: %s: maximum number of characters, for example "5,000".
-#: includes/Rest/Reports_Controller.php:233
+#: includes/Report_Submission.php:91
 #, php-format
 msgid "The description is required (%s characters maximum)."
 msgstr ""
 
-#: includes/Rest/Reports_Controller.php:241
+#: includes/Report_Submission.php:97
 msgid "The contact e-mail address is not valid."
 msgstr ""
 
-#: includes/Rest/Reports_Controller.php:248
+#: includes/Report_Submission.php:103
 msgid "The report context is too large."
 msgstr ""
 
-#: includes/Rest/Reports_Controller.php:284
-#: includes/Rest/Reports_Controller.php:335
+#: includes/Report_Submission.php:131
+msgid "The screenshot could not be uploaded."
+msgstr ""
+
+#: includes/Report_Submission.php:153
+#: includes/Rest/Reports_Controller.php:171
 msgid "The report could not be saved."
 msgstr ""
 
+#: includes/Rest/Reports_Controller.php:89
+msgid "Bug reporting is disabled."
+msgstr ""
+
 #. translators: %s: field name (status or priority)
-#: includes/Rest/Reports_Controller.php:327
+#: includes/Rest/Reports_Controller.php:163
 #, php-format
 msgid "Invalid value for \"%s\"."
 msgstr ""
 
-#: includes/Rest/Reports_Controller.php:332
+#: includes/Rest/Reports_Controller.php:168
 msgid "Nothing to update: send a status and/or a priority."
 msgstr ""
 
-#: includes/Rest/Reports_Controller.php:355
+#: includes/Rest/Reports_Controller.php:190
 msgid "Screenshot not found."
 msgstr ""
 
-#: includes/Rest/Reports_Controller.php:386
-msgid "The screenshot could not be uploaded."
+#: includes/Rest/Settings_Controller.php:57
+msgid "Choose an anti-bot provider to test."
+msgstr ""
+
+#: includes/Rest/Settings_Controller.php:66
+msgid "The secret key is required."
 msgstr ""
 
 #: includes/Screenshot_Store.php:113
@@ -1440,42 +1496,42 @@ msgstr ""
 msgid "%s (masked)"
 msgstr ""
 
-#: includes/Statuses.php:17
-msgid "New"
-msgstr ""
-
-#: includes/Statuses.php:19
-msgid "Confirmed"
-msgstr ""
-
-#: includes/Statuses.php:20
-msgid "In progress"
-msgstr ""
-
-#: includes/Statuses.php:21
-msgid "Fixed"
-msgstr ""
-
-#: includes/Statuses.php:22
-msgid "Won't fix"
-msgstr ""
-
-#: includes/Statuses.php:23
-msgid "Duplicate"
-msgstr ""
-
-#: includes/Statuses.php:32
+#: includes/Statuses.php:105
 msgid "Low"
 msgstr ""
 
-#: includes/Statuses.php:33
+#: includes/Statuses.php:106
 msgid "Normal"
 msgstr ""
 
-#: includes/Statuses.php:34
+#: includes/Statuses.php:107
 msgid "High"
 msgstr ""
 
-#: includes/Statuses.php:35
+#: includes/Statuses.php:108
 msgid "Critical"
+msgstr ""
+
+#: includes/Statuses.php:132
+msgid "New"
+msgstr ""
+
+#: includes/Statuses.php:136
+msgid "Confirmed"
+msgstr ""
+
+#: includes/Statuses.php:138
+msgid "In progress"
+msgstr ""
+
+#: includes/Statuses.php:140
+msgid "Fixed"
+msgstr ""
+
+#: includes/Statuses.php:142
+msgid "Won't fix"
+msgstr ""
+
+#: includes/Statuses.php:144
+msgid "Duplicate"
 msgstr ""

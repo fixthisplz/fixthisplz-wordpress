@@ -32,6 +32,11 @@ final class Settings_Sanitizer {
 			}
 		}
 
+		// The Statuses tab posts editor rows (keys made or kept server-side) rather than the stored list.
+		if ( array_key_exists( 'status_rows', $input ) ) {
+			$input['statuses'] = Status_Editor::from_post( $input['status_rows'], $input['status_moves'] ?? array() );
+		}
+
 		return self::validate( self::merge( $current, $input ) );
 	}
 

@@ -118,6 +118,16 @@ final class Reports_Repository {
 		return is_int( $rows ) && $rows > 0;
 	}
 
+	/** Moves every report of a deleted status $from to $to. */
+	public function reassign_status( string $from, string $to ): void {
+		global $wpdb;
+		$table = Installer::table();
+		$now   = self::now();
+		$wpdb->query( // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->prepare( "UPDATE {$table} SET status = %s, status_changed_at = %s, updated_at = %s WHERE status = %s", $to, $now, $now, $from )
+		);
+	}
+
 	public function delete( int $id ): bool {
 		global $wpdb;
 		$report = $this->find( $id );
