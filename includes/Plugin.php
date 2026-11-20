@@ -10,6 +10,7 @@ final class Plugin {
 		Installer::maybe_upgrade();
 		Settings::register_hooks();
 		Rest\Reports_Controller::register_hooks();
+		Rest\Settings_Controller::register_hooks();
 		Frontend\Assets::register_hooks();
 		Privacy::register_hooks();
 		Retention::register_hooks();

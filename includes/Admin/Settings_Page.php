@@ -3,12 +3,13 @@
 namespace Bug_Spotter\Admin;
 
 use Bug_Spotter\Settings;
+use Bug_Spotter\Settings_Sanitizer;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Bugs › Settings (spec 7): one Settings API option, one tab per block, one <form> per tab that posts only
- * that tab's fields. Settings::sanitize() merges the post on the saved settings, so the other tabs are kept.
+ * that tab's fields. Settings_Sanitizer::sanitize() merges the post on the saved settings, so the other tabs are kept.
  * Every checkbox posts a hidden "0" first and every list posts an empty marker first, so "all unchecked"
  * reaches the sanitizer as a value instead of being missing.
  */
@@ -27,7 +28,7 @@ final class Settings_Page {
 			Settings::OPTION,
 			array(
 				'type'              => 'array',
-				'sanitize_callback' => array( Settings::class, 'sanitize' ),
+				'sanitize_callback' => array( Settings_Sanitizer::class, 'sanitize' ),
 				'default'           => Settings::defaults(),
 				'show_in_rest'      => false,
 			)

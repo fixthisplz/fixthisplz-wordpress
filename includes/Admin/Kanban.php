@@ -62,7 +62,7 @@ final class Kanban {
 		if ( $total > $limit && $limit < self::MAX_LIMIT ) {
 			$args = self::current_limits();
 			$args[ $status . '_limit' ] = min( self::MAX_LIMIT, $limit + self::STEP );
-			$url  = Bugs_Page::page_url( array_merge( Bugs_Page::filter_query_args( $criteria ), array( 'view' => 'kanban' ), $args ) );
+			$url  = Bugs_Page::page_url( array_merge( Report_Query_Args::filter_query_args( $criteria ), array( 'view' => 'kanban' ), $args ) );
 			echo '<p class="bugspot-more"><a href="' . esc_url( $url ) . '">' . esc_html__( 'Show more', 'bug-spotter' ) . '</a></p>';
 		}
 		echo '</section>';

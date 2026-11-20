@@ -28,35 +28,9 @@ final class Mailer {
 		/* translators: 1: site name, 2: report number */
 		$subject = sprintf( __( '[%1$s] New bug #%2$d', 'bug-spotter' ), $blogname, $report_id );
 
-		$excerpt  = Report_Format::excerpt( (string) $report['description'], self::EXCERPT_LENGTH );
-		$reporter = Report_Format::reporter_label( $report );
-		$link     = admin_url( 'admin.php?page=bug-spotter&report=' . $report_id );
-		$page     = (string) $report['page_url'];
-
-		$labels = array(
-			'number'      => __( 'Report', 'bug-spotter' ),
-			'description' => __( 'Description', 'bug-spotter' ),
-			'page'        => __( 'Page', 'bug-spotter' ),
-			'reporter'    => __( 'Reported by', 'bug-spotter' ),
-			'screenshot'  => __( 'Screenshot', 'bug-spotter' ),
-			'link'        => __( 'Open the report', 'bug-spotter' ),
-		);
-
-		$capture = ! empty( $report['screenshot'] ) ? Screenshot_Store::capture_label( $report['context'] ) : '';
-
-		$text = $labels['number'] . ': #' . $report_id . "\n"
-			. $labels['description'] . ': ' . $excerpt . "\n"
-			. $labels['page'] . ': ' . $page . "\n"
-			. $labels['reporter'] . ': ' . $reporter . "\n"
-			. ( '' !== $capture ? $labels['screenshot'] . ': ' . $capture . "\n" : '' )
-			. $labels['link'] . ': ' . $link . "\n";
-
-		$html = '<p><strong>' . esc_html( $labels['number'] ) . ':</strong> #' . (int) $report_id . '</p>'
-			. '<p><strong>' . esc_html( $labels['description'] ) . ':</strong><br>' . nl2br( esc_html( $excerpt ) ) . '</p>'
-			. '<p><strong>' . esc_html( $labels['page'] ) . ':</strong> <a href="' . esc_url( $page ) . '">' . esc_html( $page ) . '</a></p>'
-			. '<p><strong>' . esc_html( $labels['reporter'] ) . ':</strong> ' . esc_html( $reporter ) . '</p>'
-			. ( '' !== $capture ? '<p><strong>' . esc_html( $labels['screenshot'] ) . ':</strong> ' . esc_html( $capture ) . '</p>' : '' )
-			. '<p><a href="' . esc_url( $link ) . '">' . esc_html( $labels['link'] ) . '</a></p>';
+		$values = self::values( $report_id, $report );
+		$text   = self::build_text( $values );
+		$html   = self::build_html( $values );
 
 		$attachments = array();
 		if ( ! empty( $notifications['attach_screenshot'] ) && is_string( $report['screenshot'] ?? null ) ) {
@@ -75,5 +49,56 @@ final class Mailer {
 		} finally {
 			remove_action( 'phpmailer_init', $alt );
 		}
+	}
+
+	/**
+	 * The values shown in the e-mail, raw (each format escapes its own way).
+	 *
+	 * @param array<string,mixed> $report
+	 * @return array{number:string,description:string,page:string,reporter:string,screenshot:string,link:string}
+	 */
+	private static function values( int $report_id, array $report ): array {
+		return array(
+			'number'      => '#' . $report_id,
+			'description' => Report_Format::excerpt( (string) $report['description'], self::EXCERPT_LENGTH ),
+			'page'        => (string) $report['page_url'],
+			'reporter'    => Report_Format::reporter_label( $report ),
+			'screenshot'  => ! empty( $report['screenshot'] ) ? Screenshot_Store::capture_label( $report['context'] ) : '',
+			'link'        => admin_url( 'admin.php?page=bug-spotter&report=' . $report_id ),
+		);
+	}
+
+	/** @return array<string,string> */
+	private static function labels(): array {
+		return array(
+			'number'      => __( 'Report', 'bug-spotter' ),
+			'description' => __( 'Description', 'bug-spotter' ),
+			'page'        => __( 'Page', 'bug-spotter' ),
+			'reporter'    => __( 'Reported by', 'bug-spotter' ),
+			'screenshot'  => __( 'Screenshot', 'bug-spotter' ),
+			'link'        => __( 'Open the report', 'bug-spotter' ),
+		);
+	}
+
+	/** Plain-text alternative body. @param array<string,string> $v */
+	private static function build_text( array $v ): string {
+		$l = self::labels();
+		return $l['number'] . ': ' . $v['number'] . "\n"
+			. $l['description'] . ': ' . $v['description'] . "\n"
+			. $l['page'] . ': ' . $v['page'] . "\n"
+			. $l['reporter'] . ': ' . $v['reporter'] . "\n"
+			. ( '' !== $v['screenshot'] ? $l['screenshot'] . ': ' . $v['screenshot'] . "\n" : '' )
+			. $l['link'] . ': ' . $v['link'] . "\n";
+	}
+
+	/** HTML body. @param array<string,string> $v */
+	private static function build_html( array $v ): string {
+		$l = self::labels();
+		return '<p><strong>' . esc_html( $l['number'] ) . ':</strong> ' . esc_html( $v['number'] ) . '</p>'
+			. '<p><strong>' . esc_html( $l['description'] ) . ':</strong><br>' . nl2br( esc_html( $v['description'] ) ) . '</p>'
+			. '<p><strong>' . esc_html( $l['page'] ) . ':</strong> <a href="' . esc_url( $v['page'] ) . '">' . esc_html( $v['page'] ) . '</a></p>'
+			. '<p><strong>' . esc_html( $l['reporter'] ) . ':</strong> ' . esc_html( $v['reporter'] ) . '</p>'
+			. ( '' !== $v['screenshot'] ? '<p><strong>' . esc_html( $l['screenshot'] ) . ':</strong> ' . esc_html( $v['screenshot'] ) . '</p>' : '' )
+			. '<p><a href="' . esc_url( $v['link'] ) . '">' . esc_html( $l['link'] ) . '</a></p>';
 	}
 }

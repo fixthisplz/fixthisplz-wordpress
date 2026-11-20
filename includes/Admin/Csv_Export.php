@@ -21,7 +21,7 @@ final class Csv_Export {
 	public static function url( array $filters, string $orderby = 'created_at', string $order = 'DESC' ): string {
 		$args = array_merge(
 			array( 'action' => self::ACTION ),
-			Bugs_Page::filter_query_args( $filters ),
+			Report_Query_Args::filter_query_args( $filters ),
 			array( 'orderby' => $orderby, 'order' => strtolower( $order ) )
 		);
 		return wp_nonce_url( add_query_arg( $args, admin_url( 'admin-post.php' ) ), self::ACTION );
@@ -34,8 +34,8 @@ final class Csv_Export {
 		}
 
 		$request                 = wp_unslash( $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- verified above.
-		$filters                 = Bugs_Page::read_filters( $request );
-		list( $orderby, $order ) = Bugs_Page::read_sort( $request );
+		$filters                 = Report_Query_Args::read_filters( $request );
+		list( $orderby, $order ) = Report_Query_Args::read_sort( $request );
 
 		// Another plugin's notice or a stray buffer would corrupt the BOM / first row.
 		if ( headers_sent() ) {

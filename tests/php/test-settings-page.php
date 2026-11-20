@@ -3,6 +3,7 @@
 use Bug_Spotter\Admin\Settings_Page;
 use Bug_Spotter\Installer;
 use Bug_Spotter\Settings;
+use Bug_Spotter\Settings_Sanitizer;
 
 /**
  * What a browser would post for the first <form> of $html: every named input/select/textarea, in document
@@ -190,7 +191,7 @@ settings_page_test(
 		assert_true( str_contains( $css, '#bugspot-button{' ), 'preview uses the front-end CSS' );
 		assert_true( str_contains( $css, 'min-width:52px' ), 'pill shape applied' );
 		assert_true( ! str_contains( $css, 'body{' ), 'no CSS injection' );
-		$expected = Bug_Spotter\Frontend\Button_Style::css( Settings::sanitize( array( 'button' => array( 'shape' => 'pill', 'color_bg' => 'red;}body{x:y' ) ) )['button'] );
+		$expected = Bug_Spotter\Frontend\Button_Style::css( Settings_Sanitizer::sanitize( array( 'button' => array( 'shape' => 'pill', 'color_bg' => 'red;}body{x:y' ) ) )['button'] );
 		assert_same( $expected, $css, 'preview CSS is exactly the front-end CSS' );
 	}
 );

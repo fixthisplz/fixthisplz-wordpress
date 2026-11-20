@@ -74,8 +74,8 @@ final class List_Table extends \WP_List_Table {
 
 	public function prepare_items(): void {
 		$request = wp_unslash( $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only filters.
-		$this->filters = Bugs_Page::read_filters( $request );
-		list( $orderby, $order ) = Bugs_Page::read_sort( $request );
+		$this->filters = Report_Query_Args::read_filters( $request );
+		list( $orderby, $order ) = Report_Query_Args::read_sort( $request );
 
 		$per_page = (int) $this->get_items_per_page( Bugs_Page::PER_PAGE_OPTION, Bugs_Page::DEFAULT_PER_PAGE );
 		$result   = ( new Reports_Repository() )->query(
@@ -108,7 +108,7 @@ final class List_Table extends \WP_List_Table {
 			$base['status'] = $status;
 			return sprintf(
 				'<a href="%s"%s>%s <span class="count">(%d)</span></a>',
-				esc_url( Bugs_Page::page_url( Bugs_Page::filter_query_args( $base ) ) ),
+				esc_url( Bugs_Page::page_url( Report_Query_Args::filter_query_args( $base ) ) ),
 				$current === $status ? ' class="current" aria-current="page"' : '',
 				esc_html( $label ),
 				$count
@@ -140,7 +140,7 @@ final class List_Table extends \WP_List_Table {
 		$excerpt = Report_Format::excerpt( $text, self::EXCERPT_LENGTH );
 		$view    = Bugs_Page::page_url( array( 'report' => $id ) );
 		$delete  = wp_nonce_url(
-			Bugs_Page::page_url( array_merge( Bugs_Page::filter_query_args( $this->filters ), array( 'bugspot_action' => 'delete', 'bug' => $id ) ) ),
+			Bugs_Page::page_url( array_merge( Report_Query_Args::filter_query_args( $this->filters ), array( 'bugspot_action' => 'delete', 'bug' => $id ) ) ),
 			'bugspot_delete_' . $id
 		);
 

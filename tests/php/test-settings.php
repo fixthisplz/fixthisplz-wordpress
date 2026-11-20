@@ -1,6 +1,7 @@
 <?php
 
 use Bug_Spotter\Settings;
+use Bug_Spotter\Settings_Sanitizer;
 use Bug_Spotter\Statuses;
 
 /** Registers a test whose body runs with the real bugspot_settings option saved and restored. */
@@ -37,7 +38,7 @@ settings_test(
 	'settings: sanitize rejects css injection in colors',
 	function () {
 		delete_option( Settings::OPTION );
-		$out = Settings::sanitize( array( 'button' => array( 'color_bg' => 'red;}body{display:none', 'color_fg' => '#abc', 'color_bg_hover' => 'rgba(0,0,0,0.5)' ) ) );
+		$out = Settings_Sanitizer::sanitize( array( 'button' => array( 'color_bg' => 'red;}body{display:none', 'color_fg' => '#abc', 'color_bg_hover' => 'rgba(0,0,0,0.5)' ) ) );
 		assert_same( '#d63638', $out['button']['color_bg'] );
 		assert_same( '#abc', $out['button']['color_fg'] );
 		assert_same( 'rgba(0,0,0,0.5)', $out['button']['color_bg_hover'] );
@@ -48,7 +49,7 @@ settings_test(
 	'settings: sanitize clamps limits',
 	function () {
 		delete_option( Settings::OPTION );
-		$out = Settings::sanitize( array( 'protection' => array( 'per_hour' => -5, 'per_day' => 99999999 ), 'captcha' => array( 'v3_threshold' => 7 ) ) );
+		$out = Settings_Sanitizer::sanitize( array( 'protection' => array( 'per_hour' => -5, 'per_day' => 99999999 ), 'captcha' => array( 'v3_threshold' => 7 ) ) );
 		assert_same( 1, $out['protection']['per_hour'] );
 		assert_same( 10000, $out['protection']['per_day'] );
 		assert_same( 1.0, (float) $out['captcha']['v3_threshold'] );
@@ -59,7 +60,7 @@ settings_test(
 	'settings: sanitize drops unknown roles and keeps admin manager',
 	function () {
 		delete_option( Settings::OPTION );
-		$out = Settings::sanitize(
+		$out = Settings_Sanitizer::sanitize(
 			array(
 				'visibility' => array( 'roles' => array( 'editor', 'nope' ) ),
 				'management' => array( 'roles' => array( 'editor', 'ghost' ) ),
@@ -74,8 +75,8 @@ settings_test(
 	'settings: sanitize keeps existing secret when blank',
 	function () {
 		update_option( Settings::OPTION, array( 'captcha' => array( 'secret_key' => 'abc123' ) ) );
-		$out = Settings::sanitize( array( 'captcha' => array( 'secret_key' => '', 'site_key' => 'pub' ) ) );
-		$new = Settings::sanitize( array( 'captcha' => array( 'secret_key' => 'zzz' ) ) );
+		$out = Settings_Sanitizer::sanitize( array( 'captcha' => array( 'secret_key' => '', 'site_key' => 'pub' ) ) );
+		$new = Settings_Sanitizer::sanitize( array( 'captcha' => array( 'secret_key' => 'zzz' ) ) );
 		delete_option( Settings::OPTION );
 		assert_same( 'abc123', $out['captcha']['secret_key'] );
 		assert_same( 'pub', $out['captcha']['site_key'] );
@@ -87,9 +88,9 @@ settings_test(
 	'settings: sanitize never returns empty formats',
 	function () {
 		delete_option( Settings::OPTION );
-		$out = Settings::sanitize( array( 'dialog' => array( 'formats' => array( 'exe' ) ) ) );
+		$out = Settings_Sanitizer::sanitize( array( 'dialog' => array( 'formats' => array( 'exe' ) ) ) );
 		assert_same( array( 'md', 'json', 'txt' ), $out['dialog']['formats'] );
-		$out = Settings::sanitize( array( 'dialog' => array( 'formats' => array( 'json' ) ) ) );
+		$out = Settings_Sanitizer::sanitize( array( 'dialog' => array( 'formats' => array( 'json' ) ) ) );
 		assert_same( array( 'json' ), $out['dialog']['formats'] );
 	}
 );
@@ -98,7 +99,7 @@ settings_test(
 	'settings: sanitize merges onto saved settings and treats posted 0 as false',
 	function () {
 		update_option( Settings::OPTION, array( 'enabled' => true, 'button' => array( 'shape' => 'pill' ) ) );
-		$out = Settings::sanitize( array( 'visibility' => array( 'guests' => '0' ) ) );
+		$out = Settings_Sanitizer::sanitize( array( 'visibility' => array( 'guests' => '0' ) ) );
 		delete_option( Settings::OPTION );
 		assert_same( true, $out['enabled'] );
 		assert_same( 'pill', $out['button']['shape'] );
@@ -110,7 +111,7 @@ settings_test(
 	'settings: sanitize parses selectors, urls, emails and enums',
 	function () {
 		delete_option( Settings::OPTION );
-		$out = Settings::sanitize(
+		$out = Settings_Sanitizer::sanitize(
 			array(
 				'context'       => array( 'sensitive_selectors' => "#a\n\n .b " ),
 				'visibility'    => array( 'excluded_url_prefixes' => array( '/shop' ) ),
@@ -123,8 +124,8 @@ settings_test(
 		assert_same( 'a@example.com, b@example.com', $out['notifications']['recipients'] );
 		assert_same( 'circle', $out['button']['shape'] );
 		assert_same( 'l', $out['button']['size'] );
-		assert_same( Settings::sanitize( array() ), Settings::sanitize( 'garbage' ) );
-		assert_same( 'circle', Settings::sanitize( 'garbage' )['button']['shape'] );
+		assert_same( Settings_Sanitizer::sanitize( array() ), Settings_Sanitizer::sanitize( 'garbage' ) );
+		assert_same( 'circle', Settings_Sanitizer::sanitize( 'garbage' )['button']['shape'] );
 	}
 );
 
@@ -133,7 +134,7 @@ settings_test(
 	function () {
 		delete_option( Settings::OPTION );
 		assert_same( 'Report a bug', Settings::text( 'dialog.title' ) );
-		$out = Settings::sanitize( array( 'dialog' => array( 'title' => ' Hi ' ) ) );
+		$out = Settings_Sanitizer::sanitize( array( 'dialog' => array( 'title' => ' Hi ' ) ) );
 		update_option( Settings::OPTION, $out );
 		$t = Settings::text( 'dialog.title' );
 		delete_option( Settings::OPTION );
@@ -156,7 +157,7 @@ settings_test(
 settings_test(
 	'settings: invalid numeric values fall back to the field default, not the minimum',
 	function () {
-		$out = Settings::sanitize(
+		$out = Settings_Sanitizer::sanitize(
 			array(
 				'button' => array(
 					'shadow_custom' => array( 'y' => '', 'x' => 'abc', 'blur' => array( 1 ) ),
@@ -170,7 +171,7 @@ settings_test(
 		assert_same( 12, $out['button']['shadow_custom']['blur'] );
 		assert_same( 99999, $out['button']['z_index'] );
 		assert_same( 8, $out['button']['radius_px'] );
-		$out = Settings::sanitize( array( 'button' => array( 'z_index' => -5, 'radius_px' => 999 ) ) );
+		$out = Settings_Sanitizer::sanitize( array( 'button' => array( 'z_index' => -5, 'radius_px' => 999 ) ) );
 		assert_same( 0, $out['button']['z_index'] );
 		assert_same( 200, $out['button']['radius_px'] );
 	}
@@ -179,7 +180,7 @@ settings_test(
 settings_test(
 	'settings: custom position handles missing and invalid units',
 	function () {
-		$out = Settings::sanitize( array( 'button' => array( 'position' => array( 'anchor' => 'custom', 'x' => '12', 'x_unit' => 'em', 'y' => 'zz' ) ) ) );
+		$out = Settings_Sanitizer::sanitize( array( 'button' => array( 'position' => array( 'anchor' => 'custom', 'x' => '12', 'x_unit' => 'em', 'y' => 'zz' ) ) ) );
 		$pos = $out['button']['position'];
 		assert_same( 'custom', $pos['anchor'] );
 		assert_same( 12, $pos['x'] );
@@ -193,7 +194,7 @@ settings_test(
 	'settings: array input on scalar fields is ignored and keeps the stored secret',
 	function () {
 		update_option( Settings::OPTION, array( 'captcha' => array( 'secret_key' => 'keepme' ) ) );
-		$out = Settings::sanitize(
+		$out = Settings_Sanitizer::sanitize(
 			array(
 				'captcha' => array( 'secret_key' => array( 'x' ), 'site_key' => array( 'y' ) ),
 				'dialog'  => array( 'instructions' => array( 'z' ), 'privacy_url' => array( 'u' ), 'title' => array( 't' ) ),
@@ -215,14 +216,14 @@ settings_test(
 		$d = Settings::defaults();
 		assert_same( 'tab', $d['dialog']['capture_method'] );
 		assert_same( false, $d['dialog']['mask_capture'] );
-		assert_same( 'dom', Settings::sanitize( array( 'dialog' => array( 'capture_method' => 'dom' ) ) )['dialog']['capture_method'] );
+		assert_same( 'dom', Settings_Sanitizer::sanitize( array( 'dialog' => array( 'capture_method' => 'dom' ) ) )['dialog']['capture_method'] );
 		foreach ( array( 'window', '', 'TAB', 3, array( 'dom' ), null ) as $absurd ) {
-			$out = Settings::sanitize( array( 'dialog' => array( 'capture_method' => $absurd ) ) );
+			$out = Settings_Sanitizer::sanitize( array( 'dialog' => array( 'capture_method' => $absurd ) ) );
 			assert_same( 'tab', $out['dialog']['capture_method'], 'absurd capture_method: ' . var_export( $absurd, true ) );
 		}
-		assert_same( true, Settings::sanitize( array( 'dialog' => array( 'mask_capture' => '1' ) ) )['dialog']['mask_capture'] );
-		assert_same( false, Settings::sanitize( array( 'dialog' => array( 'mask_capture' => '0' ) ) )['dialog']['mask_capture'] );
-		assert_same( false, Settings::sanitize( array( 'dialog' => array( 'title' => 'x' ) ) )['dialog']['mask_capture'], 'absent stays off' );
+		assert_same( true, Settings_Sanitizer::sanitize( array( 'dialog' => array( 'mask_capture' => '1' ) ) )['dialog']['mask_capture'] );
+		assert_same( false, Settings_Sanitizer::sanitize( array( 'dialog' => array( 'mask_capture' => '0' ) ) )['dialog']['mask_capture'] );
+		assert_same( false, Settings_Sanitizer::sanitize( array( 'dialog' => array( 'title' => 'x' ) ) )['dialog']['mask_capture'], 'absent stays off' );
 	}
 );
 

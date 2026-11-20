@@ -35,49 +35,6 @@ final class Bugs_Page {
 		return max( 1, min( Reports_Repository::MAX_PER_PAGE, (int) $value ) );
 	}
 
-	/**
-	 * Sanitised list filters from an already-unslashed request array.
-	 *
-	 * @return array{status:string,priority:string,from:string,to:string,search:string}
-	 */
-	public static function read_filters( array $src ): array {
-		$text = static fn( string $key ): string => isset( $src[ $key ] ) && is_string( $src[ $key ] ) ? $src[ $key ] : '';
-		$date = static function ( string $value ): string {
-			$parsed = \DateTimeImmutable::createFromFormat( '!Y-m-d', $value );
-			return ( $parsed && $parsed->format( 'Y-m-d' ) === $value ) ? $value : '';
-		};
-
-		$status   = sanitize_key( $text( 'status' ) );
-		$priority = sanitize_key( $text( 'priority' ) );
-
-		return array(
-			'status'   => Statuses::is_valid( $status ) ? $status : '',
-			'priority' => Statuses::is_valid_priority( $priority ) ? $priority : '',
-			'from'     => $date( $text( 'from' ) ),
-			'to'       => $date( $text( 'to' ) ),
-			'search'   => trim( sanitize_text_field( $text( 's' ) ) ),
-		);
-	}
-
-	/** @return array{0:string,1:string} orderby (created_at|priority) and order (ASC|DESC). */
-	public static function read_sort( array $src ): array {
-		$orderby = isset( $src['orderby'] ) && 'priority' === $src['orderby'] ? 'priority' : 'created_at';
-		$order   = isset( $src['order'] ) && is_string( $src['order'] ) && 'asc' === strtolower( $src['order'] ) ? 'ASC' : 'DESC';
-		return array( $orderby, $order );
-	}
-
-	/** Filters as URL parameters (empty ones dropped). */
-	public static function filter_query_args( array $filters ): array {
-		$args = array(
-			'status'   => $filters['status'] ?? '',
-			'priority' => $filters['priority'] ?? '',
-			'from'     => $filters['from'] ?? '',
-			'to'       => $filters['to'] ?? '',
-			's'        => $filters['search'] ?? '',
-		);
-		return array_filter( $args, static fn( $v ) => '' !== $v );
-	}
-
 	public static function page_url( array $args = array() ): string {
 		return add_query_arg( array_merge( array( 'page' => Menu::SLUG ), $args ), admin_url( 'admin.php' ) );
 	}
@@ -159,8 +116,8 @@ final class Bugs_Page {
 
 	/** Query args that keep the user's filters, sort, view and page after an action. */
 	private static function redirect_args( array $request ): array {
-		list( $orderby, $order ) = self::read_sort( $request );
-		$args                    = self::filter_query_args( self::read_filters( $request ) );
+		list( $orderby, $order ) = Report_Query_Args::read_sort( $request );
+		$args                    = Report_Query_Args::filter_query_args( Report_Query_Args::read_filters( $request ) );
 		if ( isset( $request['orderby'] ) ) {
 			$args['orderby'] = $orderby;
 			$args['order']   = strtolower( $order );
@@ -195,7 +152,7 @@ final class Bugs_Page {
 			return;
 		}
 
-		$filters = self::read_filters( $query );
+		$filters = Report_Query_Args::read_filters( $query );
 		$kanban  = isset( $query['view'] ) && 'kanban' === $query['view'];
 
 		echo '<div class="wrap bugspot-admin"><h1 class="wp-heading-inline">' . esc_html__( 'Bugs', 'bug-spotter' ) . '</h1>';
@@ -237,7 +194,7 @@ final class Bugs_Page {
 	}
 
 	private static function render_tabs( array $filters, bool $kanban ): void {
-		$args = self::filter_query_args( $filters );
+		$args = Report_Query_Args::filter_query_args( $filters );
 		echo '<nav class="nav-tab-wrapper">';
 		printf(
 			'<a href="%s" class="nav-tab%s">%s</a>',
@@ -264,7 +221,7 @@ final class Bugs_Page {
 			echo '<input type="hidden" name="status" value="' . esc_attr( $filters['status'] ) . '">';
 		}
 		if ( isset( $query['orderby'] ) ) {
-			list( $orderby, $order ) = self::read_sort( $query );
+			list( $orderby, $order ) = Report_Query_Args::read_sort( $query );
 			echo '<input type="hidden" name="orderby" value="' . esc_attr( $orderby ) . '">';
 			echo '<input type="hidden" name="order" value="' . esc_attr( strtolower( $order ) ) . '">';
 		}
@@ -281,7 +238,7 @@ final class Bugs_Page {
 		echo '<label class="screen-reader-text" for="bugspot-search">' . esc_html__( 'Search reports', 'bug-spotter' ) . '</label>';
 		echo '<input type="search" id="bugspot-search" name="s" value="' . esc_attr( $filters['search'] ) . '" placeholder="' . esc_attr__( 'Search description or URL', 'bug-spotter' ) . '"> ';
 		echo '<button type="submit" class="button">' . esc_html__( 'Filter', 'bug-spotter' ) . '</button> ';
-		echo '<a class="button" href="' . esc_url( Csv_Export::url( $filters, ...self::read_sort( $query ) ) ) . '">' . esc_html__( 'Export CSV', 'bug-spotter' ) . '</a>';
+		echo '<a class="button" href="' . esc_url( Csv_Export::url( $filters, ...Report_Query_Args::read_sort( $query ) ) ) . '">' . esc_html__( 'Export CSV', 'bug-spotter' ) . '</a>';
 		echo '</div>';
 	}
 }

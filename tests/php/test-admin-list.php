@@ -3,6 +3,7 @@
 use Bug_Spotter\Admin\Bugs_Page;
 use Bug_Spotter\Admin\Csv_Export;
 use Bug_Spotter\Admin\Menu;
+use Bug_Spotter\Admin\Report_Query_Args;
 use Bug_Spotter\Reports_Repository;
 
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -205,7 +206,7 @@ bugspot_test(
 bugspot_test(
 	'admin-list: read_filters_sanitises_input',
 	function () {
-		$f = Bugs_Page::read_filters(
+		$f = Report_Query_Args::read_filters(
 			array(
 				'status'   => 'bogus',
 				'priority' => 'high',
