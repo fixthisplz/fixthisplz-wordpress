@@ -180,14 +180,14 @@ msgstr "Erreurs de la console"
 
 #: includes/Admin/Detail_Page.php:106
 #: includes/Admin/Settings_Tabs.php:265
-#: includes/Frontend/Assets.php:182
+#: includes/Frontend/Assets.php:190
 msgid "Failed requests"
 msgstr "Requêtes en échec"
 
 #: includes/Admin/Detail_Page.php:107
 #: includes/Admin/Settings_Tabs.php:98
 #: includes/Admin/Settings_Tabs.php:215
-#: includes/Frontend/Assets.php:189
+#: includes/Frontend/Assets.php:197
 #: includes/Mailer.php:78
 msgid "Screenshot"
 msgstr "Capture d’écran"
@@ -855,7 +855,7 @@ msgid "Let reporters attach a screenshot of the page"
 msgstr "Permettre de joindre une capture d’écran de la page"
 
 #: includes/Admin/Settings_Tabs.php:117
-#: includes/Frontend/Assets.php:180
+#: includes/Frontend/Assets.php:188
 #: includes/Privacy.php:51
 msgid "Contact e-mail"
 msgstr "E-mail de contact"
@@ -1126,112 +1126,112 @@ msgstr "Aperçu de la capture d’écran"
 msgid "Retake"
 msgstr "Refaire"
 
-#: includes/Frontend/Assets.php:164
+#: includes/Frontend/Assets.php:172
 msgid "Technical details sent with your report"
 msgstr "Détails techniques joints à votre signalement"
 
-#: includes/Frontend/Assets.php:165
+#: includes/Frontend/Assets.php:173
 msgid "Privacy policy"
 msgstr "Politique de confidentialité"
 
-#: includes/Frontend/Assets.php:166
+#: includes/Frontend/Assets.php:174
 msgid "Report sent"
 msgstr "Signalement envoyé"
 
 #. translators: %s: report number, for example #42.
-#: includes/Frontend/Assets.php:168
+#: includes/Frontend/Assets.php:176
 #, php-format
 msgid "Report %s sent."
 msgstr "Signalement %s envoyé."
 
-#: includes/Frontend/Assets.php:169
+#: includes/Frontend/Assets.php:177
 msgid "Download"
 msgstr "Télécharger"
 
-#: includes/Frontend/Assets.php:170
+#: includes/Frontend/Assets.php:178
 msgid "Download the screenshot"
 msgstr "Télécharger la capture d’écran"
 
-#: includes/Frontend/Assets.php:171
+#: includes/Frontend/Assets.php:179
 msgid "Done"
 msgstr "Terminer"
 
-#: includes/Frontend/Assets.php:172
+#: includes/Frontend/Assets.php:180
 msgid "The report could not be sent. Your text was kept; you can try again or download it."
 msgstr "Le signalement n’a pas pu être envoyé. Votre texte a été conservé ; vous pouvez réessayer ou le télécharger."
 
-#: includes/Frontend/Assets.php:173
+#: includes/Frontend/Assets.php:181
 msgid "Too many reports in a short time. Please try again later."
 msgstr "Trop de signalements en peu de temps. Veuillez réessayer plus tard."
 
-#: includes/Frontend/Assets.php:174
+#: includes/Frontend/Assets.php:182
 #: includes/Report_Submission.php:66
 msgid "You are not allowed to send bug reports."
 msgstr "Vous n’êtes pas autorisé à envoyer des signalements."
 
-#: includes/Frontend/Assets.php:175
+#: includes/Frontend/Assets.php:183
 msgid "The anti-spam check failed. Please try again."
 msgstr "La vérification anti-spam a échoué. Veuillez réessayer."
 
-#: includes/Frontend/Assets.php:176
+#: includes/Frontend/Assets.php:184
 msgid "The bug reporter could not be loaded."
 msgstr "Le module de signalement de bugs n’a pas pu être chargé."
 
 #. translators: %s: short description of the highlighted element, for example "button – Send".
-#: includes/Frontend/Assets.php:178
+#: includes/Frontend/Assets.php:186
 #, php-format
 msgid "Highlighted: %s. Press Enter to select it, or the Up arrow for its parent."
 msgstr "Surligné : %s. Appuyez sur Entrée pour le sélectionner, ou sur la flèche haut pour choisir son parent."
 
-#: includes/Frontend/Assets.php:179
+#: includes/Frontend/Assets.php:187
 msgid "Bug report"
 msgstr "Signalement de bug"
 
-#: includes/Frontend/Assets.php:181
+#: includes/Frontend/Assets.php:189
 msgid "Console"
 msgstr "Console"
 
-#: includes/Frontend/Assets.php:183
+#: includes/Frontend/Assets.php:191
 msgid "Generated at"
 msgstr "Généré le"
 
-#: includes/Frontend/Assets.php:184
+#: includes/Frontend/Assets.php:192
 msgid "Taking the screenshot…"
 msgstr "Capture d’écran en cours…"
 
-#: includes/Frontend/Assets.php:185
+#: includes/Frontend/Assets.php:193
 msgid "Please enter a valid e-mail address, or leave the field empty."
 msgstr "Veuillez saisir une adresse e-mail valide, ou laisser le champ vide."
 
-#: includes/Frontend/Assets.php:190
+#: includes/Frontend/Assets.php:198
 msgid "The screenshot could not be taken. You can send the report without it."
 msgstr "La capture d’écran n’a pas pu être réalisée. Vous pouvez envoyer le signalement sans elle."
 
-#: includes/Frontend/Assets.php:191
+#: includes/Frontend/Assets.php:199
 msgid "Screenshot cancelled: you can send the report without a screenshot."
 msgstr "Capture annulée : vous pouvez envoyer le signalement sans capture."
 
-#: includes/Frontend/Assets.php:197
+#: includes/Frontend/Assets.php:205
 msgid "The screenshot is too large to be sent. Remove it or retake it, then try again."
 msgstr "La capture d’écran est trop volumineuse pour être envoyée. Retirez-la ou refaites-la, puis réessayez."
 
-#: includes/Frontend/Assets.php:198
+#: includes/Frontend/Assets.php:206
 msgid "The report was refused. Please check the form and try again."
 msgstr "Le signalement a été refusé. Veuillez vérifier le formulaire et réessayer."
 
-#: includes/Frontend/Assets.php:199
+#: includes/Frontend/Assets.php:207
 msgid "Bug reporting is currently disabled on this site."
 msgstr "Le signalement de bugs est actuellement désactivé sur ce site."
 
-#: includes/Frontend/Assets.php:200
+#: includes/Frontend/Assets.php:208
 msgid "The anti-spam check is unavailable right now. Please try again later."
 msgstr "La vérification anti-spam est indisponible pour le moment. Veuillez réessayer plus tard."
 
-#: includes/Frontend/Assets.php:201
+#: includes/Frontend/Assets.php:209
 msgid "Please complete the anti-spam check."
 msgstr "Veuillez compléter la vérification anti-spam."
 
-#: includes/Frontend/Assets.php:202
+#: includes/Frontend/Assets.php:210
 msgid "This page cannot be reported: its address is not a web address."
 msgstr "Cette page ne peut pas être signalée : son adresse n’est pas une adresse web."
 
@@ -1439,12 +1439,12 @@ msgstr "Masquer les champs saisis et les zones sensibles dans la capture"
 msgid "On a real capture, masking applies only when the visitor shares this tab."
 msgstr "Sur une capture réelle, le masquage ne s’applique que si le visiteur partage cet onglet."
 
-#: includes/Frontend/Assets.php:186
+#: includes/Frontend/Assets.php:194
 #: includes/Screenshot_Store.php:136
 msgid "Real capture"
 msgstr "Vraie capture"
 
-#: includes/Frontend/Assets.php:187
+#: includes/Frontend/Assets.php:195
 #: includes/Screenshot_Store.php:136
 msgid "Page reconstruction"
 msgstr "Reconstruction de la page"
@@ -1455,7 +1455,7 @@ msgstr "Reconstruction de la page"
 msgid "%s (masked)"
 msgstr "%s (masquée)"
 
-#: includes/Frontend/Assets.php:188
+#: includes/Frontend/Assets.php:196
 msgid "masked"
 msgstr "masquée"
 
@@ -1472,7 +1472,7 @@ msgid "The screenshot is too large (%s MB maximum)."
 msgstr "La capture d’écran est trop volumineuse (%s Mo maximum)."
 
 #. translators: %s: maximum screenshot size in megabytes, for example "5".
-#: includes/Frontend/Assets.php:194
+#: includes/Frontend/Assets.php:202
 #, php-format
 msgid "The screenshot is too large (%s MB maximum). You can send the report without it."
 msgstr "La capture d’écran est trop volumineuse (%s Mo maximum). Vous pouvez envoyer le signalement sans elle."
@@ -1589,3 +1589,35 @@ msgstr "Utilisé pour le menu et les titres des pages de gestion. Laisser vide p
 #: includes/Admin/Settings_Management_Tab.php:30
 msgid "Show the number of new reports next to the menu name"
 msgstr "Afficher le nombre de nouveaux signalements à côté du nom du menu"
+
+#: includes/Frontend/Assets.php:164
+msgid "Annotate"
+msgstr "Annoter"
+
+#: includes/Frontend/Assets.php:165
+msgid "Rectangle"
+msgstr "Rectangle"
+
+#: includes/Frontend/Assets.php:166
+msgid "Arrow"
+msgstr "Flèche"
+
+#: includes/Frontend/Assets.php:167
+msgid "Hide"
+msgstr "Masquer"
+
+#: includes/Frontend/Assets.php:168
+msgid "Undo last"
+msgstr "Annuler le dernier"
+
+#: includes/Frontend/Assets.php:169
+msgid "Clear all"
+msgstr "Tout effacer"
+
+#: includes/Frontend/Assets.php:170
+msgid "Apply"
+msgstr "Appliquer"
+
+#: includes/Frontend/Assets.php:171
+msgid "The annotations could not be applied."
+msgstr "Les annotations n'ont pas pu être appliquées."

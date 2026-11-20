@@ -61,7 +61,21 @@
 #bugspot-dialog-root .bugspot-alert{padding:10px 12px;border-left:4px solid var(--bugspot-danger);border-radius:4px;background:var(--bugspot-surface)}
 #bugspot-dialog-root .bugspot-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}
 #bugspot-dialog-root .bugspot-success-text{font-size:16px}
+
+/* Annotation editor (annotate-editor.js): full screen over the page, the screenshot fitted in the stage. */
+#bugspot-annotator{position:fixed;inset:0;z-index:1999999995;display:block;background:var(--bugspot-bg)}
+#bugspot-annotator .bugspot-annot{display:flex;flex-direction:column;height:100%}
+#bugspot-annotator .bugspot-annot-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid var(--bugspot-border)}
+#bugspot-annotator .bugspot-annot-actions{justify-content:flex-end;border-top:1px solid var(--bugspot-border);border-bottom:0}
+#bugspot-annotator .bugspot-row{display:flex;flex-wrap:wrap;gap:8px}
+#bugspot-annotator .bugspot-btn[aria-pressed="true"]{background:var(--bugspot-accent);border-color:var(--bugspot-accent);color:var(--bugspot-accent-fg)}
+#bugspot-annotator .bugspot-annot-stage{position:relative;flex:1 1 auto;min-height:0;background:var(--bugspot-surface)}
+#bugspot-annotator .bugspot-annot-fit{position:absolute;inset:12px;display:flex;align-items:center;justify-content:center}
+#bugspot-annotator .bugspot-annot-canvas{display:block;max-width:none;box-shadow:0 0 0 1px var(--bugspot-border);touch-action:none;cursor:crosshair;user-select:none;-webkit-user-select:none}
 @media (max-width:600px){
+	#bugspot-annotator .bugspot-annot-bar{padding:8px}
+	#bugspot-annotator .bugspot-annot-actions .bugspot-btn{flex:1 1 auto}
+	#bugspot-annotator .bugspot-annot-fit{inset:6px}
 	#bugspot-dialog-root{padding:0;align-items:stretch}
 	#bugspot-dialog-root .bugspot-dialog{width:100%;max-height:none;height:100%;border-radius:0}
 	#bugspot-dialog-root .bugspot-actions .bugspot-btn{flex:1 1 auto}

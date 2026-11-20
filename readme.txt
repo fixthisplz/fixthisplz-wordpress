@@ -23,6 +23,7 @@ Everything is built natively for WordPress: PHP and hooks, a dedicated database 
 * Accessible modal dialog: description, optional contact e-mail for guests, optional screenshot with preview, privacy notice, and a "Technical details sent with your report" panel that shows exactly what is sent.
 * Two screenshot methods: a real capture of the browser tab (exact image; the browser asks the visitor for permission), or a reconstruction of the page (no permission prompt, may differ slightly from the screen). Phones and browsers without screen sharing always use the reconstruction.
 * Optional masking of typed fields and sensitive areas in the screenshot.
+* Screenshot annotation before sending: rectangles, arrows and hidden areas, drawn with a mouse, a finger or a pen; undo, clear all, cancel or apply.
 * Download of the report as Markdown, JSON or plain text, plus the screenshot, built in the browser.
 * Bugs menu with a filterable and sortable list (status, priority, period, search), bulk actions, CSV export, a Kanban board with drag and drop, and a detail screen. The menu name, the list sub-menu name and the menu position can be changed.
 * Configurable statuses: name, color, order (also the order of the Kanban columns) and a "Closed" flag; add your own or delete one, moving its reports to another status. Defaults: New, Seen, Confirmed, In progress, Fixed, Won't fix, Duplicate. Priorities: Low, Normal, High, Critical.
@@ -121,6 +122,9 @@ Values typed in form fields and passwords are never written into the report. Ele
 The plugin adds suggested text to your privacy policy (Settings › Privacy), and registers a personal data exporter and eraser. Closed reports (by default Fixed, Won't fix and Duplicate: every status marked "Closed") can be deleted automatically after a number of months of your choice.
 
 == Changelog ==
+
+= 1.1.0 =
+* Screenshot annotation: before sending, the visitor can draw rectangles and arrows on the screenshot, or hide an area, and undo them at any time.
 
 = 1.0.0 =
 * First public release: floating button with live preview, element picker, accessible report dialog, optional screenshot (real tab capture or page reconstruction, optional masking), report downloads, list and Kanban board, detail screen, CSV export, configurable statuses, menu name and position, e-mail notification, anti-bot providers and rate limits, privacy exporter and eraser, automatic purge of closed reports, French translation.

@@ -41,9 +41,10 @@ export function buildDialog({ t, dlg, askEmail, allowScreenshot }) {
 	const shotBox = make('input', { id: id('shot'), type: 'checkbox', class: 'bugspot-checkbox' });
 	const shotStatus = make('p', { class: 'bugspot-shot-status', role: 'status', 'aria-live': 'polite' });
 	const shotImage = make('img', { class: 'bugspot-shot-image', alt: t('screenshotPreview') });
+	const annotateButton = make('button', { type: 'button', class: 'bugspot-btn', text: t('annotate') });
 	const retakeButton = make('button', { type: 'button', class: 'bugspot-btn', text: t('retakeScreenshot') });
 	const removeButton = make('button', { type: 'button', class: 'bugspot-btn', text: t('removeScreenshot') });
-	const shotPreview = make('div', { class: 'bugspot-shot-preview', hidden: true }, [shotImage, make('div', { class: 'bugspot-row' }, [retakeButton, removeButton])]);
+	const shotPreview = make('div', { class: 'bugspot-shot-preview', hidden: true }, [shotImage, make('div', { class: 'bugspot-row' }, [annotateButton, retakeButton, removeButton])]);
 
 	const contextCode = make('pre', { class: 'bugspot-context-json', tabindex: '0' });
 	const honeypot = make('input', { type: 'text', name: 'website', id: id('website'), tabindex: '-1', autocomplete: 'off', 'aria-hidden': 'true' });
@@ -103,7 +104,7 @@ export function buildDialog({ t, dlg, askEmail, allowScreenshot }) {
 
 	return {
 		root, panel, title, closeButton, elementSummary, changeButton, description, counter, descriptionError, email, emailError,
-		shotBox, shotStatus, shotImage, shotPreview, retakeButton, removeButton, contextCode, honeypot, captchaBox,
+		shotBox, shotStatus, shotImage, shotPreview, annotateButton, retakeButton, removeButton, contextCode, honeypot, captchaBox,
 		formError, errorDownloads, cancelButton, submitButton, form, success, successText, successDownloads, doneButton,
 	};
 }
