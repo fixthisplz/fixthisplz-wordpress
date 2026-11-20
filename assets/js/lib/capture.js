@@ -111,10 +111,10 @@ function fillSensitive(node) {
 	}
 }
 
-/** Runs on the cloned tree, never on the page. Exported for tests. */
+/** Runs on the cloned tree, never on the page; returns the boxes it filled. Exported for tests. */
 export function maskClone(root, sensitiveSelectors = []) {
 	if (!root || root.nodeType !== 1) {
-		return;
+		return [];
 	}
 	const selectors = ['[data-bugspot-sensitive]', ...(Array.isArray(sensitiveSelectors) ? sensitiveSelectors : [])].filter(
 		(s) => typeof s === 'string' && s.trim() !== ''
@@ -137,6 +137,7 @@ export function maskClone(root, sensitiveSelectors = []) {
 		stack.push(...Array.from(node.childNodes || []));
 	}
 	sensitive.forEach(fillSensitive);
+	return sensitive;
 }
 
 const parentOf = (node) => (node.parentNode && node.parentNode.nodeType === 11 ? node.parentNode.host : node.parentNode);
@@ -244,6 +245,69 @@ function stripResources(clone) {
 	}
 }
 
+const PSEUDO_ATTR = 'data-bugspot-pseudo';
+const MASKED_ATTR = 'data-bugspot-masked';
+const PSEUDO_ELEMENTS = ['::before', '::after'];
+// What the library copies right: a plain string. It writes any value as `content: '<value minus every quote>'`,
+// so url("data:…"), alt text ("x" / ""), counter() or attr() would be drawn as literal text.
+const isCopiedRight = (value) => !value || value === 'none' || value === 'normal' || /^"[^"'\\]*"$/.test(value);
+
+/**
+ * Puts back, on the clone, the exact computed `content` of the ::before/::after the library mangled. enter() gets
+ * every source element the filter keeps, leave() every clone from onCloneEachNode (it comes after the subtree, so a
+ * stack pairs them); apply() writes the overrides once the tree is masked, into the library's own <style> (a <style>
+ * inside the cloned tree doubles the embedding time when it holds images). <iframe> elements are never paired: the
+ * library replaces them with the frame's document, whose clones belong to another document.
+ */
+export function createPseudoRepair({ ownerDocument, getContent = (node, pseudo) => getComputedStyle(node, pseudo).content }) {
+	const sources = [];
+	const repairs = [];
+	const pairs = (node) => node.nodeType === 1 && node.ownerDocument === ownerDocument && node.tagName !== 'IFRAME';
+	return {
+		enter(node) {
+			if (pairs(node)) {
+				sources.push(node);
+			}
+		},
+		leave(clone) {
+			if (!pairs(clone) || !sources.length) {
+				return; // the root (never filtered) or a frame document
+			}
+			const source = sources.pop();
+			if (clone.getAttribute('class') === source.getAttribute('class')) {
+				return; // the library added no pseudo-element class: nothing copied
+			}
+			for (const pseudo of PSEUDO_ELEMENTS) {
+				const value = getContent(source, pseudo);
+				if (!isCopiedRight(value)) {
+					clone.setAttribute(PSEUDO_ATTR, String(repairs.length));
+					repairs.push({ clone, pseudo, value });
+				}
+			}
+		},
+		/**
+		 * @param hidden clones filled as sensitive: no pseudo-element of theirs, or of their descendants, shows
+		 * anything (an explicit pseudo color would otherwise escape the inherited transparent text).
+		 */
+		apply(styleElement, hidden = []) {
+			if (!styleElement || (!repairs.length && !hidden.length)) {
+				return;
+			}
+			const masked = (clone) => hidden.some((h) => h === clone || (h.contains && h.contains(clone)));
+			const css = repairs.map(({ clone, pseudo, value }) => {
+				const id = clone.getAttribute(PSEUDO_ATTR);
+				return `[${PSEUDO_ATTR}="${id}"]${pseudo}{content:${masked(clone) ? '""' : value} !important}`;
+			});
+			if (hidden.length) {
+				hidden.forEach((h) => h.setAttribute(MASKED_ATTR, ''));
+				const all = PSEUDO_ELEMENTS.flatMap((p) => [`[${MASKED_ATTR}]${p}`, `[${MASKED_ATTR}] *${p}`]);
+				css.push(`${all.join(',')}{content:"" !important}`);
+			}
+			styleElement.appendChild(ownerDocument.createTextNode(`\n${css.join('\n')}\n`));
+		},
+	};
+}
+
 function pageBackground() {
 	for (const el of [document.documentElement, document.body]) {
 		if (!el) continue;
@@ -273,6 +337,7 @@ export async function captureVisible({ vendorUrl, sensitiveSelectors = [], debug
 	const scrollY = window.scrollY;
 	const cut = createCutFilter({ ...viewportTree(width, height), ownerDocument: document });
 	const bodyTransforms = new WeakMap();
+	const pseudo = createPseudoRepair({ ownerDocument: document });
 
 	const context = await createContext(document.documentElement, {
 		width,
@@ -284,8 +349,15 @@ export async function captureVisible({ vendorUrl, sensitiveSelectors = [], debug
 		backgroundColor: pageBackground(),
 		// Inner scroll containers keep their position (the document's own scroll is handled below).
 		features: { restoreScrollPosition: true },
-		filter: (node) => cut.filter(node),
+		filter: (node) => {
+			const keep = cut.filter(node);
+			if (keep) {
+				pseudo.enter(node);
+			}
+			return keep;
+		},
 		onCloneEachNode: (clone) => {
+			pseudo.leave(clone);
 			if (clone.nodeType !== 1) {
 				return;
 			}
@@ -297,10 +369,11 @@ export async function captureVisible({ vendorUrl, sensitiveSelectors = [], debug
 			}
 		},
 		onCloneNode: (clone) => {
-			maskClone(clone, sensitiveSelectors);
+			const filled = maskClone(clone, sensitiveSelectors);
 			if (clone.nodeType !== 1) {
 				return;
 			}
+			pseudo.apply(context.svgStyleElement, filled); // filled with the copied pseudo-elements by now
 			// restoreScrollPosition also translated <body> by the page scroll: undo it, then shift the cloned
 			// document with margins instead (a transform would make fixed elements scroll away).
 			for (const child of Array.from(clone.children)) {
