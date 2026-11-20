@@ -71,7 +71,7 @@ function rest_user( string $role ): int {
 
 /** Clears the limiter counters of the CLI client IP (also from the in-memory object cache). */
 function rest_reset_limiter(): void {
-	$short = substr( Bug_Spotter\Secret::hmac( Bug_Spotter\Client_Ip::get( '' ) ), 0, 16 );
+	$short = substr( Bug_Spotter\Secret::hmac( Bug_Spotter\Rate_Limiter::bucket( Bug_Spotter\Client_Ip::get( '' ) ) ), 0, 16 );
 	delete_transient( 'bugspot_rl_h_' . $short );
 	delete_transient( 'bugspot_rl_d_' . $short );
 	// Rows created inside a rolled-back test transaction can linger in the in-memory options cache.
@@ -166,7 +166,7 @@ bugspot_test(
 				);
 				assert_same( $before, (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . Installer::table() ) );
 				assert_same( 0, count( $sent ), 'no mail for a honeypot hit' );
-				assert_true( false === get_transient( 'bugspot_rl_h_' . substr( Bug_Spotter\Secret::hmac( Bug_Spotter\Client_Ip::get( '' ) ), 0, 16 ) ), 'honeypot must not be counted' );
+				assert_true( false === get_transient( 'bugspot_rl_h_' . substr( Bug_Spotter\Secret::hmac( Bug_Spotter\Rate_Limiter::bucket( Bug_Spotter\Client_Ip::get( '' ) ) ), 0, 16 ) ), 'honeypot must not be counted' );
 			}
 		);
 	}
@@ -531,7 +531,7 @@ bugspot_test(
 					$res = rest_do_request( $req );
 					assert_same( 413, $res->get_status() );
 					assert_same( 'bugspot_too_large', $res->as_error()->get_error_code() );
-					$short = substr( Bug_Spotter\Secret::hmac( Bug_Spotter\Client_Ip::get( '' ) ), 0, 16 );
+					$short = substr( Bug_Spotter\Secret::hmac( Bug_Spotter\Rate_Limiter::bucket( Bug_Spotter\Client_Ip::get( '' ) ) ), 0, 16 );
 					assert_true( false === get_transient( 'bugspot_rl_h_' . $short ), 'not counted by the limiter' );
 					// A normal body with a big CONTENT_LENGTH is not mistaken for a dropped one.
 					assert_same( 201, rest_post()->get_status() );

@@ -20,6 +20,21 @@ final class Rate_Limiter {
 		$this->per_day  = $per_day;
 	}
 
+	/**
+	 * Address the limiter counts by: an IPv6 visitor usually owns a whole /64, so IPv6 is grouped by /64.
+	 * IPv4 and IPv4-mapped IPv6 (counted as the embedded IPv4) are kept per address. Expects a valid IP.
+	 */
+	public static function bucket( string $ip ): string {
+		$bin = inet_pton( $ip );
+		if ( false === $bin || 16 !== strlen( $bin ) ) {
+			return $ip;
+		}
+		if ( str_starts_with( $bin, str_repeat( "\0", 10 ) . "\xff\xff" ) ) {
+			return (string) inet_ntop( substr( $bin, 12 ) );
+		}
+		return inet_ntop( substr( $bin, 0, 8 ) . str_repeat( "\0", 8 ) ) . '/64';
+	}
+
 	/** True when allowed (and counted); false when either window is exhausted (nothing counted). */
 	public function attempt( string $ip_hash ): bool {
 		$short = substr( $ip_hash, 0, 16 );

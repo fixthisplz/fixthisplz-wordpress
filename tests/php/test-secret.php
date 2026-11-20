@@ -78,15 +78,20 @@ bugspot_test(
 );
 
 bugspot_test(
-	'secret: key_prefers_constant_when_defined',
+	'secret: constant_value_is_hashed_into_the_key',
 	function () {
-		$filter = static fn() => 'wp-config-secret';
-		add_filter( 'bugspot_secret_constant', $filter );
-		try {
-			assert_same( hash( 'sha256', 'wp-config-secret', true ), Secret::key() );
-		} finally {
-			remove_filter( 'bugspot_secret_constant', $filter );
-		}
-		assert_true( hash( 'sha256', 'wp-config-secret', true ) !== Secret::key(), 'constant must not leak past the filter' );
+		assert_same( hash( 'sha256', 'wp-config-secret', true ), Secret::from_constant( 'wp-config-secret' ) );
+		assert_same( null, Secret::from_constant( '' ), 'empty constant falls back to the option' );
+		assert_same( null, Secret::from_constant( 123 ), 'non-string constant falls back to the option' );
+		assert_same( null, Secret::from_constant( null ), 'undefined constant falls back to the option' );
+	}
+);
+
+bugspot_test(
+	'secret: key_uses_the_constant_when_defined_else_the_option',
+	function () {
+		$key           = Secret::key();
+		$from_constant = defined( 'BUGSPOT_SECRET' ) ? Secret::from_constant( BUGSPOT_SECRET ) : null;
+		assert_same( $from_constant ?? base64_decode( (string) get_option( Secret::OPTION ), true ), $key );
 	}
 );

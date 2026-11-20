@@ -212,7 +212,7 @@ final class Reports_Controller {
 
 		$protection = $settings['protection'];
 		$ip         = Client_Ip::get( (string) $protection['proxy_header'] );
-		$ip_hash    = Secret::hmac( $ip );
+		$ip_hash    = Secret::hmac( Rate_Limiter::bucket( $ip ) );
 		if ( ! ( new Rate_Limiter( (int) $protection['per_hour'], (int) $protection['per_day'] ) )->attempt( $ip_hash ) ) {
 			return new \WP_Error( 'bugspot_rate_limited', __( 'Too many reports. Please try again later.', 'bug-spotter' ), array( 'status' => 429 ) );
 		}

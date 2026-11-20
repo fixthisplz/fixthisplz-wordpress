@@ -331,6 +331,19 @@ bugspot_test(
 );
 
 bugspot_test(
+	'rate_limiter_bucket_groups_ipv6_by_64',
+	function () {
+		$bucket = Rate_Limiter::bucket( '2001:db8:1:2:aaaa::1' );
+		assert_same( '2001:db8:1:2::/64', $bucket );
+		assert_same( $bucket, Rate_Limiter::bucket( '2001:db8:1:2:ffff:eeee:dddd:cccc' ), 'same /64 shares the bucket' );
+		assert_true( $bucket !== Rate_Limiter::bucket( '2001:db8:1:3::1' ), 'another /64 has its own bucket' );
+		assert_same( '203.0.113.7', Rate_Limiter::bucket( '203.0.113.7' ), 'IPv4 is unchanged' );
+		assert_same( '203.0.113.7', Rate_Limiter::bucket( '::ffff:203.0.113.7' ), 'IPv4-mapped IPv6 counts as its IPv4' );
+		assert_true( Rate_Limiter::bucket( '::ffff:203.0.113.8' ) !== Rate_Limiter::bucket( '::ffff:203.0.113.7' ), 'mapped addresses are not pooled' );
+	}
+);
+
+bugspot_test(
 	'client_ip_xff_uses_rightmost_valid_entry',
 	function () {
 		$saved = array(

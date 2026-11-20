@@ -14,10 +14,9 @@ final class Secret {
 
 	/** Raw 32-byte key: BUGSPOT_SECRET (hashed) if defined, otherwise a generated option. */
 	public static function key(): string {
-		// The filter exists so tests can exercise the constant path (a real constant cannot be undefined).
-		$constant = apply_filters( 'bugspot_secret_constant', defined( 'BUGSPOT_SECRET' ) ? BUGSPOT_SECRET : null );
-		if ( is_string( $constant ) && '' !== $constant ) {
-			return hash( 'sha256', $constant, true );
+		$from_constant = self::from_constant( defined( 'BUGSPOT_SECRET' ) ? BUGSPOT_SECRET : null );
+		if ( null !== $from_constant ) {
+			return $from_constant;
 		}
 
 		$stored = get_option( self::OPTION, '' );
@@ -29,6 +28,11 @@ final class Secret {
 		$raw = random_bytes( SODIUM_CRYPTO_SECRETBOX_KEYBYTES );
 		update_option( self::OPTION, base64_encode( $raw ), false );
 		return $raw;
+	}
+
+	/** 32-byte key derived from the BUGSPOT_SECRET value; null when it is not a non-empty string. */
+	public static function from_constant( mixed $value ): ?string {
+		return is_string( $value ) && '' !== $value ? hash( 'sha256', $value, true ) : null;
 	}
 
 	/** base64( nonce . secretbox ) with a fresh random nonce per call. */

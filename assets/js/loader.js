@@ -1,4 +1,4 @@
-/* Bug Spotter loader: diagnostics buffers + floating button. Classic script, no dependencies. */
+/* Bug Spotter loader: diagnostics buffers + button. Classic script. */
 (function () {
 	'use strict';
 	var w = window;
@@ -13,12 +13,12 @@
 	var store = (globalThis[key] = globalThis[key] || { console: [], network: [] });
 	var ownUrl = String(cfg.restUrl || '');
 
-	/* Minimal mirror of lib/redact.js (same rules, same order; truncation last). */
+	/* Mirror of lib/redact.js: same rules, same order, truncation last. */
 	function text(s, max) {
 		s = String(s)
 			.replace(/\bBearer\s+\S+/gi, 'Bearer [jeton]')
 			.replace(/\beyJ[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*/g, '[jeton]')
-			.replace(/[\w.+%-]{1,64}@[\w-]{1,63}(?:\.[\w-]{1,63}){1,20}/g, '[email]')
+			.replace(/[\p{L}\p{N}\p{Mn}\p{Mc}\p{Pc}.+%-]{1,64}@[\p{L}\p{N}\p{Mn}\p{Mc}\p{Pc}-]{1,63}(?:\.[\p{L}\p{N}\p{Mn}\p{Mc}\p{Pc}-]{1,63}){1,20}/gu, '[email]')
 			.replace(/[A-Za-z0-9_-]{32,}/g, '[jeton]');
 		return Array.from(s).slice(0, max).join('');
 	}
@@ -27,9 +27,7 @@
 		var out;
 		try {
 			var p = new URL(String(u), location.href);
-			p.hash = '';
-			p.username = '';
-			p.password = '';
+			p.hash = p.username = p.password = '';
 			p.searchParams.forEach(function (v, k) { p.searchParams.set(k, '…'); });
 			out = decodeURI(p.href);
 		} catch (e) {
@@ -39,6 +37,7 @@
 	}
 
 	function push(list, entry) {
+		entry.at = new Date().toISOString();
 		list.push(entry);
 		if (list.length > LIMIT) { list.shift(); }
 	}
@@ -46,22 +45,21 @@
 	function describe(a) {
 		if (a instanceof Error) { return a.name + ': ' + a.message; }
 		if (typeof a === 'string') { return a; }
-		try { return JSON.stringify(a); } catch (e) { /* circular */ }
+		try { return JSON.stringify(a); } catch (e) {}
 		try { return String(a); } catch (e) { return '[unserializable]'; }
 	}
 
-	function addConsole(level, message) {
-		try {
-			push(store.console, { level: level, message: text(message, 500), at: new Date().toISOString() });
-		} catch (e) { /* never break the page */ }
+	/* Never throws into the page; parts joined like console output. */
+	function addConsole(level, parts) {
+		try { push(store.console, { level: level, message: text(Array.prototype.map.call(parts, describe).join(' '), 500) }); } catch (e) {}
 	}
 
 	function addNetwork(method, target, status) {
 		try {
 			var raw = String(target);
 			if (ownUrl && raw.indexOf(ownUrl) === 0) { return; }
-			push(store.network, { method: String(method || 'GET').toUpperCase().slice(0, 16), url: url(raw), status: status, at: new Date().toISOString() });
-		} catch (e) { /* never break the page */ }
+			push(store.network, { method: String(method || 'GET').toUpperCase().slice(0, 16), url: url(raw), status: status });
+		} catch (e) {}
 	}
 
 	if (collect.console) {
@@ -72,7 +70,8 @@
 			console[level] = function () {
 				if (!busy) {
 					busy = true;
-					try { addConsole(level, Array.prototype.map.call(arguments, describe).join(' ')); } catch (e) { /* never throw into the page */ } finally { busy = false; }
+					addConsole(level, arguments);
+					busy = false;
 				}
 				return original.apply(this, arguments);
 			};
@@ -80,10 +79,10 @@
 		w.addEventListener('error', function (e) {
 			if (e.target && e.target !== w) { return; }
 			var where = e.filename ? ' (' + url(e.filename) + ':' + e.lineno + ')' : '';
-			addConsole('error', (e.message || 'Script error') + where);
+			addConsole('error', [(e.message || 'Script error') + where]);
 		});
 		w.addEventListener('unhandledrejection', function (e) {
-			try { addConsole('error', 'Unhandled rejection: ' + describe(e.reason)); } catch (err) { /* ignore */ }
+			addConsole('error', ['Unhandled rejection:', e.reason]);
 		});
 	}
 
@@ -98,9 +97,9 @@
 					var method = (init && init.method) || (input && input.method) || 'GET';
 					promise.then(
 						function (r) { if (r && r.status >= 400) { addNetwork(method, target, r.status); } },
-						function (err) { if (!err || (err.name !== 'AbortError' && err.name !== 'TimeoutError')) { addNetwork(method, target, 0); } }
+						function (err) { if (!/^(Abort|Timeout)Error$/.test(err && err.name)) { addNetwork(method, target, 0); } }
 					);
-				} catch (e) { /* never break the page */ }
+				} catch (e) {}
 				return promise;
 			};
 		}

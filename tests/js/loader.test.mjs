@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
+import { redactText } from '../../assets/js/lib/redact.js';
 
 const SOURCE = readFileSync(new URL('../../assets/js/loader.js', import.meta.url), 'utf8');
 
@@ -35,6 +36,33 @@ test('loader does not log aborted or timed-out fetches', async () => {
 		['http://cdn.test/timeout', { failWith: 'TimeoutError' }],
 	];
 	assert.deepEqual(await failedRequests(calls), []);
+});
+
+/** Runs the loader with console capture on, logs each message through console.error, returns the stored messages. */
+function loggedMessages(messages) {
+	const context = vm.createContext({ console: { error() {}, warn() {} }, addEventListener() {} });
+	context.window = context;
+	context.document = { readyState: 'loading', addEventListener() {} };
+	context.bugSpotterConfig = { collect: { console: true } };
+	vm.runInContext(SOURCE, context);
+	for (const message of messages) {
+		context.console.error(message);
+	}
+	return Array.from(vm.runInContext("globalThis[Symbol.for('bugspot.diagnostics')].console", context), (entry) => entry.message);
+}
+
+test('loader redacts console messages exactly like lib/redact.js', () => {
+	const samples = [
+		'failed for jean.dupont@example.test',
+		'failed for jérôme.dupont@example.test',
+		'émilie@example.test',
+		'contact@société.test',
+		'jean+bugs@example.test',
+		'/api/users/jean%40example.test',
+		'Bearer abc.def eyJa.b.c ' + 'a'.repeat(40),
+	];
+	assert.deepEqual(loggedMessages(samples), samples.map((s) => redactText(s, 500)));
+	assert.deepEqual(loggedMessages(['jérôme.dupont@example.test']), ['[email]']);
 });
 
 test('loader stays within its size budget', () => {
