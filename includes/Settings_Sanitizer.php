@@ -120,6 +120,7 @@ final class Settings_Sanitizer {
 			'context'       => self::validate_context( $s['context'] ),
 			'data'          => self::validate_data( $s['data'], $d['data'] ),
 			'management'    => self::validate_management( $s['management'] ),
+			'statuses'      => Statuses::sanitize( $s['statuses'] ),
 		);
 	}
 
@@ -237,15 +238,22 @@ final class Settings_Sanitizer {
 		return is_string( $v ) && 1 === preg_match( '/^dashicons-[a-z0-9-]+$/', $v ) ? $v : $default;
 	}
 
+	/** Strict #rgb / #rrggbb, trimmed; null for anything else (safe in inline CSS). @param mixed $v */
+	public static function hex_color( $v ): ?string {
+		$v = is_string( $v ) ? trim( $v ) : '';
+		return 1 === preg_match( '/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/', $v ) ? $v : null;
+	}
+
 	/** Strict #rgb / #rrggbb / rgba(r,g,b,a); anything else falls back to the default (no CSS injection). @param mixed $v */
 	private static function color( $v, string $default ): string {
+		$hex = self::hex_color( $v );
+		if ( null !== $hex ) {
+			return $hex;
+		}
 		if ( ! is_string( $v ) ) {
 			return $default;
 		}
 		$v = trim( $v );
-		if ( 1 === preg_match( '/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/', $v ) ) {
-			return $v;
-		}
 		if ( 1 === preg_match( '/^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(0|1|0?\.\d{1,3}|1\.0{1,3})\s*\)$/', $v, $m )
 			&& (int) $m[1] <= 255 && (int) $m[2] <= 255 && (int) $m[3] <= 255 ) {
 			return $v;

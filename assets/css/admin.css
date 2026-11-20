@@ -10,9 +10,7 @@
 .bugspot-priority-low{background:#f0f6fc;border-color:#c5d9ed}
 .bugspot-priority-high{background:#fcf0e1;border-color:#e6c28b;color:#704d00}
 .bugspot-priority-critical{background:#fcf0f1;border-color:#e0a0a6;color:#8a2424;font-weight:600}
-.bugspot-status-new{background:#e5f1ff;border-color:#9ec2e6;color:#0a4b78;font-weight:600}
-.bugspot-status-fixed{background:#edfaef;border-color:#a3d6ab;color:#0a5c1f}
-.bugspot-status-wont_fix,.bugspot-status-duplicate{color:#646970}
+.bugspot-status{background:color-mix(in srgb,var(--bugspot-status) 10%,#fff);border-color:color-mix(in srgb,var(--bugspot-status) 30%,#fff);color:color-mix(in srgb,var(--bugspot-status) 75%,#000)}
 .bugspot-detail .bugspot-pairs{border-collapse:collapse;width:100%}
 .bugspot-detail .bugspot-pairs th{width:130px;text-align:left;vertical-align:top;padding:4px 8px 4px 0;font-weight:600}
 .bugspot-detail .bugspot-pairs td,.bugspot-detail .bugspot-wrap{word-break:break-word}

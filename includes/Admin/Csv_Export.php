@@ -76,7 +76,6 @@ final class Csv_Export {
 			)
 		);
 
-		$statuses   = Statuses::all();
 		$priorities = Statuses::priorities();
 		$page       = 1;
 		$sent       = 0;
@@ -89,7 +88,7 @@ final class Csv_Export {
 					array(
 						(string) (int) $item['id'],
 						null !== $time ? wp_date( 'Y-m-d H:i:s', $time ) : '',
-						$statuses[ $item['status'] ] ?? (string) $item['status'],
+						Statuses::label( (string) $item['status'] ),
 						$priorities[ $item['priority'] ] ?? (string) $item['priority'],
 						(string) $item['page_url'],
 						Report_Format::reporter_label( $item ),

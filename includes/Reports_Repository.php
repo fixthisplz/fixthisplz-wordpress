@@ -72,7 +72,8 @@ final class Reports_Repository {
 		$data = array();
 		if ( array_key_exists( 'status', $fields ) ) {
 			$status = (string) $fields['status'];
-			if ( ! Statuses::is_valid( $status ) ) {
+			// A status unknown to the settings may be kept, never newly set.
+			if ( $status !== $current['status'] && ! Statuses::is_valid( $status ) ) {
 				return false;
 			}
 			$data['status'] = $status;
@@ -185,7 +186,7 @@ final class Reports_Repository {
 		return array_map( array( self::class, 'hydrate' ), is_array( $rows ) ? $rows : array() );
 	}
 
-	/** @return array<string,int> One entry per status key (0 when empty); the `status` filter is ignored. */
+	/** @return array<string,int> One entry per status key in order (0 when empty), then stored keys unknown to the settings; the `status` filter is ignored. */
 	public function count_by_status( array $args ): array {
 		global $wpdb;
 		$table = Installer::table();
@@ -194,9 +195,7 @@ final class Reports_Repository {
 		$rows   = $wpdb->get_results( "SELECT status, COUNT(*) AS n FROM {$table} {$where} GROUP BY status", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$counts = array_fill_keys( array_keys( Statuses::all() ), 0 );
 		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
-			if ( isset( $counts[ $row['status'] ] ) ) {
-				$counts[ $row['status'] ] = (int) $row['n'];
-			}
+			$counts[ $row['status'] ] = (int) $row['n'];
 		}
 		return $counts;
 	}
@@ -219,15 +218,16 @@ final class Reports_Repository {
 	/** Deletes closed reports whose last status change is older than $months months (and their screenshots). */
 	public function purge_closed_older_than( int $months ): int {
 		global $wpdb;
-		if ( $months <= 0 ) {
+		$closed = Statuses::closed();
+		if ( $months <= 0 || ! $closed ) {
 			return 0;
 		}
 		$table  = Installer::table();
 		$cutoff = ( new \DateTimeImmutable( 'now', new \DateTimeZone( 'UTC' ) ) )->modify( '-' . $months . ' months' )->format( 'Y-m-d H:i:s' );
-		$in     = implode( ',', array_fill( 0, count( Statuses::CLOSED ), '%s' ) );
+		$in     = implode( ',', array_fill( 0, count( $closed ), '%s' ) );
 
 		$rows = $wpdb->get_results( // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-			$wpdb->prepare( "SELECT id, screenshot FROM {$table} WHERE status IN ({$in}) AND status_changed_at < %s", array_merge( Statuses::CLOSED, array( $cutoff ) ) ),
+			$wpdb->prepare( "SELECT id, screenshot FROM {$table} WHERE status IN ({$in}) AND status_changed_at < %s", array_merge( $closed, array( $cutoff ) ) ),
 			ARRAY_A
 		);
 		$deleted = 0;

@@ -183,11 +183,11 @@ final class List_Table extends \WP_List_Table {
 	}
 
 	protected function column_priority( $item ): string {
-		return $this->pill( 'priority', (string) $item['priority'], Statuses::priorities() );
+		return $this->priority_pill( (string) $item['priority'] );
 	}
 
 	protected function column_status( $item ): string {
-		return $this->pill( 'status', (string) $item['status'], Statuses::all() );
+		return Report_Format::status_pill( (string) $item['status'] );
 	}
 
 	protected function column_created_at( $item ): string {
@@ -198,13 +198,11 @@ final class List_Table extends \WP_List_Table {
 		return '';
 	}
 
-	/** @param array<string,string> $labels */
-	private function pill( string $kind, string $key, array $labels ): string {
+	private function priority_pill( string $priority ): string {
 		return sprintf(
-			'<span class="bugspot-pill bugspot-%1$s bugspot-%1$s-%2$s">%3$s</span>',
-			esc_attr( $kind ),
-			esc_attr( $key ),
-			esc_html( $labels[ $key ] ?? $key )
+			'<span class="bugspot-pill bugspot-priority bugspot-priority-%1$s">%2$s</span>',
+			esc_attr( $priority ),
+			esc_html( Statuses::priorities()[ $priority ] ?? $priority )
 		);
 	}
 }

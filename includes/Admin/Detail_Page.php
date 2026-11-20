@@ -86,7 +86,7 @@ final class Detail_Page {
 
 		$context = $report['context'];
 		/* translators: %d: report number. */
-		echo '<h1 class="wp-heading-inline">' . esc_html( sprintf( __( 'Bug #%d', 'bug-spotter' ), $id ) ) . '</h1>';
+		echo '<h1 class="wp-heading-inline">' . esc_html( sprintf( __( 'Bug #%d', 'bug-spotter' ), $id ) ) . '</h1> ' . Report_Format::status_pill( (string) $report['status'] ); // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
 		echo '<hr class="wp-header-end">';
 		self::render_back_link();
 		self::render_notice();
@@ -286,7 +286,9 @@ final class Detail_Page {
 				echo '<input type="hidden" name="report" value="' . esc_attr( (string) $id ) . '">';
 				wp_nonce_field( self::UPDATE_ACTION . '_' . $id );
 				echo '<p><label for="bugspot-status"><strong>' . esc_html__( 'Status', 'bug-spotter' ) . '</strong></label><br>';
-				self::select( 'status', 'bugspot-status', Statuses::all(), (string) $report['status'] );
+				$status = (string) $report['status'];
+				// A status unknown to the settings stays listed (under its key) until changed.
+				self::select( 'status', 'bugspot-status', Statuses::all() + array( $status => Statuses::label( $status ) ), $status );
 				echo '</p><p><label for="bugspot-priority-select"><strong>' . esc_html__( 'Priority', 'bug-spotter' ) . '</strong></label><br>';
 				self::select( 'priority', 'bugspot-priority-select', Statuses::priorities(), (string) $report['priority'] );
 				echo '</p><p><button type="submit" class="button button-primary">' . esc_html__( 'Update', 'bug-spotter' ) . '</button></p></form>';

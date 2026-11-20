@@ -111,6 +111,16 @@ final class Settings {
 				'roles'      => array( 'administrator' ),
 				'menu_badge' => true,
 			),
+			// Ordered list (Kanban columns, selectors); an empty label shows the translated default name.
+			'statuses'      => array(
+				array( 'key' => 'new', 'label' => '', 'color' => '#2271b1', 'closed' => false ),
+				array( 'key' => 'seen', 'label' => '', 'color' => '#50575e', 'closed' => false ),
+				array( 'key' => 'confirmed', 'label' => '', 'color' => '#50575e', 'closed' => false ),
+				array( 'key' => 'in_progress', 'label' => '', 'color' => '#50575e', 'closed' => false ),
+				array( 'key' => 'fixed', 'label' => '', 'color' => '#008a20', 'closed' => true ),
+				array( 'key' => 'wont_fix', 'label' => '', 'color' => '#8c8f94', 'closed' => true ),
+				array( 'key' => 'duplicate', 'label' => '', 'color' => '#8c8f94', 'closed' => true ),
+			),
 		);
 	}
 

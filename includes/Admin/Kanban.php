@@ -42,17 +42,17 @@ final class Kanban {
 		$counts   = $repo->count_by_status( $criteria );
 
 		echo '<div class="bugspot-board-wrap"><div class="bugspot-board">';
-		foreach ( Statuses::all() as $status => $label ) {
-			self::render_column( $repo, $criteria, $status, $label, $counts[ $status ] ?? 0 );
+		foreach ( array_keys( Statuses::all() ) as $status ) {
+			self::render_column( $repo, $criteria, $status, $counts[ $status ] ?? 0 );
 		}
 		echo '</div></div>';
 	}
 
-	private static function render_column( Reports_Repository $repo, array $criteria, string $status, string $label, int $total ): void {
+	private static function render_column( Reports_Repository $repo, array $criteria, string $status, int $total ): void {
 		$limit = self::column_limit( $status );
 
 		echo '<section class="bugspot-column" data-status="' . esc_attr( $status ) . '">';
-		echo '<h2 class="bugspot-column-title">' . esc_html( $label ) . ' <span class="bugspot-count" data-status="' . esc_attr( $status ) . '">' . esc_html( (string) $total ) . '</span></h2>';
+		echo '<h2 class="bugspot-column-title">' . Report_Format::status_pill( $status ) . ' <span class="bugspot-count" data-status="' . esc_attr( $status ) . '">' . esc_html( (string) $total ) . '</span></h2>'; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
 		echo '<ul class="bugspot-cards" data-status="' . esc_attr( $status ) . '">';
 		foreach ( self::fetch( $repo, $criteria, $status, $limit ) as $item ) {
 			self::render_card( $item );

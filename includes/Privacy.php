@@ -38,7 +38,6 @@ final class Privacy {
 		$ids   = self::ids_for_email( $email );
 		$slice = array_slice( $ids, ( max( 1, $page ) - 1 ) * self::PER_PAGE, self::PER_PAGE );
 		$items = array();
-		$stats = Statuses::all();
 
 		foreach ( $repo->find_many( $slice ) as $report ) {
 			$data = array(
@@ -46,7 +45,7 @@ final class Privacy {
 				array( 'name' => __( 'Date', 'bug-spotter' ), 'value' => wp_date( 'Y-m-d H:i', (int) Reports_Repository::timestamp( $report['created_at'] ) ) ),
 				array( 'name' => __( 'Page', 'bug-spotter' ), 'value' => $report['page_url'] ),
 				array( 'name' => __( 'Description', 'bug-spotter' ), 'value' => $report['description'] ),
-				array( 'name' => __( 'Status', 'bug-spotter' ), 'value' => $stats[ $report['status'] ] ?? $report['status'] ),
+				array( 'name' => __( 'Status', 'bug-spotter' ), 'value' => Statuses::label( (string) $report['status'] ) ),
 			);
 			if ( is_string( $report['reporter_email'] ) && '' !== $report['reporter_email'] ) {
 				$data[] = array( 'name' => __( 'Contact e-mail', 'bug-spotter' ), 'value' => $report['reporter_email'] );

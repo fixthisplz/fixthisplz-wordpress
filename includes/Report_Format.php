@@ -35,6 +35,15 @@ final class Report_Format {
 		return mb_strlen( $text ) > $length ? mb_substr( $text, 0, $length ) . '…' : $text;
 	}
 
+	/** A status pill tinted from the status color (see .bugspot-status in admin.css). */
+	public static function status_pill( string $status ): string {
+		return sprintf(
+			'<span class="bugspot-pill bugspot-status" style="--bugspot-status:%s">%s</span>',
+			esc_attr( Statuses::color( $status ) ),
+			esc_html( Statuses::label( $status ) )
+		);
+	}
+
 	/** A stored UTC datetime in the site's date and time formats and timezone; '' when absent or invalid. */
 	public static function date( mixed $utc ): string {
 		$time = Reports_Repository::timestamp( $utc );
