@@ -51,7 +51,7 @@ final class Csv_Export {
 
 		$out = fopen( 'php://output', 'w' );
 		self::write( $out, $filters, $orderby, $order );
-		fclose( $out );
+		fclose( $out ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- php://output is an output stream, not a file; WP_Filesystem does not apply.
 		exit;
 	}
 
@@ -62,7 +62,7 @@ final class Csv_Export {
 	 */
 	public static function write( $stream, array $filters, string $orderby = 'created_at', string $order = 'DESC' ): void {
 		$repo = new Reports_Repository();
-		fwrite( $stream, "\xEF\xBB\xBF" ); // UTF-8 BOM so spreadsheets detect the encoding.
+		fwrite( $stream, "\xEF\xBB\xBF" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- writes to a stream (php://output), not a file. UTF-8 BOM so spreadsheets detect the encoding.
 		self::put_row(
 			$stream,
 			array(

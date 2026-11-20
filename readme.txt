@@ -1,46 +1,58 @@
 === Bug Spotter ===
+Contributors: dlicha
 Tags: bug report, feedback, screenshot, support, issue tracker
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 0.1.0
+Stable tag: 1.0.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Let visitors and editors report bugs from any page of your site, and manage the reports from a simple list or Kanban board in the dashboard.
+Let visitors and editors report bugs from any page, with an optional screenshot, and track them in a list or Kanban board.
 
 == Description ==
 
 Bug Spotter adds a floating button to your site. A visitor (logged in or not) clicks it, points at the element that has a problem or picks "Whole page", describes what went wrong, optionally attaches a screenshot, and submits. The report lands in a dedicated **Bugs** menu of your dashboard, and you get an e-mail. Right after sending, the reporter can download a copy of the report.
 
-Everything is built natively for WordPress: PHP and hooks, a dedicated database table, the WordPress REST API, the Settings API, native admin screens, and plain JavaScript. There is no build step, no CDN and no external service apart from the anti-bot provider you choose.
+Everything is built natively for WordPress: PHP and hooks, a dedicated database table, the WordPress REST API, the Settings API, native admin screens, and plain JavaScript. There is no build step, no CDN and no external service apart from the anti-bot provider you choose. Everything is free: there is no premium version.
 
 = Features =
 
 * Floating button with live preview in the settings: icon (Dashicon or SVG from your media library), shape, size, colors, shadow, corner radius, position (desktop and mobile), z-index.
 * Element picker for mouse, touch and keyboard, announced to screen readers; "Whole page" option.
 * Accessible modal dialog: description, optional contact e-mail for guests, optional screenshot with preview, privacy notice, and a "Technical details sent with your report" panel that shows exactly what is sent.
+* Two screenshot methods: a real capture of the browser tab (exact image; the browser asks the visitor for permission), or a reconstruction of the page (no permission prompt, may differ slightly from the screen). Phones and browsers without screen sharing always use the reconstruction.
+* Optional masking of typed fields and sensitive areas in the screenshot.
 * Download of the report as Markdown, JSON or plain text, plus the screenshot, built in the browser.
-* Bugs menu with a filterable and sortable list (status, priority, period, search), bulk actions, CSV export, a Kanban board with drag and drop, and a detail screen.
-* Statuses: New, Seen, Confirmed, In progress, Fixed, Won't fix, Duplicate. Priorities: Low, Normal, High, Critical.
+* Bugs menu with a filterable and sortable list (status, priority, period, search), bulk actions, CSV export, a Kanban board with drag and drop, and a detail screen. The menu name, the list sub-menu name and the menu position can be changed.
+* Configurable statuses: name, color, order (also the order of the Kanban columns) and a "Closed" flag; add your own or delete one, moving its reports to another status. Defaults: New, Seen, Confirmed, In progress, Fixed, Won't fix, Duplicate. Priorities: Low, Normal, High, Critical.
 * E-mail notification for each new report, with a link to the report and an optional screenshot attachment.
 * Anti-bot protection: Cloudflare Turnstile, Google reCAPTCHA v2 or v3, hCaptcha, or none; a hidden honeypot field; per-IP rate limits (hourly and daily). Includes a "Test the keys" button.
-* Privacy by design: values typed in form fields and passwords are never collected; e-mails and tokens are redacted in the browser and again on the server; the IP address is never stored (only a keyed hash); the contact e-mail is stored encrypted; screenshots are stored in a private folder.
+* Privacy by design: values typed in form fields and passwords are never written into the report; e-mails and tokens are redacted in the browser and again on the server; the IP address is never stored (only a keyed hash); the contact e-mail is stored encrypted; screenshots are stored in a private folder.
 * WordPress personal data exporter and eraser, suggested privacy policy text, automatic deletion of closed reports after a delay you choose.
 * Loads nothing on pages where the button is not shown. The reporter code is loaded step by step: the small loader first, the rest on the first click.
 * Translated into French; translation-ready for any other language.
 
-= Third-party library =
+= External services =
 
-Screenshots use [modern-screenshot](https://github.com/qq15725/modern-screenshot) 4.7.0 (MIT licence), bundled in `assets/vendor/` with its licence file. It is loaded only when a reporter ticks "Attach a screenshot".
+Bug Spotter connects to an external service only when you choose an anti-bot provider in **Bugs › Settings › Anti-bot** (the default is "None"). The provider's script is loaded in the report dialog, and when a report is sent your server sends the visitor's token and IP address to the provider for verification. "Test the keys" in the settings does the same with your own browser.
+
+* Cloudflare Turnstile: [terms](https://www.cloudflare.com/website-terms/), [privacy policy](https://www.cloudflare.com/privacypolicy/).
+* Google reCAPTCHA v2 and v3: [terms](https://policies.google.com/terms), [privacy policy](https://policies.google.com/privacy).
+* hCaptcha: [terms](https://www.hcaptcha.com/terms), [privacy policy](https://www.hcaptcha.com/privacy).
+
+= Third-party libraries =
+
+* [modern-screenshot](https://github.com/qq15725/modern-screenshot) 4.7.0, MIT licence, bundled unminified in `assets/vendor/` with its licence file. It builds the page reconstruction and is loaded only when that method is used.
 
 == Installation ==
 
 1. Upload the `bug-spotter` folder to `/wp-content/plugins/`, or install the plugin from the Plugins screen.
 2. Activate the plugin.
 3. Go to **Bugs › Settings**. Bug reporting is disabled by default and, once enabled, is visible to administrators only: tick the roles (and "Guests") who should see the button.
-4. If guests can report, choose an anti-bot provider in the **Anti-bot** tab and use "Test the keys".
-5. Check the e-mail recipients in the **Notifications** tab.
+4. In the **Dialog** tab, choose the screenshot method and whether screenshots are masked.
+5. If guests can report, choose an anti-bot provider in the **Anti-bot** tab and use "Test the keys".
+6. Check the e-mail recipients in the **Notifications** tab.
 
 == Frequently Asked Questions ==
 
@@ -86,7 +98,7 @@ Yes. The button's HTML contains nothing that is specific to a user. The report i
 
 = What happens to my data if I deactivate or delete the plugin? =
 
-Deactivating keeps everything. Deleting the plugin keeps your reports, screenshots and settings too, unless you ticked "Delete all reports, screenshots and settings when the plugin is deleted" in **Settings › Data and privacy**. In that case the table, the options, the capability and the private folder are removed.
+Deactivating keeps everything. Deleting the plugin keeps your reports, screenshots and settings too, unless you ticked "Delete all reports, screenshots and settings when the plugin is deleted" in **Bugs › Settings › Data and privacy**. In that case the table, the options, the capability and the private folder are removed.
 
 = Does it work on multisite? =
 
@@ -94,7 +106,7 @@ Activate it on each site where you want it. Network uninstall only cleans the ma
 
 = Who can manage the reports? =
 
-The roles ticked in **Settings › Management** receive the `bugspot_manage` capability (administrators by default). It gives access to the list, the Kanban board, the detail screen, screenshots and the CSV export. The Settings screen itself requires `manage_options`, so a bug manager never sees your anti-bot secret keys.
+The roles ticked in **Bugs › Settings › Management** receive the `bugspot_manage` capability (administrators by default). It gives access to the list, the Kanban board, the detail screen, screenshots and the CSV export. The Settings screen itself requires `manage_options`, so a bug manager never sees your anti-bot secret keys.
 
 = Does it answer the reporters? =
 
@@ -104,11 +116,16 @@ No. Bug Spotter is not a support system: there is no reply, no discussion thread
 
 Bug Spotter stores reports in a dedicated table of your database. A report contains the description written by the reporter, the address of the page (query values are replaced), technical context (browser, language, time zone, window size, the element chosen, and optionally the last console errors and failed network requests), an optional screenshot, an optional contact e-mail address (encrypted), the WordPress user ID when the reporter is logged in, and a keyed hash of the IP address used against abuse. The IP address itself is never stored.
 
-Values typed in form fields and passwords are never collected, whether in the report or in a screenshot. Elements marked `data-bugspot-sensitive`, and elements matching the sensitive selectors you configure, are masked. The plugin makes no request to external services, except the one to the anti-bot provider you choose (Cloudflare, Google or hCaptcha), which receives the visitor's token and IP address as required for verification.
+Values typed in form fields and passwords are never written into the report. Elements marked `data-bugspot-sensitive`, and elements matching the sensitive selectors you configure, are replaced by "[masked]" in the report. The screenshot is an image of the page as the reporter sees it, shown to the reporter before sending; it is not masked unless you enable "Hide typed fields and sensitive areas in the screenshot" in **Bugs › Settings › Dialog** (on a real capture, masking applies only when the visitor shares the current tab). The plugin makes no request to external services, except the one to the anti-bot provider you choose (Cloudflare, Google or hCaptcha), which receives the visitor's token and IP address as required for verification.
 
-The plugin adds suggested text to your privacy policy (Settings › Privacy), and registers a personal data exporter and eraser. Closed reports (Fixed, Won't fix, Duplicate) can be deleted automatically after a number of months of your choice.
+The plugin adds suggested text to your privacy policy (Settings › Privacy), and registers a personal data exporter and eraser. Closed reports (by default Fixed, Won't fix and Duplicate: every status marked "Closed") can be deleted automatically after a number of months of your choice.
 
 == Changelog ==
 
-= 0.1.0 =
-* First release: floating button, element picker, report dialog with optional screenshot and downloads, list and Kanban board, detail screen, e-mail notification, anti-bot providers, rate limits, privacy exporter and eraser, automatic purge, French translation.
+= 1.0.0 =
+* First public release: floating button with live preview, element picker, accessible report dialog, optional screenshot (real tab capture or page reconstruction, optional masking), report downloads, list and Kanban board, detail screen, CSV export, configurable statuses, menu name and position, e-mail notification, anti-bot providers and rate limits, privacy exporter and eraser, automatic purge of closed reports, French translation.
+
+== Upgrade Notice ==
+
+= 1.0.0 =
+First public release.

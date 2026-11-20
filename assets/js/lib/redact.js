@@ -5,13 +5,13 @@ const VALUE_MASK = '…';
 // PCRE \s / \S are ASCII-only without /u; spelled out so JS Unicode spaces behave the same.
 const WS = '\\t\\n\\v\\f\\r ';
 const STEPS = [
-	[new RegExp(`\\bBearer[${WS}]+[^${WS}]+`, 'gi'), 'Bearer [jeton]'],
-	[/\beyJ[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*/g, '[jeton]'],
+	[new RegExp(`\\bBearer[${WS}]+[^${WS}]+`, 'gi'), 'Bearer [token]'],
+	[/\beyJ[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*/g, '[token]'],
 	// Every repetition bounded on purpose (see Redactor.php). PHP \w under /u (UCP) is letters, numbers, "_",
 	// combining marks (Mn, Mc) and connector punctuation (Pc): same set here. Node's Unicode tables can be newer
 	// than PCRE's, so JS may mask very slightly more than PHP (safe direction).
 	[/[\p{L}\p{N}\p{Mn}\p{Mc}\p{Pc}.+%-]{1,64}@[\p{L}\p{N}\p{Mn}\p{Mc}\p{Pc}-]{1,63}(?:\.[\p{L}\p{N}\p{Mn}\p{Mc}\p{Pc}-]{1,63}){1,20}/gu, '[email]'],
-	[/[A-Za-z0-9_-]{32,}/g, '[jeton]'],
+	[/[A-Za-z0-9_-]{32,}/g, '[token]'],
 ];
 const CONTROL_AND_SPACE = /[\x00-\x20\x7f]+/g;
 // A lone surrogate is the JS equivalent of invalid UTF-8; replaced by "?" exactly like PHP's mb_scrub.

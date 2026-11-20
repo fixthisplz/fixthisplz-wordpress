@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Bug Spotter 0.1.0\n"
+"Project-Id-Version: Bug Spotter 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/bug-spotter\n"
 "Last-Translator: \n"
 "Language-Team: Français\n"
@@ -1291,8 +1291,8 @@ msgid "Purpose: this site lets visitors and users report bugs they meet while br
 msgstr "Finalité : ce site permet aux visiteurs et aux utilisateurs de signaler les bugs qu’ils rencontrent en naviguant. Les signalements servent uniquement à trouver et corriger ces problèmes."
 
 #: includes/Privacy.php:117
-msgid "Data collected: the description you write, the address of the page, technical context (browser, screen size, language, errors and failed requests seen by the page), an optional screenshot, an optional contact e-mail address (stored encrypted), your account if you are logged in, and a keyed hash of your IP address used only against abuse. Your IP address itself is never stored. Values typed into the site's own forms and fields (including passwords) are never collected; only the description and optional contact e-mail typed into the bug report form are stored."
-msgstr "Données collectées : la description que vous rédigez, l’adresse de la page, le contexte technique (navigateur, taille d’écran, langue, erreurs et requêtes en échec observées par la page), une capture d’écran facultative, une adresse e-mail de contact facultative (stockée chiffrée), votre compte si vous êtes connecté, et une empreinte à clé de votre adresse IP, utilisée uniquement contre les abus. Votre adresse IP elle-même n’est jamais stockée. Les valeurs saisies dans les formulaires et champs du site (mots de passe compris) ne sont jamais collectées ; seuls la description et l’adresse e-mail de contact facultative saisies dans le formulaire de signalement sont conservées."
+msgid "Data collected: the description you write, the address of the page, technical context (browser, screen size, language, errors and failed requests seen by the page), an optional screenshot, an optional contact e-mail address (stored encrypted), your account if you are logged in, and a keyed hash of your IP address used only against abuse. Your IP address itself is never stored. Values typed into the site's own forms and fields (including passwords) are never collected; only the description and optional contact e-mail typed into the bug report form are stored. The optional screenshot is an image of the page as it appears on your screen, which you see before sending."
+msgstr "Données collectées : la description que vous rédigez, l’adresse de la page, le contexte technique (navigateur, taille d’écran, langue, erreurs et requêtes en échec observées par la page), une capture d’écran facultative, une adresse e-mail de contact facultative (stockée chiffrée), votre compte si vous êtes connecté, et une empreinte à clé de votre adresse IP, utilisée uniquement contre les abus. Votre adresse IP elle-même n’est jamais stockée. Les valeurs saisies dans les formulaires et champs du site (mots de passe compris) ne sont jamais collectées ; seuls la description et l’adresse e-mail de contact facultative saisies dans le formulaire de signalement sont conservées. La capture d’écran facultative est une image de la page telle qu’elle apparaît sur votre écran, que vous voyez avant l’envoi."
 
 #: includes/Privacy.php:118
 msgid "Anti-bot check: when an anti-bot provider is enabled (Cloudflare Turnstile, Google reCAPTCHA or hCaptcha), that provider receives your IP address and browser data when you send a report, under its own privacy policy."

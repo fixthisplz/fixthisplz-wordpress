@@ -4,7 +4,7 @@
 import { truncate } from './redact.js';
 import { FIELD_TAGS, closestAny, isEditable, matchesAny, sensitiveList } from './sensitive.js';
 
-const MASKED = '[masqué]';
+const MASKED = '[masked]';
 // Subtrees whose text is never "visible text" of a selection.
 const SKIP_TAGS = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE', 'TEXTAREA', 'SELECT', 'INPUT', 'OPTION', 'SVG']);
 const STABLE_DATA_ATTRS = ['data-testid', 'data-test-id', 'data-test', 'data-cy', 'data-qa'];

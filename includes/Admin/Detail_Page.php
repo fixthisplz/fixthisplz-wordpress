@@ -168,7 +168,7 @@ final class Detail_Page {
 	private static function render_page( array $report, array $context ): void {
 		$url = (string) $report['page_url'];
 		if ( '' !== $url ) {
-			echo '<p>' . self::link_or_text( $url ) . '</p>';
+			echo '<p>' . self::link_or_text( $url ) . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput -- link_or_text() escapes.
 		}
 		$title = isset( $context['title'] ) && is_string( $context['title'] ) ? $context['title'] : '';
 		self::render_pairs(

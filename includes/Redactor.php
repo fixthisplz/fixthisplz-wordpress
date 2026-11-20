@@ -11,12 +11,12 @@ defined( 'ABSPATH' ) || exit;
 //
 // text() applies, in this exact order:
 //  1. Invalid UTF-8 is replaced (mb_scrub, bad bytes become "?").
-//  2. Bearer:   /\bBearer\s+\S+/i                                      => "Bearer [jeton]"
-//  3. JWT:      /\beyJ[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*/   => "[jeton]"
+//  2. Bearer:   /\bBearer\s+\S+/i                                      => "Bearer [token]"
+//  3. JWT:      /\beyJ[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*/   => "[token]"
 //  4. E-mail:   /[\w.+%-]{1,64}@[\w-]{1,63}(?:\.[\w-]{1,63}){1,20}/u   => "[email]"
 //     (every repetition is bounded on purpose: unbounded labels make the regex engine hit its
 //     backtrack/JIT limit on hostile input such as "a@" . "a." x 25000; the JS mirror copies these bounds.)
-//  5. Long run: /[A-Za-z0-9_-]{32,}/                                    => "[jeton]"
+//  5. Long run: /[A-Za-z0-9_-]{32,}/                                    => "[token]"
 //  6. Truncation to $max characters (mb_substr). Truncating last means a token can never be cut into
 //     a visible fragment, and the cut never splits a UTF-8 character.
 //
@@ -33,10 +33,10 @@ final class Redactor {
 		$s = mb_scrub( $s, 'UTF-8' );
 
 		$steps = array(
-			'/\bBearer\s+\S+/i'                                       => 'Bearer [jeton]',
-			'/\beyJ[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*/'   => '[jeton]',
+			'/\bBearer\s+\S+/i'                                       => 'Bearer [token]',
+			'/\beyJ[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*/'   => '[token]',
 			'/[\w.+%-]{1,64}@[\w-]{1,63}(?:\.[\w-]{1,63}){1,20}/u'                        => '[email]',
-			'/[A-Za-z0-9_-]{32,}/'                                    => '[jeton]',
+			'/[A-Za-z0-9_-]{32,}/'                                    => '[token]',
 		);
 		foreach ( $steps as $pattern => $replacement ) {
 			$result = preg_replace( $pattern, $replacement, $s );
@@ -55,7 +55,7 @@ final class Redactor {
 			return '';
 		}
 
-		$parts = parse_url( $url );
+		$parts = wp_parse_url( $url );
 		if ( ! is_array( $parts ) || empty( $parts['scheme'] ) || empty( $parts['host'] ) ) {
 			return '';
 		}

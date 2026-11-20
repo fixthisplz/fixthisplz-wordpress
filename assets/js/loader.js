@@ -16,10 +16,10 @@
 	/* Mirror of lib/redact.js: same rules, same order, truncation last. */
 	function text(s, max) {
 		s = String(s)
-			.replace(/\bBearer\s+\S+/gi, 'Bearer [jeton]')
-			.replace(/\beyJ[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*/g, '[jeton]')
+			.replace(/\bBearer\s+\S+/gi, 'Bearer [token]')
+			.replace(/\beyJ[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*/g, '[token]')
 			.replace(/[\p{L}\p{N}\p{Mn}\p{Mc}\p{Pc}.+%-]{1,64}@[\p{L}\p{N}\p{Mn}\p{Mc}\p{Pc}-]{1,63}(?:\.[\p{L}\p{N}\p{Mn}\p{Mc}\p{Pc}-]{1,63}){1,20}/gu, '[email]')
-			.replace(/[A-Za-z0-9_-]{32,}/g, '[jeton]');
+			.replace(/[A-Za-z0-9_-]{32,}/g, '[token]');
 		return Array.from(s).slice(0, max).join('');
 	}
 

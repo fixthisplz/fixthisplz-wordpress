@@ -456,7 +456,7 @@ bugspot_test(
 				};
 				$reads = 0;
 				$count = static function ( string $sql ) use ( &$reads ): string {
-					$reads += str_starts_with( $sql, 'SELECT * FROM ' . Installer::table() . ' WHERE id' ) ? 1 : 0;
+					$reads += str_starts_with( $sql, 'SELECT * FROM `' . Installer::table() . '` WHERE id' ) ? 1 : 0;
 					return $sql;
 				};
 				add_filter( 'query', $count );

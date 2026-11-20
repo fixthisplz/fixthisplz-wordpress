@@ -10,8 +10,8 @@ bugspot_test(
 		assert_true( false === strpos( $out, 'abc.def' ), 'bearer leaked' );
 		assert_true( false === strpos( $out, 'eyJa' ), 'jwt leaked' );
 		assert_true( false === strpos( $out, 'aaaa' ), 'long run leaked' );
-		assert_true( false !== strpos( $out, '[email]' ) && false !== strpos( $out, '[jeton]' ) );
-		assert_true( false !== strpos( $out, 'Bearer [jeton]' ) );
+		assert_true( false !== strpos( $out, '[email]' ) && false !== strpos( $out, '[token]' ) );
+		assert_true( false !== strpos( $out, 'Bearer [token]' ) );
 	}
 );
 
@@ -33,7 +33,7 @@ bugspot_test(
 	'redactor_url_masks_email_and_token_in_path',
 	function () {
 		$out = Redactor::url( 'https://site.test/u/jean@ex.test/' . str_repeat( 'k', 40 ), 2048 );
-		assert_same( 'https://site.test/u/[email]/[jeton]', $out );
+		assert_same( 'https://site.test/u/[email]/[token]', $out );
 	}
 );
 

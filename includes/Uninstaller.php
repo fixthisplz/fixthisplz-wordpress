@@ -15,7 +15,7 @@ final class Uninstaller {
 		}
 
 		global $wpdb;
-		$wpdb->query( 'DROP TABLE IF EXISTS ' . Installer::table() ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name built from the trusted prefix.
+		$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', Installer::table() ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- removes the plugin's own table on uninstall.
 
 		delete_option( Settings::OPTION );
 		delete_option( Installer::DB_VERSION_OPTION );
@@ -35,7 +35,7 @@ final class Uninstaller {
 	/** Goes through delete_transient() so an external object cache is cleared too; short-lived anyway. */
 	private static function delete_rate_limit_transients(): void {
 		global $wpdb;
-		$names = $wpdb->get_col( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like( '_transient_bugspot_rl_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$names = $wpdb->get_col( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like( '_transient_bugspot_rl_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- removes the rate-limit transients by prefix, no API for that.
 		foreach ( $names as $name ) {
 			delete_transient( substr( $name, strlen( '_transient_' ) ) );
 		}

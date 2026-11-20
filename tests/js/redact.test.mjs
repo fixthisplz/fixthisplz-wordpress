@@ -10,8 +10,8 @@ test('redactText masks email jwt bearer long tokens', () => {
 	assert.ok(!out.includes('abc.def'), 'bearer leaked');
 	assert.ok(!out.includes('eyJa'), 'jwt leaked');
 	assert.ok(!out.includes('aaaa'), 'long run leaked');
-	assert.ok(out.includes('[email]') && out.includes('[jeton]'));
-	assert.ok(out.includes('Bearer [jeton]'));
+	assert.ok(out.includes('[email]') && out.includes('[token]'));
+	assert.ok(out.includes('Bearer [token]'));
 });
 
 test('redactText keeps short alphanumeric runs', () => {
@@ -23,7 +23,7 @@ test('redactUrl strips values fragment credentials', () => {
 });
 
 test('redactUrl masks email and token in path', () => {
-	assert.equal(redactUrl('https://site.test/u/jean@ex.test/' + 'k'.repeat(40), 2048), 'https://site.test/u/[email]/[jeton]');
+	assert.equal(redactUrl('https://site.test/u/jean@ex.test/' + 'k'.repeat(40), 2048), 'https://site.test/u/[email]/[token]');
 });
 
 test('redactUrl returns empty when unparsable', () => {

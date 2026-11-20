@@ -22,8 +22,7 @@ final class Client_Ip {
 	public static function get( string $proxy_header = '' ): string {
 		$key = self::HEADERS[ $proxy_header ] ?? null;
 		if ( null !== $key && isset( $_SERVER[ $key ] ) && is_string( $_SERVER[ $key ] ) ) {
-			// Values are only ever compared/hashed after FILTER_VALIDATE_IP, so no further sanitising is needed.
-			foreach ( array_reverse( explode( ',', wp_unslash( $_SERVER[ $key ] ) ) ) as $candidate ) {
+			foreach ( array_reverse( explode( ',', sanitize_text_field( wp_unslash( $_SERVER[ $key ] ) ) ) ) as $candidate ) {
 				$ip = self::valid( $candidate );
 				if ( null !== $ip ) {
 					return $ip;
@@ -31,7 +30,7 @@ final class Client_Ip {
 			}
 		}
 
-		$remote = isset( $_SERVER['REMOTE_ADDR'] ) && is_string( $_SERVER['REMOTE_ADDR'] ) ? self::valid( $_SERVER['REMOTE_ADDR'] ) : null;
+		$remote = isset( $_SERVER['REMOTE_ADDR'] ) && is_string( $_SERVER['REMOTE_ADDR'] ) ? self::valid( sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) ) : null;
 		return $remote ?? '0.0.0.0';
 	}
 

@@ -105,17 +105,17 @@ test('describeElement returns tag, role, name, visible text and integer rect', (
 test('describeElement masks sensitive subtree', () => {
 	const inner = el('span', {}, ['IBAN FR76 3000']);
 	el('div', { 'data-bugspot-sensitive': '' }, [inner]);
-	assert.equal(describeElement(inner, {}).text, '[masqué]');
+	assert.equal(describeElement(inner, {}).text, '[masked]');
 
 	const viaSetting = el('strong', {}, ['1 234,56 €']);
 	el('section', { class: 'account balance' }, [viaSetting]);
-	assert.equal(describeElement(viaSetting, { sensitiveSelectors: ['.balance'] }).text, '[masqué]');
+	assert.equal(describeElement(viaSetting, { sensitiveSelectors: ['.balance'] }).text, '[masked]');
 
 	// A sensitive descendant inside a non-sensitive selection is masked too.
 	const parent = el('div', {}, ['Total: ', el('b', { class: 'balance' }, ['999 €']), ' end']);
 	const d = describeElement(parent, { sensitiveSelectors: ['.balance'] });
 	assert.ok(!d.text.includes('999'), d.text);
-	assert.match(d.text, /\[masqué\]/);
+	assert.match(d.text, /\[masked\]/);
 
 	// An invalid selector from the settings does not break the description.
 	assert.equal(describeElement(el('p', {}, ['ok']), { sensitiveSelectors: ['%%bad'] }).text, 'ok');
@@ -177,8 +177,8 @@ test('describeElement names links and buttons from their content', () => {
 	const hidden = el('a', { href: '/x' }, ['Account 1234']);
 	el('div', { 'data-bugspot-sensitive': '' }, [hidden]);
 	d = describeElement(hidden, {});
-	assert.equal(d.name, '[masqué]');
-	assert.equal(d.text, '[masqué]');
+	assert.equal(d.name, '[masked]');
+	assert.equal(d.text, '[masked]');
 });
 
 test('describeElement never names an element from text typed in an editable region', () => {

@@ -2,7 +2,7 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Bug Spotter 0.1.0\n"
+"Project-Id-Version: Bug Spotter 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/bug-spotter\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1409,7 +1409,7 @@ msgid "Purpose: this site lets visitors and users report bugs they meet while br
 msgstr ""
 
 #: includes/Privacy.php:117
-msgid "Data collected: the description you write, the address of the page, technical context (browser, screen size, language, errors and failed requests seen by the page), an optional screenshot, an optional contact e-mail address (stored encrypted), your account if you are logged in, and a keyed hash of your IP address used only against abuse. Your IP address itself is never stored. Values typed into the site's own forms and fields (including passwords) are never collected; only the description and optional contact e-mail typed into the bug report form are stored."
+msgid "Data collected: the description you write, the address of the page, technical context (browser, screen size, language, errors and failed requests seen by the page), an optional screenshot, an optional contact e-mail address (stored encrypted), your account if you are logged in, and a keyed hash of your IP address used only against abuse. Your IP address itself is never stored. Values typed into the site's own forms and fields (including passwords) are never collected; only the description and optional contact e-mail typed into the bug report form are stored. The optional screenshot is an image of the page as it appears on your screen, which you see before sending."
 msgstr ""
 
 #: includes/Privacy.php:118

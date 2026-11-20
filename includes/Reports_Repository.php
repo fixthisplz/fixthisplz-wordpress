@@ -4,6 +4,8 @@ namespace Bug_Spotter;
 
 defined( 'ABSPATH' ) || exit;
 
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- custom table, live data.
+
 /** SQL access to the reports table. Dates are stored in UTC ("Y-m-d H:i:s"); every value goes through $wpdb->prepare(). */
 final class Reports_Repository {
 
@@ -50,8 +52,7 @@ final class Reports_Repository {
 
 	public function find( int $id ): ?array {
 		global $wpdb;
-		$table = Installer::table();
-		$row   = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$row = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', Installer::table(), $id ), ARRAY_A );
 		return is_array( $row ) ? self::hydrate( $row ) : null;
 	}
 
@@ -104,11 +105,11 @@ final class Reports_Repository {
 	/** `new` -> `seen` only; atomic so two simultaneous opens cannot both transition. */
 	public function mark_seen( int $id ): bool {
 		global $wpdb;
-		$table = Installer::table();
 		$now   = self::now();
-		$rows  = $wpdb->query( // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$rows  = $wpdb->query(
 			$wpdb->prepare(
-				"UPDATE {$table} SET status = 'seen', seen_at = COALESCE(seen_at, %s), status_changed_at = %s, updated_at = %s WHERE id = %d AND status = 'new'",
+				"UPDATE %i SET status = 'seen', seen_at = COALESCE(seen_at, %s), status_changed_at = %s, updated_at = %s WHERE id = %d AND status = 'new'",
+				Installer::table(),
 				$now,
 				$now,
 				$now,
@@ -121,10 +122,9 @@ final class Reports_Repository {
 	/** Moves every report of a deleted status $from to $to. */
 	public function reassign_status( string $from, string $to ): void {
 		global $wpdb;
-		$table = Installer::table();
-		$now   = self::now();
-		$wpdb->query( // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$wpdb->prepare( "UPDATE {$table} SET status = %s, status_changed_at = %s, updated_at = %s WHERE status = %s", $to, $now, $now, $from )
+		$now = self::now();
+		$wpdb->query(
+			$wpdb->prepare( 'UPDATE %i SET status = %s, status_changed_at = %s, updated_at = %s WHERE status = %s', Installer::table(), $to, $now, $now, $from )
 		);
 	}
 
@@ -150,7 +150,7 @@ final class Reports_Repository {
 	 */
 	public function query( array $args ): array {
 		global $wpdb;
-		$table = Installer::table();
+		$table   = Installer::table();
 		$where   = $this->where( $args, true );
 		$columns = self::LIST_COLUMNS . ( false === ( $args['with_email'] ?? true ) ? '' : ', reporter_email' );
 
@@ -161,10 +161,11 @@ final class Reports_Repository {
 			? "FIELD(priority, 'low', 'normal', 'high', 'critical') {$dir}"
 			: "created_at {$dir}";
 
-		$total = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} {$where}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $where is built from prepare() fragments.
-		$rows  = $wpdb->get_results( // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $table ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where is built from prepare() fragments.
+		$rows  = $wpdb->get_results( // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- see the prepare() below.
 			$wpdb->prepare(
-				"SELECT {$columns} FROM {$table} {$where} ORDER BY {$primary}, id DESC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+				"SELECT {$columns} FROM %i {$where} ORDER BY {$primary}, id DESC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $columns and $primary come from fixed lists, $where from prepare() fragments.
+				$table,
 				$per_page,
 				( $page - 1 ) * $per_page
 			),
@@ -192,7 +193,7 @@ final class Reports_Repository {
 		$table   = Installer::table();
 		$columns = self::LIST_COLUMNS . ', reporter_email';
 		$in      = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
-		$rows    = $wpdb->get_results( $wpdb->prepare( "SELECT {$columns} FROM {$table} WHERE id IN ({$in}) ORDER BY id", $ids ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+		$rows    = $wpdb->get_results( $wpdb->prepare( "SELECT {$columns} FROM %i WHERE id IN ({$in}) ORDER BY id", array_merge( array( $table ), $ids ) ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $columns is a fixed list, $in a list of %d placeholders.
 		return array_map( array( self::class, 'hydrate' ), is_array( $rows ) ? $rows : array() );
 	}
 
@@ -202,7 +203,7 @@ final class Reports_Repository {
 		$table = Installer::table();
 		$where = $this->where( $args, false );
 
-		$rows   = $wpdb->get_results( "SELECT status, COUNT(*) AS n FROM {$table} {$where} GROUP BY status", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$rows   = $wpdb->get_results( $wpdb->prepare( "SELECT status, COUNT(*) AS n FROM %i {$where} GROUP BY status", $table ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where is built from prepare() fragments.
 		$counts = array_fill_keys( array_keys( Statuses::all() ), 0 );
 		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
 			$counts[ $row['status'] ] = (int) $row['n'];
@@ -213,16 +214,14 @@ final class Reports_Repository {
 	/** @return int[] */
 	public function ids_by_email( string $email ): array {
 		global $wpdb;
-		$table = Installer::table();
-		$hash  = Secret::hmac( strtolower( trim( $email ) ) );
-		return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$table} WHERE reporter_email_hash = %s ORDER BY id", $hash ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$hash = Secret::hmac( strtolower( trim( $email ) ) );
+		return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( 'SELECT id FROM %i WHERE reporter_email_hash = %s ORDER BY id', Installer::table(), $hash ) ) );
 	}
 
 	/** @return int[] */
 	public function ids_by_user( int $user_id ): array {
 		global $wpdb;
-		$table = Installer::table();
-		return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$table} WHERE user_id = %d ORDER BY id", $user_id ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( 'SELECT id FROM %i WHERE user_id = %d ORDER BY id', Installer::table(), $user_id ) ) );
 	}
 
 	/** Deletes closed reports whose last status change is older than $months months (and their screenshots). */
@@ -236,8 +235,8 @@ final class Reports_Repository {
 		$cutoff = ( new \DateTimeImmutable( 'now', new \DateTimeZone( 'UTC' ) ) )->modify( '-' . $months . ' months' )->format( 'Y-m-d H:i:s' );
 		$in     = implode( ',', array_fill( 0, count( $closed ), '%s' ) );
 
-		$rows = $wpdb->get_results( // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-			$wpdb->prepare( "SELECT id, screenshot FROM {$table} WHERE status IN ({$in}) AND status_changed_at < %s", array_merge( $closed, array( $cutoff ) ) ),
+		$rows = $wpdb->get_results(
+			$wpdb->prepare( "SELECT id, screenshot FROM %i WHERE status IN ({$in}) AND status_changed_at < %s", array_merge( array( $table ), $closed, array( $cutoff ) ) ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- $in is a list of %s placeholders, the values are passed as one array.
 			ARRAY_A
 		);
 		$deleted = 0;
