@@ -200,98 +200,190 @@ bugspot_test(
 	}
 );
 
+/** Deletes $dir recursively with plain PHP; does nothing unless $dir is a real directory (not a link) at exactly that path. */
+function privacy_remove_dir( string $dir ): void {
+	if ( is_link( $dir ) || ! is_dir( $dir ) || realpath( $dir ) !== $dir ) {
+		return;
+	}
+	$items = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $dir, FilesystemIterator::SKIP_DOTS ), RecursiveIteratorIterator::CHILD_FIRST );
+	foreach ( $items as $item ) {
+		if ( $item->isDir() && ! $item->isLink() ) {
+			rmdir( $item->getPathname() );
+		} else {
+			unlink( $item->getPathname() );
+		}
+	}
+	rmdir( $dir );
+}
+
+/** Options the uninstall deletes; the uninstall test parks their values (and the caps) in PRIVACY_BACKUP_OPTION. */
+const PRIVACY_PLUGIN_OPTIONS = array( 'bugspot_settings', 'bugspot_secret', 'bugspot_db_version' );
+const PRIVACY_BACKUP_OPTION  = 'bugspot_test_backup';
+
+function privacy_table_exists( string $table ): bool {
+	global $wpdb;
+	return $table === $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) );
+}
+
 /**
- * DROP TABLE is DDL (implicit commit, cannot be rolled back), so this test snapshots every piece of
- * state it destroys (rows with their ids, settings, secret, db version, role caps) and restores it in `finally`.
+ * Puts back what the uninstall test parked (backup table, then options and caps), with plain SQL / WordPress calls.
+ * Each part is restored only when its backup exists, so it also repairs a run that crashed half-way.
+ */
+function privacy_restore_backup( string $table ): void {
+	global $wpdb;
+	$backup_table = $table . '_bugspot_test_backup';
+	if ( privacy_table_exists( $backup_table ) ) {
+		// After a crash the site may have recreated the table and received new reports: never drop those.
+		if ( privacy_table_exists( $table ) && (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" ) > 0 ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			throw new RuntimeException( $table . ' and ' . $backup_table . ' both hold rows: merge them by hand.' );
+		}
+		$wpdb->query( "DROP TABLE IF EXISTS {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		if ( false === $wpdb->query( "RENAME TABLE {$backup_table} TO {$table}" ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			throw new RuntimeException( 'Could not rename ' . $backup_table . ' back: restore it by hand.' );
+		}
+	}
+
+	$saved = get_option( PRIVACY_BACKUP_OPTION );
+	if ( ! is_array( $saved ) ) {
+		return;
+	}
+	foreach ( PRIVACY_PLUGIN_OPTIONS as $opt ) {
+		if ( array_key_exists( $opt, $saved['options'] ) ) {
+			update_option( $opt, $saved['options'][ $opt ], 'bugspot_secret' === $opt ? false : null );
+		} else {
+			delete_option( $opt );
+		}
+	}
+	foreach ( wp_roles()->role_objects as $name => $role ) {
+		if ( ! empty( $saved['caps'][ $name ] ) ) {
+			$role->add_cap( 'bugspot_manage' );
+		} else {
+			$role->remove_cap( 'bugspot_manage' );
+		}
+	}
+	delete_option( PRIVACY_BACKUP_OPTION );
+}
+
+/**
+ * The uninstall destroys real bench data (DROP TABLE is DDL: no rollback), so everything it touches is moved aside
+ * before any plugin code runs and put back with plain SQL / WordPress / PHP calls: the table is renamed, the options
+ * and caps are parked in a stored option, the private dir is renamed. A crashed run leaves those backups in place;
+ * the next run restores them and stops.
  */
 bugspot_test(
 	'privacy: uninstall_removes_everything_when_enabled',
 	function () {
 		global $wpdb;
-		$table   = Installer::table();
-		$missing = new stdClass();
-		$saved   = array();
-		$caps    = array();
-		$files   = array();
-		$rows    = array();
-		$dir     = Installer::private_dir();
-		$meta    = null;
+		$table        = $wpdb->prefix . 'bugspot_reports';
+		$backup_table = $table . '_bugspot_test_backup';
+		$dir          = wp_upload_dir( null, false )['basedir'] . '/bug-spotter';
+		$missing      = new stdClass();
 
-		try {
-			// Snapshot everything the uninstall destroys: rows (original ids), options, caps, private dir files and ownership.
-			$rows = $wpdb->get_results( "SELECT * FROM {$table}", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			foreach ( array( 'bugspot_settings', 'bugspot_secret', 'bugspot_db_version' ) as $opt ) {
-				$saved[ $opt ] = get_option( $opt, $missing );
+		// Backups left by a crashed run hold the real data: put them back and stop here.
+		if ( privacy_table_exists( $backup_table ) || false !== get_option( PRIVACY_BACKUP_OPTION ) ) {
+			privacy_restore_backup( $table );
+			throw new RuntimeException( 'Restored the reports table / options from a previous crashed run; run the tests again.' );
+		}
+		$left = glob( $dir . '.bugspot-test-backup-*' );
+		if ( $left ) {
+			if ( 1 !== count( $left ) || file_exists( $dir ) || ! rename( $left[0], $dir ) ) {
+				throw new RuntimeException( 'Leftover private dir backup next to ' . $dir . ': restore it by hand.' );
 			}
-			foreach ( wp_roles()->role_objects as $name => $role ) {
-				$caps[ $name ] = $role->has_cap( 'bugspot_manage' );
-			}
-			foreach ( new FilesystemIterator( $dir, FilesystemIterator::SKIP_DOTS ) as $f ) {
-				if ( $f->isFile() && ! $f->isLink() ) {
-					$files[ $f->getFilename() ] = array(
-						'bytes' => (string) file_get_contents( $f->getPathname() ),
-						'owner' => fileowner( $f->getPathname() ),
-						'group' => filegroup( $f->getPathname() ),
-						'perms' => fileperms( $f->getPathname() ) & 07777,
-					);
-				}
-			}
-			$meta = array( 'owner' => fileowner( $dir ), 'group' => filegroup( $dir ), 'perms' => fileperms( $dir ) & 07777 );
+			throw new RuntimeException( 'Restored the private dir from a previous crashed run; run the tests again.' );
+		}
 
-			file_put_contents( $dir . '/sub-test.txt', 'x' );
-			mkdir( $dir . '/nested' );
-			file_put_contents( $dir . '/nested/deep.txt', 'x' );
-			set_transient( 'bugspot_rl_h_test', 1, HOUR_IN_SECONDS );
-			wp_roles()->get_role( 'administrator' )->add_cap( 'bugspot_manage' );
-
-			if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-				define( 'WP_UNINSTALL_PLUGIN', 'bug-spotter/bug-spotter.php' );
-			}
-			update_option( 'bugspot_settings', array( 'data' => array( 'delete_on_uninstall' => true ) ) );
-			include BUGSPOT_DIR . 'uninstall.php';
-
-			assert_same( null, $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ), 'table dropped' );
-			assert_same( $missing, get_option( 'bugspot_settings', $missing ), 'settings removed' );
-			assert_same( $missing, get_option( 'bugspot_secret', $missing ), 'secret removed' );
-			assert_same( $missing, get_option( 'bugspot_db_version', $missing ), 'db version removed' );
-			assert_same( false, get_transient( 'bugspot_rl_h_test' ), 'rate-limit transient removed' );
-			foreach ( wp_roles()->role_objects as $role ) {
-				assert_true( ! $role->has_cap( 'bugspot_manage' ), 'capability removed from ' . $role->name );
-			}
-			assert_true( ! file_exists( $dir ), 'private dir removed' );
-			assert_same( false, wp_next_scheduled( 'bugspot_daily_purge' ), 'cron cleared' );
-		} finally {
-			Installer::activate();
-			foreach ( $saved as $opt => $value ) {
-				if ( $missing === $value ) {
-					delete_option( $opt );
-				} else {
-					update_option( $opt, $value, 'bugspot_secret' === $opt ? false : null );
-				}
-			}
-			foreach ( $rows as $row ) {
-				$wpdb->insert( $table, $row );
-			}
-			foreach ( wp_roles()->role_objects as $name => $role ) {
-				if ( ! empty( $caps[ $name ] ) ) {
-					$role->add_cap( 'bugspot_manage' );
-				} else {
-					$role->remove_cap( 'bugspot_manage' );
-				}
-			}
-			// Put the private dir back exactly as found (WP-CLI runs as root: recreated files would be root-owned).
-			$dir = Installer::private_dir();
-			foreach ( $files as $name => $f ) {
-				file_put_contents( $dir . '/' . $name, $f['bytes'] );
-				chown( $dir . '/' . $name, $f['owner'] );
-				chgrp( $dir . '/' . $name, $f['group'] );
-				chmod( $dir . '/' . $name, $f['perms'] );
-			}
-			if ( null !== $meta ) {
-				chown( $dir, $meta['owner'] );
-				chgrp( $dir, $meta['group'] );
-				chmod( $dir, $meta['perms'] );
+		// Park everything the uninstall destroys.
+		$saved = array( 'options' => array(), 'caps' => array() );
+		foreach ( PRIVACY_PLUGIN_OPTIONS as $opt ) {
+			$value = get_option( $opt, $missing );
+			if ( $missing !== $value ) {
+				$saved['options'][ $opt ] = $value;
 			}
 		}
+		foreach ( wp_roles()->role_objects as $name => $role ) {
+			$saved['caps'][ $name ] = $role->has_cap( 'bugspot_manage' );
+		}
+		if ( ! add_option( PRIVACY_BACKUP_OPTION, $saved, '', false ) ) {
+			throw new RuntimeException( 'Could not store the options backup.' );
+		}
+		$backup = $dir . '.bugspot-test-backup-' . time();
+		$parked = false; // True once $dir holds only test files (real dir renamed away, or there was none).
+
+		try {
+			try {
+				if ( false === $wpdb->query( "RENAME TABLE {$table} TO {$backup_table}" ) || false === $wpdb->query( "CREATE TABLE {$table} LIKE {$backup_table}" ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					throw new RuntimeException( 'Could not move the reports table aside.' );
+				}
+				if ( file_exists( $dir ) && ! rename( $dir, $backup ) ) {
+					throw new RuntimeException( 'Could not move the private dir aside.' );
+				}
+				$parked = true;
+
+				wp_mkdir_p( $dir );
+				file_put_contents( $dir . '/sub-test.txt', 'x' );
+				mkdir( $dir . '/nested' );
+				file_put_contents( $dir . '/nested/deep.txt', 'x' );
+				set_transient( 'bugspot_rl_h_test', 1, HOUR_IN_SECONDS );
+				wp_roles()->get_role( 'administrator' )->add_cap( 'bugspot_manage' );
+
+				if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
+					define( 'WP_UNINSTALL_PLUGIN', 'bug-spotter/bug-spotter.php' );
+				}
+				update_option( 'bugspot_settings', array( 'data' => array( 'delete_on_uninstall' => true ) ) );
+				include BUGSPOT_DIR . 'uninstall.php';
+
+				assert_true( ! privacy_table_exists( $table ), 'table dropped' );
+				assert_same( $missing, get_option( 'bugspot_settings', $missing ), 'settings removed' );
+				assert_same( $missing, get_option( 'bugspot_secret', $missing ), 'secret removed' );
+				assert_same( $missing, get_option( 'bugspot_db_version', $missing ), 'db version removed' );
+				assert_same( false, get_transient( 'bugspot_rl_h_test' ), 'rate-limit transient removed' );
+				foreach ( wp_roles()->role_objects as $role ) {
+					assert_true( ! $role->has_cap( 'bugspot_manage' ), 'capability removed from ' . $role->name );
+				}
+				assert_true( ! file_exists( $dir ), 'private dir removed' );
+				assert_same( false, wp_next_scheduled( 'bugspot_daily_purge' ), 'cron cleared' );
+			} finally {
+				privacy_restore_backup( $table );
+			}
+		} finally {
+			try {
+				// Plain PHP only: whatever happened above, the test dir goes and the real one comes back untouched.
+				if ( $parked ) {
+					privacy_remove_dir( $dir );
+					if ( file_exists( $backup ) ) {
+						rename( $backup, $dir );
+					}
+				}
+				if ( file_exists( $backup ) ) {
+					throw new RuntimeException( 'Private dir backup left at ' . $backup );
+				}
+			} finally {
+				Installer::activate(); // Only re-schedules the purge now: table, options, caps and dir are back.
+			}
+		}
+	}
+);
+
+bugspot_test(
+	'privacy: exporter_query_count_does_not_grow_with_reports',
+	function () {
+		global $wpdb;
+		$repo  = new Reports_Repository();
+		$email = 'count-' . wp_rand() . '@example.test';
+		$make  = static fn() => $repo->insert( array( 'description' => 'c', 'page_url' => 'https://example.test/', 'reporter_email' => $email ) );
+		$make();
+		Privacy::export( $email, 1 ); // Warms the caches (user lookup, options).
+
+		$before = $wpdb->num_queries;
+		Privacy::export( $email, 1 );
+		$one = $wpdb->num_queries - $before;
+
+		for ( $i = 0; $i < 5; $i++ ) {
+			$make();
+		}
+		$before = $wpdb->num_queries;
+		$res    = Privacy::export( $email, 1 );
+		assert_same( 6, count( $res['data'] ) );
+		assert_same( $one, $wpdb->num_queries - $before, 'same number of queries for 1 or 6 reports' );
 	}
 );

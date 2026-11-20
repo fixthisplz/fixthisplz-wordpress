@@ -454,7 +454,15 @@ bugspot_test(
 					$req->set_body_params( $body );
 					return rest_do_request( $req );
 				};
+				$reads = 0;
+				$count = static function ( string $sql ) use ( &$reads ): string {
+					$reads += str_starts_with( $sql, 'SELECT * FROM ' . Installer::table() . ' WHERE id' ) ? 1 : 0;
+					return $sql;
+				};
+				add_filter( 'query', $count );
 				$res = $patch( $id, array( 'status' => 'fixed', 'priority' => 'high' ) );
+				remove_filter( 'query', $count );
+				assert_same( 1, $reads, 'the report is read once per update' );
 				assert_same( 200, $res->get_status() );
 				assert_same(
 					array(

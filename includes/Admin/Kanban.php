@@ -84,7 +84,7 @@ final class Kanban {
 		$items = array();
 		$page  = 1;
 		while ( count( $items ) < $limit ) {
-			$result = $repo->query( array_merge( $criteria, array( 'status' => $status, 'orderby' => 'created_at', 'order' => 'DESC', 'per_page' => min( Reports_Repository::MAX_PER_PAGE, $limit - count( $items ) ), 'page' => $page ) ) );
+			$result = $repo->query( array_merge( $criteria, array( 'status' => $status, 'with_email' => false, 'orderby' => 'created_at', 'order' => 'DESC', 'per_page' => min( Reports_Repository::MAX_PER_PAGE, $limit - count( $items ) ), 'page' => $page ) ) );
 			if ( ! $result['items'] ) {
 				break;
 			}

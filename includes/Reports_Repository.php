@@ -9,6 +9,9 @@ final class Reports_Repository {
 
 	public const MAX_PER_PAGE = 200;
 
+	/** What list screens, exports and cards read: no `context` JSON, no hashes, no dates they never show. */
+	private const LIST_COLUMNS = 'id, status, priority, description, page_url, user_id, screenshot, created_at';
+
 	/**
 	 * @param array $row Keys: description, page_url, context (array), user_id, reporter_email (plain), screenshot, ip_hash.
 	 * @return int New id, or 0 when the insert fails.
@@ -52,11 +55,16 @@ final class Reports_Repository {
 		return is_array( $row ) ? self::hydrate( $row ) : null;
 	}
 
-	/** Only `status` and `priority` can change; any invalid value rejects the whole update. */
-	public function update( int $id, array $fields ): bool {
+	/**
+	 * Only `status` and `priority` can change; any invalid value rejects the whole update.
+	 *
+	 * @param array|null $current The full row find() returned for $id (seen_at is read), when the caller already has it;
+	 *                           never a light query() / find_many() row.
+	 */
+	public function update( int $id, array $fields, ?array $current = null ): bool {
 		global $wpdb;
 
-		$current = $this->find( $id );
+		$current ??= $this->find( $id );
 		if ( null === $current ) {
 			return false;
 		}
@@ -123,14 +131,17 @@ final class Reports_Repository {
 	}
 
 	/**
+	 * Light rows (LIST_COLUMNS, plus the decrypted reporter_email unless `with_email` is false); find() has the rest.
+	 *
 	 * @param array $args status, priority, from, to (Y-m-d, site timezone), search, orderby (created_at|priority),
-	 *                    order (DESC|ASC), per_page (1-200, default 20), page (>= 1).
+	 *                    order (DESC|ASC), per_page (1-200, default 20), page (>= 1), with_email (default true).
 	 * @return array{items: array[], total: int}
 	 */
 	public function query( array $args ): array {
 		global $wpdb;
 		$table = Installer::table();
-		$where = $this->where( $args, true );
+		$where   = $this->where( $args, true );
+		$columns = self::LIST_COLUMNS . ( false === ( $args['with_email'] ?? true ) ? '' : ', reporter_email' );
 
 		$per_page = max( 1, min( self::MAX_PER_PAGE, (int) ( $args['per_page'] ?? 20 ) ) );
 		$page     = max( 1, (int) ( $args['page'] ?? 1 ) );
@@ -142,7 +153,7 @@ final class Reports_Repository {
 		$total = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} {$where}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $where is built from prepare() fragments.
 		$rows  = $wpdb->get_results( // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$wpdb->prepare(
-				"SELECT * FROM {$table} {$where} ORDER BY {$primary}, id DESC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+				"SELECT {$columns} FROM {$table} {$where} ORDER BY {$primary}, id DESC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 				$per_page,
 				( $page - 1 ) * $per_page
 			),
@@ -153,6 +164,25 @@ final class Reports_Repository {
 			'items' => array_map( array( self::class, 'hydrate' ), is_array( $rows ) ? $rows : array() ),
 			'total' => $total,
 		);
+	}
+
+	/**
+	 * Light rows (LIST_COLUMNS + decrypted reporter_email) of the given reports, by id; missing ids are skipped.
+	 *
+	 * @param int[] $ids
+	 * @return array[]
+	 */
+	public function find_many( array $ids ): array {
+		global $wpdb;
+		$ids = array_map( 'intval', $ids );
+		if ( ! $ids ) {
+			return array();
+		}
+		$table   = Installer::table();
+		$columns = self::LIST_COLUMNS . ', reporter_email';
+		$in      = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+		$rows    = $wpdb->get_results( $wpdb->prepare( "SELECT {$columns} FROM {$table} WHERE id IN ({$in}) ORDER BY id", $ids ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+		return array_map( array( self::class, 'hydrate' ), is_array( $rows ) ? $rows : array() );
 	}
 
 	/** @return array<string,int> One entry per status key (0 when empty); the `status` filter is ignored. */
@@ -260,12 +290,17 @@ final class Reports_Repository {
 		return $time ? $time->getTimestamp() : null;
 	}
 
+	/** Types the columns that were selected; `context` and `reporter_email` are decoded only when present. */
 	private static function hydrate( array $row ): array {
 		$row['id']      = (int) $row['id'];
 		$row['user_id'] = null !== $row['user_id'] ? (int) $row['user_id'] : null;
-		$context        = is_string( $row['context'] ?? null ) ? json_decode( $row['context'], true ) : null;
-		$row['context'] = is_array( $context ) ? $context : array();
-		$row['reporter_email'] = ( isset( $row['reporter_email'] ) && '' !== $row['reporter_email'] ) ? Secret::decrypt( $row['reporter_email'] ) : null;
+		if ( array_key_exists( 'context', $row ) ) {
+			$context        = is_string( $row['context'] ) ? json_decode( $row['context'], true ) : null;
+			$row['context'] = is_array( $context ) ? $context : array();
+		}
+		if ( array_key_exists( 'reporter_email', $row ) ) {
+			$row['reporter_email'] = ( null !== $row['reporter_email'] && '' !== $row['reporter_email'] ) ? Secret::decrypt( $row['reporter_email'] ) : null;
+		}
 		return $row;
 	}
 

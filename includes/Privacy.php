@@ -40,11 +40,7 @@ final class Privacy {
 		$items = array();
 		$stats = Statuses::all();
 
-		foreach ( $slice as $id ) {
-			$report = $repo->find( $id );
-			if ( null === $report ) {
-				continue;
-			}
+		foreach ( $repo->find_many( $slice ) as $report ) {
 			$data = array(
 				array( 'name' => __( 'Report number', 'bug-spotter' ), 'value' => '#' . $report['id'] ),
 				array( 'name' => __( 'Date', 'bug-spotter' ), 'value' => wp_date( 'Y-m-d H:i', (int) Reports_Repository::timestamp( $report['created_at'] ) ) ),

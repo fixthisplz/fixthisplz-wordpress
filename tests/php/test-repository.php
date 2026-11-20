@@ -245,3 +245,44 @@ bugspot_test(
 		assert_true( null !== $repo->find( $c ), 'recently closed kept (status_changed_at, not created_at)' );
 	}
 );
+
+bugspot_test(
+	'repository: query_returns_light_rows_and_skips_email_on_request',
+	function () {
+		$repo = new Reports_Repository();
+		$id   = repo_make( $repo, 'LIGHT1', array( 'context' => array( 'big' => 'x' ), 'reporter_email' => 'light@example.test', 'ip_hash' => str_repeat( 'c', 64 ) ) );
+
+		$item = $repo->query( array( 'search' => 'LIGHT1' ) )['items'][0];
+		assert_same( array( 'id', 'status', 'priority', 'description', 'page_url', 'user_id', 'screenshot', 'created_at', 'reporter_email' ), array_keys( $item ) );
+		assert_same( $id, $item['id'] );
+		assert_same( 'light@example.test', $item['reporter_email'] );
+
+		$card = $repo->query( array( 'search' => 'LIGHT1', 'with_email' => false ) )['items'][0];
+		assert_true( ! array_key_exists( 'reporter_email', $card ) && ! array_key_exists( 'context', $card ), 'cards carry neither e-mail nor context' );
+
+		$full = $repo->find( $id );
+		assert_same( array( 'big' => 'x' ), $full['context'], 'find() stays complete' );
+		assert_same( str_repeat( 'c', 64 ), $full['ip_hash'] );
+	}
+);
+
+bugspot_test(
+	'repository: find_many_reads_given_ids_in_one_query',
+	function () {
+		global $wpdb;
+		$repo = new Reports_Repository();
+		$a    = repo_make( $repo, 'FM1', array( 'reporter_email' => 'fm@example.test' ) );
+		$b    = repo_make( $repo, 'FM2' );
+
+		$before = $wpdb->num_queries;
+		$rows   = $repo->find_many( array( $b, 999999999, $a ) );
+		assert_same( 1, $wpdb->num_queries - $before, 'one query' );
+		assert_same( array( $a, $b ), array_column( $rows, 'id' ), 'by id, missing ids skipped' );
+		assert_same( 'fm@example.test', $rows[0]['reporter_email'] );
+		assert_same( null, $rows[1]['reporter_email'] );
+
+		$before = $wpdb->num_queries;
+		assert_same( array(), $repo->find_many( array() ) );
+		assert_same( 0, $wpdb->num_queries - $before, 'no query for no id' );
+	}
+);

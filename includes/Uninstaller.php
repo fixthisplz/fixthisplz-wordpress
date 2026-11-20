@@ -43,9 +43,8 @@ final class Uninstaller {
 
 	/** Deletes uploads/bug-spotter recursively; refuses anything that does not resolve to exactly that directory. */
 	private static function delete_private_dir(): void {
-		$uploads = wp_upload_dir( null, false );
-		$base    = realpath( $uploads['basedir'] );
-		$dir     = $uploads['basedir'] . '/bug-spotter';
+		$base = realpath( wp_upload_dir( null, false )['basedir'] );
+		$dir  = Installer::private_dir();
 		if ( false === $base || is_link( $dir ) || ! is_dir( $dir ) ) {
 			return;
 		}

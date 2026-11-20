@@ -22,10 +22,30 @@ bugspot_test(
 bugspot_test(
 	'installer: activate_protects_private_dir',
 	function () {
-		$dir = Installer::private_dir();
+		$dir = Installer::ensure_private_dir();
 		assert_same( wp_upload_dir( null, false )['basedir'] . '/bug-spotter', $dir );
+		assert_same( $dir, Installer::private_dir() );
 		assert_true( is_file( $dir . '/index.php' ), 'index.php missing' );
 		assert_true( str_contains( (string) file_get_contents( $dir . '/.htaccess' ), 'Require all denied' ), '.htaccess must deny access' );
+	}
+);
+
+bugspot_test(
+	'installer: private_dir_and_screenshot_path_create_nothing',
+	function () {
+		$base   = get_temp_dir() . 'bugspot-noside-' . wp_generate_password( 8, false );
+		$filter = static function ( array $uploads ) use ( $base ): array {
+			$uploads['basedir'] = $base;
+			return $uploads;
+		};
+		add_filter( 'upload_dir', $filter );
+		try {
+			assert_same( $base . '/bug-spotter', Installer::private_dir() );
+			assert_same( $base . '/bug-spotter/' . str_repeat( 'a', 32 ) . '.jpg', Bug_Spotter\Screenshot_Store::path( str_repeat( 'a', 32 ) . '.jpg' ) );
+			assert_true( ! file_exists( $base ), 'a getter must not create the directory' );
+		} finally {
+			remove_filter( 'upload_dir', $filter );
+		}
 	}
 );
 

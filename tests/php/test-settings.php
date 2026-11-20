@@ -225,3 +225,24 @@ settings_test(
 		assert_same( false, Settings::sanitize( array( 'dialog' => array( 'title' => 'x' ) ) )['dialog']['mask_capture'], 'absent stays off' );
 	}
 );
+
+settings_test(
+	'settings: get stays fresh across option writes and filters',
+	function () {
+		update_option( Settings::OPTION, array( 'button' => array( 'shape' => 'pill' ) ) );
+		assert_same( 'pill', Settings::get()['button']['shape'] );
+
+		update_option( Settings::OPTION, array( 'button' => array( 'shape' => 'square' ) ) );
+		assert_same( 'square', Settings::get()['button']['shape'], 'fresh after update_option' );
+
+		$seed = static fn() => array( 'button' => array( 'shape' => 'rounded' ) );
+		add_filter( 'pre_option_' . Settings::OPTION, $seed );
+		$filtered = Settings::get()['button']['shape'];
+		remove_filter( 'pre_option_' . Settings::OPTION, $seed );
+		assert_same( 'rounded', $filtered, 'fresh under an option filter' );
+		assert_same( 'square', Settings::get()['button']['shape'], 'fresh once the filter is gone' );
+
+		delete_option( Settings::OPTION );
+		assert_same( 'circle', Settings::get()['button']['shape'], 'defaults after delete_option' );
+	}
+);

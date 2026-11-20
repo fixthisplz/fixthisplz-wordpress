@@ -309,9 +309,10 @@ final class Reports_Controller {
 
 	/** @return \WP_REST_Response|\WP_Error */
 	public static function update( \WP_REST_Request $request ) {
-		$repo = new Reports_Repository();
-		$id   = (int) $request['id'];
-		if ( null === $repo->find( $id ) ) {
+		$repo   = new Reports_Repository();
+		$id     = (int) $request['id'];
+		$report = $repo->find( $id );
+		if ( null === $report ) {
 			return new \WP_Error( 'bugspot_not_found', __( 'Report not found.', 'bug-spotter' ), array( 'status' => 404 ) );
 		}
 
@@ -331,16 +332,15 @@ final class Reports_Controller {
 		if ( ! $fields ) {
 			return self::invalid( __( 'Nothing to update: send a status and/or a priority.', 'bug-spotter' ) );
 		}
-		if ( ! $repo->update( $id, $fields ) ) {
+		if ( ! $repo->update( $id, $fields, $report ) ) {
 			return new \WP_Error( 'bugspot_save_failed', __( 'The report could not be saved.', 'bug-spotter' ), array( 'status' => 500 ) );
 		}
 
-		$report = $repo->find( $id );
 		return new \WP_REST_Response(
 			array(
 				'id'       => $id,
-				'status'   => $report['status'] ?? $fields['status'] ?? '',
-				'priority' => $report['priority'] ?? $fields['priority'] ?? '',
+				'status'   => $fields['status'] ?? $report['status'],
+				'priority' => $fields['priority'] ?? $report['priority'],
 			),
 			200
 		);

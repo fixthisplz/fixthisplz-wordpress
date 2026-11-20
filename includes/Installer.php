@@ -20,7 +20,7 @@ final class Installer {
 		self::create_table();
 		Secret::key();
 		Settings::sync_capabilities();
-		self::private_dir();
+		self::ensure_private_dir();
 		if ( ! wp_next_scheduled( self::CRON_HOOK ) ) {
 			wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', self::CRON_HOOK );
 		}
@@ -47,10 +47,14 @@ final class Installer {
 		}
 	}
 
-	/** Upload sub-directory for screenshots, closed to direct web access. Created on first call. */
+	/** Upload sub-directory for screenshots (path only, nothing is created). */
 	public static function private_dir(): string {
-		$uploads = wp_upload_dir( null, false );
-		$dir     = $uploads['basedir'] . '/bug-spotter';
+		return wp_upload_dir( null, false )['basedir'] . '/bug-spotter';
+	}
+
+	/** Creates the private directory, closed to direct web access, when missing; returns its path. */
+	public static function ensure_private_dir(): string {
+		$dir = self::private_dir();
 		wp_mkdir_p( $dir );
 		if ( ! file_exists( $dir . '/index.php' ) ) {
 			file_put_contents( $dir . '/index.php', "<?php\n// Silence is golden.\n" ); // phpcs:ignore WordPress.WP.AlternativeFunctions

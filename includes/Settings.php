@@ -12,6 +12,9 @@ final class Settings {
 
 	private const MAX_SELECTORS = 50;
 
+	/** Last get() result and the raw option value it was built from. @var array{saved:mixed,merged:array}|null */
+	private static ?array $memo = null;
+
 	/** Keeps the bugspot_manage capability in line with the "management" roles whenever the option is written. */
 	public static function register_hooks(): void {
 		add_action( 'add_option_' . self::OPTION, array( self::class, 'sync_capabilities' ) );
@@ -127,7 +130,14 @@ final class Settings {
 	 */
 	public static function get(): array {
 		$saved = get_option( self::OPTION, array() );
-		return self::merge( self::defaults(), is_array( $saved ) ? $saved : array() );
+		// Rebuilt only when the stored value differs, so any write, filter or site switch is seen at once.
+		if ( null === self::$memo || self::$memo['saved'] !== $saved ) {
+			self::$memo = array(
+				'saved'  => $saved,
+				'merged' => self::merge( self::defaults(), is_array( $saved ) ? $saved : array() ),
+			);
+		}
+		return self::$memo['merged'];
 	}
 
 	/** Label for a text setting ("section.key"), falling back to the translated default. */

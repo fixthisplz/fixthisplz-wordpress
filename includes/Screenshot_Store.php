@@ -41,7 +41,7 @@ final class Screenshot_Store {
 			return self::bad_type();
 		}
 
-		$dir = Installer::private_dir();
+		$dir = Installer::ensure_private_dir();
 		if ( ! is_dir( $dir ) || ! wp_is_writable( $dir ) ) {
 			return self::store_failed();
 		}
