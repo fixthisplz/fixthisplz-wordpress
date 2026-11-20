@@ -4,7 +4,7 @@ Tags: bug report, feedback, screenshot, support, issue tracker
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,9 @@ The plugin adds suggested text to your privacy policy (Settings › Privacy), an
 * First public release: floating button with live preview, element picker, accessible report dialog, optional screenshot (real tab capture or page reconstruction, optional masking), report downloads, list and Kanban board, detail screen, CSV export, configurable statuses, menu name and position, e-mail notification, anti-bot providers and rate limits, privacy exporter and eraser, automatic purge of closed reports, French translation.
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+Adds screenshot annotation and makes updates safe for browsers that cached the previous script files.
 
 = 1.0.0 =
 First public release.
