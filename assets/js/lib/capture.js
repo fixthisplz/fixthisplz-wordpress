@@ -1,7 +1,7 @@
 /* Screenshot of the visible part of the page (spec 5.2), the fallback without real capture. Works on
  * modern-screenshot's CLONE only; the plugin UI is filtered out. When the site enables masking (opt-in, decision
- * David 2026-11-20), field values become bullets, editable regions too, and sensitive parts get a solid fill.
- * The vendored library is imported lazily, on first use.
+ * David 2026-11-20), clone-mask.js masks the clone. This module and the vendored library are both imported lazily,
+ * on first use.
  *
  * Speed: the library clones and styles every node it is given. Only boxes that intersect the viewport (and
  * their ancestors) are cloned deeply; any other element is cloned alone (its computed width/height are copied,
@@ -14,14 +14,12 @@ import { encodeJpeg } from './jpeg.js';
 import { addFamilies, crossOriginSheets, embedCrossOriginFonts } from './capture-fonts.js';
 import { createPseudoRepair } from './pseudo-repair.js';
 import { UI_ATTR } from './dom.js';
-import { FIELD_TAGS, KEEP_VALUE_TYPES, MASK_FILL, isEditable, matchesAny, sensitiveList } from './sensitive.js';
+import { cloneMasker, important } from './clone-mask.js';
 
 // Images already on screen are loaded: do not wait for lazy images further down the page.
 const WAIT_FOR_LOAD_MS = 300;
 // A slow or dead image must not stall the capture (library default: 30 s).
 const ASSET_TIMEOUT_MS = 5000;
-const BULLETS = '••••••';
-const REPLACED_TAGS = new Set(['IMG', 'VIDEO', 'CANVAS', 'IFRAME', 'SVG', 'OBJECT', 'EMBED', 'PICTURE']);
 
 let vendorPromise = null;
 function loadVendor(vendorUrl) {
@@ -33,94 +31,6 @@ function loadVendor(vendorUrl) {
 	}
 	return vendorPromise;
 }
-
-function important(node, name, value) {
-	node.style.setProperty(name, value, 'important');
-}
-
-function replaceText(node, text) {
-	while (node.firstChild) {
-		node.removeChild(node.firstChild);
-	}
-	if (text) {
-		node.appendChild(node.ownerDocument.createTextNode(text));
-	}
-}
-
-function maskField(node) {
-	const tag = String(node.tagName).toUpperCase();
-	if (tag === 'INPUT') {
-		const type = (node.getAttribute('type') || 'text').toLowerCase();
-		if (type === 'password') {
-			node.setAttribute('value', BULLETS); // always, so not even the length shows
-		} else if (type === 'hidden' || type === 'file') {
-			node.setAttribute('value', '');
-		} else if (!KEEP_VALUE_TYPES.has(type) && (node.getAttribute('value') || '') !== '') {
-			node.setAttribute('value', BULLETS);
-		}
-	} else if (tag === 'TEXTAREA') {
-		const had = (node.getAttribute('value') || node.textContent || '') !== '';
-		node.removeAttribute('value');
-		replaceText(node, had ? BULLETS : '');
-	} else if (tag === 'SELECT') {
-		node.removeAttribute('value');
-		replaceText(node, '');
-		const option = node.ownerDocument.createElement('option');
-		option.textContent = BULLETS;
-		option.setAttribute('selected', '');
-		node.appendChild(option);
-	}
-}
-
-function fillSensitive(node) {
-	// Same box, solid fill; everything inside is hidden (descendants included).
-	important(node, 'background', MASK_FILL);
-	important(node, 'color', 'transparent');
-	important(node, '-webkit-text-fill-color', 'transparent');
-	important(node, 'text-shadow', 'none');
-	important(node, 'border-color', MASK_FILL);
-	if (REPLACED_TAGS.has(String(node.tagName).toUpperCase())) {
-		important(node, 'opacity', '0');
-	}
-	const stack = Array.from(node.childNodes || []);
-	while (stack.length) {
-		const child = stack.pop();
-		if (child.nodeType === 1) {
-			important(child, 'visibility', 'hidden');
-			stack.push(...Array.from(child.childNodes || []));
-		}
-	}
-}
-
-/** Runs on the cloned tree, never on the page; returns the boxes it filled. */
-function maskClone(root, sensitiveSelectors = []) {
-	if (!root || root.nodeType !== 1) {
-		return [];
-	}
-	const selectors = sensitiveList(sensitiveSelectors);
-	const sensitive = [];
-	const stack = [root];
-	while (stack.length) {
-		const node = stack.pop();
-		if (node.nodeType !== 1) {
-			continue;
-		}
-		if (FIELD_TAGS.has(String(node.tagName).toUpperCase())) {
-			maskField(node);
-		} else if (isEditable(node)) {
-			replaceText(node, BULLETS);
-		}
-		if (matchesAny(node, selectors)) {
-			sensitive.push(node);
-		}
-		stack.push(...Array.from(node.childNodes || []));
-	}
-	sensitive.forEach(fillSensitive);
-	return sensitive;
-}
-
-/** What runs on each cloned subtree: maskClone when the site enabled masking, nothing otherwise. Exported for tests. */
-export const cloneMasker = (mask, sensitiveSelectors = []) => (mask === true ? (clone) => maskClone(clone, sensitiveSelectors) : () => []);
 
 const parentOf = (node) => (node.parentNode && node.parentNode.nodeType === 11 ? node.parentNode.host : node.parentNode);
 

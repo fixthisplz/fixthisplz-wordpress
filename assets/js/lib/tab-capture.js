@@ -7,9 +7,8 @@
  * Routing: the site setting config.dialog.captureMethod 'dom' always means reconstruction; otherwise real capture
  * when getDisplayMedia exists (Chrome, Edge, Firefox, Safari desktop), the device has a
  * mouse or trackpad, and the Permissions-Policy allows display-capture; otherwise the DOM reconstruction of
- * capture.js (vendored library loaded lazily). The stream is always stopped: on success, on error, after a
- * 10 s deadline, and as soon as the run is abandoned (box unchecked, Retake, dialog closed). */
-import { captureVisible } from './capture.js';
+ * capture.js (that module and the vendored library are loaded lazily). The stream is always stopped: on success, on
+ * error, after a 10 s deadline, and as soon as the run is abandoned (box unchecked, Retake, dialog closed). */
 import { encodeJpeg } from './jpeg.js';
 import { UI_ATTR } from './dom.js';
 import { listMaskTargets, measureTarget, scaleRects } from './mask-targets.js';
@@ -309,6 +308,8 @@ export function takeScreenshot({ vendorUrl, method = 'tab', mask = false, sensit
 	if (selectMethod(globalThis, method) === 'tab') {
 		return captureTab({ mask, sensitiveSelectors, signal });
 	}
-	// Loads the vendored library on first use.
-	return captureVisible({ vendorUrl, mask, sensitiveSelectors }).then((blob) => ({ blob, method: 'dom', masked: mask === true }));
+	// Loaded on first use only: the reconstruction needs no gesture, unlike getDisplayMedia above.
+	return import('./capture.js')
+		.then(({ captureVisible }) => captureVisible({ vendorUrl, mask, sensitiveSelectors }))
+		.then((blob) => ({ blob, method: 'dom', masked: mask === true }));
 }

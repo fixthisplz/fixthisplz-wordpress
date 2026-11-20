@@ -1,5 +1,5 @@
 /* What is a field, an editable region and a sensitive part (spec 5.2). The single source for both the report
- * text (element.js, report.js) and the opt-in masks (capture.js, mask-targets.js, tab-capture.js): if these
+ * text (element.js, report.js) and the opt-in masks (clone-mask.js, mask-targets.js, tab-capture.js): if these
  * rules differed, the collected text and the masked image would not cover the same things. */
 
 const SENSITIVE_ATTR = '[data-bugspot-sensitive]';
