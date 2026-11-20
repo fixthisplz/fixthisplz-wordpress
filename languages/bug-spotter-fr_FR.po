@@ -24,30 +24,28 @@ msgstr "Bug Spotter"
 msgid "Lets visitors and editors report bugs from any page of a WordPress site."
 msgstr "Permet aux visiteurs et aux éditeurs de signaler des bugs depuis n’importe quelle page d’un site WordPress."
 
-#: includes/Admin/Bugs_Page.php:25
+#: includes/Admin/Bugs_Page.php:26
 msgid "Bugs per page"
 msgstr "Bugs par page"
 
-#: includes/Admin/Bugs_Page.php:83
-#: includes/Admin/Bugs_Page.php:94
+#: includes/Admin/Bugs_Page.php:84
+#: includes/Admin/Bugs_Page.php:95
 #: includes/Admin/Csv_Export.php:33
-#: includes/Admin/Detail_Page.php:66
+#: includes/Admin/Detail_Page.php:67
 msgid "Sorry, you are not allowed to do that."
 msgstr "Désolé, vous n’avez pas l’autorisation d’effectuer cette action."
 
-#: includes/Admin/Bugs_Page.php:145
+#: includes/Admin/Bugs_Page.php:146
 msgid "Sorry, you are not allowed to access this page."
 msgstr "Désolé, vous n’avez pas l’autorisation d’accéder à cette page."
 
-#: includes/Admin/Bugs_Page.php:158
-#: includes/Admin/Detail_Page.php:80
-#: includes/Admin/Menu.php:28
-#: includes/Admin/Menu.php:61
+#: includes/Admin/Settings_Management_Tab.php:33
+#: includes/Settings.php:191
 msgid "Bugs"
 msgstr "Bugs"
 
 #. translators: %d: number of reports.
-#: includes/Admin/Bugs_Page.php:190
+#: includes/Admin/Bugs_Page.php:191
 #, php-format
 msgid "%d report deleted."
 msgid_plural "%d reports deleted."
@@ -55,53 +53,53 @@ msgstr[0] "%d signalement supprimé."
 msgstr[1] "%d signalements supprimés."
 
 #. translators: %d: number of reports.
-#: includes/Admin/Bugs_Page.php:192
+#: includes/Admin/Bugs_Page.php:193
 #, php-format
 msgid "%d report updated."
 msgid_plural "%d reports updated."
 msgstr[0] "%d signalement mis à jour."
 msgstr[1] "%d signalements mis à jour."
 
-#: includes/Admin/Bugs_Page.php:203
+#: includes/Admin/Bugs_Page.php:204
 msgid "List"
 msgstr "Liste"
 
-#: includes/Admin/Bugs_Page.php:209
+#: includes/Admin/Bugs_Page.php:210
 msgid "Kanban"
 msgstr "Kanban"
 
-#: includes/Admin/Bugs_Page.php:230
+#: includes/Admin/Bugs_Page.php:231
 msgid "From"
 msgstr "Du"
 
-#: includes/Admin/Bugs_Page.php:231
+#: includes/Admin/Bugs_Page.php:232
 msgid "To"
 msgstr "Au"
 
-#: includes/Admin/Bugs_Page.php:232
+#: includes/Admin/Bugs_Page.php:233
 #: includes/Admin/Csv_Export.php:72
-#: includes/Admin/Detail_Page.php:292
+#: includes/Admin/Detail_Page.php:293
 #: includes/Admin/List_Table.php:40
 msgid "Priority"
 msgstr "Priorité"
 
-#: includes/Admin/Bugs_Page.php:233
+#: includes/Admin/Bugs_Page.php:234
 msgid "All priorities"
 msgstr "Toutes les priorités"
 
-#: includes/Admin/Bugs_Page.php:238
+#: includes/Admin/Bugs_Page.php:239
 msgid "Search reports"
 msgstr "Rechercher des signalements"
 
-#: includes/Admin/Bugs_Page.php:239
+#: includes/Admin/Bugs_Page.php:240
 msgid "Search description or URL"
 msgstr "Rechercher dans la description ou l’URL"
 
-#: includes/Admin/Bugs_Page.php:240
+#: includes/Admin/Bugs_Page.php:241
 msgid "Filter"
 msgstr "Filtrer"
 
-#: includes/Admin/Bugs_Page.php:241
+#: includes/Admin/Bugs_Page.php:242
 msgid "Export CSV"
 msgstr "Exporter en CSV"
 
@@ -125,16 +123,16 @@ msgid "Date"
 msgstr "Date"
 
 #: includes/Admin/Csv_Export.php:71
-#: includes/Admin/Detail_Page.php:245
-#: includes/Admin/Detail_Page.php:282
-#: includes/Admin/Detail_Page.php:288
+#: includes/Admin/Detail_Page.php:246
+#: includes/Admin/Detail_Page.php:283
+#: includes/Admin/Detail_Page.php:289
 #: includes/Admin/List_Table.php:41
 #: includes/Privacy.php:48
 msgid "Status"
 msgstr "Statut"
 
 #: includes/Admin/Csv_Export.php:73
-#: includes/Admin/Detail_Page.php:101
+#: includes/Admin/Detail_Page.php:102
 #: includes/Admin/List_Table.php:38
 #: includes/Mailer.php:76
 #: includes/Privacy.php:46
@@ -142,13 +140,13 @@ msgid "Page"
 msgstr "Page"
 
 #: includes/Admin/Csv_Export.php:74
-#: includes/Admin/Detail_Page.php:100
+#: includes/Admin/Detail_Page.php:101
 #: includes/Admin/List_Table.php:39
 msgid "Reporter"
 msgstr "Déclarant"
 
 #: includes/Admin/Csv_Export.php:75
-#: includes/Admin/Detail_Page.php:97
+#: includes/Admin/Detail_Page.php:98
 #: includes/Admin/List_Table.php:37
 #: includes/Frontend/Assets.php:156
 #: includes/Mailer.php:75
@@ -156,37 +154,37 @@ msgstr "Déclarant"
 msgid "Description"
 msgstr "Description"
 
-#: includes/Admin/Detail_Page.php:81
+#: includes/Admin/Detail_Page.php:82
 #: includes/Rest/Reports_Controller.php:151
 msgid "Report not found."
 msgstr "Signalement introuvable."
 
 #. translators: %d: report number.
-#: includes/Admin/Detail_Page.php:89
+#: includes/Admin/Detail_Page.php:90
 #, php-format
 msgid "Bug #%d"
 msgstr "Bug n° %d"
 
-#: includes/Admin/Detail_Page.php:102
+#: includes/Admin/Detail_Page.php:103
 msgid "Element"
 msgstr "Élément"
 
-#: includes/Admin/Detail_Page.php:103
+#: includes/Admin/Detail_Page.php:104
 msgid "Browser"
 msgstr "Navigateur"
 
-#: includes/Admin/Detail_Page.php:104
+#: includes/Admin/Detail_Page.php:105
 #: includes/Admin/Settings_Tabs.php:261
 msgid "Console errors"
 msgstr "Erreurs de la console"
 
-#: includes/Admin/Detail_Page.php:105
+#: includes/Admin/Detail_Page.php:106
 #: includes/Admin/Settings_Tabs.php:265
 #: includes/Frontend/Assets.php:182
 msgid "Failed requests"
 msgstr "Requêtes en échec"
 
-#: includes/Admin/Detail_Page.php:106
+#: includes/Admin/Detail_Page.php:107
 #: includes/Admin/Settings_Tabs.php:98
 #: includes/Admin/Settings_Tabs.php:215
 #: includes/Frontend/Assets.php:189
@@ -194,158 +192,158 @@ msgstr "Requêtes en échec"
 msgid "Screenshot"
 msgstr "Capture d’écran"
 
-#: includes/Admin/Detail_Page.php:107
+#: includes/Admin/Detail_Page.php:108
 msgid "Raw data"
 msgstr "Données brutes"
 
-#: includes/Admin/Detail_Page.php:109
+#: includes/Admin/Detail_Page.php:110
 msgid "Show the raw JSON"
 msgstr "Afficher le JSON brut"
 
-#: includes/Admin/Detail_Page.php:119
+#: includes/Admin/Detail_Page.php:120
 msgid "Back to the list"
 msgstr "Retour à la liste"
 
-#: includes/Admin/Detail_Page.php:125
+#: includes/Admin/Detail_Page.php:126
 msgid "Report updated."
 msgstr "Signalement mis à jour."
 
-#: includes/Admin/Detail_Page.php:127
+#: includes/Admin/Detail_Page.php:128
 msgid "The report could not be updated."
 msgstr "Le signalement n’a pas pu être mis à jour."
 
-#: includes/Admin/Detail_Page.php:138
+#: includes/Admin/Detail_Page.php:139
 #: includes/Admin/Settings_Button_Tab.php:162
 #: includes/Admin/Settings_Tabs.php:150
 msgid "None"
 msgstr "Aucun"
 
-#: includes/Admin/Detail_Page.php:163
+#: includes/Admin/Detail_Page.php:164
 msgid "Contact e-mail:"
 msgstr "E-mail de contact :"
 
-#: includes/Admin/Detail_Page.php:175
+#: includes/Admin/Detail_Page.php:176
 #: includes/Admin/Settings_Tabs.php:77
 msgid "Title"
 msgstr "Titre"
 
-#: includes/Admin/Detail_Page.php:176
+#: includes/Admin/Detail_Page.php:177
 msgid "WordPress page"
 msgstr "Page WordPress"
 
-#: includes/Admin/Detail_Page.php:202
+#: includes/Admin/Detail_Page.php:203
 msgid "Selector"
 msgstr "Sélecteur"
 
-#: includes/Admin/Detail_Page.php:203
+#: includes/Admin/Detail_Page.php:204
 msgid "Tag"
 msgstr "Balise"
 
-#: includes/Admin/Detail_Page.php:204
+#: includes/Admin/Detail_Page.php:205
 msgid "Role"
 msgstr "Rôle"
 
-#: includes/Admin/Detail_Page.php:205
+#: includes/Admin/Detail_Page.php:206
 #: includes/Admin/Settings_Statuses_Tab.php:25
 msgid "Name"
 msgstr "Nom"
 
-#: includes/Admin/Detail_Page.php:206
+#: includes/Admin/Detail_Page.php:207
 #: includes/Admin/Settings_Button_Tab.php:119
 msgid "Text"
 msgstr "Texte"
 
-#: includes/Admin/Detail_Page.php:207
+#: includes/Admin/Detail_Page.php:208
 #: includes/Admin/Settings_Button_Tab.php:55
 msgid "Position"
 msgstr "Position"
 
-#: includes/Admin/Detail_Page.php:216
+#: includes/Admin/Detail_Page.php:217
 msgid "Language"
 msgstr "Langue"
 
-#: includes/Admin/Detail_Page.php:217
+#: includes/Admin/Detail_Page.php:218
 msgid "Time zone"
 msgstr "Fuseau horaire"
 
-#: includes/Admin/Detail_Page.php:218
+#: includes/Admin/Detail_Page.php:219
 msgid "User agent"
 msgstr "User-agent"
 
-#: includes/Admin/Detail_Page.php:219
+#: includes/Admin/Detail_Page.php:220
 msgid "Viewport"
 msgstr "Zone d’affichage"
 
-#: includes/Admin/Detail_Page.php:220
+#: includes/Admin/Detail_Page.php:221
 msgid "Plugin version"
 msgstr "Version de l’extension"
 
-#: includes/Admin/Detail_Page.php:230
+#: includes/Admin/Detail_Page.php:231
 msgid "Level"
 msgstr "Niveau"
 
-#: includes/Admin/Detail_Page.php:230
+#: includes/Admin/Detail_Page.php:231
 msgid "Message"
 msgstr "Message"
 
-#: includes/Admin/Detail_Page.php:230
-#: includes/Admin/Detail_Page.php:245
+#: includes/Admin/Detail_Page.php:231
+#: includes/Admin/Detail_Page.php:246
 msgid "Time"
 msgstr "Heure"
 
-#: includes/Admin/Detail_Page.php:245
+#: includes/Admin/Detail_Page.php:246
 msgid "Method"
 msgstr "Méthode"
 
-#: includes/Admin/Detail_Page.php:245
+#: includes/Admin/Detail_Page.php:246
 msgid "URL"
 msgstr "URL"
 
-#: includes/Admin/Detail_Page.php:262
+#: includes/Admin/Detail_Page.php:263
 msgid "No screenshot was attached."
 msgstr "Aucune capture d’écran n’était jointe."
 
-#: includes/Admin/Detail_Page.php:274
+#: includes/Admin/Detail_Page.php:275
 msgid "Screenshot of the page (click for full size)"
 msgstr "Capture d’écran de la page (cliquez pour l’agrandir)"
 
-#: includes/Admin/Detail_Page.php:294
+#: includes/Admin/Detail_Page.php:295
 msgid "Update"
 msgstr "Mettre à jour"
 
-#: includes/Admin/Detail_Page.php:299
+#: includes/Admin/Detail_Page.php:300
 msgid "Dates"
 msgstr "Dates"
 
-#: includes/Admin/Detail_Page.php:302
+#: includes/Admin/Detail_Page.php:303
 msgid "Created"
 msgstr "Créé"
 
-#: includes/Admin/Detail_Page.php:303
+#: includes/Admin/Detail_Page.php:304
 #: includes/Statuses.php:134
 msgid "Seen"
 msgstr "Vu"
 
-#: includes/Admin/Detail_Page.php:304
+#: includes/Admin/Detail_Page.php:305
 msgid "Status changed"
 msgstr "Statut modifié"
 
-#: includes/Admin/Detail_Page.php:305
+#: includes/Admin/Detail_Page.php:306
 msgid "Updated"
 msgstr "Mis à jour"
 
-#: includes/Admin/Detail_Page.php:311
+#: includes/Admin/Detail_Page.php:312
 #: includes/Admin/List_Table.php:71
 #: includes/Admin/List_Table.php:155
 #: includes/Admin/Settings_Statuses_Tab.php:97
 msgid "Delete"
 msgstr "Supprimer"
 
-#: includes/Admin/Detail_Page.php:313
+#: includes/Admin/Detail_Page.php:314
 msgid "Delete this report permanently? This cannot be undone."
 msgstr "Supprimer définitivement ce signalement ? Cette action est irréversible."
 
-#: includes/Admin/Detail_Page.php:317
+#: includes/Admin/Detail_Page.php:318
 msgid "Delete this report"
 msgstr "Supprimer ce signalement"
 
@@ -399,17 +397,17 @@ msgstr "Voir"
 msgid "Delete this report permanently?"
 msgstr "Supprimer définitivement ce signalement ?"
 
-#: includes/Admin/Menu.php:38
-#: includes/Admin/Menu.php:39
+#: includes/Admin/Settings_Management_Tab.php:34
+#: includes/Settings.php:193
 msgid "All bugs"
 msgstr "Tous les bugs"
 
-#: includes/Admin/Menu.php:47
+#: includes/Admin/Menu.php:49
 #: includes/Admin/Settings_Page.php:68
 msgid "Bug Spotter settings"
 msgstr "Réglages de Bug Spotter"
 
-#: includes/Admin/Menu.php:48
+#: includes/Admin/Menu.php:50
 msgid "Settings"
 msgstr "Réglages"
 
@@ -417,8 +415,8 @@ msgstr "Réglages"
 #: includes/Admin/Settings_Button_Tab.php:120
 #: includes/Admin/Settings_Button_Tab.php:126
 #: includes/Admin/Settings_Tabs.php:78
-#: includes/Settings.php:158
-#: includes/Settings.php:165
+#: includes/Settings.php:185
+#: includes/Settings.php:196
 msgid "Report a bug"
 msgstr "Signaler un bug"
 
@@ -831,7 +829,7 @@ msgid "Instructions"
 msgstr "Consigne"
 
 #: includes/Admin/Settings_Tabs.php:83
-#: includes/Settings.php:160
+#: includes/Settings.php:187
 msgid "Describe what went wrong and what you expected to happen."
 msgstr "Décrivez ce qui n’a pas fonctionné et ce que vous attendiez."
 
@@ -840,7 +838,7 @@ msgid "Privacy notice"
 msgstr "Mention de confidentialité"
 
 #: includes/Admin/Settings_Tabs.php:88
-#: includes/Settings.php:162
+#: includes/Settings.php:189
 msgid "Your report includes technical details about this page and your browser."
 msgstr "Votre signalement inclut des détails techniques sur cette page et sur votre navigateur."
 
@@ -1029,25 +1027,21 @@ msgstr "Désinstallation"
 msgid "Delete all reports, screenshots and settings when the plugin is deleted"
 msgstr "Supprimer tous les signalements, captures d’écran et réglages lors de la suppression de l’extension"
 
-#: includes/Admin/Settings_Tabs.php:302
-#: includes/Admin/Settings_Tabs.php:303
+#: includes/Admin/Settings_Management_Tab.php:18
+#: includes/Admin/Settings_Management_Tab.php:19
 msgid "Who can manage bugs"
 msgstr "Qui peut gérer les bugs"
 
-#: includes/Admin/Settings_Tabs.php:309
+#: includes/Admin/Settings_Management_Tab.php:25
 msgid "These roles can see the reports, change their status and export them. Only administrators can change these settings."
 msgstr "Ces rôles peuvent voir les signalements, modifier leur statut et les exporter. Seuls les administrateurs peuvent modifier ces réglages."
 
-#: includes/Admin/Settings_Tabs.php:313
+#: includes/Admin/Settings_Management_Tab.php:29
 msgid "Menu badge"
 msgstr "Pastille du menu"
 
-#: includes/Admin/Settings_Tabs.php:314
-msgid "Show the number of new reports next to the Bugs menu"
-msgstr "Afficher le nombre de nouveaux signalements à côté du menu Bugs"
-
 #. translators: %d: page ID.
-#: includes/Admin/Settings_Tabs.php:332
+#: includes/Admin/Settings_Tabs.php:309
 #, php-format
 msgid "Page #%d (no title)"
 msgstr "Page n° %d (sans titre)"
@@ -1535,3 +1529,63 @@ msgstr "Jamais"
 #: includes/Admin/Settings_Statuses_Tab.php:22
 msgid "Drag the rows to change the order of the Kanban columns and of the status lists. The original statuses keep their default name while their name is left empty. Reports with a \"Closed\" status are the ones the retention deletes (Data and privacy tab)."
 msgstr "Glissez les lignes pour changer l’ordre des colonnes du Kanban et des listes de statuts. Les statuts d’origine gardent leur nom par défaut tant que leur nom est laissé vide. Les signalements dont le statut est « Clos » sont ceux que supprime la durée de conservation (onglet Données et confidentialité)."
+
+#: includes/Settings.php:154
+msgid "After Dashboard"
+msgstr "Après le Tableau de bord"
+
+#: includes/Settings.php:155
+msgid "After Posts"
+msgstr "Après Publications"
+
+#: includes/Settings.php:156
+msgid "After Media"
+msgstr "Après Médias"
+
+#: includes/Settings.php:157
+msgid "After Pages"
+msgstr "Après Pages"
+
+#: includes/Settings.php:158
+msgid "After Comments"
+msgstr "Après Commentaires"
+
+#: includes/Settings.php:159
+msgid "After Appearance"
+msgstr "Après Apparence"
+
+#: includes/Settings.php:160
+msgid "After Plugins"
+msgstr "Après Extensions"
+
+#: includes/Settings.php:161
+msgid "After Users"
+msgstr "Après Comptes"
+
+#: includes/Settings.php:162
+msgid "After Tools"
+msgstr "Après Outils"
+
+#: includes/Settings.php:163
+msgid "After Settings"
+msgstr "Après Réglages"
+
+#: includes/Admin/Settings_Management_Tab.php:33
+msgid "Menu name"
+msgstr "Nom du menu"
+
+#: includes/Admin/Settings_Management_Tab.php:34
+msgid "List sub-menu name"
+msgstr "Nom du sous-menu de la liste"
+
+#: includes/Admin/Settings_Management_Tab.php:40
+msgid "Menu position"
+msgstr "Position du menu"
+
+#: includes/Admin/Settings_Management_Tab.php:51
+msgid "Used for the menu and the titles of the management pages. Leave empty for the default name."
+msgstr "Utilisé pour le menu et les titres des pages de gestion. Laisser vide pour le nom par défaut."
+
+#: includes/Admin/Settings_Management_Tab.php:30
+msgid "Show the number of new reports next to the menu name"
+msgstr "Afficher le nombre de nouveaux signalements à côté du nom du menu"

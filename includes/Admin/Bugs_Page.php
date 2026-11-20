@@ -4,6 +4,7 @@ namespace Bug_Spotter\Admin;
 
 use Bug_Spotter\Installer;
 use Bug_Spotter\Reports_Repository;
+use Bug_Spotter\Settings;
 use Bug_Spotter\Statuses;
 
 defined( 'ABSPATH' ) || exit;
@@ -155,7 +156,7 @@ final class Bugs_Page {
 		$filters = Report_Query_Args::read_filters( $query );
 		$kanban  = isset( $query['view'] ) && 'kanban' === $query['view'];
 
-		echo '<div class="wrap bugspot-admin"><h1 class="wp-heading-inline">' . esc_html__( 'Bugs', 'bug-spotter' ) . '</h1>';
+		echo '<div class="wrap bugspot-admin"><h1 class="wp-heading-inline">' . esc_html( Settings::text( 'management.menu_label' ) ) . '</h1>';
 		echo '<hr class="wp-header-end">';
 		self::render_notice( $query );
 		self::render_tabs( $filters, $kanban );

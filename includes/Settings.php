@@ -9,6 +9,9 @@ final class Settings {
 
 	public const OPTION = 'bugspot_settings';
 
+	public const MENU_LABEL_MAX = 40;
+	public const MENU_POSITION  = 26;
+
 	/** Last get() result and the raw option value it was built from. @var array{saved:mixed,merged:array}|null */
 	private static ?array $memo = null;
 
@@ -108,8 +111,11 @@ final class Settings {
 				'delete_on_uninstall' => false,
 			),
 			'management'    => array(
-				'roles'      => array( 'administrator' ),
-				'menu_badge' => true,
+				'roles'         => array( 'administrator' ),
+				'menu_badge'    => true,
+				'menu_label'    => '',
+				'list_label'    => '',
+				'menu_position' => self::MENU_POSITION,
 			),
 			// Ordered list (Kanban columns, selectors); an empty label shows the translated default name.
 			'statuses'      => array(
@@ -142,6 +148,27 @@ final class Settings {
 		return self::$memo['merged'];
 	}
 
+	/** @return array<int,string> The named admin-menu positions offered in the Management tab: position => label. */
+	public static function menu_positions(): array {
+		return array(
+			3  => __( 'After Dashboard', 'bug-spotter' ),
+			6  => __( 'After Posts', 'bug-spotter' ),
+			11 => __( 'After Media', 'bug-spotter' ),
+			21 => __( 'After Pages', 'bug-spotter' ),
+			26 => __( 'After Comments', 'bug-spotter' ),
+			61 => __( 'After Appearance', 'bug-spotter' ),
+			66 => __( 'After Plugins', 'bug-spotter' ),
+			71 => __( 'After Users', 'bug-spotter' ),
+			76 => __( 'After Tools', 'bug-spotter' ),
+			81 => __( 'After Settings', 'bug-spotter' ),
+		);
+	}
+
+	/** A position of menu_positions(), or the default for anything else. @param mixed $v */
+	public static function menu_position( $v ): int {
+		return is_numeric( $v ) && array_key_exists( (int) $v, self::menu_positions() ) ? (int) $v : self::MENU_POSITION;
+	}
+
 	/** Label for a text setting ("section.key"), falling back to the translated default. */
 	public static function text( string $key ): string {
 		$parts = explode( '.', $key, 2 );
@@ -160,6 +187,10 @@ final class Settings {
 				return __( 'Describe what went wrong and what you expected to happen.', 'bug-spotter' );
 			case 'dialog.privacy_text':
 				return __( 'Your report includes technical details about this page and your browser.', 'bug-spotter' );
+			case 'management.menu_label':
+				return __( 'Bugs', 'bug-spotter' );
+			case 'management.list_label':
+				return __( 'All bugs', 'bug-spotter' );
 			case 'button.label':
 			case 'button.tooltip':
 				return __( 'Report a bug', 'bug-spotter' );

@@ -5,6 +5,7 @@ use Bug_Spotter\Admin\Csv_Export;
 use Bug_Spotter\Admin\Menu;
 use Bug_Spotter\Admin\Report_Query_Args;
 use Bug_Spotter\Reports_Repository;
+use Bug_Spotter\Settings;
 
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
@@ -91,6 +92,108 @@ bugspot_test(
 				} finally {
 					wp_set_current_user( $prev );
 				}
+			}
+		);
+	}
+);
+
+/** The plugin's top-level entry of the global $menu, with its position key. @return array{0:int|string,1:array} */
+function bugspot_admin_menu_entry(): array {
+	global $menu;
+	foreach ( $menu as $position => $entry ) {
+		if ( 'bug-spotter' === $entry[2] ) {
+			return array( $position, $entry );
+		}
+	}
+	throw new RuntimeException( 'top-level menu missing' );
+}
+
+bugspot_test(
+	'admin-list: default_menu_names_and_position_are_unchanged',
+	function () {
+		with_settings_option(
+			function () {
+				bugspot_with_admin_menu(
+					function () {
+						global $submenu;
+						list( $position, $top ) = bugspot_admin_menu_entry();
+						assert_same( 26, $position );
+						assert_same( 'Bugs', $top[3], 'page title' );
+						assert_true( str_starts_with( $top[0], 'Bugs' ), 'menu title: ' . $top[0] );
+						assert_same( array( 'All bugs', 'bugspot_manage', 'bug-spotter', 'All bugs' ), array_slice( $submenu['bug-spotter'][0], 0, 4 ) );
+					}
+				);
+			}
+		);
+	}
+);
+
+bugspot_test(
+	'admin-list: custom_menu_names_are_escaped_and_keep_the_badge',
+	function () {
+		with_settings_option(
+			function () {
+				bugspot_admin_insert( 'menu name test' );
+				$saved = \Bug_Spotter\Settings_Sanitizer::sanitize( array( 'management' => array( 'menu_label' => 'Tickets & co', 'list_label' => 'All <b>tickets</b>', 'menu_position' => '21' ) ) )['management'];
+				assert_same( 'Tickets & co', $saved['menu_label'] );
+				assert_same( 'All tickets', $saved['list_label'], 'tags stripped on save' );
+				assert_same( 21, $saved['menu_position'] );
+
+				// A value that bypassed the sanitizer is still escaped on output.
+				$raw = array( 'management' => array( 'menu_label' => 'Tickets & co', 'list_label' => 'A <i>', 'menu_position' => 21 ) );
+				$pre = static fn() => $raw;
+				add_filter( 'pre_option_bugspot_settings', $pre );
+				try {
+					bugspot_with_admin_menu(
+						function () {
+							global $submenu;
+							list( $position, $top ) = bugspot_admin_menu_entry();
+							assert_same( 21, $position );
+							assert_same( 'Tickets & co', $top[3], 'page title (escaped by WordPress)' );
+							assert_true( str_starts_with( $top[0], 'Tickets &amp; co <span class="awaiting-mod count-' ), 'menu title: ' . $top[0] );
+							assert_true( str_contains( $top[0], '<span class="pending-count">' ), 'badge markup intact' );
+							assert_same( 'A &lt;i&gt;', $submenu['bug-spotter'][0][0] );
+							assert_same( 'A <i>', $submenu['bug-spotter'][0][3] );
+
+							$saved_get = $_GET;
+							$_GET      = array();
+							try {
+								$list = bugspot_capture( fn() => Bugs_Page::render() );
+							} finally {
+								$_GET = $saved_get;
+							}
+							assert_true( str_contains( $list, '<h1 class="wp-heading-inline">Tickets &amp; co</h1>' ), 'list page h1' );
+							$missing = bugspot_capture( fn() => Bug_Spotter\Admin\Detail_Page::render( PHP_INT_MAX ) );
+							assert_true( str_contains( $missing, '<h1>Tickets &amp; co</h1>' ), 'report-not-found h1' );
+						}
+					);
+				} finally {
+					remove_filter( 'pre_option_bugspot_settings', $pre );
+				}
+			}
+		);
+	}
+);
+
+bugspot_test(
+	'admin-list: menu_position_outside_the_list_falls_back_to_the_default',
+	function () {
+		assert_same( 26, Settings::menu_position( 27 ) );
+		assert_same( 26, Settings::menu_position( 'x' ) );
+		assert_same( 81, Settings::menu_position( '81' ) );
+		with_settings_option(
+			function () {
+				$out = \Bug_Spotter\Settings_Sanitizer::sanitize( array( 'management' => array( 'menu_position' => 999, 'menu_label' => str_repeat( 'é', 50 ) ) ) );
+				assert_same( 26, $out['management']['menu_position'] );
+				assert_same( str_repeat( 'é', 40 ), $out['management']['menu_label'], 'at most 40 characters' );
+
+				// A stored value outside the list (never sanitized) still gives the default place.
+				update_option( 'bugspot_settings', array( 'management' => array( 'menu_position' => 50 ) ) );
+				bugspot_with_admin_menu(
+					function () {
+						assert_same( 26, bugspot_admin_menu_entry()[0] );
+					}
+				);
 			}
 		);
 	}

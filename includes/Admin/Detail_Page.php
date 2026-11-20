@@ -7,6 +7,7 @@ use Bug_Spotter\Report_Format;
 use Bug_Spotter\Reports_Repository;
 use Bug_Spotter\Rest\Reports_Controller;
 use Bug_Spotter\Screenshot_Store;
+use Bug_Spotter\Settings;
 use Bug_Spotter\Statuses;
 
 defined( 'ABSPATH' ) || exit;
@@ -77,7 +78,7 @@ final class Detail_Page {
 
 		echo '<div class="wrap bugspot-admin bugspot-detail">';
 		if ( null === $report ) {
-			echo '<h1>' . esc_html__( 'Bugs', 'bug-spotter' ) . '</h1>';
+			echo '<h1>' . esc_html( Settings::text( 'management.menu_label' ) ) . '</h1>';
 			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'Report not found.', 'bug-spotter' ) . '</p></div>';
 			self::render_back_link();
 			echo '</div>';

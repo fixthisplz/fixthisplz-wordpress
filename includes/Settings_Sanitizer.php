@@ -205,8 +205,11 @@ final class Settings_Sanitizer {
 	/** @param array<string,mixed> $m @return array<string,mixed> */
 	private static function validate_management( array $m ): array {
 		return array(
-			'roles'      => self::with_administrator( self::roles( $m['roles'] ) ),
-			'menu_badge' => self::bool( $m['menu_badge'] ),
+			'roles'         => self::with_administrator( self::roles( $m['roles'] ) ),
+			'menu_badge'    => self::bool( $m['menu_badge'] ),
+			'menu_label'    => mb_substr( self::text_field( $m['menu_label'] ), 0, Settings::MENU_LABEL_MAX ),
+			'list_label'    => mb_substr( self::text_field( $m['list_label'] ), 0, Settings::MENU_LABEL_MAX ),
+			'menu_position' => Settings::menu_position( $m['menu_position'] ),
 		);
 	}
 

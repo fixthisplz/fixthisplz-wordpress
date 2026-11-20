@@ -8,7 +8,7 @@ use Bug_Spotter\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
-/** Registers the top-level "Bugs" menu and its sub-menus. */
+/** Registers the plugin's top-level menu (name and position from the settings) and its sub-menus. */
 final class Menu {
 
 	public const SLUG          = 'bug-spotter';
@@ -24,19 +24,21 @@ final class Menu {
 	}
 
 	public static function register(): void {
+		// Page titles are escaped by WordPress; menu titles are printed as HTML, so they are escaped here.
+		$list = Settings::text( 'management.list_label' );
 		$hook = add_menu_page(
-			__( 'Bugs', 'bug-spotter' ),
+			Settings::text( 'management.menu_label' ),
 			self::menu_title(),
 			Installer::CAPABILITY,
 			self::SLUG,
 			array( Bugs_Page::class, 'render' ),
 			'dashicons-flag',
-			26
+			Settings::menu_position( Settings::get()['management']['menu_position'] )
 		);
 		add_submenu_page(
 			self::SLUG,
-			__( 'All bugs', 'bug-spotter' ),
-			__( 'All bugs', 'bug-spotter' ),
+			$list,
+			esc_html( $list ),
 			Installer::CAPABILITY,
 			self::SLUG,
 			array( Bugs_Page::class, 'render' )
@@ -58,7 +60,7 @@ final class Menu {
 
 	/** Menu label, with the "new reports" bubble when enabled and non-zero. */
 	public static function menu_title(): string {
-		$title = esc_html__( 'Bugs', 'bug-spotter' );
+		$title = esc_html( Settings::text( 'management.menu_label' ) );
 		if ( empty( Settings::get()['management']['menu_badge'] ) || ! current_user_can( Installer::CAPABILITY ) ) {
 			return $title;
 		}

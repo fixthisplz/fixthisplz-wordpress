@@ -6,7 +6,7 @@ use Bug_Spotter\Admin\Settings_Fields as F;
 
 defined( 'ABSPATH' ) || exit;
 
-/** Renderers of the settings tabs other than "Button" (see Settings_Button_Tab). One method per tab. */
+/** Renderers of the settings tabs that have no class of their own (Settings_Button_Tab, Settings_Management_Tab, Settings_Statuses_Tab). One method per tab. */
 final class Settings_Tabs {
 
 	/** @param array<string,mixed> $s */
@@ -294,31 +294,8 @@ final class Settings_Tabs {
 		F::table_close();
 	}
 
-	/** @param array<string,mixed> $s */
-	public static function management( array $s ): void {
-		$m = $s['management'];
-		F::table_open();
-
-		F::row_open( __( 'Who can manage bugs', 'bug-spotter' ), '', true );
-		echo '<fieldset><legend class="screen-reader-text">' . esc_html__( 'Who can manage bugs', 'bug-spotter' ) . '</legend>';
-		F::list_marker( array( 'management', 'roles' ) );
-		foreach ( self::role_names() as $role => $label ) {
-			// Administrators always keep access (the sanitizer enforces it): shown checked and locked.
-			F::checkbox_item( array( 'management', 'roles' ), $role, 'administrator' === $role || in_array( $role, $m['roles'], true ), $label, 'administrator' === $role );
-		}
-		F::description( __( 'These roles can see the reports, change their status and export them. Only administrators can change these settings.', 'bug-spotter' ) );
-		echo '</fieldset>';
-		F::row_close();
-
-		F::row_open( __( 'Menu badge', 'bug-spotter' ) );
-		F::checkbox( array( 'management', 'menu_badge' ), (bool) $m['menu_badge'], __( 'Show the number of new reports next to the Bugs menu', 'bug-spotter' ) );
-		F::row_close();
-
-		F::table_close();
-	}
-
 	/** @return array<string,string> Role slug => translated name. */
-	private static function role_names(): array {
+	public static function role_names(): array {
 		$out = array();
 		foreach ( wp_roles()->get_names() as $role => $name ) {
 			$out[ $role ] = translate_user_role( $name );

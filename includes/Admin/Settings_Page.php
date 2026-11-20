@@ -107,7 +107,7 @@ final class Settings_Page {
 			'protection'    => Settings_Tabs::protection( $s ),
 			'context'       => Settings_Tabs::context( $s ),
 			'data'          => Settings_Tabs::data( $s ),
-			'management'    => Settings_Tabs::management( $s ),
+			'management'    => Settings_Management_Tab::render( $s ),
 			'statuses'      => Settings_Statuses_Tab::render( $s ),
 		};
 		submit_button();
