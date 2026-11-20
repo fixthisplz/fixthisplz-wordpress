@@ -301,3 +301,35 @@ bugspot_test(
 		);
 	}
 );
+
+bugspot_test(
+	'enqueue_config_carries_capture_method_and_masking',
+	function () {
+		with_settings_option(
+			function () {
+				fe_with_clean_assets(
+					function () {
+						$prev = wp_get_current_user();
+						wp_set_current_user( 0 );
+						$read = function ( array $dialog ): array {
+							update_option( Settings::OPTION, array( 'enabled' => true, 'visibility' => array( 'guests' => true ), 'dialog' => $dialog ) );
+							Assets::enqueue();
+							global $wp_scripts;
+							$js = implode( "\n", (array) $wp_scripts->get_data( 'bugspot-loader', 'before' ) );
+							wp_dequeue_script( 'bugspot-loader' );
+							wp_deregister_script( 'bugspot-loader' );
+							return json_decode( trim( substr( $js, strlen( 'window.bugSpotterConfig = ' ) ), "; \n" ), true )['dialog'];
+						};
+						$default = $read( array() );
+						$custom  = $read( array( 'capture_method' => 'dom', 'mask_capture' => true ) );
+						wp_set_current_user( $prev->ID );
+						assert_same( 'tab', $default['captureMethod'] );
+						assert_same( false, $default['maskCapture'] );
+						assert_same( 'dom', $custom['captureMethod'] );
+						assert_same( true, $custom['maskCapture'] );
+					}
+				);
+			}
+		);
+	}
+);

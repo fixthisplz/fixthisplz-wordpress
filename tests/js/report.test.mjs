@@ -88,3 +88,25 @@ test('buildDraft trims like PHP and parses numeric rect strings like is_numeric'
 	assert.equal(d.context.element.selector, '\uFEFFx\u00a0');
 	assert.deepEqual(d.context.element.rect, { x: 0, y: 7, width: 100, height: 0 });
 });
+
+const shot = { ...base, screenshot: new Blob(['x']) };
+
+test('buildDraft adds the capture method to the context only when a screenshot is attached', () => {
+	assert.deepEqual(buildDraft({ ...shot, capture: { method: 'tab', masked: true } }).context.capture, { method: 'tab', masked: true });
+	assert.deepEqual(buildDraft({ ...shot, capture: { method: 'dom', masked: 'yes', extra: 1 } }).context.capture, { method: 'dom', masked: false });
+	assert.ok(!('capture' in buildDraft({ ...base, capture: { method: 'tab', masked: false } }).context), 'no screenshot, no capture key');
+	assert.ok(!('capture' in buildDraft({ ...shot, capture: { method: 'window', masked: false } }).context), 'unknown method dropped');
+	assert.ok(!('capture' in buildDraft({ ...shot, capture: null }).context));
+});
+
+test('exports state the capture method and masking, and nothing without a screenshot', () => {
+	const labels = { screenshot: 'Capture', captureTab: 'Vraie capture', captureDom: 'Reconstruction', captureMasked: 'masquée' };
+	const masked = buildDraft({ ...shot, capture: { method: 'dom', masked: true } });
+	assert.match(toMarkdown(masked, labels), /- Capture: Reconstruction \(masquée\)/);
+	assert.match(toText(masked, labels), /^ {2}Capture: Reconstruction \(masquée\)$/m);
+	assert.deepEqual(JSON.parse(toJson(masked)).context.capture, { method: 'dom', masked: true });
+	const plain = buildDraft({ ...shot, capture: { method: 'tab', masked: false } });
+	assert.match(toMarkdown(plain), /- Screenshot: Real capture\n/);
+	assert.doesNotMatch(toMarkdown(buildDraft(base), labels), /Capture:|Screenshot:/);
+	assert.doesNotMatch(toText(buildDraft(base)), /Screenshot:/);
+});

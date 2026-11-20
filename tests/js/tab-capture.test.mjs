@@ -23,6 +23,12 @@ test('selectMethod picks the real capture on any desktop browser with getDisplay
 	assert.equal(selectMethod(env({ coarse: true, fine: true })), 'tab'); // touch laptop with a mouse
 });
 
+test('selectMethod honours the site setting dom even when the API is present', () => {
+	assert.equal(selectMethod(env(), 'dom'), 'dom');
+	assert.equal(selectMethod(env(), 'tab'), 'tab');
+	assert.equal(selectMethod(env({ api: false }), 'tab'), 'dom'); // tab never forces an unavailable API
+});
+
 test('selectMethod falls back without the API or on a touch-only device', () => {
 	assert.equal(selectMethod(env({ api: false })), 'dom');
 	assert.equal(selectMethod({ navigator: {} }), 'dom');

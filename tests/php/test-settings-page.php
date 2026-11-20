@@ -280,3 +280,22 @@ settings_page_test(
 		}
 	}
 );
+
+settings_page_test(
+	'settings-page: dialog_tab_offers_the_capture_method_and_masking',
+	function () {
+		$html = settings_page_tab_html( 'dialog' );
+		assert_true( 1 === preg_match( '/<input type="radio"[^>]*name="bugspot_settings\[dialog\]\[capture_method\]"[^>]*value="tab"[^>]* checked/', $html ), 'tab radio checked by default' );
+		assert_true( 1 === preg_match( '/<input type="radio"[^>]*name="bugspot_settings\[dialog\]\[capture_method\]"[^>]*value="dom"(?![^>]* checked)/', $html ), 'dom radio present, unchecked' );
+		assert_true( str_contains( $html, 'Real capture of the tab (recommended)' ) && str_contains( $html, 'Page reconstruction — no permission prompt' ), 'both choices labelled' );
+		assert_true( str_contains( $html, 'On phones and in browsers without screen sharing, the reconstruction is always used.' ), 'permanent mobile notice' );
+		assert_true( str_contains( $html, 'Hide typed fields and sensitive areas in the screenshot' ), 'mask checkbox' );
+		assert_true( str_contains( $html, 'data-bugspot-show-if="bugspot_settings[dialog][allow_screenshot]"' ), 'shown only when screenshots are allowed' );
+		assert_true( ! str_contains( $html, 'mask_capture][]' ) && 1 === preg_match( '/type="hidden" name="bugspot_settings\[dialog\]\[mask_capture\]" value="0"/', $html ), 'hidden 0 marker' );
+
+		update_option( Settings::OPTION, array( 'dialog' => array( 'capture_method' => 'dom', 'mask_capture' => true ) ) );
+		$post = settings_page_form_post( settings_page_tab_html( 'dialog' ) );
+		assert_same( 'dom', $post[ Settings::OPTION ]['dialog']['capture_method'] );
+		assert_same( '1', $post[ Settings::OPTION ]['dialog']['mask_capture'] );
+	}
+);

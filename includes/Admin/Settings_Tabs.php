@@ -99,6 +99,20 @@ final class Settings_Tabs {
 		F::checkbox( array( 'dialog', 'allow_screenshot' ), (bool) $g['allow_screenshot'], __( 'Let reporters attach a screenshot of the page', 'bug-spotter' ) );
 		F::row_close();
 
+		$only_with_screenshot = F::show_if( array( 'dialog', 'allow_screenshot' ), '=', '1' );
+
+		F::row_open( __( 'Capture method', 'bug-spotter' ), '', true, $only_with_screenshot );
+		echo '<fieldset><legend class="screen-reader-text">' . esc_html__( 'Capture method', 'bug-spotter' ) . '</legend>';
+		F::radio( array( 'dialog', 'capture_method' ), 'tab', $g['capture_method'], __( 'Real capture of the tab (recommended) — exact image, the browser asks the visitor for permission', 'bug-spotter' ) );
+		F::radio( array( 'dialog', 'capture_method' ), 'dom', $g['capture_method'], __( 'Page reconstruction — no permission prompt, may differ slightly from the screen', 'bug-spotter' ) );
+		F::description( __( 'On phones and in browsers without screen sharing, the reconstruction is always used.', 'bug-spotter' ) );
+		echo '</fieldset>';
+		F::row_close();
+
+		F::row_open( __( 'Masking', 'bug-spotter' ), '', true, $only_with_screenshot );
+		F::checkbox( array( 'dialog', 'mask_capture' ), (bool) $g['mask_capture'], __( 'Hide typed fields and sensitive areas in the screenshot', 'bug-spotter' ) );
+		F::row_close();
+
 		F::row_open( __( 'Contact e-mail', 'bug-spotter' ) );
 		F::checkbox( array( 'dialog', 'ask_email_guests' ), (bool) $g['ask_email_guests'], __( 'Ask guests for an optional contact e-mail address', 'bug-spotter' ) );
 		F::row_close();

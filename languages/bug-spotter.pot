@@ -1426,3 +1426,46 @@ msgstr ""
 #: includes/Statuses.php:35
 msgid "Critical"
 msgstr ""
+
+#: includes/Admin/Settings_Tabs.php
+msgid "Capture method"
+msgstr ""
+
+#: includes/Admin/Settings_Tabs.php
+msgid "Real capture of the tab (recommended) — exact image, the browser asks the visitor for permission"
+msgstr ""
+
+#: includes/Admin/Settings_Tabs.php
+msgid "Page reconstruction — no permission prompt, may differ slightly from the screen"
+msgstr ""
+
+#: includes/Admin/Settings_Tabs.php
+msgid "On phones and in browsers without screen sharing, the reconstruction is always used."
+msgstr ""
+
+#: includes/Admin/Settings_Tabs.php
+msgid "Masking"
+msgstr ""
+
+#: includes/Admin/Settings_Tabs.php
+msgid "Hide typed fields and sensitive areas in the screenshot"
+msgstr ""
+
+#: includes/Screenshot_Store.php
+#: includes/Frontend/Assets.php
+msgid "Real capture"
+msgstr ""
+
+#: includes/Screenshot_Store.php
+#: includes/Frontend/Assets.php
+msgid "Page reconstruction"
+msgstr ""
+
+#: includes/Screenshot_Store.php
+#. translators: %s: capture method, for example "Real capture".
+msgid "%s (masked)"
+msgstr ""
+
+#: includes/Frontend/Assets.php
+msgid "masked"
+msgstr ""

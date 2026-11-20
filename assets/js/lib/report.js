@@ -19,6 +19,10 @@ const FALLBACK_LABELS = {
 	console: 'Console',
 	network: 'Failed requests',
 	generatedAt: 'Generated at',
+	screenshot: 'Screenshot',
+	captureTab: 'Real capture',
+	captureDom: 'Page reconstruction',
+	captureMasked: 'masked',
 };
 
 const scalar = (v) => (typeof v === 'string' ? v : typeof v === 'number' && Number.isFinite(v) ? String(v) : '');
@@ -81,11 +85,18 @@ function buildNetwork(entries) {
 	return out.slice(-MAX_ENTRIES);
 }
 
+/** How the attached screenshot was made: only the two known methods, never without a screenshot. */
+function buildCapture(capture, screenshot) {
+	const known = capture && typeof capture === 'object' && (capture.method === 'tab' || capture.method === 'dom');
+	return screenshot && known ? { method: capture.method, masked: capture.masked === true } : null;
+}
+
 /** The reporter's own description is stored as written (bounded only); the context is redacted and bounded. */
-export function buildDraft({ description, reporterEmail, element, diagnostics, env, config, screenshot }) {
+export function buildDraft({ description, reporterEmail, element, diagnostics, env, config, screenshot, capture }) {
 	const e = env || {};
 	const cfg = config || {};
 	const diag = diagnostics || {};
+	const shotCapture = buildCapture(capture, screenshot);
 	return {
 		description: truncate(scalar(description), DESCRIPTION_MAX),
 		reporterEmail: truncate(phpTrim(scalar(reporterEmail)), EMAIL_MAX),
@@ -101,6 +112,7 @@ export function buildDraft({ description, reporterEmail, element, diagnostics, e
 			element: buildElement(element),
 			console: buildConsole(diag.console),
 			network: buildNetwork(diag.network),
+			...(shotCapture ? { capture: shotCapture } : {}),
 		},
 		screenshot: Boolean(screenshot),
 		generatedAt: new Date().toISOString(),
@@ -143,12 +155,21 @@ function elementLines(draft, labels, code) {
 	return lines;
 }
 
-function contextLines(draft, code) {
+function captureLabel(capture, labels) {
+	const method = label(labels, capture.method === 'tab' ? 'captureTab' : 'captureDom');
+	return capture.masked ? `${method} (${label(labels, 'captureMasked')})` : method;
+}
+
+function contextLines(draft, labels, code) {
 	const c = draft.context;
 	const wrap = code ? inline : String;
-	return ['url', 'title', 'locale', 'timezone', 'user_agent', 'viewport', 'plugin_version', 'wp_page']
+	const lines = ['url', 'title', 'locale', 'timezone', 'user_agent', 'viewport', 'plugin_version', 'wp_page']
 		.filter((k) => c[k] !== '')
 		.map((k) => `${k}: ${wrap(c[k])}`);
+	if (c.capture) {
+		lines.push(`${label(labels, 'screenshot')}: ${captureLabel(c.capture, labels)}`);
+	}
+	return lines;
 }
 
 function diagnosticLines(draft, labels, heading) {
@@ -170,7 +191,7 @@ export function toMarkdown(draft, labels) {
 		lines.push('', `## ${label(labels, 'email')}`, '', draft.reporterEmail);
 	}
 	lines.push('', `## ${label(labels, 'selectedElement')}`, '', ...elementLines(draft, labels, true).map((l) => `- ${l}`));
-	lines.push('', `## ${label(labels, 'technicalContext')}`, '', ...contextLines(draft, true).map((l) => `- ${l}`));
+	lines.push('', `## ${label(labels, 'technicalContext')}`, '', ...contextLines(draft, labels, true).map((l) => `- ${l}`));
 	lines.push(...diagnosticLines(draft, labels, (h) => `### ${h}`));
 	lines.push('', `_${label(labels, 'generatedAt')} ${draft.generatedAt}_`, '');
 	return lines.join('\n');
@@ -183,7 +204,7 @@ export function toText(draft, labels) {
 		lines.push('', `${label(labels, 'email')}: ${draft.reporterEmail}`);
 	}
 	lines.push('', `${label(labels, 'selectedElement')}:`, ...elementLines(draft, labels, false).map((l) => `  ${l}`));
-	lines.push('', `${label(labels, 'technicalContext')}:`, ...contextLines(draft, false).map((l) => `  ${l}`));
+	lines.push('', `${label(labels, 'technicalContext')}:`, ...contextLines(draft, labels, false).map((l) => `  ${l}`));
 	lines.push(...diagnosticLines(draft, labels, (h) => `${h}:`));
 	lines.push('', `${label(labels, 'generatedAt')} ${draft.generatedAt}`, '');
 	return lines.join('\n');

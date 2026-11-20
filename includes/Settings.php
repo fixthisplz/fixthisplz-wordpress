@@ -79,6 +79,8 @@ final class Settings {
 				'privacy_text'     => '',
 				'privacy_url'      => '',
 				'allow_screenshot' => true,
+				'capture_method'   => 'tab',
+				'mask_capture'     => false,
 				'ask_email_guests' => true,
 				'formats'          => array( 'md', 'json', 'txt' ),
 			),
@@ -260,6 +262,8 @@ final class Settings {
 			'privacy_text'     => self::textarea( $g['privacy_text'] ),
 			'privacy_url'      => is_string( $g['privacy_url'] ) ? esc_url_raw( $g['privacy_url'] ) : '',
 			'allow_screenshot' => self::bool( $g['allow_screenshot'] ),
+			'capture_method'   => self::enum( $g['capture_method'], array( 'tab', 'dom' ), $d['dialog']['capture_method'] ),
+			'mask_capture'     => self::bool( $g['mask_capture'] ),
 			'ask_email_guests' => self::bool( $g['ask_email_guests'] ),
 			'formats'          => array() === $formats ? $d['dialog']['formats'] : $formats,
 		);

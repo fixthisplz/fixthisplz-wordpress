@@ -121,3 +121,26 @@ bugspot_test(
 		assert_same( array(), $out['network'] );
 	}
 );
+
+bugspot_test(
+	'context_keeps_a_valid_capture_and_drops_an_invalid_one',
+	function () {
+		$out = Context_Validator::validate( bugspot_ctx( array( 'capture' => array( 'method' => 'tab', 'masked' => true, 'extra' => 'x' ) ) ) );
+		assert_same( array( 'method' => 'tab', 'masked' => true ), $out['capture'] );
+		$out = Context_Validator::validate( bugspot_ctx( array( 'capture' => array( 'method' => 'dom', 'masked' => false ) ) ) );
+		assert_same( array( 'method' => 'dom', 'masked' => false ), $out['capture'] );
+		assert_true( ! array_key_exists( 'capture', Context_Validator::validate( bugspot_ctx() ) ), 'absent when not sent' );
+		foreach ( array(
+			array( 'method' => 'window', 'masked' => false ),
+			array( 'method' => 'tab', 'masked' => 'yes' ),
+			array( 'method' => 'tab' ),
+			array( 'masked' => true ),
+			'tab',
+			array( 'method' => array( 'tab' ), 'masked' => false ),
+		) as $bad ) {
+			$out = Context_Validator::validate( bugspot_ctx( array( 'capture' => $bad ) ) );
+			assert_true( is_array( $out ), 'never a 422 for capture' );
+			assert_true( ! array_key_exists( 'capture', $out ), 'invalid capture dropped' );
+		}
+	}
+);

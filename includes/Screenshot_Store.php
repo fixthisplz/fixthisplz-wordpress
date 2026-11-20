@@ -116,4 +116,18 @@ final class Screenshot_Store {
 	private static function store_failed(): \WP_Error {
 		return new \WP_Error( 'bugspot_store_failed', __( 'The screenshot could not be stored.', 'bug-spotter' ), array( 'status' => 500 ) );
 	}
+
+	/** "Real capture" or "Page reconstruction", plus "(masked)", from the context's `capture` key; '' when absent. */
+	public static function capture_label( array $context ): string {
+		$capture = $context['capture'] ?? null;
+		if ( ! is_array( $capture ) || ! in_array( $capture['method'] ?? null, array( 'tab', 'dom' ), true ) ) {
+			return '';
+		}
+		$label = 'tab' === $capture['method'] ? __( 'Real capture', 'bug-spotter' ) : __( 'Page reconstruction', 'bug-spotter' );
+		if ( true !== ( $capture['masked'] ?? null ) ) {
+			return $label;
+		}
+		/* translators: %s: capture method, for example "Real capture". */
+		return sprintf( __( '%s (masked)', 'bug-spotter' ), $label );
+	}
 }

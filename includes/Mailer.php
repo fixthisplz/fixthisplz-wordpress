@@ -41,19 +41,24 @@ final class Mailer {
 			'description' => __( 'Description', 'bug-spotter' ),
 			'page'        => __( 'Page', 'bug-spotter' ),
 			'reporter'    => __( 'Reported by', 'bug-spotter' ),
+			'screenshot'  => __( 'Screenshot', 'bug-spotter' ),
 			'link'        => __( 'Open the report', 'bug-spotter' ),
 		);
+
+		$capture = ! empty( $report['screenshot'] ) ? Screenshot_Store::capture_label( $report['context'] ) : '';
 
 		$text = $labels['number'] . ': #' . $report_id . "\n"
 			. $labels['description'] . ': ' . $excerpt . "\n"
 			. $labels['page'] . ': ' . $page . "\n"
 			. $labels['reporter'] . ': ' . $reporter . "\n"
+			. ( '' !== $capture ? $labels['screenshot'] . ': ' . $capture . "\n" : '' )
 			. $labels['link'] . ': ' . $link . "\n";
 
 		$html = '<p><strong>' . esc_html( $labels['number'] ) . ':</strong> #' . (int) $report_id . '</p>'
 			. '<p><strong>' . esc_html( $labels['description'] ) . ':</strong><br>' . nl2br( esc_html( $excerpt ) ) . '</p>'
 			. '<p><strong>' . esc_html( $labels['page'] ) . ':</strong> <a href="' . esc_url( $page ) . '">' . esc_html( $page ) . '</a></p>'
 			. '<p><strong>' . esc_html( $labels['reporter'] ) . ':</strong> ' . esc_html( $reporter ) . '</p>'
+			. ( '' !== $capture ? '<p><strong>' . esc_html( $labels['screenshot'] ) . ':</strong> ' . esc_html( $capture ) . '</p>' : '' )
 			. '<p><a href="' . esc_url( $link ) . '">' . esc_html( $labels['link'] ) . '</a></p>';
 
 		$attachments = array();

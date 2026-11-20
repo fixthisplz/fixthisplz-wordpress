@@ -117,3 +117,23 @@ bugspot_test(
 		assert_true( str_contains( $html, 'for="bugspot-priority-select"' ) && str_contains( $html, 'id="bugspot-priority-select"' ), 'label/select ids' );
 	}
 );
+
+bugspot_test(
+	'admin-detail: screenshot_box_shows_the_capture_method',
+	function () {
+		$name  = str_repeat( 'a', 32 ) . '.jpg';
+		$cases = array(
+			array( array( 'method' => 'tab', 'masked' => false ), 'Real capture', false ),
+			array( array( 'method' => 'dom', 'masked' => true ), 'Page reconstruction (masked)', true ),
+		);
+		foreach ( $cases as list( $capture, $expected, $masked ) ) {
+			$id   = bugspot_admin_insert( 'detail-capture', array( 'screenshot' => $name, 'context' => array( 'capture' => $capture ) ) );
+			$html = bugspot_capture( fn() => Detail_Page::render( $id ) );
+			assert_true( str_contains( $html, '>' . $expected . '<' ), 'label shown: ' . $expected );
+			assert_same( $masked, str_contains( $html, '(masked)' ) );
+		}
+		$id   = bugspot_admin_insert( 'detail-capture-none', array( 'screenshot' => $name ) );
+		$html = bugspot_capture( fn() => Detail_Page::render( $id ) );
+		assert_true( ! str_contains( $html, 'Real capture' ) && ! str_contains( $html, 'Page reconstruction' ), 'no label without the key' );
+	}
+);

@@ -4,6 +4,7 @@ namespace Bug_Spotter\Admin;
 
 use Bug_Spotter\Installer;
 use Bug_Spotter\Reports_Repository;
+use Bug_Spotter\Screenshot_Store;
 use Bug_Spotter\Statuses;
 
 defined( 'ABSPATH' ) || exit;
@@ -258,6 +259,10 @@ final class Detail_Page {
 		if ( ! is_string( $report['screenshot'] ?? null ) || '' === $report['screenshot'] ) {
 			echo '<p class="bugspot-muted">' . esc_html__( 'No screenshot was attached.', 'bug-spotter' ) . '</p>';
 			return;
+		}
+		$method = Screenshot_Store::capture_label( $report['context'] );
+		if ( '' !== $method ) {
+			echo '<p class="bugspot-muted">' . esc_html( $method ) . '</p>';
 		}
 		// An <img> cannot send X-WP-Nonce: cookie authentication accepts it as a query argument instead.
 		$src = add_query_arg( '_wpnonce', wp_create_nonce( 'wp_rest' ), rest_url( 'bug-spotter/v1/reports/' . (int) $report['id'] . '/screenshot' ) );

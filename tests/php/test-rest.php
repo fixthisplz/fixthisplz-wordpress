@@ -631,3 +631,23 @@ bugspot_test(
 		);
 	}
 );
+
+bugspot_test(
+	'rest: mailer_states_the_capture_method_only_with_a_screenshot',
+	function () {
+		rest_env(
+			function ( &$sent ) {
+				$repo    = new Reports_Repository();
+				$context = array( 'capture' => array( 'method' => 'tab', 'masked' => true ) );
+				$with    = $repo->insert( array( 'description' => 'd', 'page_url' => 'http://x/', 'context' => $context, 'screenshot' => str_repeat( 'b', 32 ) . '.jpg' ) );
+				$without = $repo->insert( array( 'description' => 'd', 'page_url' => 'http://x/', 'context' => $context ) );
+				Bug_Spotter\Mailer::notify( $with );
+				Bug_Spotter\Mailer::notify( $without );
+				assert_true( false !== strpos( $sent[0]['message'], '<strong>Screenshot:</strong> Real capture (masked)' ), 'HTML line' );
+				assert_true( false === strpos( $sent[1]['message'], 'Real capture' ), 'no line without screenshot' );
+				$repo->delete( $with );
+				$repo->delete( $without );
+			}
+		);
+	}
+);

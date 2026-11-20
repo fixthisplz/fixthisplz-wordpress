@@ -4,7 +4,8 @@
  * When the site enables masking (config.dialog.maskCapture), fields, [contenteditable] and sensitive zones are
  * covered on the bitmap before any export — best effort, only when a tab was shared. The plugin UI is hidden while
  * the frame is grabbed; a CaptureController keeps this page in front when another tab or window is shared.
- * Routing: real capture when getDisplayMedia exists (Chrome, Edge, Firefox, Safari desktop), the device has a
+ * Routing: the site setting config.dialog.captureMethod 'dom' always means reconstruction; otherwise real capture
+ * when getDisplayMedia exists (Chrome, Edge, Firefox, Safari desktop), the device has a
  * mouse or trackpad, and the Permissions-Policy allows display-capture; otherwise the DOM reconstruction of
  * capture.js (vendored library loaded lazily). The stream is always stopped: on success, on error, after a
  * 10 s deadline, and as soon as the run is abandoned (box unchecked, Retake, dialog closed). */
@@ -49,8 +50,11 @@ function allowsDisplayCapture(doc) {
 	return !policy || typeof policy.allowsFeature !== 'function' || policy.allowsFeature('display-capture') !== false;
 }
 
-/** 'tab' (real capture) or 'dom' (reconstruction), see Routing above. */
-export function selectMethod(env = globalThis) {
+/** 'tab' (real capture) or 'dom' (reconstruction), see Routing above. The site setting 'dom' always wins. */
+export function selectMethod(env = globalThis, preferred = 'tab') {
+	if (preferred === 'dom') {
+		return 'dom';
+	}
 	const devices = env.navigator && env.navigator.mediaDevices;
 	if (!devices || typeof devices.getDisplayMedia !== 'function' || !allowsDisplayCapture(env.document)) {
 		return 'dom';
@@ -296,11 +300,11 @@ export function captureTab({ mask = false, sensitiveSelectors = [], signal = nul
 /**
  * Entry point used by the dialog: real capture on desktop, DOM reconstruction elsewhere. The result says how the
  * image was made (method 'tab' = real capture, 'dom' = page reconstruction) and whether masks were applied.
- * @param {{vendorUrl: string, mask?: boolean, sensitiveSelectors?: string[], signal?: AbortSignal}} options
+ * @param {{vendorUrl: string, method?: 'tab'|'dom', mask?: boolean, sensitiveSelectors?: string[], signal?: AbortSignal}} options
  * @returns {Promise<{blob: Blob, method: 'tab'|'dom', masked: boolean}>}
  */
-export function takeScreenshot({ vendorUrl, mask = false, sensitiveSelectors = [], signal = null }) {
-	if (selectMethod() === 'tab') {
+export function takeScreenshot({ vendorUrl, method = 'tab', mask = false, sensitiveSelectors = [], signal = null }) {
+	if (selectMethod(globalThis, method) === 'tab') {
 		return captureTab({ mask, sensitiveSelectors, signal });
 	}
 	// Loads the vendored library on first use.

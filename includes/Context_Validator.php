@@ -27,7 +27,7 @@ final class Context_Validator {
 			return self::invalid( __( 'The report context needs a valid http(s) URL.', 'bug-spotter' ) );
 		}
 
-		return array(
+		$context = array(
 			'url'            => $url,
 			'title'          => self::text( $raw['title'] ?? null, 255 ),
 			'locale'         => self::text( $raw['locale'] ?? null, 16 ),
@@ -40,6 +40,20 @@ final class Context_Validator {
 			'console'        => self::console( $raw['console'] ?? null ),
 			'network'        => self::network( $raw['network'] ?? null ),
 		);
+
+		$capture = self::capture( $raw['capture'] ?? null );
+		if ( null !== $capture ) {
+			$context['capture'] = $capture;
+		}
+		return $context;
+	}
+
+	/** How the attached screenshot was made; anything outside the closed values drops the key (never a 422). @return array{method:string,masked:bool}|null */
+	private static function capture( mixed $v ): ?array {
+		if ( ! is_array( $v ) || ! in_array( $v['method'] ?? null, array( 'tab', 'dom' ), true ) || ! is_bool( $v['masked'] ?? null ) ) {
+			return null;
+		}
+		return array( 'method' => $v['method'], 'masked' => $v['masked'] );
 	}
 
 	private static function invalid( string $message ): \WP_Error {

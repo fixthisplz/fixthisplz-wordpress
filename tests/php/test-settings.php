@@ -207,3 +207,21 @@ settings_test(
 		assert_same( array( 'editor' ), $out['visibility']['roles'] );
 	}
 );
+
+settings_test(
+	'settings: capture method defaults to tab, masking to off, absurd values fall back',
+	function () {
+		delete_option( Settings::OPTION );
+		$d = Settings::defaults();
+		assert_same( 'tab', $d['dialog']['capture_method'] );
+		assert_same( false, $d['dialog']['mask_capture'] );
+		assert_same( 'dom', Settings::sanitize( array( 'dialog' => array( 'capture_method' => 'dom' ) ) )['dialog']['capture_method'] );
+		foreach ( array( 'window', '', 'TAB', 3, array( 'dom' ), null ) as $absurd ) {
+			$out = Settings::sanitize( array( 'dialog' => array( 'capture_method' => $absurd ) ) );
+			assert_same( 'tab', $out['dialog']['capture_method'], 'absurd capture_method: ' . var_export( $absurd, true ) );
+		}
+		assert_same( true, Settings::sanitize( array( 'dialog' => array( 'mask_capture' => '1' ) ) )['dialog']['mask_capture'] );
+		assert_same( false, Settings::sanitize( array( 'dialog' => array( 'mask_capture' => '0' ) ) )['dialog']['mask_capture'] );
+		assert_same( false, Settings::sanitize( array( 'dialog' => array( 'title' => 'x' ) ) )['dialog']['mask_capture'], 'absent stays off' );
+	}
+);

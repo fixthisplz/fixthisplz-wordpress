@@ -1429,3 +1429,46 @@ msgstr "Haute"
 #: includes/Statuses.php:35
 msgid "Critical"
 msgstr "Critique"
+
+#: includes/Admin/Settings_Tabs.php
+msgid "Capture method"
+msgstr "Méthode de capture"
+
+#: includes/Admin/Settings_Tabs.php
+msgid "Real capture of the tab (recommended) — exact image, the browser asks the visitor for permission"
+msgstr "Vraie capture de l’onglet (recommandé) — image exacte, le navigateur demande l’accord du visiteur"
+
+#: includes/Admin/Settings_Tabs.php
+msgid "Page reconstruction — no permission prompt, may differ slightly from the screen"
+msgstr "Reconstruction de la page — sans demande d’accord, peut différer légèrement de l’écran"
+
+#: includes/Admin/Settings_Tabs.php
+msgid "On phones and in browsers without screen sharing, the reconstruction is always used."
+msgstr "Sur mobile et dans les navigateurs sans partage d’écran, la reconstruction est toujours utilisée."
+
+#: includes/Admin/Settings_Tabs.php
+msgid "Masking"
+msgstr "Masquage"
+
+#: includes/Admin/Settings_Tabs.php
+msgid "Hide typed fields and sensitive areas in the screenshot"
+msgstr "Masquer les champs saisis et les zones sensibles dans la capture"
+
+#: includes/Screenshot_Store.php
+#: includes/Frontend/Assets.php
+msgid "Real capture"
+msgstr "Vraie capture"
+
+#: includes/Screenshot_Store.php
+#: includes/Frontend/Assets.php
+msgid "Page reconstruction"
+msgstr "Reconstruction de la page"
+
+#: includes/Screenshot_Store.php
+#. translators: %s: capture method, for example "Real capture".
+msgid "%s (masked)"
+msgstr "%s (masquée)"
+
+#: includes/Frontend/Assets.php
+msgid "masked"
+msgstr "masquée"

@@ -73,7 +73,7 @@ export function openDialog({ config, element, onRetakeElement, onClose }) {
 	const diagnostics = snapshotDiagnostics();
 	let described = element ? describeElement(element, { sensitiveSelectors }) : null;
 	let shot = null;
-	let shotInfo = null; // { method: 'tab'|'dom', masked } of the current shot, for the report (Task 19)
+	let shotInfo = null; // { method: 'tab'|'dom', masked } of the current shot, sent with the report
 	let shotUrl = '';
 	let captureRun = 0;
 	let captureAbort = null; // stops the capture stream as soon as its run is stale
@@ -179,6 +179,7 @@ export function openDialog({ config, element, onRetakeElement, onClose }) {
 			env,
 			config: cfg,
 			screenshot: Boolean(shot),
+			capture: shotInfo,
 		});
 	}
 
@@ -280,6 +281,7 @@ export function openDialog({ config, element, onRetakeElement, onClose }) {
 		}
 		shotImage.removeAttribute('src');
 		shotPreview.hidden = true;
+		refreshElement();
 	}
 
 	function captureMessage(error) {
@@ -297,7 +299,7 @@ export function openDialog({ config, element, onRetakeElement, onClose }) {
 		capturing = true;
 		shotStatus.textContent = t('capturing');
 		try {
-			const { blob, method, masked } = await takeScreenshot({ vendorUrl: cfg.vendorUrl, mask: dlg.maskCapture === true, sensitiveSelectors, signal: captureAbort.signal });
+			const { blob, method, masked } = await takeScreenshot({ vendorUrl: cfg.vendorUrl, method: dlg.captureMethod, mask: dlg.maskCapture === true, sensitiveSelectors, signal: captureAbort.signal });
 			if (closed || run !== captureRun) {
 				return;
 			}
@@ -307,6 +309,7 @@ export function openDialog({ config, element, onRetakeElement, onClose }) {
 			shotImage.src = shotUrl;
 			shotPreview.hidden = false;
 			shotStatus.textContent = '';
+			refreshElement();
 		} catch (error) {
 			if (closed || run !== captureRun) {
 				return;
