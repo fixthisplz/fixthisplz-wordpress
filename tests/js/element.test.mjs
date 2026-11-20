@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { describeElement, cssPath } from '../../assets/js/lib/element.js';
+import { describeElement, cssPath, summarizeElement } from '../../assets/js/lib/element.js';
 
 /* Hand-made fake DOM: just enough of Element/Text for element.js (no jsdom). */
 function matches(node, selector) {
@@ -204,4 +204,10 @@ test('describeElement never names an element from text typed in an editable regi
 	const labelled = el('h2', { 'aria-label': 'Editor title' }, ['my draft']);
 	el('div', { contenteditable: 'true' }, [labelled]);
 	assert.equal(describeElement(labelled, {}).name, 'Editor title');
+});
+
+test('summarizeElement shows role (or tag) and name, else the start of the text', () => {
+	assert.equal(summarizeElement({ tag: 'button', role: 'button', name: 'Send', text: 'Send now' }), 'button – Send');
+	assert.equal(summarizeElement({ tag: 'p', role: '', name: '', text: 'x'.repeat(100) }), `p – ${'x'.repeat(80)}`);
+	assert.equal(summarizeElement({ tag: 'div', role: '', name: '', text: '' }), 'div');
 });

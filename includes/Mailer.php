@@ -28,11 +28,8 @@ final class Mailer {
 		/* translators: 1: site name, 2: report number */
 		$subject = sprintf( __( '[%1$s] New bug #%2$d', 'bug-spotter' ), $blogname, $report_id );
 
-		$excerpt = mb_substr( (string) $report['description'], 0, self::EXCERPT_LENGTH );
-		if ( mb_strlen( (string) $report['description'] ) > self::EXCERPT_LENGTH ) {
-			$excerpt .= '…';
-		}
-		$reporter = self::reporter( $report );
+		$excerpt  = Report_Format::excerpt( (string) $report['description'], self::EXCERPT_LENGTH );
+		$reporter = Report_Format::reporter_label( $report );
 		$link     = admin_url( 'admin.php?page=bug-spotter&report=' . $report_id );
 		$page     = (string) $report['page_url'];
 
@@ -78,20 +75,5 @@ final class Mailer {
 		} finally {
 			remove_action( 'phpmailer_init', $alt );
 		}
-	}
-
-	/** Reporter label: WP display name, or "Visitor" with the contact e-mail when one was given. */
-	private static function reporter( array $report ): string {
-		if ( ! empty( $report['user_id'] ) ) {
-			$user = get_userdata( (int) $report['user_id'] );
-			if ( $user ) {
-				return $user->display_name;
-			}
-		}
-		$label = __( 'Visitor', 'bug-spotter' );
-		if ( is_string( $report['reporter_email'] ?? null ) && '' !== $report['reporter_email'] ) {
-			$label .= ' (' . $report['reporter_email'] . ')';
-		}
-		return $label;
 	}
 }

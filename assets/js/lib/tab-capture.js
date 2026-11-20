@@ -13,8 +13,9 @@ import { captureVisible } from './capture.js';
 import { encodeJpeg } from './jpeg.js';
 import { UI_ATTR } from './dom.js';
 import { listMaskTargets, measureTarget, scaleRects } from './mask-targets.js';
+import { MASK_FILL } from './sensitive.js';
+import { withTimeout } from './async.js';
 
-const FILL = '#3c434a';
 const HIDE_CLASS = 'bugspot-capture-hide';
 const STEP_TIMEOUT_MS = 5000;
 const DEADLINE_MS = 10000; // whole shoot, once the permission is granted
@@ -103,15 +104,7 @@ export async function withStream(stream, grab, signal = null) {
 	}
 }
 
-export function withTimeout(promise, ms, error = () => new Error('Screenshot timed out.')) {
-	let timer;
-	return Promise.race([
-		promise,
-		new Promise((_, reject) => {
-			timer = setTimeout(() => reject(error()), ms);
-		}),
-	]).finally(() => clearTimeout(timer));
-}
+const timedOut = () => new Error('Screenshot timed out.');
 
 const isHidden = () => document.visibilityState === 'hidden';
 
@@ -147,7 +140,7 @@ async function grabFreshFrame(track, notBefore, assertLive, until) {
 		const grabbed = new ImageCapture(track).grabFrame();
 		let bitmap;
 		try {
-			bitmap = await withTimeout(until(grabbed), STEP_TIMEOUT_MS);
+			bitmap = await withTimeout(until(grabbed), STEP_TIMEOUT_MS, timedOut);
 		} catch (error) {
 			// Abandoned or timed out: the frame may still arrive later, and nobody would close it.
 			grabbed.then((late) => late.close(), () => {});
@@ -170,10 +163,11 @@ async function grabFreshFrame(track, notBefore, assertLive, until) {
 				video.requestVideoFrameCallback((now, meta) => resolve(meta));
 				refresher?.grabFrame().then((bitmap) => bitmap.close(), () => {});
 			})),
-			STEP_TIMEOUT_MS
+			STEP_TIMEOUT_MS,
+			timedOut
 		);
 	try {
-		await withTimeout(until(video.play()), STEP_TIMEOUT_MS);
+		await withTimeout(until(video.play()), STEP_TIMEOUT_MS, timedOut);
 		if (typeof video.requestVideoFrameCallback === 'function') {
 			for (let tries = 1; ; tries += 1) {
 				const meta = await nextFrame();
@@ -232,7 +226,7 @@ async function shoot(track, options, assertLive, onStop) {
 	try {
 		const ctx = canvas.getContext('2d');
 		ctx.drawImage(frame.source, 0, 0, frame.width, frame.height);
-		ctx.fillStyle = FILL;
+		ctx.fillStyle = MASK_FILL;
 		boxes.forEach((b) => ctx.fillRect(b.x, b.y, b.width, b.height)); // before any export
 	} finally {
 		frame.release();
@@ -293,7 +287,7 @@ export function captureTab({ mask = false, sensitiveSelectors = [], signal = nul
 						assertLive();
 						if (Date.now() > deadline) throw new StaleCaptureError();
 					};
-					return withTimeout(shoot(track, { mask, sensitiveSelectors }, live, onStop), DEADLINE_MS);
+					return withTimeout(shoot(track, { mask, sensitiveSelectors }, live, onStop), DEADLINE_MS, timedOut);
 				},
 				signal
 			);

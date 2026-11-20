@@ -50,7 +50,7 @@ final class Context_Validator {
 
 	/** How the attached screenshot was made; anything outside the closed values drops the key (never a 422). @return array{method:string,masked:bool}|null */
 	private static function capture( mixed $v ): ?array {
-		if ( ! is_array( $v ) || ! in_array( $v['method'] ?? null, array( 'tab', 'dom' ), true ) || ! is_bool( $v['masked'] ?? null ) ) {
+		if ( ! is_array( $v ) || ! in_array( $v['method'] ?? null, Screenshot_Store::METHODS, true ) || ! is_bool( $v['masked'] ?? null ) ) {
 			return null;
 		}
 		return array( 'method' => $v['method'], 'masked' => $v['masked'] );

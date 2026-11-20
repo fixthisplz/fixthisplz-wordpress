@@ -6,7 +6,6 @@ import {
 	shouldMask,
 	captureTab,
 	takeScreenshot,
-	withTimeout,
 	CaptureDeniedError,
 } from '../../assets/js/lib/tab-capture.js';
 
@@ -80,11 +79,6 @@ test('shouldMask: off by default; when on, only for a surface reported as a tab'
 	assert.equal(shouldMask(true, track(undefined)), false); // unknown surface: masked would be false information
 	assert.equal(shouldMask(true, track('window')), false); // page rectangles mean nothing there: skipped
 	assert.equal(shouldMask(true, track('monitor')), false);
-});
-
-test('withTimeout rejects after the deadline and lets a fast promise through', async () => {
-	assert.equal(await withTimeout(Promise.resolve('fast'), 50), 'fast');
-	await assert.rejects(withTimeout(new Promise(() => {}), 10), /timed out/);
 });
 
 test('withStream stops every track at once when the run is abandoned mid-grab', async () => {

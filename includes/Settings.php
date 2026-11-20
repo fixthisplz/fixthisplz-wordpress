@@ -2,6 +2,8 @@
 
 namespace Bug_Spotter;
 
+use Bug_Spotter\Captcha\Factory;
+
 defined( 'ABSPATH' ) || exit;
 
 final class Settings {
@@ -16,13 +18,14 @@ final class Settings {
 		add_action( 'update_option_' . self::OPTION, array( self::class, 'sync_capabilities' ) );
 	}
 
-	/** Hook callback: reads the option as just saved (administrator is always kept). */
+	/** Hook callback and activation: grants the capability to the saved "management" roles. */
 	public static function sync_capabilities(): void {
-		$roles = (array) self::get()['management']['roles'];
-		if ( ! in_array( 'administrator', $roles, true ) ) {
-			$roles[] = 'administrator';
-		}
-		Installer::sync_capabilities( $roles );
+		Installer::sync_capabilities( self::with_administrator( (array) self::get()['management']['roles'] ) );
+	}
+
+	/** The administrator always keeps the management capability, whatever the settings say. @param string[] $roles @return string[] */
+	private static function with_administrator( array $roles ): array {
+		return in_array( 'administrator', $roles, true ) ? $roles : array_merge( $roles, array( 'administrator' ) );
 	}
 
 	/** @return array<string,mixed> */
@@ -223,36 +226,7 @@ final class Settings {
 			'show_in_admin'         => self::bool( $v['show_in_admin'] ),
 		);
 
-		$b  = $s['button'];
-		$bd = $d['button'];
-		$sc = $b['shadow_custom'];
-
-		$out['button'] = array(
-			'icon_type'               => self::enum( $b['icon_type'], array( 'dashicon', 'svg' ), $bd['icon_type'] ),
-			'dashicon'                => self::dashicon( $b['dashicon'], $bd['dashicon'] ),
-			'svg_attachment_id'       => absint( $b['svg_attachment_id'] ),
-			'shape'                   => self::enum( $b['shape'], array( 'circle', 'rounded', 'pill' ), $bd['shape'] ),
-			'label'                   => self::text_field( $b['label'] ),
-			'tooltip'                 => self::text_field( $b['tooltip'] ),
-			'size'                    => self::enum( $b['size'], array( 's', 'm', 'l' ), $bd['size'] ),
-			'color_bg'                => self::color( $b['color_bg'], $bd['color_bg'] ),
-			'color_fg'                => self::color( $b['color_fg'], $bd['color_fg'] ),
-			'color_bg_hover'          => self::color( $b['color_bg_hover'], $bd['color_bg_hover'] ),
-			'shadow'                  => self::enum( $b['shadow'], array( 'none', 'light', 'medium', 'strong', 'custom' ), $bd['shadow'] ),
-			'shadow_custom'           => array(
-				'x'      => self::int( $sc['x'], -100, 100, $bd['shadow_custom']['x'] ),
-				'y'      => self::int( $sc['y'], -100, 100, $bd['shadow_custom']['y'] ),
-				'blur'   => self::int( $sc['blur'], 0, 200, $bd['shadow_custom']['blur'] ),
-				'spread' => self::int( $sc['spread'], -100, 100, $bd['shadow_custom']['spread'] ),
-				'color'  => self::color( $sc['color'], $bd['shadow_custom']['color'] ),
-			),
-			'radius_mode'             => self::enum( $b['radius_mode'], array( 'preset', 'custom' ), $bd['radius_mode'] ),
-			'radius_px'               => self::int( $b['radius_px'], 0, 200, $bd['radius_px'] ),
-			'position'                => self::position( $b['position'], $bd['position'] ),
-			'mobile_position_enabled' => self::bool( $b['mobile_position_enabled'] ),
-			'position_mobile'         => self::position( $b['position_mobile'], $bd['position_mobile'] ),
-			'z_index'                 => self::int( $b['z_index'], 0, 2147483647, $bd['z_index'] ),
-		);
+		$out['button'] = self::validate_button( $s['button'] );
 
 		$g                = $s['dialog'];
 		$formats          = array_values( array_unique( array_intersect( (array) $g['formats'], array( 'md', 'json', 'txt' ) ) ) );
@@ -262,7 +236,7 @@ final class Settings {
 			'privacy_text'     => self::textarea( $g['privacy_text'] ),
 			'privacy_url'      => is_string( $g['privacy_url'] ) ? esc_url_raw( $g['privacy_url'] ) : '',
 			'allow_screenshot' => self::bool( $g['allow_screenshot'] ),
-			'capture_method'   => self::enum( $g['capture_method'], array( 'tab', 'dom' ), $d['dialog']['capture_method'] ),
+			'capture_method'   => self::enum( $g['capture_method'], Screenshot_Store::METHODS, $d['dialog']['capture_method'] ),
 			'mask_capture'     => self::bool( $g['mask_capture'] ),
 			'ask_email_guests' => self::bool( $g['ask_email_guests'] ),
 			'formats'          => array() === $formats ? $d['dialog']['formats'] : $formats,
@@ -270,7 +244,7 @@ final class Settings {
 
 		$c               = $s['captcha'];
 		$out['captcha']  = array(
-			'provider'     => self::enum( $c['provider'], array( 'none', 'turnstile', 'recaptcha_v2', 'recaptcha_v3', 'hcaptcha' ), 'none' ),
+			'provider'     => self::enum( $c['provider'], array_merge( array( 'none' ), Factory::PROVIDERS ), 'none' ),
 			'site_key'     => self::text_field( $c['site_key'] ),
 			'secret_key'   => self::text_field( $c['secret_key'] ),
 			'v3_threshold' => is_numeric( $c['v3_threshold'] ) ? max( 0.0, min( 1.0, (float) $c['v3_threshold'] ) ) : $d['captcha']['v3_threshold'],
@@ -304,16 +278,52 @@ final class Settings {
 		);
 
 		$m                   = $s['management'];
-		$manage_roles        = self::roles( $m['roles'] );
-		if ( ! in_array( 'administrator', $manage_roles, true ) ) {
-			$manage_roles[] = 'administrator';
-		}
 		$out['management']   = array(
-			'roles'      => $manage_roles,
+			'roles'      => self::with_administrator( self::roles( $m['roles'] ) ),
 			'menu_badge' => self::bool( $m['menu_badge'] ),
 		);
 
 		return $out;
+	}
+
+	/**
+	 * The "button" block, complete and validated: every value is checked (colors by regex, numbers cast and
+	 * clamped, enums from whitelists), missing keys take their default. Also used by Button_Style on output.
+	 *
+	 * @param mixed $b Possibly partial, untrusted.
+	 * @return array<string,mixed>
+	 */
+	public static function validate_button( $b ): array {
+		$bd = self::defaults()['button'];
+		$b  = self::merge( $bd, is_array( $b ) ? $b : array() );
+		$sc = $b['shadow_custom'];
+
+		return array(
+			'icon_type'               => self::enum( $b['icon_type'], array( 'dashicon', 'svg' ), $bd['icon_type'] ),
+			'dashicon'                => self::dashicon( $b['dashicon'], $bd['dashicon'] ),
+			'svg_attachment_id'       => absint( $b['svg_attachment_id'] ),
+			'shape'                   => self::enum( $b['shape'], array( 'circle', 'rounded', 'pill' ), $bd['shape'] ),
+			'label'                   => self::text_field( $b['label'] ),
+			'tooltip'                 => self::text_field( $b['tooltip'] ),
+			'size'                    => self::enum( $b['size'], array( 's', 'm', 'l' ), $bd['size'] ),
+			'color_bg'                => self::color( $b['color_bg'], $bd['color_bg'] ),
+			'color_fg'                => self::color( $b['color_fg'], $bd['color_fg'] ),
+			'color_bg_hover'          => self::color( $b['color_bg_hover'], $bd['color_bg_hover'] ),
+			'shadow'                  => self::enum( $b['shadow'], array( 'none', 'light', 'medium', 'strong', 'custom' ), $bd['shadow'] ),
+			'shadow_custom'           => array(
+				'x'      => self::int( $sc['x'], -100, 100, $bd['shadow_custom']['x'] ),
+				'y'      => self::int( $sc['y'], -100, 100, $bd['shadow_custom']['y'] ),
+				'blur'   => self::int( $sc['blur'], 0, 200, $bd['shadow_custom']['blur'] ),
+				'spread' => self::int( $sc['spread'], -100, 100, $bd['shadow_custom']['spread'] ),
+				'color'  => self::color( $sc['color'], $bd['shadow_custom']['color'] ),
+			),
+			'radius_mode'             => self::enum( $b['radius_mode'], array( 'preset', 'custom' ), $bd['radius_mode'] ),
+			'radius_px'               => self::int( $b['radius_px'], 0, 200, $bd['radius_px'] ),
+			'position'                => self::position( $b['position'], $bd['position'] ),
+			'mobile_position_enabled' => self::bool( $b['mobile_position_enabled'] ),
+			'position_mobile'         => self::position( $b['position_mobile'], $bd['position_mobile'] ),
+			'z_index'                 => self::int( $b['z_index'], 0, 2147483647, $bd['z_index'] ),
+		);
 	}
 
 	/** @param mixed $v */

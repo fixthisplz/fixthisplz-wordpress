@@ -19,8 +19,7 @@ final class Installer {
 	public static function activate(): void {
 		self::create_table();
 		Secret::key();
-		$settings = Settings::get();
-		self::sync_capabilities( $settings['management']['roles'] );
+		Settings::sync_capabilities();
 		self::private_dir();
 		if ( ! wp_next_scheduled( self::CRON_HOOK ) ) {
 			wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', self::CRON_HOOK );

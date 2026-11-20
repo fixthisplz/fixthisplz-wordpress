@@ -32,7 +32,7 @@ final class Bugs_Page {
 	}
 
 	public static function save_screen_option( mixed $keep, string $option, mixed $value ): int {
-		return max( 1, min( 200, (int) $value ) );
+		return max( 1, min( Reports_Repository::MAX_PER_PAGE, (int) $value ) );
 	}
 
 	/**
@@ -174,7 +174,7 @@ final class Bugs_Page {
 		return $args;
 	}
 
-	private static function notice_args( string $type, int $count ): array {
+	public static function notice_args( string $type, int $count ): array {
 		return '' === $type ? array() : array( 'bugspot_notice' => $type, 'bugspot_count' => $count );
 	}
 
@@ -283,22 +283,5 @@ final class Bugs_Page {
 		echo '<button type="submit" class="button">' . esc_html__( 'Filter', 'bug-spotter' ) . '</button> ';
 		echo '<a class="button" href="' . esc_url( Csv_Export::url( $filters, ...self::read_sort( $query ) ) ) . '">' . esc_html__( 'Export CSV', 'bug-spotter' ) . '</a>';
 		echo '</div>';
-	}
-
-	/**
-	 * Who reported: a WP user (name + profile link) or a visitor (+ decrypted contact e-mail when given).
-	 *
-	 * @return array{name:string,url:string,email:string,is_user:bool}
-	 */
-	public static function reporter( array $item ): array {
-		$email = is_string( $item['reporter_email'] ?? null ) ? $item['reporter_email'] : '';
-		$uid   = (int) ( $item['user_id'] ?? 0 );
-		if ( $uid > 0 ) {
-			$user = get_userdata( $uid );
-			if ( $user ) {
-				return array( 'name' => $user->display_name, 'url' => (string) get_edit_user_link( $uid ), 'email' => '', 'is_user' => true );
-			}
-		}
-		return array( 'name' => __( 'Visitor', 'bug-spotter' ), 'url' => '', 'email' => $email, 'is_user' => false );
 	}
 }

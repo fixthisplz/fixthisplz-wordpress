@@ -1,9 +1,10 @@
 /* Describes the element a visitor designated (spec 5.1 / 5.2). Never reads a field value: only tag, role,
  * accessible name and visible text outside fields, editable regions and sensitive subtrees. */
 
-export const MASKED = '[masqué]';
-const SENSITIVE_ATTR = '[data-bugspot-sensitive]';
-const FIELD_TAGS = new Set(['INPUT', 'TEXTAREA', 'SELECT']);
+import { truncate } from './redact.js';
+import { FIELD_TAGS, closestAny, isEditable, matchesAny, sensitiveList } from './sensitive.js';
+
+const MASKED = '[masqué]';
 // Subtrees whose text is never "visible text" of a selection.
 const SKIP_TAGS = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE', 'TEXTAREA', 'SELECT', 'INPUT', 'OPTION', 'SVG']);
 const STABLE_DATA_ATTRS = ['data-testid', 'data-test-id', 'data-test', 'data-cy', 'data-qa'];
@@ -46,10 +47,9 @@ const IMPLICIT_ROLES = {
 };
 
 const collapse = (s) => String(s ?? '').replace(/\s+/g, ' ').trim();
-const truncate = (s, max) => Array.from(s).slice(0, max).join('');
 
 /** Ids produced by frameworks or counters are useless across page loads: 4+ digits, hex runs, uuids, React ":r1:". */
-export function isGeneratedId(id) {
+function isGeneratedId(id) {
 	return (
 		id === '' ||
 		/\d{4,}/.test(id) ||
@@ -117,46 +117,8 @@ function selectorFor(el) {
 	return cssPath(el);
 }
 
-/** True when el (or an ancestor) is marked sensitive. Invalid selectors from the settings are skipped. */
-export function isSensitive(el, sensitiveSelectors) {
-	for (const selector of [SENSITIVE_ATTR, ...(Array.isArray(sensitiveSelectors) ? sensitiveSelectors : [])]) {
-		if (typeof selector !== 'string' || selector.trim() === '') {
-			continue;
-		}
-		try {
-			if (el.closest(selector)) {
-				return true;
-			}
-		} catch {
-			/* invalid selector: ignored */
-		}
-	}
-	return false;
-}
-
-function matchesSensitive(el, sensitiveSelectors) {
-	for (const selector of [SENSITIVE_ATTR, ...(Array.isArray(sensitiveSelectors) ? sensitiveSelectors : [])]) {
-		if (typeof selector !== 'string' || selector.trim() === '') {
-			continue;
-		}
-		try {
-			if (el.matches(selector)) {
-				return true;
-			}
-		} catch {
-			/* invalid selector: ignored */
-		}
-	}
-	return false;
-}
-
-function isEditable(el) {
-	const v = el.getAttribute('contenteditable');
-	return v !== null && v.toLowerCase() !== 'false';
-}
-
 /** Visible text of a subtree, skipping fields, editable regions, scripts and masking sensitive parts. */
-function visibleText(root, sensitiveSelectors) {
+function visibleText(root, selectors) {
 	const out = [];
 	let budget = WALK_LIMIT;
 	const walk = (node) => {
@@ -175,7 +137,7 @@ function visibleText(root, sensitiveSelectors) {
 			out.push(' ');
 			return;
 		}
-		if (node !== root && matchesSensitive(node, sensitiveSelectors)) {
+		if (node !== root && matchesAny(node, selectors)) {
 			out.push(` ${MASKED} `);
 			return;
 		}
@@ -187,7 +149,7 @@ function visibleText(root, sensitiveSelectors) {
 	return collapse(out.join(''));
 }
 
-function labelledBy(el, sensitiveSelectors) {
+function labelledBy(el, selectors) {
 	const ids = el.getAttribute('aria-labelledby');
 	const doc = el.ownerDocument;
 	if (!ids || !doc || typeof doc.getElementById !== 'function') {
@@ -198,12 +160,12 @@ function labelledBy(el, sensitiveSelectors) {
 			.split(/\s+/)
 			.map((id) => doc.getElementById(id))
 			.filter(Boolean)
-			.map((n) => (isSensitive(n, sensitiveSelectors) ? MASKED : visibleText(n, sensitiveSelectors)))
+			.map((n) => (closestAny(n, selectors) ? MASKED : visibleText(n, selectors)))
 			.join(' ')
 	);
 }
 
-function fieldLabel(el, sensitiveSelectors) {
+function fieldLabel(el, selectors) {
 	const labels = el.labels && el.labels.length ? Array.from(el.labels) : [];
 	if (labels.length === 0 && typeof el.closest === 'function') {
 		const wrapping = el.closest('label');
@@ -211,21 +173,21 @@ function fieldLabel(el, sensitiveSelectors) {
 			labels.push(wrapping);
 		}
 	}
-	const text = collapse(labels.map((l) => visibleText(l, sensitiveSelectors)).join(' '));
+	const text = collapse(labels.map((l) => visibleText(l, selectors)).join(' '));
 	return text || collapse(el.getAttribute('placeholder')) || collapse(el.getAttribute('title')) || '';
 }
 
-function accessibleName(el, isField, editable, role, sensitiveSelectors) {
-	const aria = collapse(el.getAttribute('aria-label')) || labelledBy(el, sensitiveSelectors);
+function accessibleName(el, isField, editable, role, selectors) {
+	const aria = collapse(el.getAttribute('aria-label')) || labelledBy(el, selectors);
 	if (aria) {
 		return aria;
 	}
 	if (isField) {
 		// Never the value attribute (for submit buttons it may still be page data).
-		return fieldLabel(el, sensitiveSelectors);
+		return fieldLabel(el, selectors);
 	}
 	if (NAME_FROM_CONTENT.has(role) && !editable) {
-		const content = truncate(visibleText(el, sensitiveSelectors), NAME_MAX);
+		const content = truncate(visibleText(el, selectors), NAME_MAX);
 		if (content) {
 			return content;
 		}
@@ -254,23 +216,24 @@ function rectOf(el) {
 }
 
 export function describeElement(el, { sensitiveSelectors } = {}) {
+	const selectors = sensitiveList(sensitiveSelectors);
 	const tagUpper = String(el.tagName).toUpperCase();
 	const isField = FIELD_TAGS.has(tagUpper);
 	let editable = !isField && Boolean(el.isContentEditable);
 	for (let n = el; !isField && !editable && n && n.nodeType === 1; n = n.parentElement) {
 		editable = isEditable(n);
 	}
-	const sensitive = isSensitive(el, sensitiveSelectors);
+	const sensitive = closestAny(el, selectors);
 
 	const role = roleOf(el);
 	// Content typed in an editable region is never a name (spec 5.2).
-	let name = accessibleName(el, isField, editable, role, sensitiveSelectors);
+	let name = accessibleName(el, isField, editable, role, selectors);
 	let text = '';
 	if (sensitive) {
 		text = MASKED;
 		name = isField || name === '' ? name : MASKED;
 	} else if (!isField && !editable) {
-		text = visibleText(el, sensitiveSelectors);
+		text = visibleText(el, selectors);
 	}
 
 	return {
@@ -281,4 +244,9 @@ export function describeElement(el, { sensitiveSelectors } = {}) {
 		text: truncate(text, TEXT_MAX),
 		rect: rectOf(el),
 	};
+}
+
+/** One-line summary of a described element: "role – name" (or the start of its text). */
+export function summarizeElement(d) {
+	return [d.role || d.tag, d.name || truncate(d.text, 80)].filter(Boolean).join(' – ');
 }

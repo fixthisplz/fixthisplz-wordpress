@@ -1,6 +1,8 @@
 /* Anti-bot widget (spec 6.3). The provider script is injected once, only when the dialog opens.
  * mountCaptcha never throws: a provider that cannot load makes getToken() reject with CaptchaUnavailableError. */
 
+import { withTimeout } from './async.js';
+
 const LOAD_TIMEOUT_MS = 15000;
 const ACTION = 'bug_report';
 const scripts = new Map();
@@ -54,13 +56,11 @@ function waitFor(get, timeout = LOAD_TIMEOUT_MS) {
 	});
 }
 
-function withTimeout(promise, timeout = LOAD_TIMEOUT_MS) {
-	return Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new CaptchaUnavailableError()), timeout))]);
-}
+const unavailable = () => new CaptchaUnavailableError();
 
 const grecaptchaReady = () =>
 	waitFor(() => window.grecaptcha && typeof window.grecaptcha.ready === 'function' && window.grecaptcha).then(
-		(g) => withTimeout(new Promise((resolve) => g.ready(() => resolve(g))))
+		(g) => withTimeout(new Promise((resolve) => g.ready(() => resolve(g))), LOAD_TIMEOUT_MS, unavailable)
 	);
 
 const PROVIDERS = {
@@ -101,7 +101,7 @@ const PROVIDERS = {
 		async render(container, siteKey) {
 			const api = await grecaptchaReady();
 			return {
-				token: () => withTimeout(Promise.resolve(api.execute(siteKey, { action: ACTION }))),
+				token: () => withTimeout(Promise.resolve(api.execute(siteKey, { action: ACTION })), LOAD_TIMEOUT_MS, unavailable),
 				reset: () => {},
 				remove: () => {},
 			};
@@ -127,7 +127,7 @@ export async function mountCaptcha(container, captchaConfig) {
 		if (!cfg.scriptUrl || !cfg.siteKey) {
 			throw new CaptchaUnavailableError();
 		}
-		await withTimeout(loadScript(cfg.scriptUrl));
+		await withTimeout(loadScript(cfg.scriptUrl), LOAD_TIMEOUT_MS, unavailable);
 		widget = await provider.render(container, cfg.siteKey);
 	} catch {
 		failure = new CaptchaUnavailableError();

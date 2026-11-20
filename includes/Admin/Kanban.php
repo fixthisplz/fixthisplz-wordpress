@@ -2,7 +2,9 @@
 
 namespace Bug_Spotter\Admin;
 
+use Bug_Spotter\Report_Format;
 use Bug_Spotter\Reports_Repository;
+use Bug_Spotter\Rest\Reports_Controller;
 use Bug_Spotter\Statuses;
 
 defined( 'ABSPATH' ) || exit;
@@ -10,17 +12,17 @@ defined( 'ABSPATH' ) || exit;
 /** Kanban board: one column per status, cards draggable between columns (see assets/js/admin-kanban.js). */
 final class Kanban {
 
-	private const STEP      = 50;
-	private const MAX_LIMIT = 1000;
-	private const CHUNK     = 200; // Reports_Repository::query() caps per_page at 200.
+	private const STEP           = 50;
+	private const MAX_LIMIT      = 1000;
+	private const EXCERPT_LENGTH = 100;
 
 	public static function enqueue_assets(): void {
-		wp_enqueue_script( 'bug-spotter-kanban', BUGSPOT_URL . 'assets/js/admin-kanban.js', array( 'jquery', 'jquery-ui-sortable', 'wp-api-fetch', 'wp-i18n' ), BUGSPOT_VERSION, true );
+		wp_enqueue_script( 'bug-spotter-kanban', BUGSPOT_URL . 'assets/js/admin-kanban.js', array( 'jquery', 'jquery-ui-sortable', 'wp-api-fetch' ), BUGSPOT_VERSION, true );
 		wp_localize_script(
 			'bug-spotter-kanban',
 			'bugspotKanban',
 			array(
-				'path'         => '/bug-spotter/v1/reports/',
+				'path'         => '/' . Reports_Controller::NAMESPACE . '/reports/',
 				'genericError' => __( 'The report could not be moved. Please try again.', 'bug-spotter' ),
 				'dismiss'      => __( 'Dismiss this notice.', 'bug-spotter' ),
 			)
@@ -82,7 +84,7 @@ final class Kanban {
 		$items = array();
 		$page  = 1;
 		while ( count( $items ) < $limit ) {
-			$result = $repo->query( array_merge( $criteria, array( 'status' => $status, 'orderby' => 'created_at', 'order' => 'DESC', 'per_page' => min( self::CHUNK, $limit - count( $items ) ), 'page' => $page ) ) );
+			$result = $repo->query( array_merge( $criteria, array( 'status' => $status, 'orderby' => 'created_at', 'order' => 'DESC', 'per_page' => min( Reports_Repository::MAX_PER_PAGE, $limit - count( $items ) ), 'page' => $page ) ) );
 			if ( ! $result['items'] ) {
 				break;
 			}
@@ -97,27 +99,25 @@ final class Kanban {
 
 	private static function render_card( array $item ): void {
 		$id       = (int) $item['id'];
-		$excerpt  = mb_strimwidth( trim( (string) preg_replace( '/\s+/u', ' ', (string) $item['description'] ) ), 0, 100, '…' );
+		$excerpt  = Report_Format::excerpt( trim( (string) preg_replace( '/\s+/u', ' ', (string) $item['description'] ) ), self::EXCERPT_LENGTH );
 		$path     = wp_parse_url( (string) $item['page_url'], PHP_URL_PATH );
 		$path     = is_string( $path ) && '' !== $path ? $path : (string) $item['page_url'];
-		$created  = date_create_immutable( (string) $item['created_at'] . ' UTC' );
+		$created  = Reports_Repository::timestamp( $item['created_at'] );
 		$priority = (string) $item['priority'];
 		$labels   = Statuses::priorities();
-		$color    = Statuses::priority_colors()[ $priority ] ?? '';
-		$style    = preg_match( '/^#[0-9a-fA-F]{3,8}$/', $color ) ? ' style="background:' . esc_attr( $color ) . ';border-color:' . esc_attr( $color ) . ';color:#fff"' : '';
 
 		echo '<li class="bugspot-card" data-id="' . esc_attr( (string) $id ) . '" data-status="' . esc_attr( (string) $item['status'] ) . '">';
 		echo '<div class="bugspot-card-head"><a class="bugspot-card-id" href="' . esc_url( Detail_Page::url( $id ) ) . '">#' . esc_html( (string) $id ) . '</a>';
 		if ( is_string( $item['screenshot'] ?? null ) && '' !== $item['screenshot'] ) {
 			echo ' <span class="dashicons dashicons-camera" title="' . esc_attr__( 'Has a screenshot', 'bug-spotter' ) . '" aria-label="' . esc_attr__( 'Has a screenshot', 'bug-spotter' ) . '"></span>';
 		}
-		echo ' <span class="bugspot-pill bugspot-priority-' . esc_attr( $priority ) . '"' . $style . '>' . esc_html( $labels[ $priority ] ?? $priority ) . '</span></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $style is built from esc_attr() of a validated hex colour.
+		echo ' <span class="bugspot-pill bugspot-priority-' . esc_attr( $priority ) . '">' . esc_html( $labels[ $priority ] ?? $priority ) . '</span></div>';
 		echo '<p class="bugspot-card-text">' . esc_html( $excerpt ) . '</p>';
 		echo '<p class="bugspot-card-meta bugspot-muted"><span class="bugspot-card-page">' . esc_html( $path ) . '</span>';
-		if ( $created ) {
+		if ( null !== $created ) {
 			/* translators: %s: human-readable time difference, e.g. "2 hours". */
-			$ago = sprintf( __( '%s ago', 'bug-spotter' ), human_time_diff( $created->getTimestamp(), time() ) );
-			echo ' &middot; <span title="' . esc_attr( wp_date( 'Y-m-d H:i', $created->getTimestamp() ) ) . '">' . esc_html( $ago ) . '</span>';
+			$ago = sprintf( __( '%s ago', 'bug-spotter' ), human_time_diff( $created, time() ) );
+			echo ' &middot; <span title="' . esc_attr( wp_date( 'Y-m-d H:i', $created ) ) . '">' . esc_html( $ago ) . '</span>';
 		}
 		echo '</p></li>';
 	}

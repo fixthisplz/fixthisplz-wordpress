@@ -2,7 +2,7 @@
  * which elements to cover and where they are on screen (CSS px of the viewport).
  * Known limits: fields inside CLOSED shadow roots are not reached; pinch-zoom and transformed frames are not
  * compensated. */
-import { FIELD_TAGS, KEEP_VALUE_TYPES, isEditable, matchesAny, sensitiveList } from './capture.js';
+import { FIELD_TAGS, KEEP_VALUE_TYPES, isEditable, matchesAny, sensitiveList } from './sensitive.js';
 import { UI_ATTR } from './dom.js';
 
 const MARGIN = 2;

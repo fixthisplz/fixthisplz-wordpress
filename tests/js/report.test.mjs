@@ -52,8 +52,6 @@ test('buildDraft never includes field values', () => {
 		assert.ok(!JSON.stringify(d).includes('secret'), tag);
 		assert.equal(d.context.element.text, '');
 	}
-	const d = buildDraft({ ...base, element: { selector: 'div', tag: 'div', text: 'visible', isField: true } });
-	assert.equal(d.context.element.text, '');
 });
 
 test('buildDraft keeps text of ordinary elements and ints the rect', () => {

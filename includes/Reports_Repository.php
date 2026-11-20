@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 /** SQL access to the reports table. Dates are stored in UTC ("Y-m-d H:i:s"); every value goes through $wpdb->prepare(). */
 final class Reports_Repository {
 
-	private const MAX_PER_PAGE = 200;
+	public const MAX_PER_PAGE = 200;
 
 	/**
 	 * @param array $row Keys: description, page_url, context (array), user_id, reporter_email (plain), screenshot, ip_hash.
@@ -251,6 +251,15 @@ final class Reports_Repository {
 		return $parsed->setTimezone( new \DateTimeZone( 'UTC' ) )->format( 'Y-m-d H:i:s' );
 	}
 
+	/** Unix timestamp of a stored UTC "Y-m-d H:i:s" datetime; null when absent or invalid. */
+	public static function timestamp( mixed $utc ): ?int {
+		if ( ! is_string( $utc ) || '' === $utc ) {
+			return null;
+		}
+		$time = date_create_immutable( $utc . ' UTC' );
+		return $time ? $time->getTimestamp() : null;
+	}
+
 	private static function hydrate( array $row ): array {
 		$row['id']      = (int) $row['id'];
 		$row['user_id'] = null !== $row['user_id'] ? (int) $row['user_id'] : null;
@@ -261,7 +270,7 @@ final class Reports_Repository {
 	}
 
 	private static function delete_screenshot( mixed $name ): void {
-		if ( is_string( $name ) && '' !== $name && class_exists( 'Bug_Spotter\Screenshot_Store' ) ) {
+		if ( is_string( $name ) && '' !== $name ) {
 			Screenshot_Store::delete( $name );
 		}
 	}

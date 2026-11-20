@@ -1,12 +1,12 @@
 /* Report draft: builds the exact object that is shown, sent and downloaded, plus its export formats.
  * Bounds mirror includes/Context_Validator.php (spec 5.1). Pure functions except readEnvironment()/download(). */
-import { redactText, redactUrl } from './redact.js';
+import { redactText, redactUrl, truncate } from './redact.js';
+import { FIELD_TAGS } from './sensitive.js';
 
 export const DESCRIPTION_MAX = 5000;
 const EMAIL_MAX = 254;
 const MAX_ENTRIES = 20;
 const COORD_LIMIT = 1000000;
-const FIELD_TAGS = new Set(['input', 'textarea', 'select']);
 
 // Last-resort English headings; real ones come from config.i18n (same key names).
 const FALLBACK_LABELS = {
@@ -32,7 +32,6 @@ const phpTrim = (s) => s.replace(PHP_TRIM, '');
 // PHP is_numeric(): decimal or exponent notation, surrounding whitespace allowed, no hex.
 const NUMERIC = /^[ \t\n\r\v\f]*[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[ \t\n\r\v\f]*$/;
 const text = (v, max) => phpTrim(redactText(scalar(v), max));
-const truncate = (s, max) => Array.from(s).slice(0, max).join('');
 
 function toInt(v) {
 	const n = typeof v === 'string' && NUMERIC.test(v) ? Number(v) : v;
@@ -44,7 +43,7 @@ function buildElement(el) {
 		return null;
 	}
 	const tag = text(el.tag, 32);
-	const isField = el.isField === true || FIELD_TAGS.has(tag.toLowerCase());
+	const isField = FIELD_TAGS.has(tag.toUpperCase());
 	const rect = el.rect && typeof el.rect === 'object' ? el.rect : {};
 	return {
 		selector: text(el.selector, 512),

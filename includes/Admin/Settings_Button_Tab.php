@@ -3,6 +3,7 @@
 namespace Bug_Spotter\Admin;
 
 use Bug_Spotter\Admin\Settings_Fields as F;
+use Bug_Spotter\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -128,12 +129,13 @@ final class Settings_Button_Tab {
 			)
 		);
 
-		$colors = array(
-			'color_bg'       => array( __( 'Background color', 'bug-spotter' ), '#d63638' ),
-			'color_fg'       => array( __( 'Icon and text color', 'bug-spotter' ), '#ffffff' ),
-			'color_bg_hover' => array( __( 'Background color on hover', 'bug-spotter' ), '#b32d2e' ),
+		$defaults = Settings::defaults()['button'];
+		$colors   = array(
+			'color_bg'       => __( 'Background color', 'bug-spotter' ),
+			'color_fg'       => __( 'Icon and text color', 'bug-spotter' ),
+			'color_bg_hover' => __( 'Background color on hover', 'bug-spotter' ),
 		);
-		foreach ( $colors as $key => list( $label, $default ) ) {
+		foreach ( $colors as $key => $label ) {
 			$id = F::id( array( 'button', $key ) );
 			F::row_open( $label, $id );
 			F::input(
@@ -142,7 +144,7 @@ final class Settings_Button_Tab {
 				$b[ $key ],
 				array(
 					'class'              => 'bugspot-color-field',
-					'data-default-color' => $default,
+					'data-default-color' => $defaults[ $key ],
 				)
 			);
 			F::row_close();
@@ -169,7 +171,7 @@ final class Settings_Button_Tab {
 		F::labelled_number( array( 'button', 'shadow_custom', 'spread' ), $sc['spread'], __( 'Spread (px)', 'bug-spotter' ), -100, 100 );
 		$cid = F::id( array( 'button', 'shadow_custom', 'color' ) );
 		echo '<label for="' . esc_attr( $cid ) . '">' . esc_html__( 'Color', 'bug-spotter' ) . '</label> ';
-		F::input( 'text', array( 'button', 'shadow_custom', 'color' ), $sc['color'], array( 'class' => 'regular-text bugspot-short', 'placeholder' => 'rgba(0,0,0,0.25)' ) );
+		F::input( 'text', array( 'button', 'shadow_custom', 'color' ), $sc['color'], array( 'class' => 'regular-text bugspot-short', 'placeholder' => $defaults['shadow_custom']['color'] ) );
 		F::description( __( 'Hex color (#rrggbb) or rgba(red, green, blue, opacity), for example rgba(0,0,0,0.25).', 'bug-spotter' ) );
 		echo '</fieldset>';
 		F::row_close();

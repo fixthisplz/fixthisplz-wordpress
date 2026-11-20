@@ -14,16 +14,13 @@ import { encodeJpeg } from './jpeg.js';
 import { addFamilies, crossOriginSheets, embedCrossOriginFonts } from './capture-fonts.js';
 import { createPseudoRepair } from './pseudo-repair.js';
 import { UI_ATTR } from './dom.js';
+import { FIELD_TAGS, KEEP_VALUE_TYPES, MASK_FILL, isEditable, matchesAny, sensitiveList } from './sensitive.js';
 
 // Images already on screen are loaded: do not wait for lazy images further down the page.
 const WAIT_FOR_LOAD_MS = 300;
 // A slow or dead image must not stall the capture (library default: 30 s).
 const ASSET_TIMEOUT_MS = 5000;
 const BULLETS = '••••••';
-const FILL = '#3c434a';
-// Input types whose value attribute is page-authored (labels, flags) rather than chosen or typed.
-export const KEEP_VALUE_TYPES = new Set(['button', 'submit', 'reset', 'image', 'checkbox', 'radio']);
-export const FIELD_TAGS = new Set(['INPUT', 'TEXTAREA', 'SELECT']);
 const REPLACED_TAGS = new Set(['IMG', 'VIDEO', 'CANVAS', 'IFRAME', 'SVG', 'OBJECT', 'EMBED', 'PICTURE']);
 
 let vendorPromise = null;
@@ -75,28 +72,13 @@ function maskField(node) {
 	}
 }
 
-export function isEditable(node) {
-	const v = node.getAttribute('contenteditable');
-	return v !== null && v.toLowerCase() !== 'false';
-}
-
-export function matchesAny(node, selectors) {
-	return selectors.some((selector) => {
-		try {
-			return node.matches(selector);
-		} catch {
-			return false; // invalid selector from the settings: ignored
-		}
-	});
-}
-
 function fillSensitive(node) {
 	// Same box, solid fill; everything inside is hidden (descendants included).
-	important(node, 'background', FILL);
+	important(node, 'background', MASK_FILL);
 	important(node, 'color', 'transparent');
 	important(node, '-webkit-text-fill-color', 'transparent');
 	important(node, 'text-shadow', 'none');
-	important(node, 'border-color', FILL);
+	important(node, 'border-color', MASK_FILL);
 	if (REPLACED_TAGS.has(String(node.tagName).toUpperCase())) {
 		important(node, 'opacity', '0');
 	}
@@ -108,13 +90,6 @@ function fillSensitive(node) {
 			stack.push(...Array.from(child.childNodes || []));
 		}
 	}
-}
-
-/** Built-in marker plus the configured selectors (non-strings and blanks dropped). Shared with tab-capture.js. */
-export function sensitiveList(sensitiveSelectors = []) {
-	return ['[data-bugspot-sensitive]', ...(Array.isArray(sensitiveSelectors) ? sensitiveSelectors : [])].filter(
-		(s) => typeof s === 'string' && s.trim() !== ''
-	);
 }
 
 /** Runs on the cloned tree, never on the page; returns the boxes it filled. */

@@ -59,7 +59,7 @@ final class Menu {
 	/** Menu label, with the "new reports" bubble when enabled and non-zero. */
 	public static function menu_title(): string {
 		$title = esc_html__( 'Bugs', 'bug-spotter' );
-		if ( empty( Settings::get()['management']['menu_badge'] ) || ! current_user_can( 'bugspot_manage' ) ) {
+		if ( empty( Settings::get()['management']['menu_badge'] ) || ! current_user_can( Installer::CAPABILITY ) ) {
 			return $title;
 		}
 		$new = ( new Reports_Repository() )->count_by_status( array() )['new'] ?? 0;

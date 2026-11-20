@@ -6,6 +6,9 @@ defined( 'ABSPATH' ) || exit;
 
 final class Factory {
 
+	/** Every real provider ("none" excepted). The settings tab holds their labels. */
+	public const PROVIDERS = array( 'turnstile', 'recaptcha_v2', 'recaptcha_v3', 'hcaptcha' );
+
 	/** @param array<string,mixed> $captcha The "captcha" block of the settings. Unknown provider => None. */
 	public static function from_settings( array $captcha ): Provider {
 		$site   = is_string( $captcha['site_key'] ?? null ) ? $captcha['site_key'] : '';

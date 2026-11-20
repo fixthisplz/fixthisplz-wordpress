@@ -71,7 +71,7 @@
 			$wrap.children( '.bugspot-error' ).remove();
 
 			apiFetch( {
-				path: ( config.path || '/bug-spotter/v1/reports/' ) + $item.attr( 'data-id' ),
+				path: config.path + $item.attr( 'data-id' ),
 				method: 'PATCH',
 				data: { status: to }
 			} ).then( function () {

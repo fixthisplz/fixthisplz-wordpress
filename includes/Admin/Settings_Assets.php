@@ -19,7 +19,7 @@ final class Settings_Assets {
 		wp_enqueue_script( self::SCRIPT, BUGSPOT_URL . 'assets/js/admin-settings.js', array( 'jquery', 'wp-color-picker', 'wp-api-fetch' ), BUGSPOT_VERSION, true );
 
 		$script_urls = array();
-		foreach ( array( 'turnstile', 'recaptcha_v2', 'recaptcha_v3', 'hcaptcha' ) as $provider ) {
+		foreach ( Factory::PROVIDERS as $provider ) {
 			// "{siteKey}" is replaced in the browser by the typed key (only reCAPTCHA v3 puts it in the URL).
 			$script_urls[ $provider ] = Factory::from_settings(
 				array(

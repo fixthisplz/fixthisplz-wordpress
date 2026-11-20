@@ -1,6 +1,6 @@
 /* Element picker (spec 5, step 2). Mouse, touch and keyboard; page handlers never see the picking events.
  * Resolves with the chosen Element, 'page' (whole page) or null (cancelled). Leaves nothing behind. */
-import { describeElement } from './element.js';
+import { describeElement, summarizeElement } from './element.js';
 import { make, translator, UI_ATTR } from './dom.js';
 
 const FOCUSABLE = [
@@ -72,8 +72,7 @@ export function inspect({ labels = {}, sensitiveSelectors = [] } = {}) {
 	};
 
 	function announce(el) {
-		const d = describeElement(el, { sensitiveSelectors });
-		const what = [d.role || d.tag, d.name || Array.from(d.text).slice(0, 80).join('')].filter(Boolean).join(' – ');
+		const what = summarizeElement(describeElement(el, { sensitiveSelectors }));
 		const template = t('inspectHighlighted');
 		status.textContent = template.includes('%s') ? template.replace('%s', what) : what;
 	}

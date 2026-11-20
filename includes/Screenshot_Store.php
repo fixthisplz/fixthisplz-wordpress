@@ -13,6 +13,8 @@ final class Screenshot_Store {
 	/** Decompression-bomb guard: a small file can declare a huge canvas. */
 	public const MAX_PIXELS   = 40000000;
 	public const JPEG_QUALITY = 85;
+	/** How a screenshot can be made: real tab capture or page reconstruction (mirrored in report.js). */
+	public const METHODS      = array( 'tab', 'dom' );
 
 	private const NAME_PATTERN = '/^[a-f0-9]{32}\.jpg$/D';
 
@@ -27,7 +29,7 @@ final class Screenshot_Store {
 		}
 		// Checked before any decoding so an oversized upload never reaches the image libraries.
 		if ( $size > self::MAX_BYTES ) {
-			return new \WP_Error( 'bugspot_too_large', __( 'The screenshot is too large (5 MB maximum).', 'bug-spotter' ), array( 'status' => 413 ) );
+			return self::too_large();
 		}
 
 		// Real type from the content, never from the file name or the client-sent MIME type.
@@ -82,8 +84,6 @@ final class Screenshot_Store {
 			);
 		};
 		if ( class_exists( 'Imagick' ) ) {
-			require_once ABSPATH . WPINC . '/class-wp-image-editor.php';
-			require_once ABSPATH . WPINC . '/class-wp-image-editor-imagick.php';
 			add_filter( 'wp_image_editors', $swap, PHP_INT_MAX );
 		}
 		try {
@@ -113,6 +113,16 @@ final class Screenshot_Store {
 		return new \WP_Error( 'bugspot_bad_type', __( 'The screenshot must be a PNG or JPEG image.', 'bug-spotter' ), array( 'status' => 422 ) );
 	}
 
+	/** 413 for a screenshot over MAX_BYTES (also used when PHP itself dropped an oversized upload). */
+	public static function too_large(): \WP_Error {
+		return new \WP_Error(
+			'bugspot_too_large',
+			/* translators: %s: maximum screenshot size in megabytes, for example "5". */
+			sprintf( __( 'The screenshot is too large (%s MB maximum).', 'bug-spotter' ), number_format_i18n( self::MAX_BYTES / MB_IN_BYTES ) ),
+			array( 'status' => 413 )
+		);
+	}
+
 	private static function store_failed(): \WP_Error {
 		return new \WP_Error( 'bugspot_store_failed', __( 'The screenshot could not be stored.', 'bug-spotter' ), array( 'status' => 500 ) );
 	}
@@ -120,7 +130,7 @@ final class Screenshot_Store {
 	/** "Real capture" or "Page reconstruction", plus "(masked)", from the context's `capture` key; '' when absent. */
 	public static function capture_label( array $context ): string {
 		$capture = $context['capture'] ?? null;
-		if ( ! is_array( $capture ) || ! in_array( $capture['method'] ?? null, array( 'tab', 'dom' ), true ) ) {
+		if ( ! is_array( $capture ) || ! in_array( $capture['method'] ?? null, self::METHODS, true ) ) {
 			return '';
 		}
 		$label = 'tab' === $capture['method'] ? __( 'Real capture', 'bug-spotter' ) : __( 'Page reconstruction', 'bug-spotter' );

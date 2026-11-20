@@ -28,6 +28,10 @@
 .bugspot-card{background:#fff;border:1px solid #dcdcde;border-radius:3px;padding:8px;margin:0 0 8px;cursor:grab}
 .bugspot-card.bugspot-placeholder{background:#e5f1ff;border:2px dashed #2271b1;min-height:40px;box-sizing:border-box;visibility:visible!important}
 .bugspot-card-head{display:flex;gap:6px;align-items:center}
+.bugspot-card .bugspot-priority-low{background:#787c82;border-color:#787c82;color:#fff}
+.bugspot-card .bugspot-priority-normal{background:#2271b1;border-color:#2271b1;color:#fff}
+.bugspot-card .bugspot-priority-high{background:#b26200;border-color:#b26200;color:#fff}
+.bugspot-card .bugspot-priority-critical{background:#d63638;border-color:#d63638;color:#fff}
 .bugspot-card-head .dashicons{font-size:16px;width:16px;height:16px;color:#646970}
 .bugspot-card-text{margin:6px 0;word-break:break-word}
 .bugspot-card-meta{margin:0;font-size:12px;word-break:break-all}

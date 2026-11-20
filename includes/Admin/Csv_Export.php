@@ -3,6 +3,7 @@
 namespace Bug_Spotter\Admin;
 
 use Bug_Spotter\Installer;
+use Bug_Spotter\Report_Format;
 use Bug_Spotter\Reports_Repository;
 use Bug_Spotter\Statuses;
 
@@ -12,7 +13,6 @@ defined( 'ABSPATH' ) || exit;
 final class Csv_Export {
 
 	public const ACTION = 'bugspot_export';
-	private const BATCH = 200;
 
 	public static function register_hooks(): void {
 		add_action( 'admin_post_' . self::ACTION, array( self::class, 'handle' ) );
@@ -81,20 +81,18 @@ final class Csv_Export {
 		$page       = 1;
 		$sent       = 0;
 		do {
-			$result = $repo->query( array_merge( $filters, array( 'orderby' => $orderby, 'order' => $order, 'per_page' => self::BATCH, 'page' => $page ) ) );
+			$result = $repo->query( array_merge( $filters, array( 'orderby' => $orderby, 'order' => $order, 'per_page' => Reports_Repository::MAX_PER_PAGE, 'page' => $page ) ) );
 			foreach ( $result['items'] as $item ) {
-				$who  = Bugs_Page::reporter( $item );
-				$name = '' !== $who['email'] ? $who['name'] . ' (' . $who['email'] . ')' : $who['name'];
-				$time = date_create_immutable( (string) $item['created_at'] . ' UTC' );
+				$time = Reports_Repository::timestamp( $item['created_at'] );
 				self::put_row(
 					$stream,
 					array(
 						(string) (int) $item['id'],
-						$time ? wp_date( 'Y-m-d H:i:s', $time->getTimestamp() ) : '',
+						null !== $time ? wp_date( 'Y-m-d H:i:s', $time ) : '',
 						$statuses[ $item['status'] ] ?? (string) $item['status'],
 						$priorities[ $item['priority'] ] ?? (string) $item['priority'],
 						(string) $item['page_url'],
-						$name,
+						Report_Format::reporter_label( $item ),
 						(string) $item['description'],
 					)
 				);

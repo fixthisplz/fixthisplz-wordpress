@@ -7,6 +7,7 @@ use Bug_Spotter\Client_Ip;
 use Bug_Spotter\Context_Validator;
 use Bug_Spotter\Frontend\Button_Style;
 use Bug_Spotter\Frontend\Visibility;
+use Bug_Spotter\Installer;
 use Bug_Spotter\Mailer;
 use Bug_Spotter\Rate_Limiter;
 use Bug_Spotter\Reports_Repository;
@@ -83,7 +84,7 @@ final class Reports_Controller {
 	}
 
 	public static function can_manage(): bool {
-		return current_user_can( 'bugspot_manage' );
+		return current_user_can( Installer::CAPABILITY );
 	}
 
 	public static function can_manage_options(): bool {
@@ -99,7 +100,7 @@ final class Reports_Controller {
 	public static function captcha_test( \WP_REST_Request $request ) {
 		$settings = Settings::get();
 		$provider = self::string_param( $request, 'provider' );
-		if ( ! in_array( $provider, array( 'turnstile', 'recaptcha_v2', 'recaptcha_v3', 'hcaptcha' ), true ) ) {
+		if ( ! in_array( $provider, Factory::PROVIDERS, true ) ) {
 			return self::invalid( __( 'Choose an anti-bot provider to test.', 'bug-spotter' ) );
 		}
 		$site_key = trim( self::string_param( $request, 'site_key' ) );
@@ -187,7 +188,7 @@ final class Reports_Controller {
 		$length = isset( $_SERVER['CONTENT_LENGTH'] ) && is_scalar( $_SERVER['CONTENT_LENGTH'] ) ? (int) $_SERVER['CONTENT_LENGTH'] : 0;
 		$limit  = (int) wp_convert_hr_to_bytes( (string) ini_get( 'post_max_size' ) );
 		if ( $limit > 0 && $length > $limit && ! $request->get_body_params() && ! $request->get_file_params() ) {
-			return new \WP_Error( 'bugspot_too_large', __( 'The screenshot is too large (5 MB maximum).', 'bug-spotter' ), array( 'status' => 413 ) );
+			return Screenshot_Store::too_large();
 		}
 
 		// Honeypot: same status and shape as a real success; nothing written, counted or mailed.
@@ -226,12 +227,10 @@ final class Reports_Controller {
 		}
 
 		$description = trim( self::string_param( $request, 'description' ) );
-		if ( '' === $description || mb_strlen( $description ) > self::MAX_DESCRIPTION ) {
-			return self::invalid( __( 'The description is required (5000 characters maximum).', 'bug-spotter' ) );
-		}
-		$description = self::clean_description( $description );
+		$description = '' === $description || mb_strlen( $description ) > self::MAX_DESCRIPTION ? '' : self::clean_description( $description );
 		if ( '' === $description ) {
-			return self::invalid( __( 'The description is required (5000 characters maximum).', 'bug-spotter' ) );
+			/* translators: %s: maximum number of characters, for example "5,000". */
+			return self::invalid( sprintf( __( 'The description is required (%s characters maximum).', 'bug-spotter' ), number_format_i18n( self::MAX_DESCRIPTION ) ) );
 		}
 
 		$user_id = get_current_user_id();
@@ -381,7 +380,7 @@ final class Reports_Controller {
 	private static function store_upload( array $file ) {
 		$error = (int) ( $file['error'] ?? UPLOAD_ERR_OK );
 		if ( UPLOAD_ERR_INI_SIZE === $error || UPLOAD_ERR_FORM_SIZE === $error ) {
-			return new \WP_Error( 'bugspot_too_large', __( 'The screenshot is too large (5 MB maximum).', 'bug-spotter' ), array( 'status' => 413 ) );
+			return Screenshot_Store::too_large();
 		}
 		if ( UPLOAD_ERR_OK !== $error ) {
 			return new \WP_Error( 'bugspot_upload_failed', __( 'The screenshot could not be uploaded.', 'bug-spotter' ), array( 'status' => 422 ) );

@@ -2,6 +2,7 @@
 
 namespace Bug_Spotter\Admin;
 
+use Bug_Spotter\Report_Format;
 use Bug_Spotter\Reports_Repository;
 use Bug_Spotter\Statuses;
 
@@ -136,7 +137,7 @@ final class List_Table extends \WP_List_Table {
 	protected function column_description( $item ): string {
 		$id      = (int) $item['id'];
 		$text    = (string) $item['description'];
-		$excerpt = mb_strlen( $text ) > self::EXCERPT_LENGTH ? mb_substr( $text, 0, self::EXCERPT_LENGTH ) . '…' : $text;
+		$excerpt = Report_Format::excerpt( $text, self::EXCERPT_LENGTH );
 		$view    = Bugs_Page::page_url( array( 'report' => $id ) );
 		$delete  = wp_nonce_url(
 			Bugs_Page::page_url( array_merge( Bugs_Page::filter_query_args( $this->filters ), array( 'bugspot_action' => 'delete', 'bug' => $id ) ) ),
@@ -170,7 +171,7 @@ final class List_Table extends \WP_List_Table {
 	}
 
 	protected function column_reporter( $item ): string {
-		$who = Bugs_Page::reporter( $item );
+		$who = Report_Format::reporter( $item );
 		if ( $who['is_user'] && '' !== $who['url'] ) {
 			return sprintf( '<a href="%s">%s</a>', esc_url( $who['url'] ), esc_html( $who['name'] ) );
 		}
@@ -190,12 +191,7 @@ final class List_Table extends \WP_List_Table {
 	}
 
 	protected function column_created_at( $item ): string {
-		$date = date_create_immutable( (string) $item['created_at'] . ' UTC' );
-		if ( ! $date ) {
-			return '';
-		}
-		$format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
-		return esc_html( wp_date( $format, $date->getTimestamp() ) );
+		return esc_html( Report_Format::date( $item['created_at'] ) );
 	}
 
 	protected function column_default( $item, $column_name ): string {

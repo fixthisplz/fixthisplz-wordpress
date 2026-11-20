@@ -3,7 +3,9 @@
 namespace Bug_Spotter\Admin;
 
 use Bug_Spotter\Installer;
+use Bug_Spotter\Report_Format;
 use Bug_Spotter\Reports_Repository;
+use Bug_Spotter\Rest\Reports_Controller;
 use Bug_Spotter\Screenshot_Store;
 use Bug_Spotter\Statuses;
 
@@ -51,7 +53,7 @@ final class Detail_Page {
 		self::require_capability();
 
 		list( $type, $count ) = Bugs_Page::apply_bulk( 'delete', array( $id ) );
-		wp_safe_redirect( Bugs_Page::page_url( '' === $type ? array() : array( 'bugspot_notice' => $type, 'bugspot_count' => $count ) ) );
+		wp_safe_redirect( Bugs_Page::page_url( Bugs_Page::notice_args( $type, $count ) ) );
 		exit;
 	}
 
@@ -151,7 +153,7 @@ final class Detail_Page {
 	}
 
 	private static function render_reporter( array $report ): void {
-		$who = Bugs_Page::reporter( $report );
+		$who = Report_Format::reporter( $report );
 		if ( '' !== $who['url'] ) {
 			echo '<p><a href="' . esc_url( $who['url'] ) . '">' . esc_html( $who['name'] ) . '</a></p>';
 		} else {
@@ -265,7 +267,7 @@ final class Detail_Page {
 			echo '<p class="bugspot-muted">' . esc_html( $method ) . '</p>';
 		}
 		// An <img> cannot send X-WP-Nonce: cookie authentication accepts it as a query argument instead.
-		$src = add_query_arg( '_wpnonce', wp_create_nonce( 'wp_rest' ), rest_url( 'bug-spotter/v1/reports/' . (int) $report['id'] . '/screenshot' ) );
+		$src = add_query_arg( '_wpnonce', wp_create_nonce( 'wp_rest' ), rest_url( Reports_Controller::NAMESPACE . '/reports/' . (int) $report['id'] . '/screenshot' ) );
 		printf(
 			'<a href="%1$s" target="_blank" rel="noopener noreferrer"><img class="bugspot-screenshot" src="%1$s" alt="%2$s" loading="lazy"></a>',
 			esc_url( $src ),
@@ -276,36 +278,43 @@ final class Detail_Page {
 	private static function render_sidebar( array $report ): void {
 		$id = (int) $report['id'];
 
-		echo '<div class="postbox"><div class="postbox-header"><h2 class="hndle">' . esc_html__( 'Status', 'bug-spotter' ) . '</h2></div><div class="inside">';
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
-		echo '<input type="hidden" name="action" value="' . esc_attr( self::UPDATE_ACTION ) . '">';
-		echo '<input type="hidden" name="report" value="' . esc_attr( (string) $id ) . '">';
-		wp_nonce_field( self::UPDATE_ACTION . '_' . $id );
-		echo '<p><label for="bugspot-status"><strong>' . esc_html__( 'Status', 'bug-spotter' ) . '</strong></label><br>';
-		self::select( 'status', 'bugspot-status', Statuses::all(), (string) $report['status'] );
-		echo '</p><p><label for="bugspot-priority-select"><strong>' . esc_html__( 'Priority', 'bug-spotter' ) . '</strong></label><br>';
-		self::select( 'priority', 'bugspot-priority-select', Statuses::priorities(), (string) $report['priority'] );
-		echo '</p><p><button type="submit" class="button button-primary">' . esc_html__( 'Update', 'bug-spotter' ) . '</button></p></form>';
-		echo '</div></div>';
+		self::box(
+			__( 'Status', 'bug-spotter' ),
+			static function () use ( $report, $id ): void {
+				echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
+				echo '<input type="hidden" name="action" value="' . esc_attr( self::UPDATE_ACTION ) . '">';
+				echo '<input type="hidden" name="report" value="' . esc_attr( (string) $id ) . '">';
+				wp_nonce_field( self::UPDATE_ACTION . '_' . $id );
+				echo '<p><label for="bugspot-status"><strong>' . esc_html__( 'Status', 'bug-spotter' ) . '</strong></label><br>';
+				self::select( 'status', 'bugspot-status', Statuses::all(), (string) $report['status'] );
+				echo '</p><p><label for="bugspot-priority-select"><strong>' . esc_html__( 'Priority', 'bug-spotter' ) . '</strong></label><br>';
+				self::select( 'priority', 'bugspot-priority-select', Statuses::priorities(), (string) $report['priority'] );
+				echo '</p><p><button type="submit" class="button button-primary">' . esc_html__( 'Update', 'bug-spotter' ) . '</button></p></form>';
+			}
+		);
 
-		echo '<div class="postbox"><div class="postbox-header"><h2 class="hndle">' . esc_html__( 'Dates', 'bug-spotter' ) . '</h2></div><div class="inside">';
-		self::render_pairs(
-			array(
-				__( 'Created', 'bug-spotter' )        => self::format_date( $report['created_at'] ?? null ),
-				__( 'Seen', 'bug-spotter' )           => self::format_date( $report['seen_at'] ?? null ),
-				__( 'Status changed', 'bug-spotter' ) => self::format_date( $report['status_changed_at'] ?? null ),
-				__( 'Updated', 'bug-spotter' )        => self::format_date( $report['updated_at'] ?? null ),
+		self::box(
+			__( 'Dates', 'bug-spotter' ),
+			static fn() => self::render_pairs(
+				array(
+					__( 'Created', 'bug-spotter' )        => Report_Format::date( $report['created_at'] ?? null ),
+					__( 'Seen', 'bug-spotter' )           => Report_Format::date( $report['seen_at'] ?? null ),
+					__( 'Status changed', 'bug-spotter' ) => Report_Format::date( $report['status_changed_at'] ?? null ),
+					__( 'Updated', 'bug-spotter' )        => Report_Format::date( $report['updated_at'] ?? null ),
+				)
 			)
 		);
-		echo '</div></div>';
 
-		echo '<div class="postbox"><div class="postbox-header"><h2 class="hndle">' . esc_html__( 'Delete', 'bug-spotter' ) . '</h2></div><div class="inside">';
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" onsubmit="return window.confirm(this.getAttribute(\'data-confirm\'));" data-confirm="' . esc_attr__( 'Delete this report permanently? This cannot be undone.', 'bug-spotter' ) . '">';
-		echo '<input type="hidden" name="action" value="' . esc_attr( self::DELETE_ACTION ) . '">';
-		echo '<input type="hidden" name="report" value="' . esc_attr( (string) $id ) . '">';
-		wp_nonce_field( self::DELETE_ACTION . '_' . $id );
-		echo '<button type="submit" class="button button-link-delete">' . esc_html__( 'Delete this report', 'bug-spotter' ) . '</button></form>';
-		echo '</div></div>';
+		self::box(
+			__( 'Delete', 'bug-spotter' ),
+			static function () use ( $id ): void {
+				echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" onsubmit="return window.confirm(this.getAttribute(\'data-confirm\'));" data-confirm="' . esc_attr__( 'Delete this report permanently? This cannot be undone.', 'bug-spotter' ) . '">';
+				echo '<input type="hidden" name="action" value="' . esc_attr( self::DELETE_ACTION ) . '">';
+				echo '<input type="hidden" name="report" value="' . esc_attr( (string) $id ) . '">';
+				wp_nonce_field( self::DELETE_ACTION . '_' . $id );
+				echo '<button type="submit" class="button button-link-delete">' . esc_html__( 'Delete this report', 'bug-spotter' ) . '</button></form>';
+			}
+		);
 	}
 
 	private static function select( string $name, string $id, array $options, string $current ): void {
@@ -314,14 +323,5 @@ final class Detail_Page {
 			printf( '<option value="%s"%s>%s</option>', esc_attr( (string) $key ), selected( $current, (string) $key, false ), esc_html( $label ) );
 		}
 		echo '</select>';
-	}
-
-	/** UTC "Y-m-d H:i:s" => site-timezone display; '' when absent. */
-	private static function format_date( mixed $utc ): string {
-		if ( ! is_string( $utc ) || '' === $utc ) {
-			return '';
-		}
-		$time = date_create_immutable( $utc . ' UTC' );
-		return $time ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $time->getTimestamp() ) : '';
 	}
 }

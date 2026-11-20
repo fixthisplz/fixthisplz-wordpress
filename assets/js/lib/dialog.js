@@ -1,6 +1,6 @@
 /* Report dialog (spec 5, steps 3-5): accessible modal, exact technical context, optional screenshot,
  * anti-bot widget, guarded submit, confirmation and downloads. Every label comes from config.i18n. */
-import { describeElement } from './element.js';
+import { describeElement, summarizeElement } from './element.js';
 import { buildDraft, readEnvironment, toMarkdown, toJson, toText, reportFileName, download, DESCRIPTION_MAX } from './report.js';
 import { CaptureTooLargeError } from './jpeg.js';
 // Static import (small): getDisplayMedia must be reached synchronously from the visitor's click.
@@ -183,16 +183,8 @@ export function openDialog({ config, element, onRetakeElement, onClose }) {
 		});
 	}
 
-	function summarize(d) {
-		if (!d) {
-			return t('wholePage');
-		}
-		const what = d.name || Array.from(d.text).slice(0, 80).join('');
-		return [d.role || d.tag, what].filter(Boolean).join(' – ');
-	}
-
 	function refreshElement() {
-		elementSummary.textContent = summarize(described);
+		elementSummary.textContent = described ? summarizeElement(described) : t('wholePage');
 		contextCode.textContent = JSON.stringify(currentDraft().context, null, 2);
 	}
 
@@ -556,14 +548,10 @@ export function openDialog({ config, element, onRetakeElement, onClose }) {
 	description.focus();
 
 	return {
-		close,
 		focus() {
 			if (!root.hidden && !panel.contains(document.activeElement)) {
 				(form.hidden ? successText : description).focus();
 			}
-		},
-		get isOpen() {
-			return !closed;
 		},
 	};
 }

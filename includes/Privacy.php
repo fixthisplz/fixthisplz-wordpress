@@ -47,7 +47,7 @@ final class Privacy {
 			}
 			$data = array(
 				array( 'name' => __( 'Report number', 'bug-spotter' ), 'value' => '#' . $report['id'] ),
-				array( 'name' => __( 'Date', 'bug-spotter' ), 'value' => wp_date( 'Y-m-d H:i', (int) strtotime( $report['created_at'] . ' UTC' ) ) ),
+				array( 'name' => __( 'Date', 'bug-spotter' ), 'value' => wp_date( 'Y-m-d H:i', (int) Reports_Repository::timestamp( $report['created_at'] ) ) ),
 				array( 'name' => __( 'Page', 'bug-spotter' ), 'value' => $report['page_url'] ),
 				array( 'name' => __( 'Description', 'bug-spotter' ), 'value' => $report['description'] ),
 				array( 'name' => __( 'Status', 'bug-spotter' ), 'value' => $stats[ $report['status'] ] ?? $report['status'] ),

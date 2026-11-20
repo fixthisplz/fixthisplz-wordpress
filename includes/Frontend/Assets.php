@@ -4,6 +4,7 @@ namespace Bug_Spotter\Frontend;
 
 use Bug_Spotter\Captcha\Factory;
 use Bug_Spotter\Rest\Reports_Controller;
+use Bug_Spotter\Screenshot_Store;
 use Bug_Spotter\Settings;
 
 defined( 'ABSPATH' ) || exit;
@@ -83,7 +84,7 @@ final class Assets {
 			'vendorUrl'          => BUGSPOT_URL . 'assets/vendor/modern-screenshot.mjs?ver=' . rawurlencode( BUGSPOT_VERSION ),
 			'version'            => BUGSPOT_VERSION,
 			'hideOnMobile'       => (bool) $settings['visibility']['hide_on_mobile'],
-			'mobileQuery'        => '(max-width: 782px)',
+			'mobileQuery'        => Button_Style::MOBILE_QUERY,
 			'collect'            => array(
 				'console' => (bool) $context['console'],
 				'network' => (bool) $context['network'],
@@ -188,7 +189,11 @@ final class Assets {
 			'screenshot'         => __( 'Screenshot', 'bug-spotter' ),
 			'errorCapture'       => __( 'The screenshot could not be taken. You can send the report without it.', 'bug-spotter' ),
 			'errorCaptureDenied' => __( 'Screenshot cancelled: you can send the report without a screenshot.', 'bug-spotter' ),
-			'errorCaptureTooLarge' => __( 'The screenshot is too large (5 MB maximum). You can send the report without it.', 'bug-spotter' ),
+			'errorCaptureTooLarge' => sprintf(
+				/* translators: %s: maximum screenshot size in megabytes, for example "5". */
+				__( 'The screenshot is too large (%s MB maximum). You can send the report without it.', 'bug-spotter' ),
+				number_format_i18n( Screenshot_Store::MAX_BYTES / MB_IN_BYTES )
+			),
 			'errorTooLarge'      => __( 'The screenshot is too large to be sent. Remove it or retake it, then try again.', 'bug-spotter' ),
 			'errorInvalid'       => __( 'The report was refused. Please check the form and try again.', 'bug-spotter' ),
 			'errorDisabled'      => __( 'Bug reporting is currently disabled on this site.', 'bug-spotter' ),

@@ -21,7 +21,8 @@ function scrub(s) {
 	return String(s ?? '').replace(LONE_SURROGATE, '?');
 }
 
-function truncate(s, max) {
+/** First max code points of s (never splits a surrogate pair). */
+export function truncate(s, max) {
 	return Array.from(s).slice(0, Math.max(0, max)).join('');
 }
 
