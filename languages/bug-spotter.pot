@@ -1210,6 +1210,10 @@ msgid "The screenshot could not be taken. You can send the report without it."
 msgstr ""
 
 #: includes/Frontend/Assets.php:184
+msgid "Screenshot cancelled: you can send the report without a screenshot."
+msgstr ""
+
+#: includes/Frontend/Assets.php:184
 msgid "The screenshot is too large (5 MB maximum). You can send the report without it."
 msgstr ""
 

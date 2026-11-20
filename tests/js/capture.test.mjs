@@ -1,6 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { maskClone } from '../../assets/js/lib/capture.js';
+import { cloneMasker } from '../../assets/js/lib/capture.js';
+
+// Masking is opt-in (design decision 2026-11-20): these tests turn it on.
+const maskClone = (root, selectors) => cloneMasker(true, selectors)(root);
 
 /* Hand-made fake cloned tree: just what maskClone touches (no jsdom). */
 const doc = {
@@ -137,6 +140,18 @@ test('maskClone masks fields inside a sensitive box too', () => {
 	maskClone(el('main', {}, [box]));
 	assert.equal(input.getAttribute('value'), BULLETS);
 	assert.equal(input.style.get('visibility'), 'hidden');
+});
+
+test('masking off (default): the clone keeps values and nothing is filled', () => {
+	const pwd = el('input', { type: 'password', value: 'motdepasse' });
+	const text = el('input', { type: 'text', value: 'secret' });
+	const marked = el('div', { 'data-bugspot-sensitive': '' }, [text]);
+	for (const flag of [undefined, false, 'true']) {
+		assert.deepEqual(cloneMasker(flag, ['.x'])(el('form', {}, [pwd, marked])), []);
+	}
+	assert.equal(pwd.getAttribute('value'), 'motdepasse');
+	assert.equal(text.getAttribute('value'), 'secret');
+	assert.equal(marked.style.get('background'), undefined);
 });
 
 /* ---- Off-screen cut (createCutFilter) ---- */

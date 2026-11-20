@@ -2,7 +2,9 @@
  * anti-bot widget, guarded submit, confirmation and downloads. Every label comes from config.i18n. */
 import { describeElement } from './element.js';
 import { buildDraft, readEnvironment, toMarkdown, toJson, toText, reportFileName, download, DESCRIPTION_MAX } from './report.js';
-import { captureVisible, CaptureTooLargeError } from './capture.js';
+import { CaptureTooLargeError } from './jpeg.js';
+// Static import (small): getDisplayMedia must be reached synchronously from the visitor's click.
+import { takeScreenshot, CaptureDeniedError } from './tab-capture.js';
 import { mountCaptcha, CaptchaUnavailableError } from './captcha.js';
 import { make, translator, UI_ATTR } from './dom.js';
 
@@ -71,8 +73,10 @@ export function openDialog({ config, element, onRetakeElement, onClose }) {
 	const diagnostics = snapshotDiagnostics();
 	let described = element ? describeElement(element, { sensitiveSelectors }) : null;
 	let shot = null;
+	let shotInfo = null; // { method: 'tab'|'dom', masked } of the current shot, for the report (Task 19)
 	let shotUrl = '';
 	let captureRun = 0;
+	let captureAbort = null; // stops the capture stream as soon as its run is stale
 	let capturing = false;
 	let inFlight = false;
 	let closed = false;
@@ -265,8 +269,11 @@ export function openDialog({ config, element, onRetakeElement, onClose }) {
 	// ---- Screenshot ---------------------------------------------------------------------------------
 	function dropShot() {
 		captureRun += 1; // any capture still running is now stale
+		captureAbort?.abort();
+		captureAbort = null;
 		capturing = false;
 		shot = null;
+		shotInfo = null;
 		if (shotUrl) {
 			URL.revokeObjectURL(shotUrl);
 			shotUrl = '';
@@ -275,17 +282,27 @@ export function openDialog({ config, element, onRetakeElement, onClose }) {
 		shotPreview.hidden = true;
 	}
 
+	function captureMessage(error) {
+		if (error instanceof CaptureDeniedError) {
+			return t('errorCaptureDenied');
+		}
+		return error instanceof CaptureTooLargeError ? t('errorCaptureTooLarge') : t('errorCapture');
+	}
+
+	// No await before takeScreenshot(): the browser's capture prompt needs the visitor's gesture.
 	async function takeShot() {
 		dropShot();
 		const run = captureRun;
+		captureAbort = new AbortController();
 		capturing = true;
 		shotStatus.textContent = t('capturing');
 		try {
-			const blob = await captureVisible({ vendorUrl: cfg.vendorUrl, sensitiveSelectors });
+			const { blob, method, masked } = await takeScreenshot({ vendorUrl: cfg.vendorUrl, mask: dlg.maskCapture === true, sensitiveSelectors, signal: captureAbort.signal });
 			if (closed || run !== captureRun) {
 				return;
 			}
 			shot = blob;
+			shotInfo = { method, masked };
 			shotUrl = URL.createObjectURL(blob);
 			shotImage.src = shotUrl;
 			shotPreview.hidden = false;
@@ -295,10 +312,13 @@ export function openDialog({ config, element, onRetakeElement, onClose }) {
 				return;
 			}
 			shotBox.checked = false;
-			shotStatus.textContent = error instanceof CaptureTooLargeError ? t('errorCaptureTooLarge') : t('errorCapture');
+			shotStatus.textContent = captureMessage(error);
 		} finally {
 			if (run === captureRun) {
 				capturing = false;
+			}
+			if (!closed && !panel.contains(document.activeElement)) {
+				shotBox.focus(); // the UI was hidden during the grab, or Retake disappeared with the old preview
 			}
 		}
 	}

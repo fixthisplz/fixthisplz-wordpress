@@ -1213,6 +1213,10 @@ msgid "The screenshot could not be taken. You can send the report without it."
 msgstr "La capture d’écran n’a pas pu être réalisée. Vous pouvez envoyer le signalement sans elle."
 
 #: includes/Frontend/Assets.php:184
+msgid "Screenshot cancelled: you can send the report without a screenshot."
+msgstr "Capture annulée : vous pouvez envoyer le signalement sans capture."
+
+#: includes/Frontend/Assets.php:184
 msgid "The screenshot is too large (5 MB maximum). You can send the report without it."
 msgstr "La capture d’écran est trop volumineuse (5 Mo maximum). Vous pouvez envoyer le signalement sans elle."
 

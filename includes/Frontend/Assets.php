@@ -181,6 +181,7 @@ final class Assets {
 			'capturing'          => __( 'Taking the screenshot…', 'bug-spotter' ),
 			'emailError'         => __( 'Please enter a valid e-mail address, or leave the field empty.', 'bug-spotter' ),
 			'errorCapture'       => __( 'The screenshot could not be taken. You can send the report without it.', 'bug-spotter' ),
+			'errorCaptureDenied' => __( 'Screenshot cancelled: you can send the report without a screenshot.', 'bug-spotter' ),
 			'errorCaptureTooLarge' => __( 'The screenshot is too large (5 MB maximum). You can send the report without it.', 'bug-spotter' ),
 			'errorTooLarge'      => __( 'The screenshot is too large to be sent. Remove it or retake it, then try again.', 'bug-spotter' ),
 			'errorInvalid'       => __( 'The report was refused. Please check the form and try again.', 'bug-spotter' ),

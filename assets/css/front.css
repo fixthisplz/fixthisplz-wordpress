@@ -67,3 +67,6 @@
 	#bugspot-dialog-root .bugspot-actions .bugspot-btn{flex:1 1 auto}
 	#bugspot-inspector .bugspot-inspect-bar{bottom:8px}
 }
+
+/* Plugin UI hidden only while the real tab capture grabs its frame (tab-capture.js). */
+[data-bugspot-ui].bugspot-capture-hide,[data-bugspot-ui].bugspot-capture-hide *{visibility:hidden!important;transition:none!important}

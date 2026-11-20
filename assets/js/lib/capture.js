@@ -1,13 +1,14 @@
-/* Screenshot of the visible part of the page (spec 5.2). Works on modern-screenshot's CLONE only: field values
- * become bullets, editable regions too, sensitive parts get a solid fill, the plugin UI is filtered out.
+/* Screenshot of the visible part of the page (spec 5.2), the fallback without real capture. Works on
+ * modern-screenshot's CLONE only; the plugin UI is filtered out. When the site enables masking (opt-in, decision
+ * David 2026-11-20), field values become bullets, editable regions too, and sensitive parts get a solid fill.
  * The vendored library is imported lazily, on first use.
  *
  * Speed: the library clones and styles every node it is given. Only boxes that intersect the viewport (and
  * their ancestors) are cloned deeply; any other element is cloned alone (its computed width/height are copied,
  * so the layout does not move) with its children and its images dropped. */
 
-export const MAX_BYTES = 5242880;
-const QUALITIES = [0.85, 0.7, 0.5, 0.35];
+import { encodeJpeg } from './jpeg.js';
+
 // Images already on screen are loaded: do not wait for lazy images further down the page.
 const WAIT_FOR_LOAD_MS = 300;
 // A slow or dead image must not stall the capture (library default: 30 s).
@@ -16,16 +17,9 @@ const BULLETS = '••••••';
 const UI_ATTR = 'data-bugspot-ui';
 const FILL = '#3c434a';
 // Input types whose value attribute is page-authored (labels, flags) rather than chosen or typed.
-const KEEP_VALUE_TYPES = new Set(['button', 'submit', 'reset', 'image', 'checkbox', 'radio']);
-const FIELD_TAGS = new Set(['INPUT', 'TEXTAREA', 'SELECT']);
+export const KEEP_VALUE_TYPES = new Set(['button', 'submit', 'reset', 'image', 'checkbox', 'radio']);
+export const FIELD_TAGS = new Set(['INPUT', 'TEXTAREA', 'SELECT']);
 const REPLACED_TAGS = new Set(['IMG', 'VIDEO', 'CANVAS', 'IFRAME', 'SVG', 'OBJECT', 'EMBED', 'PICTURE']);
-
-export class CaptureTooLargeError extends Error {
-	constructor() {
-		super('Screenshot over 5 MB at the lowest quality.');
-		this.name = 'CaptureTooLargeError';
-	}
-}
 
 let vendorPromise = null;
 function loadVendor(vendorUrl) {
@@ -76,12 +70,12 @@ function maskField(node) {
 	}
 }
 
-function isEditable(node) {
+export function isEditable(node) {
 	const v = node.getAttribute('contenteditable');
 	return v !== null && v.toLowerCase() !== 'false';
 }
 
-function matchesAny(node, selectors) {
+export function matchesAny(node, selectors) {
 	return selectors.some((selector) => {
 		try {
 			return node.matches(selector);
@@ -111,14 +105,19 @@ function fillSensitive(node) {
 	}
 }
 
-/** Runs on the cloned tree, never on the page; returns the boxes it filled. Exported for tests. */
-export function maskClone(root, sensitiveSelectors = []) {
+/** Built-in marker plus the configured selectors (non-strings and blanks dropped). Shared with tab-capture.js. */
+export function sensitiveList(sensitiveSelectors = []) {
+	return ['[data-bugspot-sensitive]', ...(Array.isArray(sensitiveSelectors) ? sensitiveSelectors : [])].filter(
+		(s) => typeof s === 'string' && s.trim() !== ''
+	);
+}
+
+/** Runs on the cloned tree, never on the page; returns the boxes it filled. */
+function maskClone(root, sensitiveSelectors = []) {
 	if (!root || root.nodeType !== 1) {
 		return [];
 	}
-	const selectors = ['[data-bugspot-sensitive]', ...(Array.isArray(sensitiveSelectors) ? sensitiveSelectors : [])].filter(
-		(s) => typeof s === 'string' && s.trim() !== ''
-	);
+	const selectors = sensitiveList(sensitiveSelectors);
 	const sensitive = [];
 	const stack = [root];
 	while (stack.length) {
@@ -139,6 +138,9 @@ export function maskClone(root, sensitiveSelectors = []) {
 	sensitive.forEach(fillSensitive);
 	return sensitive;
 }
+
+/** What runs on each cloned subtree: maskClone when the site enabled masking, nothing otherwise. Exported for tests. */
+export const cloneMasker = (mask, sensitiveSelectors = []) => (mask === true ? (clone) => maskClone(clone, sensitiveSelectors) : () => []);
 
 const parentOf = (node) => (node.parentNode && node.parentNode.nodeType === 11 ? node.parentNode.host : node.parentNode);
 
@@ -319,17 +321,11 @@ function pageBackground() {
 	return '#ffffff';
 }
 
-function canvasToBlob(canvas, quality) {
-	return new Promise((resolve, reject) => {
-		canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error('Canvas export failed.'))), 'image/jpeg', quality);
-	});
-}
-
 /**
- * @param {{vendorUrl: string, sensitiveSelectors?: string[], debug?: boolean}} options
+ * @param {{vendorUrl: string, mask?: boolean, sensitiveSelectors?: string[], debug?: boolean}} options
  * @returns {Promise<Blob>} JPEG of the viewport, <= 5 MB.
  */
-export async function captureVisible({ vendorUrl, sensitiveSelectors = [], debug = false }) {
+export async function captureVisible({ vendorUrl, mask = false, sensitiveSelectors = [], debug = false }) {
 	const { createContext, destroyContext, domToCanvas } = await loadVendor(vendorUrl);
 	const width = window.innerWidth;
 	const height = window.innerHeight;
@@ -338,6 +334,7 @@ export async function captureVisible({ vendorUrl, sensitiveSelectors = [], debug
 	const cut = createCutFilter({ ...viewportTree(width, height), ownerDocument: document });
 	const bodyTransforms = new WeakMap();
 	const pseudo = createPseudoRepair({ ownerDocument: document });
+	const maskTree = cloneMasker(mask, sensitiveSelectors);
 
 	const context = await createContext(document.documentElement, {
 		width,
@@ -369,7 +366,7 @@ export async function captureVisible({ vendorUrl, sensitiveSelectors = [], debug
 			}
 		},
 		onCloneNode: (clone) => {
-			const filled = maskClone(clone, sensitiveSelectors);
+			const filled = maskTree(clone);
 			if (clone.nodeType !== 1) {
 				return;
 			}
@@ -397,11 +394,5 @@ export async function captureVisible({ vendorUrl, sensitiveSelectors = [], debug
 		destroyContext(context);
 	}
 
-	for (const quality of QUALITIES) {
-		const blob = await canvasToBlob(canvas, quality);
-		if (blob.size <= MAX_BYTES) {
-			return blob;
-		}
-	}
-	throw new CaptureTooLargeError();
+	return encodeJpeg(canvas);
 }
