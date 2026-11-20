@@ -1451,6 +1451,10 @@ msgstr ""
 msgid "Hide typed fields and sensitive areas in the screenshot"
 msgstr ""
 
+#: includes/Admin/Settings_Tabs.php
+msgid "On a real capture, masking applies only when the visitor shares this tab."
+msgstr ""
+
 #: includes/Screenshot_Store.php
 #: includes/Frontend/Assets.php
 msgid "Real capture"

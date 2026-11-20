@@ -144,7 +144,15 @@ const FRESH_TRIES = 10;
 async function grabFreshFrame(track, notBefore, assertLive, until) {
 	if (isHidden() && typeof ImageCapture === 'function') {
 		// Another tab or window is in front: our UI is not in its pixels, and video callbacks are paused here.
-		const bitmap = await withTimeout(until(new ImageCapture(track).grabFrame()), STEP_TIMEOUT_MS);
+		const grabbed = new ImageCapture(track).grabFrame();
+		let bitmap;
+		try {
+			bitmap = await withTimeout(until(grabbed), STEP_TIMEOUT_MS);
+		} catch (error) {
+			// Abandoned or timed out: the frame may still arrive later, and nobody would close it.
+			grabbed.then((late) => late.close(), () => {});
+			throw error;
+		}
 		return { source: bitmap, width: bitmap.width, height: bitmap.height, release: () => bitmap.close() };
 	}
 	const video = document.createElement('video');

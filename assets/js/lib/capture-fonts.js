@@ -94,7 +94,8 @@ function selectFontFaces(cssText, baseUrl, used) {
 const FETCH_TIMEOUT_MS = 5000;
 
 async function fetchOk(url) {
-	const response = await fetch(url, { mode: 'cors', credentials: 'omit', signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
+	// bugspotInternal: the loader's fetch hook must not report the capture's own requests as page failures.
+	const response = await fetch(url, { bugspotInternal: true, mode: 'cors', credentials: 'omit', signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
 	if (!response.ok) {
 		throw new Error(`HTTP ${response.status}`);
 	}

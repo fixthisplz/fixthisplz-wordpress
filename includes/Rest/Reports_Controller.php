@@ -262,6 +262,10 @@ final class Reports_Controller {
 			}
 			$screenshot = $stored;
 		}
+		// The capture method describes the screenshot: without a stored one it means nothing.
+		if ( '' === $screenshot ) {
+			unset( $context['capture'] );
+		}
 
 		$id = ( new Reports_Repository() )->insert(
 			array(

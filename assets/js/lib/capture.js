@@ -13,13 +13,13 @@
 import { encodeJpeg } from './jpeg.js';
 import { addFamilies, crossOriginSheets, embedCrossOriginFonts } from './capture-fonts.js';
 import { createPseudoRepair } from './pseudo-repair.js';
+import { UI_ATTR } from './dom.js';
 
 // Images already on screen are loaded: do not wait for lazy images further down the page.
 const WAIT_FOR_LOAD_MS = 300;
 // A slow or dead image must not stall the capture (library default: 30 s).
 const ASSET_TIMEOUT_MS = 5000;
 const BULLETS = '••••••';
-const UI_ATTR = 'data-bugspot-ui';
 const FILL = '#3c434a';
 // Input types whose value attribute is page-authored (labels, flags) rather than chosen or typed.
 export const KEEP_VALUE_TYPES = new Set(['button', 'submit', 'reset', 'image', 'checkbox', 'radio']);
@@ -293,10 +293,10 @@ function pageBackground() {
 }
 
 /**
- * @param {{vendorUrl: string, mask?: boolean, sensitiveSelectors?: string[], debug?: boolean}} options
+ * @param {{vendorUrl: string, mask?: boolean, sensitiveSelectors?: string[]}} options
  * @returns {Promise<Blob>} JPEG of the viewport, <= 5 MB.
  */
-export async function captureVisible({ vendorUrl, mask = false, sensitiveSelectors = [], debug = false }) {
+export async function captureVisible({ vendorUrl, mask = false, sensitiveSelectors = [] }) {
 	const { createContext, destroyContext, domToCanvas } = await loadVendor(vendorUrl);
 	const width = window.innerWidth;
 	const height = window.innerHeight;
@@ -311,11 +311,12 @@ export async function captureVisible({ vendorUrl, mask = false, sensitiveSelecto
 		width,
 		height,
 		scale: 1,
-		debug,
 		timeout: WAIT_FOR_LOAD_MS,
 		backgroundColor: pageBackground(),
 		// Inner scroll containers keep their position (the document's own scroll is handled below).
 		features: { restoreScrollPosition: true },
+		// Tagged so the loader's network hook does not log the library's own asset fetches as page failures.
+		fetch: { requestInit: { cache: 'force-cache', bugspotInternal: true } },
 		filter: (node) => {
 			const keep = cut.filter(node);
 			if (keep) {

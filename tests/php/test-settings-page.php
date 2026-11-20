@@ -290,6 +290,7 @@ settings_page_test(
 		assert_true( str_contains( $html, 'Real capture of the tab (recommended)' ) && str_contains( $html, 'Page reconstruction — no permission prompt' ), 'both choices labelled' );
 		assert_true( str_contains( $html, 'On phones and in browsers without screen sharing, the reconstruction is always used.' ), 'permanent mobile notice' );
 		assert_true( str_contains( $html, 'Hide typed fields and sensitive areas in the screenshot' ), 'mask checkbox' );
+		assert_true( str_contains( $html, 'masking applies only when the visitor shares this tab' ), 'mask help text' );
 		assert_true( str_contains( $html, 'data-bugspot-show-if="bugspot_settings[dialog][allow_screenshot]"' ), 'shown only when screenshots are allowed' );
 		assert_true( ! str_contains( $html, 'mask_capture][]' ) && 1 === preg_match( '/type="hidden" name="bugspot_settings\[dialog\]\[mask_capture\]" value="0"/', $html ), 'hidden 0 marker' );
 

@@ -1454,6 +1454,10 @@ msgstr "Masquage"
 msgid "Hide typed fields and sensitive areas in the screenshot"
 msgstr "Masquer les champs saisis et les zones sensibles dans la capture"
 
+#: includes/Admin/Settings_Tabs.php
+msgid "On a real capture, masking applies only when the visitor shares this tab."
+msgstr "Sur une capture réelle, le masquage ne s’applique que si le visiteur partage cet onglet."
+
 #: includes/Screenshot_Store.php
 #: includes/Frontend/Assets.php
 msgid "Real capture"

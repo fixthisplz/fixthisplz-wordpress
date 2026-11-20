@@ -92,12 +92,13 @@
 			var nativeFetch = w.fetch;
 			w.fetch = function (input, init) {
 				var promise = nativeFetch.apply(this, arguments);
+				if (init && init.bugspotInternal) { return promise; }
 				try {
 					var target = typeof input === 'string' ? input : (input && input.url) || String(input);
 					var method = (init && init.method) || (input && input.method) || 'GET';
 					promise.then(
 						function (r) { if (r && r.status >= 400) { addNetwork(method, target, r.status); } },
-						function (err) { if (!err || err.name !== 'AbortError') { addNetwork(method, target, 0); } }
+						function (err) { if (!err || (err.name !== 'AbortError' && err.name !== 'TimeoutError')) { addNetwork(method, target, 0); } }
 					);
 				} catch (e) { /* never break the page */ }
 				return promise;

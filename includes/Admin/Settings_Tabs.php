@@ -111,6 +111,7 @@ final class Settings_Tabs {
 
 		F::row_open( __( 'Masking', 'bug-spotter' ), '', true, $only_with_screenshot );
 		F::checkbox( array( 'dialog', 'mask_capture' ), (bool) $g['mask_capture'], __( 'Hide typed fields and sensitive areas in the screenshot', 'bug-spotter' ) );
+		F::description( __( 'On a real capture, masking applies only when the visitor shares this tab.', 'bug-spotter' ) );
 		F::row_close();
 
 		F::row_open( __( 'Contact e-mail', 'bug-spotter' ) );

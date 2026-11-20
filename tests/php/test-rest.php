@@ -276,6 +276,26 @@ bugspot_test(
 );
 
 bugspot_test(
+	'rest: create_keeps_the_capture_method_only_when_a_screenshot_is_stored',
+	function () {
+		rest_env(
+			function () {
+				$context = '{"url":"http://site.test/page/","capture":{"method":"tab","masked":true}}';
+				$with    = rest_post( array( 'context' => $context ), rest_upload( rest_png() ) );
+				$row     = ( new Reports_Repository() )->find( $with->get_data()['id'] );
+				assert_same( 'tab', $row['context']['capture']['method'] );
+				Bug_Spotter\Screenshot_Store::delete( (string) $row['screenshot'] );
+
+				$without = rest_post( array( 'context' => $context ) );
+				assert_same( 201, $without->get_status() );
+				$row = ( new Reports_Repository() )->find( $without->get_data()['id'] );
+				assert_true( ! isset( $row['context']['capture'] ), 'capture dropped without a screenshot' );
+			}
+		);
+	}
+);
+
+bugspot_test(
 	'rest: create_rejects_oversized_screenshot_with_413',
 	function () {
 		rest_env(
