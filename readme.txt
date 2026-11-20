@@ -125,6 +125,7 @@ The plugin adds suggested text to your privacy policy (Settings › Privacy), an
 
 = 1.1.0 =
 * Screenshot annotation: before sending, the visitor can draw rectangles and arrows on the screenshot, or hide an area, and undo them at any time.
+* Fix: after an update, browsers no longer mix old and new script files (WordPress 7.0+).
 
 = 1.0.0 =
 * First public release: floating button with live preview, element picker, accessible report dialog, optional screenshot (real tab capture or page reconstruction, optional masking), report downloads, list and Kanban board, detail screen, CSV export, configurable statuses, menu name and position, e-mail notification, anti-bot providers and rate limits, privacy exporter and eraser, automatic purge of closed reports, French translation.

@@ -50,11 +50,33 @@ final class Assets {
 			array(),
 			BUGSPOT_VERSION,
 			array(
-				'in_footer' => true,
-				'strategy'  => 'defer',
+				'in_footer'           => true,
+				'strategy'            => 'defer',
+				'module_dependencies' => self::lib_module_ids(),
 			)
 		);
 		wp_add_inline_script( 'bugspot-loader', 'window.bugSpotterConfig = ' . wp_json_encode( $config ) . ';', 'before' );
+	}
+
+	/**
+	 * Registers every assets/js/lib module under its unversioned URL and returns those ids.
+	 *
+	 * Why: reporter.js and captcha.js are loaded with ?ver=, but the browser drops that query when it
+	 * resolves their relative imports ('./dialog.js'), so after an update it could mix cached old lib
+	 * files with new ones. A script declaring these ids in 'module_dependencies' makes WordPress (7.0+)
+	 * print its import map, which remaps each unversioned URL to its ?ver= URL, for static and dynamic
+	 * imports alike, without preloading anything. Before 7.0 the arg is ignored: same behaviour as before.
+	 *
+	 * @return string[]
+	 */
+	public static function lib_module_ids(): array {
+		$ids = array();
+		foreach ( glob( BUGSPOT_DIR . 'assets/js/lib/*.js' ) ?: array() as $file ) {
+			$url = BUGSPOT_URL . 'assets/js/lib/' . basename( $file );
+			wp_register_script_module( $url, $url, array(), BUGSPOT_VERSION );
+			$ids[] = $url;
+		}
+		return $ids;
 	}
 
 	/**
