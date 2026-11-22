@@ -124,7 +124,7 @@ The plugin adds suggested text to your privacy policy (Settings › Privacy), an
 == Changelog ==
 
 = 1.1.0 =
-* Screenshot annotation: before sending, the visitor can draw rectangles, arrows and freehand strokes on the screenshot, add text, pick one of six colors, or hide an area, then select, move, resize, recolor or delete each annotation, and undo any change.
+* Screenshot annotation: before sending, the visitor can draw rectangles, arrows and freehand strokes on the screenshot, add text, pick one of six colors and one of three sizes (stroke width or text size), or hide an area, then select, move, resize, recolor, resize to a preset or delete each annotation, and undo any change.
 * Fix: after an update, browsers no longer mix old and new script files (WordPress 7.0+).
 
 = 1.0.0 =

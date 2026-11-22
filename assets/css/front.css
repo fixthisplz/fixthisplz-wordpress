@@ -74,14 +74,15 @@
 #bugspot-annotator .bugspot-annot-canvas{display:block;max-width:none;box-shadow:0 0 0 1px var(--bugspot-border);touch-action:none;cursor:crosshair;user-select:none;-webkit-user-select:none}
 #bugspot-annotator .bugspot-annot-canvas[data-tool="select"]{cursor:default}
 #bugspot-annotator .bugspot-annot-canvas[data-tool="text"]{cursor:text}
-#bugspot-annotator .bugspot-annot-color{min-width:40px;padding:8px}
+#bugspot-annotator .bugspot-annot-choice{min-width:40px;padding:8px}
 #bugspot-annotator .bugspot-annot-swatch{display:block;width:20px;height:20px;border-radius:50%;box-shadow:0 0 0 2px #fff,0 0 0 3px rgba(0,0,0,.35)}
+#bugspot-annotator .bugspot-annot-dot{display:block;flex:none;border-radius:50%;background:currentColor}
 #bugspot-annotator .bugspot-annot-text{position:absolute;transform-origin:top left;z-index:1;margin:0;min-width:0;max-width:none;border:1px dashed #1d4ed8;border-radius:0;box-shadow:none;line-height:1.25;letter-spacing:normal;text-transform:none;outline-offset:0}
 @media (max-width:600px){
 	#bugspot-annotator .bugspot-annot-bar{gap:6px;padding:8px}
 	#bugspot-annotator .bugspot-row{gap:6px}
 	#bugspot-annotator .bugspot-annot-bar .bugspot-btn{min-height:36px;padding:6px 10px;font-size:13px}
-	#bugspot-annotator .bugspot-annot-bar .bugspot-annot-color{min-width:36px;padding:6px}
+	#bugspot-annotator .bugspot-annot-bar .bugspot-annot-choice{min-width:36px;padding:6px}
 	#bugspot-annotator .bugspot-annot-actions .bugspot-btn{flex:1 1 auto}
 	#bugspot-annotator .bugspot-annot-fit{inset:6px}
 	#bugspot-dialog-root{padding:0;align-items:stretch}

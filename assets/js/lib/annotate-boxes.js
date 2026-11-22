@@ -1,8 +1,8 @@
 /* The two-point annotation types (spec 5.2, annotation): rectangle, hidden area and arrow, plain objects
- * { type, x1, y1, x2, y2, color? } in the image's native pixels. Pure. Each type follows the contract of the SHAPES
+ * { type, x1, y1, x2, y2, color?, size? } in the image's native pixels. Pure. Each type follows the contract of the SHAPES
  * table (annotate-shapes.js). */
 import { MASK_FILL } from './sensitive.js';
-import { colorOf, distanceToSegment, inBox, normalizeRect } from './annotate-common.js';
+import { colorOf, distanceToSegment, inBox, normalizeRect, withStrokeSize } from './annotate-common.js';
 
 const HEAD_RATIO = 4; // arrow head length, in line widths
 const HEAD_ANGLE = Math.PI / 6;
@@ -37,7 +37,8 @@ const twoPoints = {
 export const RECT = {
 	...twoPoints,
 	colored: true,
-	create: (p, color) => ({ type: 'rect', color, x1: p.x, y1: p.y, x2: p.x, y2: p.y }),
+	withSize: withStrokeSize,
+	create: (p, color, size) => ({ type: 'rect', color, size, x1: p.x, y1: p.y, x2: p.x, y2: p.y }),
 	// Its outline is what is seen and grabbed; the middle shows the page (a rectangle thinner than 2 slops is grabbed anywhere).
 	hits(shape, x, y, slop) {
 		const box = normalizeRect(shape);
@@ -50,10 +51,11 @@ export const RECT = {
 	},
 };
 
-// A hidden area is always filled like the automatic masks: it has no colour of its own.
+// A hidden area is always filled like the automatic masks: it has no colour nor size of its own.
 export const MASK = {
 	...twoPoints,
 	colored: false,
+	withSize: (shape) => shape,
 	create: (p) => ({ type: 'mask', x1: p.x, y1: p.y, x2: p.x, y2: p.y }),
 	hits: (shape, x, y, slop) => inBox(normalizeRect(shape), x, y, slop),
 	draw(ctx, shape) {
@@ -66,7 +68,8 @@ export const MASK = {
 export const ARROW = {
 	...twoPoints,
 	colored: true,
-	create: (p, color) => ({ type: 'arrow', color, x1: p.x, y1: p.y, x2: p.x, y2: p.y }),
+	withSize: withStrokeSize,
+	create: (p, color, size) => ({ type: 'arrow', color, size, x1: p.x, y1: p.y, x2: p.x, y2: p.y }),
 	hits: (shape, x, y, slop) => distanceToSegment(x, y, { x: shape.x1, y: shape.y1 }, { x: shape.x2, y: shape.y2 }) <= slop,
 	handles: pointHandles(ARROW_ENDS),
 	isTiny: (shape, min) => Math.hypot(shape.x2 - shape.x1, shape.y2 - shape.y1) < min,

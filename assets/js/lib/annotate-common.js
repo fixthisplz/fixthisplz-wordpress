@@ -6,6 +6,17 @@ export const ANNOTATION_COLOR = '#e0161b';
 /** Colour a shape is drawn in. */
 export const colorOf = (shape) => shape.color ?? ANNOTATION_COLOR;
 
+// Size presets, as factors of the default line width and font size (both proportional to the image).
+export const SIZES = { small: 0.6, medium: 1, large: 1.8 };
+// Default size, and that of shapes kept from a session that had no size choice.
+export const DEFAULT_SIZE = 'medium';
+
+/** Size preset of a shape whose size is its line width (rectangle, arrow, pen). */
+export const sizeOf = (shape) => shape.size ?? DEFAULT_SIZE;
+
+/** withSize() of the SHAPES table for the shapes whose size is their line width: the size is stored as its key. */
+export const withStrokeSize = (shape, size) => (sizeOf(shape) === size ? shape : { ...shape, size });
+
 export const within = (value, min, max) => Math.min(Math.max(value, min), max);
 
 /** Rectangle of a two-point shape whatever the drag direction. */

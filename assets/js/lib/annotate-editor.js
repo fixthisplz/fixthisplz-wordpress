@@ -1,17 +1,17 @@
 /* Screenshot annotation editor (spec 5.2, annotation), imported on the first click of Annotate. Full-screen plugin
  * UI over the page: the original screenshot at its native size on a canvas scaled to fit, shapes drawn, typed,
- * coloured, selected, moved and resized with any pointer (mouse, touch, pen). Drawing is pointer-only; every button
- * works from the keyboard, Delete or Backspace removes the selected shape and Escape cancels. */
+ * coloured, sized, selected, moved and resized with any pointer (mouse, touch, pen). Drawing is pointer-only; every
+ * button works from the keyboard, Delete or Backspace removes the selected shape and Escape cancels. */
 import { trapFocus } from './focus-trap.js';
 import { encodeJpeg } from './jpeg.js';
 import { FIELD_TAGS, isEditable } from './sensitive.js';
-import { ANNOTATION_COLOR, colorOf } from './annotate-common.js';
+import { ANNOTATION_COLOR, DEFAULT_SIZE, colorOf } from './annotate-common.js';
 import { drawSelection, drawShapes, fitSize, toNative } from './annotate-draw.js';
-import { deleteShape, handleAt, hitTest, moveShape, recolor, record, startHistory, undo } from './annotate-shapes.js';
+import { deleteShape, handleAt, hitTest, moveShape, recolor, record, setSize, startHistory, undo } from './annotate-shapes.js';
 import { beginDraw, beginSelect, commitText, endGesture, gestureShapes, moveGesture } from './annotate-gesture.js';
 import { fontSizeFor, makeText } from './annotate-text.js';
 import { openTextField } from './annotate-text-field.js';
-import { buildEditorView } from './annotate-view.js';
+import { buildEditorView, pressOnly } from './annotate-view.js';
 
 // CSS pixels, converted to native pixels at the current display size.
 const MIN_SHAPE = 8; // anything smaller is an accidental tap
@@ -36,12 +36,13 @@ export async function editScreenshot({ t, original, shapes }) {
 	let frame = 0; // pending animation frame of a redraw, 0 when none
 	let tool = 'rect';
 	let color = ANNOTATION_COLOR; // stamped on new shapes
+	let size = DEFAULT_SIZE; // stamped on new shapes (a SIZES key)
 	let textField = null; // the open text field, if any
 	let editing = null; // index of the text being edited in the field, hidden from the canvas meanwhile
 	let lastPress = null; // { index, time } of the last click on a shape with the Select tool
 	let applying = false;
 
-	const { root, panel, canvas, fitBox, toolButtons, colorButtons, deleteButton, undoButton, clearButton, cancelButton, applyButton } =
+	const { root, panel, canvas, fitBox, toolButtons, colorButtons, sizeButtons, deleteButton, undoButton, clearButton, cancelButton, applyButton } =
 		buildEditorView(t, width, height);
 	const ctx = canvas.getContext('2d');
 	toolButtons.forEach((node, name) =>
@@ -51,6 +52,7 @@ export async function editScreenshot({ t, original, shapes }) {
 		})
 	);
 	colorButtons.forEach((node, value) => node.addEventListener('click', () => pickColor(value)));
+	sizeButtons.forEach((node, value) => node.addEventListener('click', () => pickSize(value)));
 
 	const scale = () => width / canvas.getBoundingClientRect().width; // native pixels per CSS pixel
 	const slop = () => TOUCH_SLOP * scale();
@@ -93,19 +95,17 @@ export async function editScreenshot({ t, original, shapes }) {
 		tool = name;
 		canvas.dataset.tool = name;
 		canvas.style.cursor = '';
-		toolButtons.forEach((node, n) => node.setAttribute('aria-pressed', String(n === name)));
+		pressOnly(toolButtons, name);
 		if (name !== 'select') {
 			selected = null;
 		}
 	}
 
-	/** New shapes take color; the selected shape, unless a hidden area, is recoloured (one undo step). */
-	function pickColor(value) {
-		color = value;
-		colorButtons.forEach((node, v) => node.setAttribute('aria-pressed', String(v === value)));
-		const recolored = selected === null ? history.shapes : recolor(history.shapes, selected, value);
-		if (recolored !== history.shapes) {
-			commit(recolored, selected);
+	/** The selected shape, if any, changed by change(shapes, index): one undo step, none when it changes nothing. */
+	function changeSelected(change) {
+		const changed = selected === null ? history.shapes : change(history.shapes, selected);
+		if (changed !== history.shapes) {
+			commit(changed, selected);
 		}
 	}
 
@@ -114,12 +114,24 @@ export async function editScreenshot({ t, original, shapes }) {
 		return ctx.measureText(text).width;
 	};
 
+	/** New shapes get the colour and size; so does the selected shape (a hidden area has neither). */
+	function pickColor(value) {
+		color = value;
+		pressOnly(colorButtons, value);
+		changeSelected((shapes, index) => recolor(shapes, index, value));
+	}
+	function pickSize(value) {
+		size = value;
+		pressOnly(sizeButtons, value);
+		changeSelected((shapes, index) => setSize(shapes, index, value, { width, height, measure }));
+	}
+
 	/** Opens the text field on a new text at p (index null) or on the text at index. */
 	function openText(index, p) {
 		const shape = index === null ? null : history.shapes[index];
 		const fields = shape
 			? { x: shape.x, y: shape.y, fontSize: shape.fontSize, color: colorOf(shape) }
-			: { x: p.x, y: p.y, fontSize: fontSizeFor(width, height), color };
+			: { x: p.x, y: p.y, fontSize: fontSizeFor(width, height, size), color };
 		editing = index;
 		selected = null;
 		lastPress = null;
@@ -183,7 +195,7 @@ export async function editScreenshot({ t, original, shapes }) {
 				return;
 			}
 		} else {
-			gesture = beginDraw(history.shapes, tool, p, color);
+			gesture = beginDraw(history.shapes, tool, p, color, size);
 		}
 		redraw(); // the selection may have changed
 		if (gesture) {
@@ -277,6 +289,7 @@ export async function editScreenshot({ t, original, shapes }) {
 
 		setTool('rect');
 		pickColor(ANNOTATION_COLOR);
+		pickSize(DEFAULT_SIZE);
 		redraw();
 		document.body.appendChild(root);
 		resizes.observe(fitBox);

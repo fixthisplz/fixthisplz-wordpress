@@ -1,7 +1,7 @@
-/* The pen annotation type (spec 5.2, annotation): a freehand stroke { type: 'pen', color, points: [{x, y}, ...] } in
+/* The pen annotation type (spec 5.2, annotation): a freehand stroke { type: 'pen', color, size?, points: [{x, y}, ...] } in
  * the image's native pixels, drawn smoothly through the recorded points. Pure; follows the contract of the SHAPES
  * table (annotate-shapes.js). */
-import { boxHandles, colorOf, distanceToSegment } from './annotate-common.js';
+import { boxHandles, colorOf, distanceToSegment, withStrokeSize } from './annotate-common.js';
 
 const midpoint = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
 
@@ -35,7 +35,8 @@ const factor = (from, origin, target) => (from === origin ? 1 : (target - origin
 
 export const PEN = {
 	colored: true,
-	create: (p, color) => ({ type: 'pen', color, points: [{ x: p.x, y: p.y }] }),
+	withSize: withStrokeSize,
+	create: (p, color, size) => ({ type: 'pen', color, size, points: [{ x: p.x, y: p.y }] }),
 	// Points closer than step to the previous one add nothing but weight and jitter.
 	extend(shape, q, step) {
 		const last = shape.points.at(-1);

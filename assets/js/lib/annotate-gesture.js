@@ -7,11 +7,11 @@
 import { SHAPES, deleteShape, handleAt, hitTest, isTiny, moveHandle, moveShape, record, replaceShape } from './annotate-shapes.js';
 import { within } from './annotate-common.js';
 
-/** Press with a drawing tool at p: a new shape of type, in color, drawn from p. */
-export function beginDraw(shapes, type, p, color) {
+/** Press with a drawing tool at p: a new shape of type, in color and at size (a SIZES key), drawn from p. */
+export function beginDraw(shapes, type, p, color, size) {
 	const { create, extend } = SHAPES[type];
 	const step = (shape, q, area) => extend(shape, q, area.step);
-	return { base: shapes, index: shapes.length, current: create(p, color), drawing: true, moved: false, step };
+	return { base: shapes, index: shapes.length, current: create(p, color, size), drawing: true, moved: false, step };
 }
 
 /**

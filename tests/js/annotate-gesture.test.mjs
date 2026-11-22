@@ -47,25 +47,25 @@ test('a handle keeps its offset from the pointer: the corner does not jump under
 	assert.equal(outside.current.x2, 1000, 'the offset never takes the corner off the image');
 });
 
-test('drawing adds the shape in the chosen colour and selects it; a tiny one or a click records nothing', () => {
+test('drawing adds the shape in the chosen colour and size and selects it; a tiny one or a click records nothing', () => {
 	const history = startHistory([]);
-	const gesture = beginDraw(history.shapes, 'arrow', { x: 10, y: 10 }, '#1d6fe0');
+	const gesture = beginDraw(history.shapes, 'arrow', { x: 10, y: 10 }, '#1d6fe0', 'small');
 	assert.deepEqual(endGesture(history, gesture, 8), { history, selected: null }, 'a click draws nothing');
 	const drawn = endGesture(history, moveGesture(gesture, { x: 200, y: 10 }, area), 8);
-	assert.deepEqual(drawn.history.shapes, [{ type: 'arrow', color: '#1d6fe0', x1: 10, y1: 10, x2: 200, y2: 10 }]);
+	assert.deepEqual(drawn.history.shapes, [{ type: 'arrow', color: '#1d6fe0', size: 'small', x1: 10, y1: 10, x2: 200, y2: 10 }]);
 	assert.equal(drawn.selected, 0);
 	assert.equal(endGesture(history, moveGesture(gesture, { x: 13, y: 12 }, area), 8).history, history, 'tiny');
 });
 
-test('a hidden area drawn takes no colour', () => {
+test('a hidden area drawn takes no colour nor size', () => {
 	const history = record(startHistory([]), [rect]);
-	const gesture = moveGesture(beginDraw(history.shapes, 'mask', { x: 0, y: 0 }, '#1d6fe0'), { x: 50, y: 50 }, area);
+	const gesture = moveGesture(beginDraw(history.shapes, 'mask', { x: 0, y: 0 }, '#1d6fe0', 'large'), { x: 50, y: 50 }, area);
 	assert.deepEqual(endGesture(history, gesture, 8).history.shapes[1], { type: 'mask', x1: 0, y1: 0, x2: 50, y2: 50 });
 });
 
 test('a pen stroke is drawn point by point and kept as one undo entry', () => {
 	const history = startHistory([]);
-	let gesture = beginDraw(history.shapes, 'pen', { x: 10, y: 10 }, '#1d2327');
+	let gesture = beginDraw(history.shapes, 'pen', { x: 10, y: 10 }, '#1d2327', 'medium');
 	for (const x of [20, 21, 40, 60]) {
 		gesture = moveGesture(gesture, { x, y: 10 }, area);
 	}

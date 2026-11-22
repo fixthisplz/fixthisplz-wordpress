@@ -6,8 +6,8 @@ import { handleAt, handles, hitTest, isTiny, moveHandle, moveShape, shapeBounds 
 const pen = { type: 'pen', color: '#1e9e3a', points: [{ x: 100, y: 100 }, { x: 200, y: 100 }, { x: 200, y: 200 }] };
 
 test('a stroke records the points of the drag, dropping those closer than the step to the previous one', () => {
-	let shape = PEN.create({ x: 10, y: 10 }, '#1d6fe0');
-	assert.deepEqual(shape, { type: 'pen', color: '#1d6fe0', points: [{ x: 10, y: 10 }] });
+	let shape = PEN.create({ x: 10, y: 10 }, '#1d6fe0', 'large');
+	assert.deepEqual(shape, { type: 'pen', color: '#1d6fe0', size: 'large', points: [{ x: 10, y: 10 }] });
 	shape = PEN.extend(shape, { x: 11, y: 11 }, 3);
 	assert.equal(shape.points.length, 1, 'jitter is dropped');
 	const longer = PEN.extend(shape, { x: 14, y: 10 }, 3);

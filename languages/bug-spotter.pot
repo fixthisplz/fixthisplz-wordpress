@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-22T21:47:14+00:00\n"
+"POT-Creation-Date: 2026-11-22T22:02:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: bug-spotter\n"
@@ -171,14 +171,14 @@ msgstr ""
 
 #: includes/Admin/Detail_Page.php:106
 #: includes/Admin/Settings_Tabs.php:265
-#: includes/Frontend/Assets.php:223
+#: includes/Frontend/Assets.php:227
 msgid "Failed requests"
 msgstr ""
 
 #: includes/Admin/Detail_Page.php:107
 #: includes/Admin/Settings_Tabs.php:98
 #: includes/Admin/Settings_Tabs.php:215
-#: includes/Frontend/Assets.php:230
+#: includes/Frontend/Assets.php:234
 #: includes/Mailer.php:78
 msgid "Screenshot"
 msgstr ""
@@ -328,7 +328,7 @@ msgstr ""
 #: includes/Admin/List_Table.php:71
 #: includes/Admin/List_Table.php:155
 #: includes/Admin/Settings_Statuses_Tab.php:97
-#: includes/Frontend/Assets.php:200
+#: includes/Frontend/Assets.php:204
 msgid "Delete"
 msgstr ""
 
@@ -480,6 +480,7 @@ msgid "Pill with text"
 msgstr ""
 
 #: includes/Admin/Settings_Button_Tab.php:43
+#: includes/Frontend/Assets.php:200
 msgid "Size"
 msgstr ""
 
@@ -969,7 +970,7 @@ msgid "On a real capture, masking applies only when the visitor shares this tab.
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:117
-#: includes/Frontend/Assets.php:221
+#: includes/Frontend/Assets.php:225
 #: includes/Privacy.php:51
 msgid "Contact e-mail"
 msgstr ""
@@ -1273,147 +1274,159 @@ msgid "Black"
 msgstr ""
 
 #: includes/Frontend/Assets.php:201
-msgid "Undo last"
+msgid "Small size"
 msgstr ""
 
 #: includes/Frontend/Assets.php:202
-msgid "Clear all"
+msgid "Medium size"
 msgstr ""
 
 #: includes/Frontend/Assets.php:203
-msgid "Apply"
-msgstr ""
-
-#: includes/Frontend/Assets.php:204
-msgid "The annotations could not be applied."
+msgid "Large size"
 msgstr ""
 
 #: includes/Frontend/Assets.php:205
-msgid "Technical details sent with your report"
+msgid "Undo last"
 msgstr ""
 
 #: includes/Frontend/Assets.php:206
-msgid "Privacy policy"
+msgid "Clear all"
 msgstr ""
 
 #: includes/Frontend/Assets.php:207
+msgid "Apply"
+msgstr ""
+
+#: includes/Frontend/Assets.php:208
+msgid "The annotations could not be applied."
+msgstr ""
+
+#: includes/Frontend/Assets.php:209
+msgid "Technical details sent with your report"
+msgstr ""
+
+#: includes/Frontend/Assets.php:210
+msgid "Privacy policy"
+msgstr ""
+
+#: includes/Frontend/Assets.php:211
 msgid "Report sent"
 msgstr ""
 
 #. translators: %s: report number, for example #42.
-#: includes/Frontend/Assets.php:209
+#: includes/Frontend/Assets.php:213
 #, php-format
 msgid "Report %s sent."
 msgstr ""
 
-#: includes/Frontend/Assets.php:210
+#: includes/Frontend/Assets.php:214
 msgid "Download"
 msgstr ""
 
-#: includes/Frontend/Assets.php:211
+#: includes/Frontend/Assets.php:215
 msgid "Download the screenshot"
 msgstr ""
 
-#: includes/Frontend/Assets.php:212
+#: includes/Frontend/Assets.php:216
 msgid "Done"
 msgstr ""
 
-#: includes/Frontend/Assets.php:213
+#: includes/Frontend/Assets.php:217
 msgid "The report could not be sent. Your text was kept; you can try again or download it."
 msgstr ""
 
-#: includes/Frontend/Assets.php:214
+#: includes/Frontend/Assets.php:218
 msgid "Too many reports in a short time. Please try again later."
 msgstr ""
 
-#: includes/Frontend/Assets.php:215
+#: includes/Frontend/Assets.php:219
 #: includes/Report_Submission.php:66
 msgid "You are not allowed to send bug reports."
 msgstr ""
 
-#: includes/Frontend/Assets.php:216
+#: includes/Frontend/Assets.php:220
 msgid "The anti-spam check failed. Please try again."
 msgstr ""
 
-#: includes/Frontend/Assets.php:217
+#: includes/Frontend/Assets.php:221
 msgid "The bug reporter could not be loaded."
 msgstr ""
 
 #. translators: %s: short description of the highlighted element, for example "button – Send".
-#: includes/Frontend/Assets.php:219
+#: includes/Frontend/Assets.php:223
 #, php-format
 msgid "Highlighted: %s. Press Enter to select it, or the Up arrow for its parent."
 msgstr ""
 
-#: includes/Frontend/Assets.php:220
+#: includes/Frontend/Assets.php:224
 msgid "Bug report"
 msgstr ""
 
-#: includes/Frontend/Assets.php:222
+#: includes/Frontend/Assets.php:226
 msgid "Console"
 msgstr ""
 
-#: includes/Frontend/Assets.php:224
+#: includes/Frontend/Assets.php:228
 msgid "Generated at"
 msgstr ""
 
-#: includes/Frontend/Assets.php:225
+#: includes/Frontend/Assets.php:229
 msgid "Taking the screenshot…"
 msgstr ""
 
-#: includes/Frontend/Assets.php:226
+#: includes/Frontend/Assets.php:230
 msgid "Please enter a valid e-mail address, or leave the field empty."
 msgstr ""
 
-#: includes/Frontend/Assets.php:227
+#: includes/Frontend/Assets.php:231
 #: includes/Screenshot_Store.php:136
 msgid "Real capture"
 msgstr ""
 
-#: includes/Frontend/Assets.php:228
+#: includes/Frontend/Assets.php:232
 #: includes/Screenshot_Store.php:136
 msgid "Page reconstruction"
 msgstr ""
 
-#: includes/Frontend/Assets.php:229
+#: includes/Frontend/Assets.php:233
 msgid "masked"
 msgstr ""
 
-#: includes/Frontend/Assets.php:231
+#: includes/Frontend/Assets.php:235
 msgid "The screenshot could not be taken. You can send the report without it."
 msgstr ""
 
-#: includes/Frontend/Assets.php:232
+#: includes/Frontend/Assets.php:236
 msgid "Screenshot cancelled: you can send the report without a screenshot."
 msgstr ""
 
 #. translators: %s: maximum screenshot size in megabytes, for example "5".
-#: includes/Frontend/Assets.php:235
+#: includes/Frontend/Assets.php:239
 #, php-format
 msgid "The screenshot is too large (%s MB maximum). You can send the report without it."
 msgstr ""
 
-#: includes/Frontend/Assets.php:238
+#: includes/Frontend/Assets.php:242
 msgid "The screenshot is too large to be sent. Remove it or retake it, then try again."
 msgstr ""
 
-#: includes/Frontend/Assets.php:239
+#: includes/Frontend/Assets.php:243
 msgid "The report was refused. Please check the form and try again."
 msgstr ""
 
-#: includes/Frontend/Assets.php:240
+#: includes/Frontend/Assets.php:244
 msgid "Bug reporting is currently disabled on this site."
 msgstr ""
 
-#: includes/Frontend/Assets.php:241
+#: includes/Frontend/Assets.php:245
 msgid "The anti-spam check is unavailable right now. Please try again later."
 msgstr ""
 
-#: includes/Frontend/Assets.php:242
+#: includes/Frontend/Assets.php:246
 msgid "Please complete the anti-spam check."
 msgstr ""
 
-#: includes/Frontend/Assets.php:243
+#: includes/Frontend/Assets.php:247
 msgid "This page cannot be reported: its address is not a web address."
 msgstr ""
 

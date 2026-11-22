@@ -4,10 +4,12 @@
  *
  * Contract of a SHAPES[type] entry:
  *   colored                    whether the shape takes the palette colour (shape.color)
- *   create(p, color), extend(shape, q, step)   drawing by dragging from p, step being the pen's smallest step
+ *   withSize(shape, size, image)   shape at a size preset (SIZES), the same object when that changes nothing; image is
+ *                              { width, height, measure } (see makeText)
+ *   create(p, color, size), extend(shape, q, step)   drawing by dragging from p, step being the pen's smallest step
  *   isTiny(shape, min)         whether a shape just drawn is too small to be meant
  *   (text is typed in a field instead: it has none of these three)
- *   draw(ctx, shape)           paints it; ctx.lineWidth is already the image's line width
+ *   draw(ctx, shape)           paints it; ctx.lineWidth is already its line width (lineWidthFor)
  *   bounds(shape)              { x, y, width, height }
  *   translate(shape, dx, dy)   moved, unbounded
  *   hits(shape, x, y, slop)    whether a press at (x, y) grabs it
@@ -58,6 +60,16 @@ export function recolor(shapes, index, color) {
 	return !typeOf(shape).colored || colorOf(shape) === color ? shapes : replaceShape(shapes, index, { ...shape, color });
 }
 
+/**
+ * shapes with the one at index at size (a SIZES key); the same list when that changes nothing (same size, hidden
+ * area). image: { width, height, measure }, the image size and the text measure of makeText.
+ */
+export function setSize(shapes, index, size, image) {
+	const shape = shapes[index];
+	const sized = typeOf(shape).withSize(shape, size, image);
+	return sized === shape ? shapes : replaceShape(shapes, index, sized);
+}
+
 /** shapes with the one at index replaced by shape. */
 export function replaceShape(shapes, index, shape) {
 	return shapes.map((current, i) => (i === index ? shape : current));
@@ -73,7 +85,7 @@ export function startHistory(shapes) {
 	return { shapes, past: shapes.map((_, i) => shapes.slice(0, i)) };
 }
 
-/** history after one action (add, move, resize, recolour, edit, delete, clear) that left shapes. */
+/** history after one action (add, move, resize, recolour, size change, edit, delete, clear) that left shapes. */
 export function record(history, shapes) {
 	return { shapes, past: [...history.past, history.shapes] };
 }
