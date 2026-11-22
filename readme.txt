@@ -14,7 +14,7 @@ Let visitors and editors report bugs from any page, with an optional screenshot,
 
 Bug Spotter adds a floating button to your site. A visitor (logged in or not) clicks it, points at the element that has a problem or picks "Whole page", describes what went wrong, optionally attaches a screenshot, and submits. The report lands in a dedicated **Bugs** menu of your dashboard, and you get an e-mail. Right after sending, the reporter can download a copy of the report.
 
-Everything is built natively for WordPress: PHP and hooks, a dedicated database table, the WordPress REST API, the Settings API, native admin screens, and plain JavaScript. There is no build step, no CDN and no external service apart from the anti-bot provider you choose. Everything is free: there is no premium version.
+Everything is built natively for WordPress: PHP and hooks, a dedicated database table, the WordPress REST API, the Settings API, native admin screens, and plain JavaScript. There is no build step, no CDN and no external service apart from the anti-bot provider and the webhooks you choose. Everything is free: there is no premium version.
 
 = Features =
 
@@ -30,6 +30,7 @@ Everything is built natively for WordPress: PHP and hooks, a dedicated database 
 * Configurable priorities, the same way (name, color, order). Defaults: Low, Normal, High, Critical.
 * A dashboard widget shows the bug managers the open reports per status and the latest reports.
 * E-mail notification for each new report, with a link to the report and an optional screenshot attachment.
+* Webhooks (up to five): post new reports, status changes and assignments to Slack, Discord, Microsoft Teams or your own service (signed JSON), with a "Send a test" button.
 * Anti-bot protection: Cloudflare Turnstile, Google reCAPTCHA v2 or v3, hCaptcha, or none; a hidden honeypot field; per-IP rate limits (hourly and daily). Includes a "Test the keys" button.
 * Privacy by design: values typed in form fields and passwords are never written into the report; e-mails and tokens are redacted in the browser and again on the server; the IP address is never stored (only a keyed hash); the contact e-mail is stored encrypted; screenshots are stored in a private folder.
 * WordPress personal data exporter and eraser, suggested privacy policy text, automatic deletion of closed reports after a delay you choose.
@@ -43,6 +44,8 @@ Bug Spotter connects to an external service only when you choose an anti-bot pro
 * Cloudflare Turnstile: [terms](https://www.cloudflare.com/website-terms/), [privacy policy](https://www.cloudflare.com/privacypolicy/).
 * Google reCAPTCHA v2 and v3: [terms](https://policies.google.com/terms), [privacy policy](https://policies.google.com/privacy).
 * hCaptcha: [terms](https://www.hcaptcha.com/terms), [privacy policy](https://www.hcaptcha.com/privacy).
+
+Webhooks (**Bugs › Settings › Integrations**, none by default): your server calls only the addresses an administrator saves there, for the events ticked for each one (new report, status changed, report assigned), right after the change, and when you click "Send a test". Opening a new report (New → Seen) sends nothing. After a bulk action, Slack, Discord and Teams get one summary message (for example "12 reports: status → Fixed", with a link to the list), while the generic JSON gets one signed event per report. Each call sends the report number and title, an excerpt of the description (300 characters), the page address, the status, the priority, the display name of the assignee, a link to the report in your dashboard, the event, the site name and address, and the time. It never sends the reporter's e-mail address, IP address, screenshot or technical context. What the receiving service does with it is covered by its own terms, for example [Slack](https://slack.com/terms-of-service) ([privacy](https://slack.com/trust/privacy/privacy-policy)), [Discord](https://discord.com/terms) ([privacy](https://discord.com/privacy)) or [Microsoft Teams](https://www.microsoft.com/servicesagreement) ([privacy](https://privacy.microsoft.com/privacystatement)).
 
 = Third-party libraries =
 
@@ -107,6 +110,15 @@ Deactivating keeps everything. Deleting the plugin keeps your reports, screensho
 
 Activate it on each site where you want it. Network uninstall only cleans the main site: on the other sites, deactivate the plugin and tick the deletion option first, or remove the data by hand.
 
+= How does my service check a webhook? =
+
+Choose the "Generic JSON (signed)" format. Each request is a POST with a JSON body and two headers: `X-Bug-Spotter-Event` (`report.created`, `report.status_changed`, `report.assigned` or `test`) and `X-Bug-Spotter-Signature`: `sha256=` followed by the HMAC-SHA256, in hexadecimal, of the raw body with the webhook's signing secret (shown under the webhook in the Integrations tab). Compute the same value from the body you received, before decoding it, and compare. In PHP:
+
+`$expected = 'sha256=' . hash_hmac( 'sha256', file_get_contents( 'php://input' ), $secret );`
+`$valid    = hash_equals( $expected, $_SERVER['HTTP_X_BUG_SPOTTER_SIGNATURE'] ?? '' );`
+
+Use the `timestamp` field of the body to refuse old requests. Requests are sent once, without waiting for the answer (2-second limit) and without retry. Addresses must use https and point to a public server; addresses on a private network are refused. On a site whose environment type (`WP_ENVIRONMENT_TYPE`) is `local` or `development`, `localhost`, `127.0.0.1`, `*.localhost` and `*.test` are also accepted, over http; the `bugspot_allow_dev_webhooks` filter (true or false) overrides that choice.
+
 = Who can manage the reports? =
 
 The roles ticked in **Bugs › Settings › Management** receive the `bugspot_manage` capability (administrators by default). It gives access to the list, the Kanban board, the detail screen, screenshots and the CSV export. The Settings screen itself requires `manage_options`, so a bug manager never sees your anti-bot secret keys.
@@ -119,7 +131,7 @@ No. Bug Spotter is not a support system: there is no reply, no discussion thread
 
 Bug Spotter stores reports in a dedicated table of your database. A report contains the description written by the reporter, the address of the page (query values are replaced), technical context (browser, language, time zone, window size, the element chosen, and optionally the last console errors and failed network requests), an optional screenshot, an optional contact e-mail address (encrypted), the WordPress user ID when the reporter is logged in, and a keyed hash of the IP address used against abuse. The IP address itself is never stored.
 
-Values typed in form fields and passwords are never written into the report. Elements marked `data-bugspot-sensitive`, and elements matching the sensitive selectors you configure, are replaced by "[masked]" in the report. The screenshot is an image of the page as the reporter sees it, shown to the reporter before sending; it is not masked unless you enable "Hide typed fields and sensitive areas in the screenshot" in **Bugs › Settings › Dialog** (on a real capture, masking applies only when the visitor shares the current tab). The plugin makes no request to external services, except the one to the anti-bot provider you choose (Cloudflare, Google or hCaptcha), which receives the visitor's token and IP address as required for verification.
+Values typed in form fields and passwords are never written into the report. Elements marked `data-bugspot-sensitive`, and elements matching the sensitive selectors you configure, are replaced by "[masked]" in the report. The screenshot is an image of the page as the reporter sees it, shown to the reporter before sending; it is not masked unless you enable "Hide typed fields and sensitive areas in the screenshot" in **Bugs › Settings › Dialog** (on a real capture, masking applies only when the visitor shares the current tab). The plugin makes no request to external services, except the one to the anti-bot provider you choose (Cloudflare, Google or hCaptcha), which receives the visitor's token and IP address as required for verification, and the webhooks an administrator sets up. A webhook receives an excerpt of the description written by the reporter, the page address, the status, the priority and the display name of the team member the report is assigned to; never the reporter's e-mail address, IP address, screenshot or technical context.
 
 The plugin adds suggested text to your privacy policy (Settings › Privacy), and registers a personal data exporter and eraser. Closed reports (by default Fixed, Won't fix and Duplicate: every status marked "Closed") can be deleted automatically after a number of months of your choice.
 
@@ -131,6 +143,7 @@ The plugin adds suggested text to your privacy policy (Settings › Privacy), an
 * Dashboard widget for bug managers: open reports per status and the five latest reports.
 * Assignment: assign a report to a bug manager from its screen or with a bulk action; "Assigned to" column, initials on the Kanban cards, filter by person and "My reports". The new assignee gets an e-mail (not when assigning yourself).
 * Internal notes and history on the report screen: notes visible only to the team (deleted by their author or an administrator), and every change of status, priority or assignment with its author and date. Deleting a user unassigns their reports; the personal data exporter and eraser cover the notes.
+* Webhooks (new Integrations settings tab): up to five addresses, each with a format (generic signed JSON, Slack, Discord or Microsoft Teams), its events (new report, status changed, report assigned), an on/off switch and a "Send a test" button. Bulk actions send one summary message to chat services.
 
 = 1.1.0 =
 * Screenshot annotation: before sending, the visitor can draw rectangles, arrows and freehand strokes on the screenshot, add text, pick one of six colors and one of three sizes (stroke width or text size), or hide an area, then select, move, resize, recolor, resize to a preset or delete each annotation, and undo any change.

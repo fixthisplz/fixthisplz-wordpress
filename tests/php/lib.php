@@ -45,3 +45,6 @@ function with_settings_option( callable $fn ): void {
 		}
 	}
 }
+
+// Tests never reach the network: a request that no test stubs with pre_http_request fails here.
+add_filter( 'pre_http_request', static fn( $pre ) => false === $pre ? new WP_Error( 'bugspot_test_offline', 'Network blocked in tests.' ) : $pre, PHP_INT_MAX );

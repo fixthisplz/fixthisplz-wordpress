@@ -55,6 +55,21 @@ final class Report_Format {
 		return sprintf( __( '%1$s #%2$d', 'bug-spotter' ), Settings::text( 'management.item_label' ), $id );
 	}
 
+	/** Address of the report's detail screen in the administration. */
+	public static function link( int $id ): string {
+		return admin_url( 'admin.php?page=bug-spotter&report=' . $id );
+	}
+
+	/** Address of the list of reports in the administration. */
+	public static function list_link(): string {
+		return admin_url( 'admin.php?page=bug-spotter' );
+	}
+
+	/** The site name as plain text (e-mail subjects, webhooks). */
+	public static function site_name(): string {
+		return wp_specialchars_decode( (string) get_option( 'blogname' ), ENT_QUOTES );
+	}
+
 	/** A stored UTC datetime in the site's date and time formats and timezone; '' when absent or invalid. */
 	public static function date( mixed $utc ): string {
 		$time = Reports_Repository::timestamp( $utc );

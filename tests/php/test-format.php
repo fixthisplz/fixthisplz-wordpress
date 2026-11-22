@@ -3,7 +3,6 @@
 use Bug_Spotter\Report_Format;
 use Bug_Spotter\Reports_Repository;
 use Bug_Spotter\Settings;
-use Bug_Spotter\Settings_Sanitizer;
 
 bugspot_test(
 	'format: excerpt_cuts_at_length_with_ellipsis',
@@ -38,11 +37,11 @@ bugspot_test(
 	'settings: validate_button_completes_partial_input_with_defaults',
 	function () {
 		$d   = Settings::defaults()['button'];
-		$out = Settings_Sanitizer::validate_button( array( 'color_bg' => 'red;}', 'size' => 'l' ) );
+		$out = Bug_Spotter\Button_Sanitizer::validate( array( 'color_bg' => 'red;}', 'size' => 'l' ) );
 		assert_same( array_keys( $d ), array_keys( $out ) );
 		assert_same( $d['color_bg'], $out['color_bg'] );
 		assert_same( 'l', $out['size'] );
-		assert_same( $d, Settings_Sanitizer::validate_button( 'not an array' ) );
+		assert_same( $d, Bug_Spotter\Button_Sanitizer::validate( 'not an array' ) );
 	}
 );
 

@@ -65,46 +65,6 @@ final class Settings_Sanitizer {
 	}
 
 	/**
-	 * The "button" block, complete and validated: every value is checked (colors by regex, numbers cast and
-	 * clamped, enums from whitelists), missing keys take their default. Also used by Button_Style on output.
-	 *
-	 * @param mixed $b Possibly partial, untrusted.
-	 * @return array<string,mixed>
-	 */
-	public static function validate_button( $b ): array {
-		$bd = Settings::defaults()['button'];
-		$b  = self::merge( $bd, is_array( $b ) ? $b : array() );
-		$sc = $b['shadow_custom'];
-
-		return array(
-			'icon_type'               => self::enum( $b['icon_type'], array( 'dashicon', 'svg' ), $bd['icon_type'] ),
-			'dashicon'                => self::dashicon( $b['dashicon'], $bd['dashicon'] ),
-			'svg_attachment_id'       => absint( $b['svg_attachment_id'] ),
-			'shape'                   => self::enum( $b['shape'], array( 'circle', 'rounded', 'pill' ), $bd['shape'] ),
-			'label'                   => self::text_field( $b['label'] ),
-			'tooltip'                 => self::text_field( $b['tooltip'] ),
-			'size'                    => self::enum( $b['size'], array( 's', 'm', 'l' ), $bd['size'] ),
-			'color_bg'                => self::color( $b['color_bg'], $bd['color_bg'] ),
-			'color_fg'                => self::color( $b['color_fg'], $bd['color_fg'] ),
-			'color_bg_hover'          => self::color( $b['color_bg_hover'], $bd['color_bg_hover'] ),
-			'shadow'                  => self::enum( $b['shadow'], array( 'none', 'light', 'medium', 'strong', 'custom' ), $bd['shadow'] ),
-			'shadow_custom'           => array(
-				'x'      => self::int( $sc['x'], -100, 100, $bd['shadow_custom']['x'] ),
-				'y'      => self::int( $sc['y'], -100, 100, $bd['shadow_custom']['y'] ),
-				'blur'   => self::int( $sc['blur'], 0, 200, $bd['shadow_custom']['blur'] ),
-				'spread' => self::int( $sc['spread'], -100, 100, $bd['shadow_custom']['spread'] ),
-				'color'  => self::color( $sc['color'], $bd['shadow_custom']['color'] ),
-			),
-			'radius_mode'             => self::enum( $b['radius_mode'], array( 'preset', 'custom' ), $bd['radius_mode'] ),
-			'radius_px'               => self::int( $b['radius_px'], 0, 200, $bd['radius_px'] ),
-			'position'                => self::position( $b['position'], $bd['position'] ),
-			'mobile_position_enabled' => self::bool( $b['mobile_position_enabled'] ),
-			'position_mobile'         => self::position( $b['position_mobile'], $bd['position_mobile'] ),
-			'z_index'                 => self::int( $b['z_index'], 0, 2147483647, $bd['z_index'] ),
-		);
-	}
-
-	/**
 	 * @param array<string,mixed> $s Merged settings (values untrusted).
 	 * @return array<string,mixed>
 	 */
@@ -113,7 +73,7 @@ final class Settings_Sanitizer {
 		return array(
 			'enabled'       => self::bool( $s['enabled'] ),
 			'visibility'    => self::validate_visibility( $s['visibility'] ),
-			'button'        => self::validate_button( $s['button'] ),
+			'button'        => Button_Sanitizer::validate( $s['button'] ),
 			'dialog'        => self::validate_dialog( $s['dialog'], $d['dialog'] ),
 			'captcha'       => self::validate_captcha( $s['captcha'], $d['captcha'] ),
 			'notifications' => self::validate_notifications( $s['notifications'] ),
@@ -123,6 +83,7 @@ final class Settings_Sanitizer {
 			'management'    => self::validate_management( $s['management'] ),
 			'statuses'      => Statuses::sanitize( $s['statuses'] ),
 			'priorities'    => Priorities::sanitize( $s['priorities'] ),
+			'webhooks'      => Webhooks::sanitize( $s['webhooks'] ),
 		);
 	}
 
@@ -211,26 +172,26 @@ final class Settings_Sanitizer {
 		);
 	}
 
-	/** @param mixed $v */
-	private static function bool( $v ): bool {
+	/** A posted checkbox ("1"/"0", "on", "true"…) or a stored boolean. @param mixed $v */
+	public static function bool( $v ): bool {
 		return is_string( $v ) ? filter_var( $v, FILTER_VALIDATE_BOOLEAN ) : (bool) $v;
 	}
 
-	/** @param mixed $v */
-	private static function int( $v, int $min, int $max, int $default ): int {
+	/** A number clamped to [$min, $max]; $default when not numeric. @param mixed $v */
+	public static function int( $v, int $min, int $max, int $default ): int {
 		if ( ! is_numeric( $v ) ) {
 			return $default;
 		}
 		return max( $min, min( $max, (int) $v ) );
 	}
 
-	/** @param mixed $v */
-	private static function enum( $v, array $allowed, string $default ): string {
+	/** $v when it is one of $allowed, else $default. @param mixed $v */
+	public static function enum( $v, array $allowed, string $default ): string {
 		return is_string( $v ) && in_array( $v, $allowed, true ) ? $v : $default;
 	}
 
-	/** @param mixed $v */
-	private static function text_field( $v ): string {
+	/** One line of plain text. @param mixed $v */
+	public static function text_field( $v ): string {
 		return is_scalar( $v ) ? sanitize_text_field( (string) $v ) : '';
 	}
 
@@ -239,48 +200,10 @@ final class Settings_Sanitizer {
 		return is_scalar( $v ) ? sanitize_textarea_field( (string) $v ) : '';
 	}
 
-	/** @param mixed $v */
-	private static function dashicon( $v, string $default ): string {
-		return is_string( $v ) && 1 === preg_match( '/^dashicons-[a-z0-9-]+$/', $v ) ? $v : $default;
-	}
-
 	/** Strict #rgb / #rrggbb, trimmed; null for anything else (safe in inline CSS). @param mixed $v */
 	public static function hex_color( $v ): ?string {
 		$v = is_string( $v ) ? trim( $v ) : '';
 		return 1 === preg_match( '/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/', $v ) ? $v : null;
-	}
-
-	/** Strict #rgb / #rrggbb / rgba(r,g,b,a); anything else falls back to the default (no CSS injection). @param mixed $v */
-	private static function color( $v, string $default ): string {
-		$hex = self::hex_color( $v );
-		if ( null !== $hex ) {
-			return $hex;
-		}
-		if ( ! is_string( $v ) ) {
-			return $default;
-		}
-		$v = trim( $v );
-		if ( 1 === preg_match( '/^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(0|1|0?\.\d{1,3}|1\.0{1,3})\s*\)$/', $v, $m )
-			&& (int) $m[1] <= 255 && (int) $m[2] <= 255 && (int) $m[3] <= 255 ) {
-			return $v;
-		}
-		return $default;
-	}
-
-	/** @param mixed $v @return array<string,mixed> */
-	private static function position( $v, array $default ): array {
-		$v      = array_merge( $default, is_array( $v ) ? $v : array() );
-		$x_unit = self::enum( $v['x_unit'], array( 'px', '%' ), 'px' );
-		$y_unit = self::enum( $v['y_unit'], array( 'px', '%' ), 'px' );
-		return array(
-			'anchor' => self::enum( $v['anchor'], array( 'bottom-right', 'bottom-left', 'top-right', 'top-left', 'middle-right', 'middle-left', 'custom' ), 'bottom-right' ),
-			'edge_x' => self::enum( $v['edge_x'], array( 'left', 'right' ), 'right' ),
-			'edge_y' => self::enum( $v['edge_y'], array( 'top', 'bottom' ), 'bottom' ),
-			'x'      => self::int( $v['x'], 0, '%' === $x_unit ? 100 : 10000, $default['x'] ),
-			'x_unit' => $x_unit,
-			'y'      => self::int( $v['y'], 0, '%' === $y_unit ? 100 : 10000, $default['y'] ),
-			'y_unit' => $y_unit,
-		);
 	}
 
 	/** @param mixed $v @return string[] */

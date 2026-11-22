@@ -154,9 +154,10 @@ final class Report_Submission {
 		}
 
 		try {
-			Mailer::notify( $id );
+			// Mailer (e-mail) and Webhook_Sender (webhooks) listen to it.
+			do_action( 'bugspot_report_created', $id );
 		} catch ( \Throwable $e ) {
-			// The report is stored; a failing mail hook must not turn that into an error.
+			// The report is stored; a failing notification must not turn that into an error.
 			error_log( 'Bug Spotter: notification failed: ' . $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
 		}
 		return $id;

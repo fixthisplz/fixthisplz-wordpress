@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-22T23:06:06+00:00\n"
+"POT-Creation-Date: 2026-11-22T23:44:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: bug-spotter\n"
@@ -48,7 +48,7 @@ msgstr ""
 msgid "Delete note"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:28
+#: includes/Admin/Bugs_Page.php:29
 msgid "Bugs per page"
 msgstr ""
 
@@ -90,9 +90,10 @@ msgstr ""
 
 #: includes/Admin/Bugs_Page.php:240
 #: includes/Admin/Csv_Export.php:70
-#: includes/Admin/Detail_Page.php:148
+#: includes/Admin/Detail_Page.php:149
 #: includes/Admin/List_Table.php:42
-#: includes/Report_Format.php:73
+#: includes/Report_Format.php:88
+#: includes/Webhook_Payload.php:122
 msgid "Priority"
 msgstr ""
 
@@ -117,9 +118,10 @@ msgid "Export CSV"
 msgstr ""
 
 #: includes/Admin/Bugs_Page.php:256
-#: includes/Admin/Detail_Page.php:150
+#: includes/Admin/Detail_Page.php:151
 #: includes/Admin/List_Table.php:44
-#: includes/Report_Format.php:74
+#: includes/Report_Format.php:89
+#: includes/Webhook_Payload.php:123
 msgid "Assigned to"
 msgstr ""
 
@@ -129,7 +131,8 @@ msgstr ""
 
 #: includes/Admin/Bugs_Page.php:258
 #: includes/Admin/List_Table.php:203
-#: includes/Report_Format.php:82
+#: includes/Report_Format.php:97
+#: includes/Webhook_Payload.php:123
 msgid "Unassigned"
 msgstr ""
 
@@ -154,35 +157,38 @@ msgid "Date"
 msgstr ""
 
 #: includes/Admin/Csv_Export.php:69
-#: includes/Admin/Detail_Page.php:137
-#: includes/Admin/Detail_Page.php:143
+#: includes/Admin/Detail_Page.php:138
+#: includes/Admin/Detail_Page.php:144
 #: includes/Admin/List_Table.php:43
 #: includes/Admin/Report_Context_View.php:125
 #: includes/Privacy.php:57
-#: includes/Report_Format.php:72
+#: includes/Report_Format.php:87
+#: includes/Webhook_Payload.php:121
 msgid "Status"
 msgstr ""
 
 #: includes/Admin/Csv_Export.php:71
-#: includes/Admin/Detail_Page.php:96
+#: includes/Admin/Detail_Page.php:97
 #: includes/Admin/List_Table.php:40
-#: includes/Mailer.php:152
+#: includes/Mailer.php:145
 #: includes/Privacy.php:55
+#: includes/Webhook_Payload.php:120
 msgid "Page"
 msgstr ""
 
 #: includes/Admin/Csv_Export.php:72
-#: includes/Admin/Detail_Page.php:95
+#: includes/Admin/Detail_Page.php:96
 #: includes/Admin/List_Table.php:41
 msgid "Reporter"
 msgstr ""
 
 #: includes/Admin/Csv_Export.php:73
-#: includes/Admin/Detail_Page.php:91
+#: includes/Admin/Detail_Page.php:92
 #: includes/Admin/List_Table.php:39
 #: includes/Frontend/Assets.php:178
-#: includes/Mailer.php:151
+#: includes/Mailer.php:144
 #: includes/Privacy.php:56
+#: includes/Webhook_Payload.php:119
 msgid "Description"
 msgstr ""
 
@@ -195,100 +201,101 @@ msgstr ""
 msgid "No reports found."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:76
+#: includes/Admin/Detail_Page.php:77
 #: includes/Rest/Reports_Controller.php:152
 msgid "Report not found."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:94
+#: includes/Admin/Detail_Page.php:95
 msgid "Notes and history"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:97
+#: includes/Admin/Detail_Page.php:98
 msgid "Element"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:98
+#: includes/Admin/Detail_Page.php:99
 msgid "Browser"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:99
+#: includes/Admin/Detail_Page.php:100
 #: includes/Admin/Settings_Tabs.php:261
 msgid "Console errors"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:100
+#: includes/Admin/Detail_Page.php:101
 #: includes/Admin/Settings_Tabs.php:265
 #: includes/Frontend/Assets.php:227
 msgid "Failed requests"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:101
+#: includes/Admin/Detail_Page.php:102
 #: includes/Admin/Settings_Tabs.php:98
 #: includes/Admin/Settings_Tabs.php:215
 #: includes/Frontend/Assets.php:234
-#: includes/Mailer.php:154
+#: includes/Mailer.php:147
 msgid "Screenshot"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:102
+#: includes/Admin/Detail_Page.php:103
 msgid "Raw data"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:110
+#: includes/Admin/Detail_Page.php:111
 msgid "Back to the list"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:116
+#: includes/Admin/Detail_Page.php:117
 msgid "Report updated."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:117
+#: includes/Admin/Detail_Page.php:118
 msgid "The report could not be updated."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:118
+#: includes/Admin/Detail_Page.php:119
 msgid "Note added."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:119
+#: includes/Admin/Detail_Page.php:120
 msgid "Note deleted."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:120
+#: includes/Admin/Detail_Page.php:121
 msgid "The note could not be added."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:153
+#: includes/Admin/Detail_Page.php:154
 msgid "— Unassigned —"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:155
+#: includes/Admin/Detail_Page.php:156
 msgid "Update"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:160
+#: includes/Admin/Detail_Page.php:161
 msgid "Dates"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:163
+#: includes/Admin/Detail_Page.php:164
 msgid "Created"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:164
+#: includes/Admin/Detail_Page.php:165
 #: includes/Statuses.php:31
 msgid "Seen"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:165
+#: includes/Admin/Detail_Page.php:166
+#: includes/Webhooks.php:34
 msgid "Status changed"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:166
+#: includes/Admin/Detail_Page.php:167
 msgid "Updated"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:172
+#: includes/Admin/Detail_Page.php:173
 #: includes/Admin/List_Table.php:79
 #: includes/Admin/List_Table.php:164
 #: includes/Admin/Settings_List_Tab.php:130
@@ -296,11 +303,11 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:174
+#: includes/Admin/Detail_Page.php:175
 msgid "Delete this report permanently? This cannot be undone."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:178
+#: includes/Admin/Detail_Page.php:179
 msgid "Delete this report"
 msgstr ""
 
@@ -367,7 +374,7 @@ msgid "Delete this report permanently?"
 msgstr ""
 
 #: includes/Admin/Menu.php:50
-#: includes/Admin/Settings_Page.php:71
+#: includes/Admin/Settings_Page.php:72
 msgid "Bug Spotter settings"
 msgstr ""
 
@@ -479,68 +486,76 @@ msgstr ""
 msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:58
+#: includes/Admin/Settings_Assets.php:63
 #: includes/Admin/Settings_Button_Tab.php:120
 #: includes/Admin/Settings_Button_Tab.php:126
 #: includes/Admin/Settings_Tabs.php:78
-#: includes/Settings.php:193
-#: includes/Settings.php:206
+#: includes/Settings.php:195
+#: includes/Settings.php:208
 msgid "Report a bug"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:59
+#: includes/Admin/Settings_Assets.php:64
 msgid "Choose an SVG icon"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:60
+#: includes/Admin/Settings_Assets.php:65
 msgid "Use this icon"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:61
+#: includes/Admin/Settings_Assets.php:66
 msgid "Please choose an SVG file."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:62
+#: includes/Admin/Settings_Assets.php:67
 #: includes/Admin/Settings_Button_Tab.php:290
 msgid "Button preview"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:63
+#: includes/Admin/Settings_Assets.php:68
 msgid "The preview could not be updated."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:64
+#: includes/Admin/Settings_Assets.php:69
 msgid "Loading the provider widget…"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:65
+#: includes/Admin/Settings_Assets.php:70
 msgid "Complete the check below to finish the test."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:66
+#: includes/Admin/Settings_Assets.php:71
 msgid "Checking the keys…"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:67
-#: includes/Rest/Settings_Controller.php:91
+#: includes/Admin/Settings_Assets.php:72
+#: includes/Rest/Settings_Controller.php:103
 msgid "Keys are valid."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:68
+#: includes/Admin/Settings_Assets.php:73
 msgid "The test failed."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:69
+#: includes/Admin/Settings_Assets.php:74
 msgid "The provider widget could not be loaded. Check the site key, the provider choice and your connection; reload the page before testing another Google key."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:70
+#: includes/Admin/Settings_Assets.php:75
 msgid "No answer from the check. Try again."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:71
-#: includes/Rest/Settings_Controller.php:69
+#: includes/Admin/Settings_Assets.php:76
+#: includes/Rest/Settings_Controller.php:81
 msgid "Enter the site key first."
+msgstr ""
+
+#: includes/Admin/Settings_Assets.php:77
+msgid "Sending the test…"
+msgstr ""
+
+#: includes/Admin/Settings_Assets.php:78
+msgid "The test could not be sent."
 msgstr ""
 
 #: includes/Admin/Settings_Button_Tab.php:32
@@ -797,6 +812,74 @@ msgstr ""
 msgid "Updated as you change the settings below. The frame stands for a browser window; save to apply."
 msgstr ""
 
+#: includes/Admin/Settings_Integrations_Tab.php:17
+msgid "Each new report, status change or assignment can be posted to a chat channel or to your own service. Only the addresses below are called. They receive the report number, an excerpt of the description, the page, the status, the priority, the name of the assignee and a link to the report, never the reporter’s e-mail address, IP address or screenshot."
+msgstr ""
+
+#. translators: %d: webhook number, 1 to 5.
+#: includes/Admin/Settings_Integrations_Tab.php:30
+#, php-format
+msgid "Webhook %d"
+msgstr ""
+
+#: includes/Admin/Settings_Integrations_Tab.php:34
+msgid "Address (URL)"
+msgstr ""
+
+#: includes/Admin/Settings_Integrations_Tab.php:38
+msgid "Must start with https:// (in this development environment, http://localhost and *.test addresses are also accepted). Leave empty to remove the webhook."
+msgstr ""
+
+#: includes/Admin/Settings_Integrations_Tab.php:39
+msgid "Must start with https://. Leave empty to remove the webhook."
+msgstr ""
+
+#: includes/Admin/Settings_Integrations_Tab.php:44
+msgid "Format"
+msgstr ""
+
+#: includes/Admin/Settings_Integrations_Tab.php:46
+#: includes/Admin/Settings_Integrations_Tab.php:47
+msgid "Events"
+msgstr ""
+
+#: includes/Admin/Settings_Integrations_Tab.php:55
+msgid "Active"
+msgstr ""
+
+#: includes/Admin/Settings_Integrations_Tab.php:56
+msgid "Send the events ticked above"
+msgstr ""
+
+#: includes/Admin/Settings_Integrations_Tab.php:61
+#: includes/Admin/Settings_Tabs.php:190
+msgid "Test"
+msgstr ""
+
+#: includes/Admin/Settings_Integrations_Tab.php:62
+msgid "Send a test"
+msgstr ""
+
+#: includes/Admin/Settings_Integrations_Tab.php:64
+msgid "Sends a test message to the saved address, even when the webhook is inactive. Save your changes first. Requires JavaScript."
+msgstr ""
+
+#: includes/Admin/Settings_Integrations_Tab.php:76
+msgid "Signing secret"
+msgstr ""
+
+#: includes/Admin/Settings_Integrations_Tab.php:81
+msgid "Make a new secret when saving"
+msgstr ""
+
+#: includes/Admin/Settings_Integrations_Tab.php:84
+msgid "Each request carries the header X-Bug-Spotter-Signature: sha256= followed by the HMAC-SHA256 of the raw body with this secret. Your service computes the same value to check that the request comes from this site."
+msgstr ""
+
+#: includes/Admin/Settings_Integrations_Tab.php:85
+msgid "The secret can no longer be read (the BUGSPOT_SECRET key changed): a new one is made when saving."
+msgstr ""
+
 #: includes/Admin/Settings_List_Tab.php:33
 msgid "Order"
 msgstr ""
@@ -888,7 +971,7 @@ msgid "Menu name"
 msgstr ""
 
 #: includes/Admin/Settings_Management_Tab.php:34
-#: includes/Settings.php:199
+#: includes/Settings.php:201
 msgid "Bugs"
 msgstr ""
 
@@ -897,7 +980,7 @@ msgid "List sub-menu name"
 msgstr ""
 
 #: includes/Admin/Settings_Management_Tab.php:35
-#: includes/Settings.php:201
+#: includes/Settings.php:203
 msgid "All bugs"
 msgstr ""
 
@@ -906,7 +989,7 @@ msgid "Name of one report"
 msgstr ""
 
 #: includes/Admin/Settings_Management_Tab.php:36
-#: includes/Settings.php:203
+#: includes/Settings.php:205
 msgid "Bug"
 msgstr ""
 
@@ -962,19 +1045,23 @@ msgstr ""
 msgid "Priorities"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:66
+#: includes/Admin/Settings_Page.php:56
+msgid "Integrations"
+msgstr ""
+
+#: includes/Admin/Settings_Page.php:67
 msgid "Sorry, you are not allowed to manage these settings."
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:74
+#: includes/Admin/Settings_Page.php:75
 msgid "Settings sections"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:136
+#: includes/Admin/Settings_Page.php:138
 msgid "Guests (not logged in) can send bug reports, but no anti-bot check is configured. Expect spam."
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:145
+#: includes/Admin/Settings_Page.php:147
 msgid "Configure an anti-bot provider"
 msgstr ""
 
@@ -1028,7 +1115,7 @@ msgid "Instructions"
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:83
-#: includes/Settings.php:195
+#: includes/Settings.php:197
 msgid "Describe what went wrong and what you expected to happen."
 msgstr ""
 
@@ -1037,7 +1124,7 @@ msgid "Privacy notice"
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:88
-#: includes/Settings.php:197
+#: includes/Settings.php:199
 msgid "Your report includes technical details about this page and your browser."
 msgstr ""
 
@@ -1159,10 +1246,6 @@ msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:189
 msgid "Test the keys"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:190
-msgid "Test"
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:192
@@ -1544,38 +1627,39 @@ msgid "This page cannot be reported: its address is not a web address."
 msgstr ""
 
 #. translators: 1: site name, 2: report title, such as "Bug #12".
-#: includes/Mailer.php:35
+#: includes/Mailer.php:36
 #, php-format
 msgid "[%1$s] New report: %2$s"
 msgstr ""
 
 #. translators: 1: site name, 2: report title, such as "Bug #12".
-#: includes/Mailer.php:86
+#: includes/Mailer.php:87
 #, php-format
 msgid "[%1$s] Assigned to you: %2$s"
 msgstr ""
 
 #. translators: 1: site name, 2: number of reports.
-#: includes/Mailer.php:93
+#: includes/Mailer.php:94
 #, php-format
 msgid "[%1$s] %2$d report assigned to you"
 msgid_plural "[%1$s] %2$d reports assigned to you"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/Mailer.php:94
+#: includes/Mailer.php:95
 msgid "These reports are now assigned to you:"
 msgstr ""
 
-#: includes/Mailer.php:150
+#: includes/Mailer.php:143
 msgid "Report"
 msgstr ""
 
-#: includes/Mailer.php:153
+#: includes/Mailer.php:146
 msgid "Reported by"
 msgstr ""
 
-#: includes/Mailer.php:155
+#: includes/Mailer.php:148
+#: includes/Webhook_Payload.php:137
 msgid "Open the report"
 msgstr ""
 
@@ -1647,6 +1731,7 @@ msgid "Note"
 msgstr ""
 
 #: includes/Privacy.php:131
+#: includes/Webhook_Payload.php:126
 msgid "Change"
 msgstr ""
 
@@ -1678,6 +1763,10 @@ msgstr ""
 msgid "Recipients: only the site administrators and the people they authorise to manage bug reports."
 msgstr ""
 
+#: includes/Privacy.php:183
+msgid "Webhooks: if the site administrators connect a chat or project service, it receives an excerpt of the description, the page address, the status, the priority and the name of the team member in charge, never your e-mail address, IP address or screenshot."
+msgstr ""
+
 #: includes/Report_Format.php:24
 msgid "Visitor"
 msgstr ""
@@ -1688,12 +1777,12 @@ msgstr ""
 msgid "%1$s #%2$d"
 msgstr ""
 
-#: includes/Report_Format.php:66
+#: includes/Report_Format.php:81
 msgid "System"
 msgstr ""
 
 #. translators: 1: changed field (Status, Priority or Assigned to), 2: old value, 3: new value.
-#: includes/Report_Format.php:77
+#: includes/Report_Format.php:92
 #, php-format
 msgid "%1$s: %2$s → %3$s"
 msgstr ""
@@ -1703,7 +1792,7 @@ msgid "Too many reports. Please try again later."
 msgstr ""
 
 #: includes/Report_Submission.php:80
-#: includes/Rest/Settings_Controller.php:86
+#: includes/Rest/Settings_Controller.php:98
 msgid "The anti-bot check failed."
 msgstr ""
 
@@ -1748,12 +1837,22 @@ msgstr ""
 msgid "Screenshot not found."
 msgstr ""
 
-#: includes/Rest/Settings_Controller.php:57
+#: includes/Rest/Settings_Controller.php:69
 msgid "Choose an anti-bot provider to test."
 msgstr ""
 
-#: includes/Rest/Settings_Controller.php:66
+#: includes/Rest/Settings_Controller.php:78
 msgid "The secret key is required."
+msgstr ""
+
+#: includes/Rest/Settings_Controller.php:129
+msgid "Save the webhook before testing it."
+msgstr ""
+
+#. translators: 1: HTTP status code, such as 200, 2: its reason, such as "OK".
+#: includes/Rest/Settings_Controller.php:141
+#, php-format
+msgid "The receiver answered: HTTP %1$d %2$s"
 msgstr ""
 
 #: includes/Screenshot_Store.php:113
@@ -1776,43 +1875,43 @@ msgstr ""
 msgid "%s (masked)"
 msgstr ""
 
-#: includes/Settings.php:162
+#: includes/Settings.php:164
 msgid "After Dashboard"
 msgstr ""
 
-#: includes/Settings.php:163
+#: includes/Settings.php:165
 msgid "After Posts"
 msgstr ""
 
-#: includes/Settings.php:164
+#: includes/Settings.php:166
 msgid "After Media"
 msgstr ""
 
-#: includes/Settings.php:165
+#: includes/Settings.php:167
 msgid "After Pages"
 msgstr ""
 
-#: includes/Settings.php:166
+#: includes/Settings.php:168
 msgid "After Comments"
 msgstr ""
 
-#: includes/Settings.php:167
+#: includes/Settings.php:169
 msgid "After Appearance"
 msgstr ""
 
-#: includes/Settings.php:168
+#: includes/Settings.php:170
 msgid "After Plugins"
 msgstr ""
 
-#: includes/Settings.php:169
+#: includes/Settings.php:171
 msgid "After Users"
 msgstr ""
 
-#: includes/Settings.php:170
+#: includes/Settings.php:172
 msgid "After Tools"
 msgstr ""
 
-#: includes/Settings.php:171
+#: includes/Settings.php:173
 msgid "After Settings"
 msgstr ""
 
@@ -1842,4 +1941,84 @@ msgstr ""
 
 #: includes/Team.php:39
 msgid "Deleted user"
+msgstr ""
+
+#: includes/Webhooks.php:23
+msgid "Generic JSON (signed)"
+msgstr ""
+
+#: includes/Webhooks.php:24
+msgid "Slack"
+msgstr ""
+
+#: includes/Webhooks.php:25
+msgid "Discord"
+msgstr ""
+
+#: includes/Webhooks.php:26
+msgid "Microsoft Teams"
+msgstr ""
+
+#: includes/Webhooks.php:33
+msgid "New report"
+msgstr ""
+
+#: includes/Webhooks.php:35
+msgid "Report assigned"
+msgstr ""
+
+#. translators: %s: the address typed for a webhook. The notice is printed as HTML: the address is escaped.
+#: includes/Webhooks.php:118
+#, php-format
+msgid "The webhook %s was not saved: its address must start with https:// and point to a public server (http://localhost and *.test addresses are accepted for development)."
+msgstr ""
+
+#. translators: %s: the address typed for a webhook. The notice is printed as HTML: the address is escaped.
+#: includes/Webhooks.php:120
+#, php-format
+msgid "The webhook %s was not saved: its address must start with https:// and point to a public server."
+msgstr ""
+
+#. translators: 1: number of reports, 2: name of the person they are assigned to.
+#: includes/Webhook_Payload.php:70
+#, php-format
+msgid "%1$d report assigned to %2$s"
+msgid_plural "%1$d reports assigned to %2$s"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: number of reports, 2: their new status.
+#: includes/Webhook_Payload.php:72
+#, php-format
+msgid "%1$d report: status → %2$s"
+msgid_plural "%1$d reports: status → %2$s"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: report title, such as "Bug #12".
+#: includes/Webhook_Payload.php:102
+#, php-format
+msgid "New report: %s"
+msgstr ""
+
+#. translators: %s: report title, such as "Bug #12".
+#: includes/Webhook_Payload.php:104
+#, php-format
+msgid "Status changed: %s"
+msgstr ""
+
+#. translators: %s: report title, such as "Bug #12".
+#: includes/Webhook_Payload.php:106
+#, php-format
+msgid "Report assigned: %s"
+msgstr ""
+
+#. translators: %s: site name.
+#: includes/Webhook_Payload.php:108
+#, php-format
+msgid "Test message from Bug Spotter on %s. The webhook works."
+msgstr ""
+
+#: includes/Webhook_Payload.php:144
+msgid "Open the list"
 msgstr ""

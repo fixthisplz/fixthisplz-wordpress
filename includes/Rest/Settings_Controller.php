@@ -8,10 +8,13 @@ use Bug_Spotter\Frontend\Button_Style;
 use Bug_Spotter\Report_Submission;
 use Bug_Spotter\Settings;
 use Bug_Spotter\Settings_Sanitizer;
+use Bug_Spotter\Webhook_Payload;
+use Bug_Spotter\Webhook_Sender;
+use Bug_Spotter\Webhooks;
 
 defined( 'ABSPATH' ) || exit;
 
-/** REST helpers of the settings screen (bug-spotter/v1): anti-bot key test and button preview. Nothing is saved. */
+/** REST helpers of the settings screen (bug-spotter/v1): anti-bot key test, button preview and webhook test. Nothing is saved. */
 final class Settings_Controller {
 
 	public static function register_hooks(): void {
@@ -35,6 +38,15 @@ final class Settings_Controller {
 			array(
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( self::class, 'button_preview' ),
+				'permission_callback' => array( self::class, 'can_manage_options' ),
+			)
+		);
+		register_rest_route(
+			Reports_Controller::NAMESPACE,
+			'/webhook-test',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( self::class, 'webhook_test' ),
 				'permission_callback' => array( self::class, 'can_manage_options' ),
 			)
 		);
@@ -102,6 +114,34 @@ final class Settings_Controller {
 		$button = $request->get_param( 'button' );
 		$clean  = Settings_Sanitizer::sanitize( array( 'button' => is_array( $button ) ? $button : array() ) )['button'];
 		return new \WP_REST_Response( array( 'css' => Button_Style::css( $clean ) ), 200 );
+	}
+
+	/**
+	 * Sends a test message to a saved webhook ("index": its place in the Integrations tab), even a disabled one,
+	 * and waits for the answer.
+	 *
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public static function webhook_test( \WP_REST_Request $request ) {
+		$index   = $request->get_param( 'index' );
+		$webhook = is_numeric( $index ) ? ( Webhooks::all()[ (int) $index ] ?? null ) : null;
+		if ( null === $webhook ) {
+			return Report_Submission::invalid( __( 'Save the webhook before testing it.', 'bug-spotter' ) );
+		}
+		$response = Webhook_Sender::send( $webhook, Webhook_Payload::data( 'test', null ), true );
+		if ( is_wp_error( $response ) ) {
+			return new \WP_Error( 'bugspot_webhook_failed', $response->get_error_message(), array( 'status' => 502 ) );
+		}
+		$code = (int) wp_remote_retrieve_response_code( $response );
+		return new \WP_REST_Response(
+			array(
+				'ok'      => $code >= 200 && $code < 300,
+				'code'    => $code,
+				/* translators: 1: HTTP status code, such as 200, 2: its reason, such as "OK". */
+				'message' => sprintf( __( 'The receiver answered: HTTP %1$d %2$s', 'bug-spotter' ), $code, wp_remote_retrieve_response_message( $response ) ),
+			),
+			200
+		);
 	}
 
 	private static function string_param( \WP_REST_Request $request, string $key ): string {

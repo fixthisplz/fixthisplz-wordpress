@@ -135,6 +135,8 @@ final class Settings {
 				array( 'key' => 'high', 'label' => '', 'color' => '#b26200' ),
 				array( 'key' => 'critical', 'label' => '', 'color' => '#d63638' ),
 			),
+			// Rows of Webhooks::sanitize(), at most Webhooks::MAX.
+			'webhooks'      => array(),
 		);
 	}
 

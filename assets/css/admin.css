@@ -74,3 +74,5 @@
 .bugspot-detail .bugspot-entry p{margin:0 0 4px}
 .bugspot-detail .bugspot-note-text{word-break:break-word;margin-bottom:4px}
 .bugspot-admin .column-assigned{width:130px}
+.bugspot-webhook{max-width:900px;margin:0 0 16px;padding:0 16px;border:1px solid #c3c4c7;background:#fff}
+.bugspot-webhook>legend{padding:0 6px;font-weight:600;font-size:14px}

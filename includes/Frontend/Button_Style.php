@@ -2,12 +2,12 @@
 
 namespace Bug_Spotter\Frontend;
 
-use Bug_Spotter\Settings_Sanitizer;
+use Bug_Spotter\Button_Sanitizer;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CSS of the floating button. The settings are validated again here, by the same Settings_Sanitizer::validate_button()
+ * CSS of the floating button. The settings are validated again here, by the same Button_Sanitizer::validate()
  * as a save: nothing user-supplied reaches the output unchecked, and this class only formats.
  */
 final class Button_Style {
@@ -37,7 +37,7 @@ final class Button_Style {
 
 	/** @param array<string,mixed> $button The "button" block of the settings (possibly partial or untrusted). */
 	public static function css( array $button, bool $hide_on_mobile = false ): string {
-		$b      = Settings_Sanitizer::validate_button( $button );
+		$b      = Button_Sanitizer::validate( $button );
 		$size   = self::SIZES[ $b['size'] ];
 		$radius = 'custom' === $b['radius_mode'] ? $b['radius_px'] . 'px' : self::RADII[ $b['shape'] ];
 		$media  = '@media ' . self::MOBILE_QUERY;

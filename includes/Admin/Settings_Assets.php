@@ -32,6 +32,10 @@ final class Settings_Assets {
 			wp_enqueue_script( 'bug-spotter-lists', BUGSPOT_URL . 'assets/js/admin-lists.js', array( 'jquery', 'jquery-ui-sortable', 'wp-color-picker' ), BUGSPOT_VERSION, true );
 		}
 
+		if ( 'integrations' === Settings_Page::current_tab() ) {
+			wp_enqueue_script( 'bug-spotter-webhooks', BUGSPOT_URL . 'assets/js/admin-webhooks.js', array( 'jquery', 'wp-api-fetch', self::SCRIPT ), BUGSPOT_VERSION, true );
+		}
+
 		$script_urls = array();
 		foreach ( Factory::PROVIDERS as $provider ) {
 			// "{siteKey}" is replaced in the browser by the typed key (only reCAPTCHA v3 puts it in the URL).
@@ -50,6 +54,7 @@ final class Settings_Assets {
 				'option'       => Settings::OPTION,
 				'previewPath'  => '/' . Reports_Controller::NAMESPACE . '/button-preview',
 				'testPath'     => '/' . Reports_Controller::NAMESPACE . '/captcha-test',
+				'webhookPath'  => '/' . Reports_Controller::NAMESPACE . '/webhook-test',
 				'captchaUrl'   => BUGSPOT_URL . 'assets/js/lib/captcha.js?ver=' . rawurlencode( BUGSPOT_VERSION ),
 				'scriptUrls'   => $script_urls,
 				'frontCss'     => BUGSPOT_URL . 'assets/css/front.css?ver=' . rawurlencode( BUGSPOT_VERSION ),
@@ -69,6 +74,8 @@ final class Settings_Assets {
 					'testNoWidget' => __( 'The provider widget could not be loaded. Check the site key, the provider choice and your connection; reload the page before testing another Google key.', 'bug-spotter' ),
 					'testTimeout'  => __( 'No answer from the check. Try again.', 'bug-spotter' ),
 					'testNeedKey'  => __( 'Enter the site key first.', 'bug-spotter' ),
+					'hookSending'  => __( 'Sending the test…', 'bug-spotter' ),
+					'hookFailed'   => __( 'The test could not be sent.', 'bug-spotter' ),
 				),
 			)
 		);

@@ -8,6 +8,7 @@ use Bug_Spotter\Priorities;
 use Bug_Spotter\Reports_Repository;
 use Bug_Spotter\Settings;
 use Bug_Spotter\Team;
+use Bug_Spotter\Webhook_Sender;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -72,14 +73,13 @@ final class Bugs_Page {
 		if ( null === $fields ) {
 			return array( '', 0 );
 		}
-		// Only real changes count; each new assignee gets one e-mail for all their reports.
-		Mailer::batch_assignments(
-			static function () use ( $repo, $ids, $fields, &$count ): void {
-				foreach ( $ids as $id ) {
-					$count += $repo->update( $id, $fields ) ? 1 : 0;
-				}
+		// Only real changes count; each new assignee gets one e-mail for all their reports, each chat webhook one message.
+		$update = static function () use ( $repo, $ids, $fields, &$count ): void {
+			foreach ( $ids as $id ) {
+				$count += $repo->update( $id, $fields ) ? 1 : 0;
 			}
-		);
+		};
+		Webhook_Sender::batch( static fn() => Mailer::batch_assignments( $update ) );
 		return array( $count > 0 ? 'updated' : '', $count );
 	}
 

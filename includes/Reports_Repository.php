@@ -57,8 +57,9 @@ final class Reports_Repository {
 	}
 
 	/**
-	 * Applies the changes Report_Changes::from() accepts; each one is recorded in the history under the current user,
-	 * and a new assignee fires `bugspot_report_assigned` ($id, assignee ID, ID of the user who assigned).
+	 * Applies the changes Report_Changes::from() accepts; each one is recorded in the history under the current user.
+	 * Every real change fires `bugspot_report_changed` ($id, the changes, ID of the user), and a new assignee also
+	 * `bugspot_report_assigned` ($id, assignee ID, ID of the user who assigned).
 	 *
 	 * @param array|null $current The full row find() returned for $id (seen_at is read), when the caller already has it;
 	 *                           never a light query() / find_many() row.
@@ -89,13 +90,14 @@ final class Reports_Repository {
 
 		$user = get_current_user_id();
 		Activity::record_changes( $id, $changes, $user );
+		do_action( 'bugspot_report_changed', $id, $changes, $user );
 		if ( null !== ( $changes['assigned_to'][1] ?? null ) ) {
 			do_action( 'bugspot_report_assigned', $id, (int) $changes['assigned_to'][1], $user );
 		}
 		return $changes;
 	}
 
-	/** `new` -> `seen` only, recorded in the history; atomic so two simultaneous opens cannot both transition. */
+	/** `new` -> `seen` only, recorded in the history and fired as `bugspot_report_changed` like update(); atomic so two simultaneous opens cannot both transition. */
 	public function mark_seen( int $id ): bool {
 		global $wpdb;
 		$now   = self::now();
@@ -112,7 +114,10 @@ final class Reports_Repository {
 		if ( ! is_int( $rows ) || $rows < 1 ) {
 			return false;
 		}
-		Activity::record_changes( $id, array( 'status' => array( 'new', 'seen' ) ), get_current_user_id() );
+		$changes = array( 'status' => array( 'new', 'seen' ) );
+		$user    = get_current_user_id();
+		Activity::record_changes( $id, $changes, $user );
+		do_action( 'bugspot_report_changed', $id, $changes, $user );
 		return true;
 	}
 

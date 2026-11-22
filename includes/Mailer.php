@@ -13,6 +13,7 @@ final class Mailer {
 	private static ?array $batch = null;
 
 	public static function register_hooks(): void {
+		add_action( 'bugspot_report_created', array( self::class, 'notify' ) );
 		add_action( 'bugspot_report_assigned', array( self::class, 'on_assigned' ), 10, 3 );
 	}
 
@@ -32,7 +33,7 @@ final class Mailer {
 		}
 
 		/* translators: 1: site name, 2: report title, such as "Bug #12". */
-		$subject = sprintf( __( '[%1$s] New report: %2$s', 'bug-spotter' ), self::blogname(), Report_Format::title( $report_id ) );
+		$subject = sprintf( __( '[%1$s] New report: %2$s', 'bug-spotter' ), Report_Format::site_name(), Report_Format::title( $report_id ) );
 
 		$attachments = array();
 		if ( ! empty( $notifications['attach_screenshot'] ) && is_string( $report['screenshot'] ?? null ) ) {
@@ -83,30 +84,22 @@ final class Mailer {
 				return false;
 			}
 			/* translators: 1: site name, 2: report title, such as "Bug #12". */
-			$subject = sprintf( __( '[%1$s] Assigned to you: %2$s', 'bug-spotter' ), self::blogname(), Report_Format::title( $report_ids[0] ) );
+			$subject = sprintf( __( '[%1$s] Assigned to you: %2$s', 'bug-spotter' ), Report_Format::site_name(), Report_Format::title( $report_ids[0] ) );
 			$values  = self::values( $report_ids[0], $report );
 			return self::send( array( $user->user_email ), $subject, self::build_html( $values ), self::build_text( $values ), array() );
 		}
 
 		$count = count( $report_ids );
 		/* translators: 1: site name, 2: number of reports. */
-		$subject = sprintf( _n( '[%1$s] %2$d report assigned to you', '[%1$s] %2$d reports assigned to you', $count, 'bug-spotter' ), self::blogname(), $count );
+		$subject = sprintf( _n( '[%1$s] %2$d report assigned to you', '[%1$s] %2$d reports assigned to you', $count, 'bug-spotter' ), Report_Format::site_name(), $count );
 		$intro   = __( 'These reports are now assigned to you:', 'bug-spotter' );
 		$html    = '<p>' . esc_html( $intro ) . '</p><ul>';
 		$text    = $intro . "\n";
 		foreach ( $report_ids as $id ) {
-			$html .= '<li><a href="' . esc_url( self::link( $id ) ) . '">' . esc_html( Report_Format::title( $id ) ) . '</a></li>';
-			$text .= '- ' . Report_Format::title( $id ) . ': ' . self::link( $id ) . "\n";
+			$html .= '<li><a href="' . esc_url( Report_Format::link( $id ) ) . '">' . esc_html( Report_Format::title( $id ) ) . '</a></li>';
+			$text .= '- ' . Report_Format::title( $id ) . ': ' . Report_Format::link( $id ) . "\n";
 		}
 		return self::send( array( $user->user_email ), $subject, $html . '</ul>', $text, array() );
-	}
-
-	private static function link( int $report_id ): string {
-		return admin_url( 'admin.php?page=bug-spotter&report=' . $report_id );
-	}
-
-	private static function blogname(): string {
-		return wp_specialchars_decode( (string) get_option( 'blogname' ), ENT_QUOTES );
 	}
 
 	/**
@@ -140,7 +133,7 @@ final class Mailer {
 			'page'        => (string) $report['page_url'],
 			'reporter'    => Report_Format::reporter_label( $report ),
 			'screenshot'  => ! empty( $report['screenshot'] ) ? Screenshot_Store::capture_label( $report['context'] ) : '',
-			'link'        => self::link( $report_id ),
+			'link'        => Report_Format::link( $report_id ),
 		);
 	}
 

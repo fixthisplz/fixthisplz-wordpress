@@ -53,6 +53,7 @@ final class Settings_Page {
 			'management'    => __( 'Management', 'bug-spotter' ),
 			'statuses'      => __( 'Statuses', 'bug-spotter' ),
 			'priorities'    => __( 'Priorities', 'bug-spotter' ),
+			'integrations'  => __( 'Integrations', 'bug-spotter' ),
 		);
 	}
 
@@ -113,6 +114,7 @@ final class Settings_Page {
 			'management'    => Settings_Management_Tab::render( $s ),
 			'statuses'      => Settings_List_Tab::render( Statuses::class, $s ),
 			'priorities'    => Settings_List_Tab::render( Priorities::class, $s ),
+			'integrations'  => Settings_Integrations_Tab::render(),
 		};
 		submit_button();
 		echo '</form>';
