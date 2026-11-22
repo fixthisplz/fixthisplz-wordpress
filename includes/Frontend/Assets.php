@@ -187,6 +187,8 @@ final class Assets {
 			'toolRectangle'      => __( 'Rectangle', 'bug-spotter' ),
 			'toolArrow'          => __( 'Arrow', 'bug-spotter' ),
 			'toolHide'           => __( 'Hide', 'bug-spotter' ),
+			'toolSelect'         => __( 'Select', 'bug-spotter' ),
+			'deleteShape'        => __( 'Delete', 'bug-spotter' ),
 			'undoShape'          => __( 'Undo last', 'bug-spotter' ),
 			'clearShapes'        => __( 'Clear all', 'bug-spotter' ),
 			'applyAnnotations'   => __( 'Apply', 'bug-spotter' ),

@@ -72,6 +72,7 @@
 #bugspot-annotator .bugspot-annot-stage{position:relative;flex:1 1 auto;min-height:0;background:var(--bugspot-surface)}
 #bugspot-annotator .bugspot-annot-fit{position:absolute;inset:12px;display:flex;align-items:center;justify-content:center}
 #bugspot-annotator .bugspot-annot-canvas{display:block;max-width:none;box-shadow:0 0 0 1px var(--bugspot-border);touch-action:none;cursor:crosshair;user-select:none;-webkit-user-select:none}
+#bugspot-annotator .bugspot-annot-canvas[data-tool="select"]{cursor:default}
 @media (max-width:600px){
 	#bugspot-annotator .bugspot-annot-bar{padding:8px}
 	#bugspot-annotator .bugspot-annot-actions .bugspot-btn{flex:1 1 auto}

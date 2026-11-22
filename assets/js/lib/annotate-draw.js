@@ -8,6 +8,13 @@ export const ANNOTATION_COLOR = '#e0161b';
 const LINE_RATIO = 300;
 const HEAD_RATIO = 4; // arrow head length, in line widths
 const HEAD_ANGLE = Math.PI / 6;
+// Selection overlay (editor only), in CSS pixels: converted with the native-per-CSS scale so it looks the same at any zoom.
+const SELECTION_COLOR = '#1d4ed8';
+const SELECTION_PAD = 4;
+const SELECTION_DASH = 6;
+const HANDLE_SIZE = 10;
+const RECT_CORNERS = [['x1', 'y1'], ['x2', 'y1'], ['x2', 'y2'], ['x1', 'y2']];
+const ARROW_ENDS = [['x1', 'y1'], ['x2', 'y2']];
 
 const clamp = (value, max) => Math.min(Math.max(value, 0), max);
 
@@ -33,6 +40,11 @@ export function toNative(clientX, clientY, rect, width, height) {
 /** Rectangle of a shape whatever the drag direction. */
 export function normalizeRect({ x1, y1, x2, y2 }) {
 	return { x: Math.min(x1, x2), y: Math.min(y1, y2), width: Math.abs(x2 - x1), height: Math.abs(y2 - y1) };
+}
+
+/** Handles of a shape: its 4 corners (rectangle, hidden area) or its 2 ends (arrow), each naming the coordinates it moves. */
+export function handles(shape) {
+	return (shape.type === 'arrow' ? ARROW_ENDS : RECT_CORNERS).map(([xKey, yKey]) => ({ xKey, yKey, x: shape[xKey], y: shape[yKey] }));
 }
 
 /** True for an accidental shape: an arrow shorter than min, a rectangle thinner than min on either side. */
@@ -87,5 +99,28 @@ export function drawShapes(ctx, shapes, width, height) {
 	ctx.lineJoin = 'miter';
 	for (const shape of shapes) {
 		DRAW[shape.type](ctx, shape);
+	}
+}
+
+/**
+ * Paints the editor's selection overlay (dashed box and handles) of one shape. Kept out of drawShapes() so it is never
+ * part of the image sent. scale: native pixels per CSS pixel of the displayed canvas.
+ */
+export function drawSelection(ctx, shape, scale) {
+	const { x, y, width, height } = normalizeRect(shape);
+	const pad = SELECTION_PAD * scale;
+	const box = [x - pad, y - pad, width + 2 * pad, height + 2 * pad];
+	const size = HANDLE_SIZE * scale;
+	ctx.lineWidth = 1.5 * scale;
+	ctx.strokeStyle = '#ffffff'; // under the dashes, so the box shows on dark and light screenshots alike
+	ctx.strokeRect(...box);
+	ctx.setLineDash([SELECTION_DASH * scale, SELECTION_DASH * scale]);
+	ctx.strokeStyle = SELECTION_COLOR;
+	ctx.strokeRect(...box);
+	ctx.setLineDash([]);
+	ctx.fillStyle = '#ffffff';
+	for (const handle of handles(shape)) {
+		ctx.fillRect(handle.x - size / 2, handle.y - size / 2, size, size);
+		ctx.strokeRect(handle.x - size / 2, handle.y - size / 2, size, size);
 	}
 }

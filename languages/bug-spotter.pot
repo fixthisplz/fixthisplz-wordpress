@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-20T15:09:27+00:00\n"
+"POT-Creation-Date: 2026-11-20T15:44:50+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: bug-spotter\n"
@@ -139,7 +139,7 @@ msgstr ""
 #: includes/Admin/Csv_Export.php:75
 #: includes/Admin/Detail_Page.php:98
 #: includes/Admin/List_Table.php:37
-#: includes/Frontend/Assets.php:156
+#: includes/Frontend/Assets.php:178
 #: includes/Mailer.php:75
 #: includes/Privacy.php:47
 msgid "Description"
@@ -171,14 +171,14 @@ msgstr ""
 
 #: includes/Admin/Detail_Page.php:106
 #: includes/Admin/Settings_Tabs.php:265
-#: includes/Frontend/Assets.php:190
+#: includes/Frontend/Assets.php:214
 msgid "Failed requests"
 msgstr ""
 
 #: includes/Admin/Detail_Page.php:107
 #: includes/Admin/Settings_Tabs.php:98
 #: includes/Admin/Settings_Tabs.php:215
-#: includes/Frontend/Assets.php:197
+#: includes/Frontend/Assets.php:221
 #: includes/Mailer.php:78
 msgid "Screenshot"
 msgstr ""
@@ -327,6 +327,7 @@ msgstr ""
 #: includes/Admin/List_Table.php:71
 #: includes/Admin/List_Table.php:155
 #: includes/Admin/Settings_Statuses_Tab.php:97
+#: includes/Frontend/Assets.php:191
 msgid "Delete"
 msgstr ""
 
@@ -397,7 +398,7 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:47
+#: includes/Admin/Settings_Assets.php:58
 #: includes/Admin/Settings_Button_Tab.php:120
 #: includes/Admin/Settings_Button_Tab.php:126
 #: includes/Admin/Settings_Tabs.php:78
@@ -406,57 +407,57 @@ msgstr ""
 msgid "Report a bug"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:48
+#: includes/Admin/Settings_Assets.php:59
 msgid "Choose an SVG icon"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:49
+#: includes/Admin/Settings_Assets.php:60
 msgid "Use this icon"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:50
+#: includes/Admin/Settings_Assets.php:61
 msgid "Please choose an SVG file."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:51
+#: includes/Admin/Settings_Assets.php:62
 #: includes/Admin/Settings_Button_Tab.php:290
 msgid "Button preview"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:52
+#: includes/Admin/Settings_Assets.php:63
 msgid "The preview could not be updated."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:53
+#: includes/Admin/Settings_Assets.php:64
 msgid "Loading the provider widget…"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:54
+#: includes/Admin/Settings_Assets.php:65
 msgid "Complete the check below to finish the test."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:55
+#: includes/Admin/Settings_Assets.php:66
 msgid "Checking the keys…"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:56
+#: includes/Admin/Settings_Assets.php:67
 #: includes/Rest/Settings_Controller.php:91
 msgid "Keys are valid."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:57
+#: includes/Admin/Settings_Assets.php:68
 msgid "The test failed."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:58
+#: includes/Admin/Settings_Assets.php:69
 msgid "The provider widget could not be loaded. Check the site key, the provider choice and your connection; reload the page before testing another Google key."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:59
+#: includes/Admin/Settings_Assets.php:70
 msgid "No answer from the check. Try again."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:60
+#: includes/Admin/Settings_Assets.php:71
 #: includes/Rest/Settings_Controller.php:69
 msgid "Enter the site key first."
 msgstr ""
@@ -520,7 +521,7 @@ msgid "Choose an SVG"
 msgstr ""
 
 #: includes/Admin/Settings_Button_Tab.php:111
-#: includes/Frontend/Assets.php:162
+#: includes/Frontend/Assets.php:184
 msgid "Remove"
 msgstr ""
 
@@ -966,7 +967,7 @@ msgid "On a real capture, masking applies only when the visitor shares this tab.
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:117
-#: includes/Frontend/Assets.php:188
+#: includes/Frontend/Assets.php:212
 #: includes/Privacy.php:51
 msgid "Contact e-mail"
 msgstr ""
@@ -1160,228 +1161,229 @@ msgstr ""
 msgid "The report context needs a valid http(s) URL."
 msgstr ""
 
-#: includes/Frontend/Assets.php:146
+#: includes/Frontend/Assets.php:168
 msgid "Loading…"
 msgstr ""
 
-#: includes/Frontend/Assets.php:147
+#: includes/Frontend/Assets.php:169
 msgid "Close"
 msgstr ""
 
-#: includes/Frontend/Assets.php:148
+#: includes/Frontend/Assets.php:170
 msgid "Cancel"
 msgstr ""
 
-#: includes/Frontend/Assets.php:149
+#: includes/Frontend/Assets.php:171
 msgid "Submit"
 msgstr ""
 
-#: includes/Frontend/Assets.php:150
+#: includes/Frontend/Assets.php:172
 msgid "Sending…"
 msgstr ""
 
-#: includes/Frontend/Assets.php:151
+#: includes/Frontend/Assets.php:173
 msgid "Whole page"
 msgstr ""
 
-#: includes/Frontend/Assets.php:152
+#: includes/Frontend/Assets.php:174
+#: includes/Frontend/Assets.php:190
 msgid "Select"
 msgstr ""
 
-#: includes/Frontend/Assets.php:153
+#: includes/Frontend/Assets.php:175
 msgid "Click the element that has a problem, or choose \"Whole page\". Press Escape to cancel."
 msgstr ""
 
-#: includes/Frontend/Assets.php:154
+#: includes/Frontend/Assets.php:176
 msgid "Change element"
 msgstr ""
 
-#: includes/Frontend/Assets.php:155
+#: includes/Frontend/Assets.php:177
 msgid "Selected element"
 msgstr ""
 
-#: includes/Frontend/Assets.php:157
+#: includes/Frontend/Assets.php:179
 msgid "What went wrong?"
 msgstr ""
 
-#: includes/Frontend/Assets.php:158
+#: includes/Frontend/Assets.php:180
 msgid "Please describe the problem."
 msgstr ""
 
-#: includes/Frontend/Assets.php:159
+#: includes/Frontend/Assets.php:181
 msgid "Your e-mail (optional)"
 msgstr ""
 
-#: includes/Frontend/Assets.php:160
+#: includes/Frontend/Assets.php:182
 msgid "Attach a screenshot"
 msgstr ""
 
-#: includes/Frontend/Assets.php:161
+#: includes/Frontend/Assets.php:183
 msgid "Screenshot preview"
 msgstr ""
 
-#: includes/Frontend/Assets.php:163
+#: includes/Frontend/Assets.php:185
 msgid "Retake"
 msgstr ""
 
-#: includes/Frontend/Assets.php:164
+#: includes/Frontend/Assets.php:186
 msgid "Annotate"
 msgstr ""
 
-#: includes/Frontend/Assets.php:165
+#: includes/Frontend/Assets.php:187
 msgid "Rectangle"
 msgstr ""
 
-#: includes/Frontend/Assets.php:166
+#: includes/Frontend/Assets.php:188
 msgid "Arrow"
 msgstr ""
 
-#: includes/Frontend/Assets.php:167
+#: includes/Frontend/Assets.php:189
 msgid "Hide"
 msgstr ""
 
-#: includes/Frontend/Assets.php:168
+#: includes/Frontend/Assets.php:192
 msgid "Undo last"
 msgstr ""
 
-#: includes/Frontend/Assets.php:169
+#: includes/Frontend/Assets.php:193
 msgid "Clear all"
 msgstr ""
 
-#: includes/Frontend/Assets.php:170
+#: includes/Frontend/Assets.php:194
 msgid "Apply"
 msgstr ""
 
-#: includes/Frontend/Assets.php:171
+#: includes/Frontend/Assets.php:195
 msgid "The annotations could not be applied."
 msgstr ""
 
-#: includes/Frontend/Assets.php:172
+#: includes/Frontend/Assets.php:196
 msgid "Technical details sent with your report"
 msgstr ""
 
-#: includes/Frontend/Assets.php:173
+#: includes/Frontend/Assets.php:197
 msgid "Privacy policy"
 msgstr ""
 
-#: includes/Frontend/Assets.php:174
+#: includes/Frontend/Assets.php:198
 msgid "Report sent"
 msgstr ""
 
 #. translators: %s: report number, for example #42.
-#: includes/Frontend/Assets.php:176
+#: includes/Frontend/Assets.php:200
 #, php-format
 msgid "Report %s sent."
 msgstr ""
 
-#: includes/Frontend/Assets.php:177
+#: includes/Frontend/Assets.php:201
 msgid "Download"
 msgstr ""
 
-#: includes/Frontend/Assets.php:178
+#: includes/Frontend/Assets.php:202
 msgid "Download the screenshot"
 msgstr ""
 
-#: includes/Frontend/Assets.php:179
+#: includes/Frontend/Assets.php:203
 msgid "Done"
 msgstr ""
 
-#: includes/Frontend/Assets.php:180
+#: includes/Frontend/Assets.php:204
 msgid "The report could not be sent. Your text was kept; you can try again or download it."
 msgstr ""
 
-#: includes/Frontend/Assets.php:181
+#: includes/Frontend/Assets.php:205
 msgid "Too many reports in a short time. Please try again later."
 msgstr ""
 
-#: includes/Frontend/Assets.php:182
+#: includes/Frontend/Assets.php:206
 #: includes/Report_Submission.php:66
 msgid "You are not allowed to send bug reports."
 msgstr ""
 
-#: includes/Frontend/Assets.php:183
+#: includes/Frontend/Assets.php:207
 msgid "The anti-spam check failed. Please try again."
 msgstr ""
 
-#: includes/Frontend/Assets.php:184
+#: includes/Frontend/Assets.php:208
 msgid "The bug reporter could not be loaded."
 msgstr ""
 
 #. translators: %s: short description of the highlighted element, for example "button – Send".
-#: includes/Frontend/Assets.php:186
+#: includes/Frontend/Assets.php:210
 #, php-format
 msgid "Highlighted: %s. Press Enter to select it, or the Up arrow for its parent."
 msgstr ""
 
-#: includes/Frontend/Assets.php:187
+#: includes/Frontend/Assets.php:211
 msgid "Bug report"
 msgstr ""
 
-#: includes/Frontend/Assets.php:189
+#: includes/Frontend/Assets.php:213
 msgid "Console"
 msgstr ""
 
-#: includes/Frontend/Assets.php:191
+#: includes/Frontend/Assets.php:215
 msgid "Generated at"
 msgstr ""
 
-#: includes/Frontend/Assets.php:192
+#: includes/Frontend/Assets.php:216
 msgid "Taking the screenshot…"
 msgstr ""
 
-#: includes/Frontend/Assets.php:193
+#: includes/Frontend/Assets.php:217
 msgid "Please enter a valid e-mail address, or leave the field empty."
 msgstr ""
 
-#: includes/Frontend/Assets.php:194
+#: includes/Frontend/Assets.php:218
 #: includes/Screenshot_Store.php:136
 msgid "Real capture"
 msgstr ""
 
-#: includes/Frontend/Assets.php:195
+#: includes/Frontend/Assets.php:219
 #: includes/Screenshot_Store.php:136
 msgid "Page reconstruction"
 msgstr ""
 
-#: includes/Frontend/Assets.php:196
+#: includes/Frontend/Assets.php:220
 msgid "masked"
 msgstr ""
 
-#: includes/Frontend/Assets.php:198
+#: includes/Frontend/Assets.php:222
 msgid "The screenshot could not be taken. You can send the report without it."
 msgstr ""
 
-#: includes/Frontend/Assets.php:199
+#: includes/Frontend/Assets.php:223
 msgid "Screenshot cancelled: you can send the report without a screenshot."
 msgstr ""
 
 #. translators: %s: maximum screenshot size in megabytes, for example "5".
-#: includes/Frontend/Assets.php:202
+#: includes/Frontend/Assets.php:226
 #, php-format
 msgid "The screenshot is too large (%s MB maximum). You can send the report without it."
 msgstr ""
 
-#: includes/Frontend/Assets.php:205
+#: includes/Frontend/Assets.php:229
 msgid "The screenshot is too large to be sent. Remove it or retake it, then try again."
 msgstr ""
 
-#: includes/Frontend/Assets.php:206
+#: includes/Frontend/Assets.php:230
 msgid "The report was refused. Please check the form and try again."
 msgstr ""
 
-#: includes/Frontend/Assets.php:207
+#: includes/Frontend/Assets.php:231
 msgid "Bug reporting is currently disabled on this site."
 msgstr ""
 
-#: includes/Frontend/Assets.php:208
+#: includes/Frontend/Assets.php:232
 msgid "The anti-spam check is unavailable right now. Please try again later."
 msgstr ""
 
-#: includes/Frontend/Assets.php:209
+#: includes/Frontend/Assets.php:233
 msgid "Please complete the anti-spam check."
 msgstr ""
 
-#: includes/Frontend/Assets.php:210
+#: includes/Frontend/Assets.php:234
 msgid "This page cannot be reported: its address is not a web address."
 msgstr ""
 

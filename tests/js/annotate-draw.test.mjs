@@ -1,13 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { ANNOTATION_COLOR, arrowHead, drawShapes, fitSize, isTiny, lineWidthFor, normalizeRect, toNative } from '../../assets/js/lib/annotate-draw.js';
+import { ANNOTATION_COLOR, arrowHead, drawSelection, drawShapes, fitSize, handles, isTiny, lineWidthFor, normalizeRect, toNative } from '../../assets/js/lib/annotate-draw.js';
 import { MASK_FILL } from '../../assets/js/lib/sensitive.js';
 
 /** Records every call and property set, with the colour and width in force at that moment. */
 function recordingContext() {
 	const calls = [];
 	const ctx = { calls, lineWidth: 1, strokeStyle: '', fillStyle: '', lineJoin: '' };
-	for (const name of ['strokeRect', 'fillRect', 'beginPath', 'moveTo', 'lineTo', 'closePath', 'stroke', 'fill']) {
+	for (const name of ['strokeRect', 'fillRect', 'beginPath', 'moveTo', 'lineTo', 'closePath', 'stroke', 'fill', 'setLineDash']) {
 		ctx[name] = (...args) => calls.push({ name, args, strokeStyle: ctx.strokeStyle, fillStyle: ctx.fillStyle, lineWidth: ctx.lineWidth });
 	}
 	return ctx;
@@ -93,4 +93,34 @@ test('drawShapes with no shape draws nothing', () => {
 	const ctx = recordingContext();
 	drawShapes(ctx, [], 800, 600);
 	assert.equal(ctx.calls.length, 0);
+});
+
+test('handles are the 4 corners of a rectangle or hidden area and the 2 ends of an arrow', () => {
+	const corners = handles({ type: 'mask', x1: 10, y1: 20, x2: 50, y2: 60 }).map(({ x, y }) => [x, y]);
+	assert.deepEqual(corners, [[10, 20], [50, 20], [50, 60], [10, 60]]);
+	const ends = handles({ type: 'arrow', x1: 1, y1: 2, x2: 3, y2: 4 });
+	assert.deepEqual(ends, [{ xKey: 'x1', yKey: 'y1', x: 1, y: 2 }, { xKey: 'x2', yKey: 'y2', x: 3, y: 4 }]);
+});
+
+test('the selection overlay (dashes, handles) is never part of drawShapes, which is what Apply encodes', () => {
+	const shapes = [{ type: 'rect', x1: 10, y1: 10, x2: 90, y2: 90 }, { type: 'arrow', x1: 0, y1: 0, x2: 300, y2: 0 }];
+	const ctx = recordingContext();
+	drawShapes(ctx, shapes, 1920, 1080);
+	assert.ok(ctx.calls.every((c) => c.name !== 'setLineDash'));
+	assert.equal(ctx.calls.filter((c) => c.name === 'strokeRect' || c.name === 'fillRect').length, 1, 'only the red rectangle');
+});
+
+test('drawSelection draws a dashed box around the shape and one handle per corner, sized in CSS pixels', () => {
+	const ctx = recordingContext();
+	drawSelection(ctx, { type: 'rect', x1: 100, y1: 100, x2: 20, y2: 40 }, 2);
+	const boxes = ctx.calls.filter((c) => c.name === 'strokeRect').slice(0, 2);
+	assert.deepEqual(boxes.map((c) => c.args), [[12, 32, 96, 76], [12, 32, 96, 76]], 'padded by 4 CSS px (8 native px)');
+	assert.deepEqual(ctx.calls.find((c) => c.name === 'setLineDash').args, [[12, 12]]);
+	assert.deepEqual(ctx.calls.at(-1).name, 'strokeRect');
+	assert.equal(ctx.calls.filter((c) => c.name === 'fillRect').length, 4);
+	assert.deepEqual(ctx.calls.find((c) => c.name === 'fillRect').args, [90, 90, 20, 20], 'a 10 CSS px square centred on (100, 100)');
+	const arrow = recordingContext();
+	drawSelection(arrow, { type: 'arrow', x1: 0, y1: 0, x2: 100, y2: 0 }, 1);
+	assert.equal(arrow.calls.filter((c) => c.name === 'fillRect').length, 2, 'two end handles for an arrow');
+	assert.deepEqual(arrow.calls.filter((c) => c.name === 'setLineDash').at(-1).args, [[]], 'dashes reset for the next drawing');
 });
