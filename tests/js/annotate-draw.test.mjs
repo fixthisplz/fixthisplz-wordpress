@@ -1,13 +1,16 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { ANNOTATION_COLOR, arrowHead, drawSelection, drawShapes, fitSize, handles, isTiny, lineWidthFor, normalizeRect, toNative } from '../../assets/js/lib/annotate-draw.js';
+import { drawSelection, drawShapes, fitSize, lineWidthFor, toNative } from '../../assets/js/lib/annotate-draw.js';
+import { ANNOTATION_COLOR, normalizeRect } from '../../assets/js/lib/annotate-common.js';
+import { arrowHead } from '../../assets/js/lib/annotate-boxes.js';
+import { handles, isTiny } from '../../assets/js/lib/annotate-shapes.js';
 import { MASK_FILL } from '../../assets/js/lib/sensitive.js';
 
 /** Records every call and property set, with the colour and width in force at that moment. */
 function recordingContext() {
 	const calls = [];
 	const ctx = { calls, lineWidth: 1, strokeStyle: '', fillStyle: '', lineJoin: '' };
-	for (const name of ['strokeRect', 'fillRect', 'beginPath', 'moveTo', 'lineTo', 'closePath', 'stroke', 'fill', 'setLineDash']) {
+	for (const name of ['strokeRect', 'fillRect', 'beginPath', 'moveTo', 'lineTo', 'quadraticCurveTo', 'closePath', 'stroke', 'fill', 'setLineDash', 'save', 'restore']) {
 		ctx[name] = (...args) => calls.push({ name, args, strokeStyle: ctx.strokeStyle, fillStyle: ctx.fillStyle, lineWidth: ctx.lineWidth });
 	}
 	return ctx;
@@ -123,4 +126,25 @@ test('drawSelection draws a dashed box around the shape and one handle per corne
 	drawSelection(arrow, { type: 'arrow', x1: 0, y1: 0, x2: 100, y2: 0 }, 1);
 	assert.equal(arrow.calls.filter((c) => c.name === 'fillRect').length, 2, 'two end handles for an arrow');
 	assert.deepEqual(arrow.calls.filter((c) => c.name === 'setLineDash').at(-1).args, [[]], 'dashes reset for the next drawing');
+});
+
+test('drawShapes paints each shape in its own colour; shapes kept from an earlier session, without one, in red', () => {
+	const ctx = recordingContext();
+	drawShapes(ctx, [
+		{ type: 'rect', color: '#1d6fe0', x1: 0, y1: 0, x2: 10, y2: 10 },
+		{ type: 'rect', x1: 0, y1: 0, x2: 10, y2: 10 },
+		{ type: 'arrow', color: '#f0b400', x1: 0, y1: 0, x2: 300, y2: 0 },
+	], 1920, 1080);
+	const strokes = ctx.calls.filter((c) => c.name === 'strokeRect' || c.name === 'stroke').map((c) => c.strokeStyle);
+	assert.deepEqual(strokes, ['#1d6fe0', ANNOTATION_COLOR, '#f0b400']);
+	assert.equal(ctx.calls.find((c) => c.name === 'fill').fillStyle, '#f0b400');
+});
+
+test('drawShapes draws a pen stroke along its smoothed path, with round ends, at the line width', () => {
+	const ctx = recordingContext();
+	drawShapes(ctx, [{ type: 'pen', color: '#1e9e3a', points: [{ x: 0, y: 0 }, { x: 100, y: 0 }, { x: 100, y: 100 }] }], 1920, 1080);
+	assert.deepEqual(ctx.calls.map((c) => c.name), ['save', 'beginPath', 'moveTo', 'quadraticCurveTo', 'lineTo', 'stroke', 'restore']);
+	assert.equal(ctx.calls[5].strokeStyle, '#1e9e3a');
+	assert.equal(ctx.calls[5].lineWidth, 6);
+	assert.equal(ctx.lineCap, 'round', 'set inside save/restore, so the rectangles keep their sharp corners');
 });

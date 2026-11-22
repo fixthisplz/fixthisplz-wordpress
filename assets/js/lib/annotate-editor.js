@@ -1,22 +1,23 @@
 /* Screenshot annotation editor (spec 5.2, annotation), imported on the first click of Annotate. Full-screen plugin
- * UI over the page: the original screenshot at its native size on a canvas scaled to fit, shapes drawn, selected,
- * moved and resized with any pointer (mouse, touch, pen). Drawing is pointer-only; every button works from the
- * keyboard, Delete or Backspace removes the selected shape and Escape cancels. */
-import { make, UI_ATTR } from './dom.js';
+ * UI over the page: the original screenshot at its native size on a canvas scaled to fit, shapes drawn, typed,
+ * coloured, selected, moved and resized with any pointer (mouse, touch, pen). Drawing is pointer-only; every button
+ * works from the keyboard, Delete or Backspace removes the selected shape and Escape cancels. */
 import { trapFocus } from './focus-trap.js';
 import { encodeJpeg } from './jpeg.js';
-import { drawSelection, drawShapes, fitSize, isTiny, toNative } from './annotate-draw.js';
-import { deleteShape, handleAt, hitTest, moveHandle, moveShape, record, replaceShape, startHistory, undo } from './annotate-shapes.js';
+import { FIELD_TAGS, isEditable } from './sensitive.js';
+import { ANNOTATION_COLOR, colorOf } from './annotate-common.js';
+import { drawSelection, drawShapes, fitSize, toNative } from './annotate-draw.js';
+import { deleteShape, handleAt, hitTest, moveShape, recolor, record, startHistory, undo } from './annotate-shapes.js';
+import { beginDraw, beginSelect, commitText, endGesture, gestureShapes, moveGesture } from './annotate-gesture.js';
+import { fontSizeFor, makeText } from './annotate-text.js';
+import { openTextField } from './annotate-text-field.js';
+import { buildEditorView } from './annotate-view.js';
 
-const TOOLS = [
-	['rect', 'toolRectangle'],
-	['arrow', 'toolArrow'],
-	['mask', 'toolHide'],
-	['select', 'toolSelect'],
-];
 // CSS pixels, converted to native pixels at the current display size.
 const MIN_SHAPE = 8; // anything smaller is an accidental tap
 const TOUCH_SLOP = 12; // how far from a shape or a handle a finger may land and still grab it
+const PEN_STEP = 3; // pen points closer than this to the previous one are dropped
+const DOUBLE_PRESS_MS = 400; // two presses on a text within this delay edit it (double click or double tap)
 
 /**
  * Opens the editor on the original screenshot with the shapes already applied (they can be undone, never burnt twice).
@@ -29,42 +30,36 @@ export async function editScreenshot({ t, original, shapes }) {
 	const { width, height } = bitmap;
 	let history = startHistory([...shapes]);
 	let selected = null; // index of the selected shape in history.shapes
-	// The gesture in progress: only the pointer that started it may move or finish it. update(point) gives the list
-	// shown while dragging; shapes stays null until the pointer moves, so a plain click changes nothing.
+	// The gesture in progress (annotate-gesture.js): only the pointer that started it may move or finish it.
 	let gesture = null;
+	let gesturePointer = null;
+	let frame = 0; // pending animation frame of a redraw, 0 when none
 	let tool = 'rect';
+	let color = ANNOTATION_COLOR; // stamped on new shapes
+	let textField = null; // the open text field, if any
+	let editing = null; // index of the text being edited in the field, hidden from the canvas meanwhile
+	let lastPress = null; // { index, time } of the last click on a shape with the Select tool
 	let applying = false;
 
-	const canvas = make('canvas', { class: 'bugspot-annot-canvas', width, height, role: 'img', 'aria-label': t('screenshotPreview') });
+	const { root, panel, canvas, fitBox, toolButtons, colorButtons, deleteButton, undoButton, clearButton, cancelButton, applyButton } =
+		buildEditorView(t, width, height);
 	const ctx = canvas.getContext('2d');
-	const button = (key, extra = '') => make('button', { type: 'button', class: `bugspot-btn ${extra}`.trim(), text: t(key) });
-	const toolButtons = TOOLS.map(([name, key]) => {
-		const node = button(key);
-		node.addEventListener('click', () => selectTool(name));
-		return [name, node];
-	});
-	const selectToolButton = toolButtons.find(([name]) => name === 'select')[1];
-	const deleteButton = button('deleteShape');
-	const undoButton = button('undoShape');
-	const clearButton = button('clearShapes');
-	const cancelButton = button('cancel');
-	const applyButton = button('applyAnnotations', 'bugspot-btn-primary');
-	const fitBox = make('div', { class: 'bugspot-annot-fit' }, [canvas]);
-	const panel = make('div', { class: 'bugspot-annot', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('annotate') }, [
-		make('div', { class: 'bugspot-annot-bar' }, [
-			make('div', { class: 'bugspot-row' }, toolButtons.map(([, node]) => node)),
-			make('div', { class: 'bugspot-row' }, [deleteButton, undoButton, clearButton]),
-		]),
-		make('div', { class: 'bugspot-annot-stage' }, [fitBox]),
-		make('div', { class: 'bugspot-annot-bar bugspot-annot-actions' }, [cancelButton, applyButton]),
-	]);
-	const root = make('div', { id: 'bugspot-annotator', class: 'bugspot-ui', [UI_ATTR]: true }, [panel]);
+	toolButtons.forEach((node, name) =>
+		node.addEventListener('click', () => {
+			setTool(name);
+			redraw();
+		})
+	);
+	colorButtons.forEach((node, value) => node.addEventListener('click', () => pickColor(value)));
 
 	const scale = () => width / canvas.getBoundingClientRect().width; // native pixels per CSS pixel
 	const slop = () => TOUCH_SLOP * scale();
 
 	function redraw() {
-		const shown = gesture?.shapes ?? history.shapes;
+		cancelAnimationFrame(frame);
+		frame = 0;
+		const list = gesture ? gestureShapes(gesture) : history.shapes;
+		const shown = editing === null ? list : deleteShape(list, editing);
 		ctx.drawImage(bitmap, 0, 0);
 		drawShapes(ctx, shown, width, height);
 		if (selected !== null && !applying) {
@@ -75,53 +70,91 @@ export async function editScreenshot({ t, original, shapes }) {
 		undoButton.disabled = history.past.length === 0;
 		clearButton.disabled = history.shapes.length === 0;
 		if (focused?.disabled && panel.contains(focused)) {
-			selectToolButton.focus(); // a button that just got disabled would drop the focus out of the editor
+			toolButtons.get('select').focus(); // a button that just got disabled would drop the focus out of the editor
 		}
 	}
 
 	/** Ends any gesture and makes shapes the new state (one undo step), with the shape at index selected (or none). */
 	function commit(shapes, index = null) {
 		history = record(history, shapes);
+		lastPress = null;
 		gesture = null;
 		selected = index;
 		redraw();
 	}
 
-	/** A drawing tool drops the selection: only the Select tool shows and edits it. */
-	function selectTool(name) {
+	/** Redraws once per frame at most while the pointer moves; any direct redraw() drops the pending one. */
+	function scheduleRedraw() {
+		frame ||= requestAnimationFrame(redraw);
+	}
+
+	/** A drawing tool drops the selection: only the Select tool shows and edits it. The caller redraws. */
+	function setTool(name) {
 		tool = name;
 		canvas.dataset.tool = name;
 		canvas.style.cursor = '';
-		toolButtons.forEach(([n, node]) => node.setAttribute('aria-pressed', String(n === name)));
+		toolButtons.forEach((node, n) => node.setAttribute('aria-pressed', String(n === name)));
 		if (name !== 'select') {
 			selected = null;
 		}
+	}
+
+	/** New shapes take color; the selected shape, unless a hidden area, is recoloured (one undo step). */
+	function pickColor(value) {
+		color = value;
+		colorButtons.forEach((node, v) => node.setAttribute('aria-pressed', String(v === value)));
+		const recolored = selected === null ? history.shapes : recolor(history.shapes, selected, value);
+		if (recolored !== history.shapes) {
+			commit(recolored, selected);
+		}
+	}
+
+	const measure = (text, font) => {
+		ctx.font = font;
+		return ctx.measureText(text).width;
+	};
+
+	/** Opens the text field on a new text at p (index null) or on the text at index. */
+	function openText(index, p) {
+		const shape = index === null ? null : history.shapes[index];
+		const fields = shape
+			? { x: shape.x, y: shape.y, fontSize: shape.fontSize, color: colorOf(shape) }
+			: { x: p.x, y: p.y, fontSize: fontSizeFor(width, height), color };
+		editing = index;
+		selected = null;
+		lastPress = null;
 		redraw();
+		const field = { host: fitBox, canvas, imageWidth: width, at: fields, ...fields, text: shape?.text ?? '', label: t('toolText'), measure };
+		textField = openTextField(field, (text, reason) => {
+			textField = null;
+			editing = null;
+			selected = index; // dropped with Escape: the text stays as it was
+			if (text !== null) {
+				// Measured once here, and kept inside the image like a moved shape.
+				const typed = text === '' ? null : moveShape(makeText({ ...fields, text }, measure), 0, 0, width, height);
+				const ended = commitText(history, index, typed);
+				const added = index === null && ended.history !== history;
+				({ history, selected } = ended);
+				if (added) {
+					setTool('select'); // the new text is selected at once, like a shape just drawn
+				}
+			}
+			redraw();
+			if (reason !== 'blur') {
+				toolButtons.get(tool).focus(); // the focus was on the removed field; after a blur it is where the visitor put it
+			}
+		});
 	}
 
 	function fit() {
 		const size = fitSize(width, height, fitBox.clientWidth, fitBox.clientHeight);
 		canvas.style.width = `${size.width}px`;
 		canvas.style.height = `${size.height}px`;
+		textField?.reposition(); // e.g. the mobile keyboard opening, or the phone turned
 		redraw(); // the selection overlay is sized in CSS pixels
 	}
 
 	const point = (event) => toNative(event.clientX, event.clientY, canvas.getBoundingClientRect(), width, height);
-
-	/** What a press at p does with the Select tool: resize by a handle of the selected shape, else move the shape under it. */
-	function grab(p) {
-		const list = history.shapes;
-		const handle = selected === null ? null : handleAt(list[selected], p.x, p.y, slop());
-		const index = handle ? selected : hitTest(list, p.x, p.y, slop());
-		selected = index === -1 ? null : index;
-		if (selected === null) {
-			return null;
-		}
-		const shape = list[index];
-		return handle
-			? (q) => replaceShape(list, index, moveHandle(shape, handle, q.x, q.y))
-			: (q) => replaceShape(list, index, moveShape(shape, q.x - p.x, q.y - p.y, width, height));
-	}
 
 	canvas.addEventListener('pointerdown', (event) => {
 		if (!event.isPrimary || event.button !== 0) {
@@ -131,21 +164,41 @@ export async function editScreenshot({ t, original, shapes }) {
 		if (applying || gesture) {
 			return; // nothing during the encode, and one gesture at a time
 		}
+		if (textField) {
+			textField.keep(); // a press elsewhere ends the typing (the field does not lose the focus to the canvas)
+			return;
+		}
 		const p = point(event);
-		const list = history.shapes;
-		const update = tool === 'select' ? grab(p) : (q) => [...list, { type: tool, x1: p.x, y1: p.y, x2: q.x, y2: q.y }];
+		if (tool === 'text') {
+			openText(null, p);
+			return;
+		}
+		if (tool === 'select') {
+			const previous = lastPress;
+			({ selected, gesture } = beginSelect(history.shapes, selected, p, slop()));
+			const again = previous?.index === selected && event.timeStamp - previous.time < DOUBLE_PRESS_MS;
+			if (again && history.shapes[selected].type === 'text') {
+				gesture = null;
+				openText(selected);
+				return;
+			}
+		} else {
+			gesture = beginDraw(history.shapes, tool, p, color);
+		}
 		redraw(); // the selection may have changed
-		if (update) {
+		if (gesture) {
 			canvas.setPointerCapture(event.pointerId);
-			gesture = { pointerId: event.pointerId, update, shapes: null };
+			gesturePointer = event.pointerId;
 		}
 	});
-	const ownsGesture = (event) => gesture !== null && event.pointerId === gesture.pointerId;
+	const ownsGesture = (event) => gesture !== null && event.pointerId === gesturePointer;
+	// The image size and, for the pen, the smallest step kept between two points (native px).
+	const area = () => ({ width, height, step: PEN_STEP * scale() });
 
 	canvas.addEventListener('pointermove', (event) => {
 		if (ownsGesture(event)) {
-			gesture.shapes = gesture.update(point(event));
-			redraw();
+			gesture = moveGesture(gesture, point(event), area());
+			scheduleRedraw();
 		} else if (!gesture && tool === 'select') {
 			const p = point(event); // hover feedback: what a press here would grab
 			const onHandle = selected !== null && handleAt(history.shapes[selected], p.x, p.y, slop()) !== null;
@@ -156,21 +209,15 @@ export async function editScreenshot({ t, original, shapes }) {
 		if (!ownsGesture(event)) {
 			return;
 		}
-		const result = gesture.shapes;
-		if (!result) {
-			gesture = null;
-			return;
+		const ended = endGesture(history, gesture, MIN_SHAPE * scale());
+		const drawn = gesture.drawing && ended.history !== history;
+		lastPress = gesture.drawing || gesture.moved ? null : { index: gesture.index, time: event.timeStamp };
+		gesture = null;
+		({ history, selected } = ended);
+		if (drawn) {
+			setTool('select'); // the new shape is selected at once so it can be adjusted
 		}
-		if (tool === 'select') {
-			commit(result, selected);
-		} else if (isTiny(result.at(-1), MIN_SHAPE * scale())) {
-			gesture = null;
-			redraw();
-		} else {
-			// The new shape is selected at once so it can be adjusted.
-			selectTool('select');
-			commit(result, result.length - 1);
-		}
+		redraw();
 	});
 	canvas.addEventListener('pointercancel', (event) => {
 		if (ownsGesture(event)) {
@@ -181,7 +228,8 @@ export async function editScreenshot({ t, original, shapes }) {
 	const deleteSelected = () => commit(deleteShape(history.shapes, selected));
 	deleteButton.addEventListener('click', deleteSelected);
 	root.addEventListener('keydown', (event) => {
-		if ((event.key === 'Delete' || event.key === 'Backspace') && selected !== null && !applying) {
+		const typing = FIELD_TAGS.has(event.target.tagName) || isEditable(event.target);
+		if ((event.key === 'Delete' || event.key === 'Backspace') && selected !== null && !applying && !typing) {
 			event.preventDefault();
 			deleteSelected();
 		}
@@ -189,6 +237,7 @@ export async function editScreenshot({ t, original, shapes }) {
 	undoButton.addEventListener('click', () => {
 		history = undo(history);
 		gesture = null;
+		lastPress = null;
 		selected = null;
 		redraw();
 	});
@@ -201,6 +250,7 @@ export async function editScreenshot({ t, original, shapes }) {
 		const release = trapFocus({ root, panel, isActive: () => root.isConnected, onEscape: cancel });
 
 		function close(settle, value) {
+			cancelAnimationFrame(frame);
 			release();
 			resizes.disconnect();
 			bitmap.close();
@@ -225,9 +275,11 @@ export async function editScreenshot({ t, original, shapes }) {
 			}
 		});
 
-		selectTool('rect');
+		setTool('rect');
+		pickColor(ANNOTATION_COLOR);
+		redraw();
 		document.body.appendChild(root);
 		resizes.observe(fitBox);
-		toolButtons[0][1].focus();
+		toolButtons.get('rect').focus();
 	});
 }

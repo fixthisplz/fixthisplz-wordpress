@@ -23,7 +23,7 @@ Everything is built natively for WordPress: PHP and hooks, a dedicated database 
 * Accessible modal dialog: description, optional contact e-mail for guests, optional screenshot with preview, privacy notice, and a "Technical details sent with your report" panel that shows exactly what is sent.
 * Two screenshot methods: a real capture of the browser tab (exact image; the browser asks the visitor for permission), or a reconstruction of the page (no permission prompt, may differ slightly from the screen). Phones and browsers without screen sharing always use the reconstruction.
 * Optional masking of typed fields and sensitive areas in the screenshot.
-* Screenshot annotation before sending: rectangles, arrows and hidden areas, drawn with a mouse, a finger or a pen; undo, clear all, cancel or apply.
+* Screenshot annotation before sending: rectangles, arrows, freehand strokes, text and hidden areas, drawn with a mouse, a finger or a pen, in six colors; select, move, resize, recolor or delete each one; undo, clear all, cancel or apply.
 * Download of the report as Markdown, JSON or plain text, plus the screenshot, built in the browser.
 * Bugs menu with a filterable and sortable list (status, priority, period, search), bulk actions, CSV export, a Kanban board with drag and drop, and a detail screen. The menu name, the list sub-menu name and the menu position can be changed.
 * Configurable statuses: name, color, order (also the order of the Kanban columns) and a "Closed" flag; add your own or delete one, moving its reports to another status. Defaults: New, Seen, Confirmed, In progress, Fixed, Won't fix, Duplicate. Priorities: Low, Normal, High, Critical.
@@ -124,7 +124,7 @@ The plugin adds suggested text to your privacy policy (Settings › Privacy), an
 == Changelog ==
 
 = 1.1.0 =
-* Screenshot annotation: before sending, the visitor can draw rectangles and arrows on the screenshot, or hide an area, then select, move, resize or delete each annotation, and undo any change.
+* Screenshot annotation: before sending, the visitor can draw rectangles, arrows and freehand strokes on the screenshot, add text, pick one of six colors, or hide an area, then select, move, resize, recolor or delete each annotation, and undo any change.
 * Fix: after an update, browsers no longer mix old and new script files (WordPress 7.0+).
 
 = 1.0.0 =

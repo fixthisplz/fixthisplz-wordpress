@@ -1,7 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { handles } from '../../assets/js/lib/annotate-draw.js';
-import { deleteShape, handleAt, hitTest, moveHandle, moveShape, record, replaceShape, startHistory, undo } from '../../assets/js/lib/annotate-shapes.js';
+import { deleteShape, handleAt, handles, hitTest, moveHandle, moveShape, recolor, record, replaceShape, startHistory, undo } from '../../assets/js/lib/annotate-shapes.js';
 
 const rect = { type: 'rect', x1: 100, y1: 100, x2: 300, y2: 200 };
 const mask = { type: 'mask', x1: 100, y1: 100, x2: 300, y2: 200 };
@@ -99,4 +98,18 @@ test('undo reverts each kind of action: add, move, resize, delete, clear', () =>
 	assert.deepEqual(undo(moved).shapes, [rect], 'move is undone');
 	assert.deepEqual(undo(added).shapes, [], 'add is undone');
 	assert.equal(cleared.past.length, 6);
+});
+
+test('recolor changes the colour of a shape, as one undo entry', () => {
+	const shapes = [rect, arrow];
+	const recolored = recolor(shapes, 1, '#1e9e3a');
+	assert.deepEqual(recolored, [rect, { ...arrow, color: '#1e9e3a' }]);
+	const history = record(startHistory(shapes), recolored);
+	assert.deepEqual(undo(history).shapes, shapes, 'the recolouring is undone');
+});
+
+test('recolor changes nothing on a hidden area, nor to the colour a shape already has', () => {
+	const shapes = [mask, rect];
+	assert.equal(recolor(shapes, 0, '#1e9e3a'), shapes, 'a hidden area keeps the mask fill');
+	assert.equal(recolor(shapes, 1, '#e0161b'), shapes, 'a shape without colour is red already');
 });
