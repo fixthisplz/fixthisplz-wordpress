@@ -3,9 +3,9 @@
 namespace Bug_Spotter\Admin;
 
 use Bug_Spotter\Installer;
+use Bug_Spotter\Priorities;
 use Bug_Spotter\Reports_Repository;
 use Bug_Spotter\Settings;
-use Bug_Spotter\Statuses;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -232,7 +232,7 @@ final class Bugs_Page {
 		echo '<label>' . esc_html__( 'To', 'bug-spotter' ) . ' <input type="date" name="to" value="' . esc_attr( $filters['to'] ) . '"></label> ';
 		echo '<label class="screen-reader-text" for="bugspot-priority">' . esc_html__( 'Priority', 'bug-spotter' ) . '</label>';
 		echo '<select name="priority" id="bugspot-priority"><option value="">' . esc_html__( 'All priorities', 'bug-spotter' ) . '</option>';
-		foreach ( Statuses::priorities() as $key => $label ) {
+		foreach ( Priorities::all() as $key => $label ) {
 			printf( '<option value="%s"%s>%s</option>', esc_attr( $key ), selected( $filters['priority'], $key, false ), esc_html( $label ) );
 		}
 		echo '</select> ';

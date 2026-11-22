@@ -140,8 +140,8 @@ bugspot_test(
 		with_settings_option(
 			function () {
 				statuses_save( array( array( 'key' => 'new', 'label' => 'A & B', 'color' => '#aa00cc' ), array( 'key' => 'seen' ) ) );
-				assert_same( '<span class="bugspot-pill bugspot-status" style="--bugspot-status:#aa00cc">A &amp; B</span>', Bug_Spotter\Report_Format::status_pill( 'new' ) );
-				assert_same( '<span class="bugspot-pill bugspot-status" style="--bugspot-status:' . Statuses::FALLBACK_COLOR . '">zz_gone</span>', Bug_Spotter\Report_Format::status_pill( 'zz_gone' ) );
+				assert_same( '<span class="bugspot-pill bugspot-status" style="--bugspot-color:#aa00cc">A &amp; B</span>', Bug_Spotter\Report_Format::pill( Statuses::class, 'new' ) );
+				assert_same( '<span class="bugspot-pill bugspot-status" style="--bugspot-color:' . Statuses::FALLBACK_COLOR . '">zz_gone</span>', Bug_Spotter\Report_Format::pill( Statuses::class, 'zz_gone' ) );
 			}
 		);
 	}

@@ -6,7 +6,7 @@ use Bug_Spotter\Admin\Settings_Fields as F;
 
 defined( 'ABSPATH' ) || exit;
 
-/** Renderers of the settings tabs that have no class of their own (Settings_Button_Tab, Settings_Management_Tab, Settings_Statuses_Tab). One method per tab. */
+/** Renderers of the settings tabs that have no class of their own (Settings_Button_Tab, Settings_Management_Tab, Settings_List_Tab). One method per tab. */
 final class Settings_Tabs {
 
 	/** @param array<string,mixed> $s */

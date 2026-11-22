@@ -2,9 +2,11 @@
 
 namespace Bug_Spotter\Admin;
 
+use Bug_Spotter\List_Editor;
+use Bug_Spotter\Priorities;
 use Bug_Spotter\Settings;
 use Bug_Spotter\Settings_Sanitizer;
-use Bug_Spotter\Status_Editor;
+use Bug_Spotter\Statuses;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,7 +23,7 @@ final class Settings_Page {
 	public static function register_hooks(): void {
 		add_action( 'admin_init', array( self::class, 'register_setting' ) );
 		add_action( 'admin_notices', array( self::class, 'guest_warning' ) );
-		Status_Editor::register_hooks();
+		List_Editor::register_hooks();
 	}
 
 	public static function register_setting(): void {
@@ -50,6 +52,7 @@ final class Settings_Page {
 			'data'          => __( 'Data and privacy', 'bug-spotter' ),
 			'management'    => __( 'Management', 'bug-spotter' ),
 			'statuses'      => __( 'Statuses', 'bug-spotter' ),
+			'priorities'    => __( 'Priorities', 'bug-spotter' ),
 		);
 	}
 
@@ -108,7 +111,8 @@ final class Settings_Page {
 			'context'       => Settings_Tabs::context( $s ),
 			'data'          => Settings_Tabs::data( $s ),
 			'management'    => Settings_Management_Tab::render( $s ),
-			'statuses'      => Settings_Statuses_Tab::render( $s ),
+			'statuses'      => Settings_List_Tab::render( Statuses::class, $s ),
+			'priorities'    => Settings_List_Tab::render( Priorities::class, $s ),
 		};
 		submit_button();
 		echo '</form>';

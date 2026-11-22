@@ -2,6 +2,7 @@
 
 namespace Bug_Spotter\Admin;
 
+use Bug_Spotter\Priorities;
 use Bug_Spotter\Report_Format;
 use Bug_Spotter\Reports_Repository;
 use Bug_Spotter\Statuses;
@@ -64,7 +65,7 @@ final class List_Table extends \WP_List_Table {
 			/* translators: %s: status label. */
 			$actions[ 'status_' . $key ] = sprintf( __( 'Set status: %s', 'bug-spotter' ), $label );
 		}
-		foreach ( Statuses::priorities() as $key => $label ) {
+		foreach ( Priorities::all() as $key => $label ) {
 			/* translators: %s: priority label. */
 			$actions[ 'priority_' . $key ] = sprintf( __( 'Set priority: %s', 'bug-spotter' ), $label );
 		}
@@ -183,11 +184,11 @@ final class List_Table extends \WP_List_Table {
 	}
 
 	protected function column_priority( $item ): string {
-		return $this->priority_pill( (string) $item['priority'] );
+		return Report_Format::pill( Priorities::class, (string) $item['priority'] );
 	}
 
 	protected function column_status( $item ): string {
-		return Report_Format::status_pill( (string) $item['status'] );
+		return Report_Format::pill( Statuses::class, (string) $item['status'] );
 	}
 
 	protected function column_created_at( $item ): string {
@@ -196,13 +197,5 @@ final class List_Table extends \WP_List_Table {
 
 	protected function column_default( $item, $column_name ): string {
 		return '';
-	}
-
-	private function priority_pill( string $priority ): string {
-		return sprintf(
-			'<span class="bugspot-pill bugspot-priority bugspot-priority-%1$s">%2$s</span>',
-			esc_attr( $priority ),
-			esc_html( Statuses::priorities()[ $priority ] ?? $priority )
-		);
 	}
 }

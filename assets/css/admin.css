@@ -7,10 +7,7 @@
 .bugspot-admin .column-page{width:18%;word-break:break-all}
 .bugspot-admin .bugspot-muted{color:#646970}
 .bugspot-pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;line-height:1.5;background:#f0f0f1;color:#1d2327;border:1px solid #dcdcde}
-.bugspot-priority-low{background:#f0f6fc;border-color:#c5d9ed}
-.bugspot-priority-high{background:#fcf0e1;border-color:#e6c28b;color:#704d00}
-.bugspot-priority-critical{background:#fcf0f1;border-color:#e0a0a6;color:#8a2424;font-weight:600}
-.bugspot-status{background:color-mix(in srgb,var(--bugspot-status) 10%,#fff);border-color:color-mix(in srgb,var(--bugspot-status) 30%,#fff);color:color-mix(in srgb,var(--bugspot-status) 75%,#000)}
+.bugspot-status,.bugspot-priority{background:color-mix(in srgb,var(--bugspot-color) 10%,#fff);border-color:color-mix(in srgb,var(--bugspot-color) 30%,#fff);color:color-mix(in srgb,var(--bugspot-color) 75%,#000)}
 .bugspot-detail .bugspot-pairs{border-collapse:collapse;width:100%}
 .bugspot-detail .bugspot-pairs th{width:130px;text-align:left;vertical-align:top;padding:4px 8px 4px 0;font-weight:600}
 .bugspot-detail .bugspot-pairs td,.bugspot-detail .bugspot-wrap{word-break:break-word}
@@ -26,10 +23,7 @@
 .bugspot-card{background:#fff;border:1px solid #dcdcde;border-radius:3px;padding:8px;margin:0 0 8px;cursor:grab}
 .bugspot-card.bugspot-placeholder{background:#e5f1ff;border:2px dashed #2271b1;min-height:40px;box-sizing:border-box;visibility:visible!important}
 .bugspot-card-head{display:flex;gap:6px;align-items:center}
-.bugspot-card .bugspot-priority-low{background:#787c82;border-color:#787c82;color:#fff}
-.bugspot-card .bugspot-priority-normal{background:#2271b1;border-color:#2271b1;color:#fff}
-.bugspot-card .bugspot-priority-high{background:#b26200;border-color:#b26200;color:#fff}
-.bugspot-card .bugspot-priority-critical{background:#d63638;border-color:#d63638;color:#fff}
+.bugspot-card .bugspot-priority{background:var(--bugspot-color);border-color:var(--bugspot-color);color:#fff}
 .bugspot-card-head .dashicons{font-size:16px;width:16px;height:16px;color:#646970}
 .bugspot-card-text{margin:6px 0;word-break:break-word}
 .bugspot-card-meta{margin:0;font-size:12px;word-break:break-all}
@@ -61,10 +55,13 @@
 .bugspot-preview-stage.is-mobile .bugspot-preview-frame{height:420px}
 .bugspot-captcha-widget:not(:empty){margin:8px 0}
 @media (max-width:782px){.bugspot-preview{position:static}}
-.bugspot-status-table{max-width:900px;margin-top:12px}
-.bugspot-status-table td{vertical-align:middle}
-.bugspot-status-table .bugspot-status-handle{width:24px;cursor:move;color:#646970}
-.bugspot-status-table .bugspot-status-count{width:70px}
-.bugspot-status-table .wp-picker-container{display:inline-block}
-.bugspot-status-placeholder{height:48px;background:#f0f6fc;outline:2px dashed #2271b1}
-.bugspot-status-moves p{margin:8px 0}
+.bugspot-list-table{max-width:900px;margin-top:12px}
+.bugspot-list-table td{vertical-align:middle}
+.bugspot-list-table .bugspot-list-handle{width:24px;cursor:move;color:#646970}
+.bugspot-list-table .bugspot-list-count{width:70px}
+.bugspot-list-table .wp-picker-container{display:inline-block}
+.bugspot-list-placeholder{height:48px;background:#f0f6fc;outline:2px dashed #2271b1}
+.bugspot-list-moves p{margin:8px 0}
+.bugspot-widget-counts{display:flex;flex-wrap:wrap;gap:6px 12px;margin:0 0 8px}
+.bugspot-widget-counts a{text-decoration:none}
+.bugspot-widget-latest li{word-break:break-word}

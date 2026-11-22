@@ -35,13 +35,24 @@ final class Report_Format {
 		return mb_strlen( $text ) > $length ? mb_substr( $text, 0, $length ) . '…' : $text;
 	}
 
-	/** A status pill tinted from the status color (see .bugspot-status in admin.css). */
-	public static function status_pill( string $status ): string {
+	/**
+	 * A status or priority pill tinted from the choice color (see .bugspot-pill in admin.css).
+	 *
+	 * @param class-string<Choice_List> $list Statuses::class or Priorities::class.
+	 */
+	public static function pill( string $list, string $key ): string {
 		return sprintf(
-			'<span class="bugspot-pill bugspot-status" style="--bugspot-status:%s">%s</span>',
-			esc_attr( Statuses::color( $status ) ),
-			esc_html( Statuses::label( $status ) )
+			'<span class="bugspot-pill bugspot-%1$s" style="--bugspot-color:%2$s">%3$s</span>',
+			esc_attr( $list::FIELD ),
+			esc_attr( $list::color( $key ) ),
+			esc_html( $list::label( $key ) )
 		);
+	}
+
+	/** "{singular name} #12" (Management tab), raw: each output escapes it its own way. */
+	public static function title( int $id ): string {
+		/* translators: 1: singular name of a report (default "Bug"), 2: report number. */
+		return sprintf( __( '%1$s #%2$d', 'bug-spotter' ), Settings::text( 'management.item_label' ), $id );
 	}
 
 	/** A stored UTC datetime in the site's date and time formats and timezone; '' when absent or invalid. */

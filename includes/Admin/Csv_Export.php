@@ -3,6 +3,7 @@
 namespace Bug_Spotter\Admin;
 
 use Bug_Spotter\Installer;
+use Bug_Spotter\Priorities;
 use Bug_Spotter\Report_Format;
 use Bug_Spotter\Reports_Repository;
 use Bug_Spotter\Statuses;
@@ -76,9 +77,8 @@ final class Csv_Export {
 			)
 		);
 
-		$priorities = Statuses::priorities();
-		$page       = 1;
-		$sent       = 0;
+		$page = 1;
+		$sent = 0;
 		do {
 			$result = $repo->query( array_merge( $filters, array( 'orderby' => $orderby, 'order' => $order, 'per_page' => Reports_Repository::MAX_PER_PAGE, 'page' => $page ) ) );
 			foreach ( $result['items'] as $item ) {
@@ -89,7 +89,7 @@ final class Csv_Export {
 						(string) (int) $item['id'],
 						null !== $time ? wp_date( 'Y-m-d H:i:s', $time ) : '',
 						Statuses::label( (string) $item['status'] ),
-						$priorities[ $item['priority'] ] ?? (string) $item['priority'],
+						Priorities::label( (string) $item['priority'] ),
 						(string) $item['page_url'],
 						Report_Format::reporter_label( $item ),
 						(string) $item['description'],

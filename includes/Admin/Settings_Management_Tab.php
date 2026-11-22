@@ -7,7 +7,7 @@ use Bug_Spotter\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
-/** "Management" tab of the settings screen (spec 7.9): who manages the bugs, and the name and place of their menu. */
+/** "Management" tab of the settings screen (spec 7.9): who manages the bugs, the name and place of their menu, the name of one report. */
 final class Settings_Management_Tab {
 
 	/** @param array<string,mixed> $s */
@@ -30,8 +30,10 @@ final class Settings_Management_Tab {
 		F::checkbox( array( 'management', 'menu_badge' ), (bool) $m['menu_badge'], __( 'Show the number of new reports next to the menu name', 'bug-spotter' ) );
 		F::row_close();
 
-		self::label_row( __( 'Menu name', 'bug-spotter' ), 'menu_label', (string) $m['menu_label'], __( 'Bugs', 'bug-spotter' ) );
-		self::label_row( __( 'List sub-menu name', 'bug-spotter' ), 'list_label', (string) $m['list_label'], __( 'All bugs', 'bug-spotter' ) );
+		$menu_help = __( 'Used for the menu and the titles of the management pages. Leave empty for the default name.', 'bug-spotter' );
+		self::label_row( __( 'Menu name', 'bug-spotter' ), 'menu_label', (string) $m['menu_label'], __( 'Bugs', 'bug-spotter' ), $menu_help );
+		self::label_row( __( 'List sub-menu name', 'bug-spotter' ), 'list_label', (string) $m['list_label'], __( 'All bugs', 'bug-spotter' ), $menu_help );
+		self::label_row( __( 'Name of one report', 'bug-spotter' ), 'item_label', (string) $m['item_label'], __( 'Bug', 'bug-spotter' ), __( 'Used in the title of a report, such as "Bug #12", on its page and in the notification e-mail. Leave empty for the default name.', 'bug-spotter' ) );
 
 		$positions = array();
 		foreach ( Settings::menu_positions() as $position => $label ) {
@@ -42,13 +44,13 @@ final class Settings_Management_Tab {
 		F::table_close();
 	}
 
-	/** Text field of a menu name; the translated default name is the placeholder. */
-	private static function label_row( string $label, string $key, string $value, string $default ): void {
+	/** Text field of a name; the translated default name is the placeholder. */
+	private static function label_row( string $label, string $key, string $value, string $default, string $help ): void {
 		$path = array( 'management', $key );
 		$id   = F::id( $path );
 		F::row_open( $label, $id );
 		F::input( 'text', $path, $value, array( 'class' => 'regular-text', 'maxlength' => (string) Settings::MENU_LABEL_MAX, 'placeholder' => $default ), true );
-		F::description( __( 'Used for the menu and the titles of the management pages. Leave empty for the default name.', 'bug-spotter' ), $id . '-desc' );
+		F::description( $help, $id . '-desc' );
 		F::row_close();
 	}
 }

@@ -25,8 +25,10 @@ Everything is built natively for WordPress: PHP and hooks, a dedicated database 
 * Optional masking of typed fields and sensitive areas in the screenshot.
 * Screenshot annotation before sending: rectangles, arrows, freehand strokes, text and hidden areas, drawn with a mouse, a finger or a pen, in six colors; select, move, resize, recolor or delete each one; undo, clear all, cancel or apply.
 * Download of the report as Markdown, JSON or plain text, plus the screenshot, built in the browser.
-* Bugs menu with a filterable and sortable list (status, priority, period, search), bulk actions, CSV export, a Kanban board with drag and drop, and a detail screen. The menu name, the list sub-menu name and the menu position can be changed.
-* Configurable statuses: name, color, order (also the order of the Kanban columns) and a "Closed" flag; add your own or delete one, moving its reports to another status. Defaults: New, Seen, Confirmed, In progress, Fixed, Won't fix, Duplicate. Priorities: Low, Normal, High, Critical.
+* Bugs menu with a filterable and sortable list (status, priority, period, search), bulk actions, CSV export, a Kanban board with drag and drop, and a detail screen. The menu name, the list sub-menu name, the name of one report and the menu position can be changed.
+* Configurable statuses: name, color, order (also the order of the Kanban columns) and a "Closed" flag; add your own or delete one, moving its reports to another status. Defaults: New, Seen, Confirmed, In progress, Fixed, Won't fix, Duplicate.
+* Configurable priorities, the same way (name, color, order). Defaults: Low, Normal, High, Critical.
+* A dashboard widget shows the bug managers the open reports per status and the latest reports.
 * E-mail notification for each new report, with a link to the report and an optional screenshot attachment.
 * Anti-bot protection: Cloudflare Turnstile, Google reCAPTCHA v2 or v3, hCaptcha, or none; a hidden honeypot field; per-IP rate limits (hourly and daily). Includes a "Test the keys" button.
 * Privacy by design: values typed in form fields and passwords are never written into the report; e-mails and tokens are redacted in the browser and again on the server; the IP address is never stored (only a keyed hash); the contact e-mail is stored encrypted; screenshots are stored in a private folder.
@@ -122,6 +124,11 @@ Values typed in form fields and passwords are never written into the report. Ele
 The plugin adds suggested text to your privacy policy (Settings › Privacy), and registers a personal data exporter and eraser. Closed reports (by default Fixed, Won't fix and Duplicate: every status marked "Closed") can be deleted automatically after a number of months of your choice.
 
 == Changelog ==
+
+= 1.2.0 =
+* Configurable priorities (new Priorities settings tab): name, color, order (sorting by priority follows it); add up to 10 or delete one, moving its reports to another priority. "Normal" cannot be deleted. Priority pills take the chosen color in the list, the Kanban board and the detail screen.
+* Name of one report (Management tab), used in titles such as "Bug #12" on the detail screen and in the notification e-mail.
+* Dashboard widget for bug managers: open reports per status and the five latest reports.
 
 = 1.1.0 =
 * Screenshot annotation: before sending, the visitor can draw rectangles, arrows and freehand strokes on the screenshot, add text, pick one of six colors and one of three sizes (stroke width or text size), or hide an area, then select, move, resize, recolor, resize to a preset or delete each annotation, and undo any change.

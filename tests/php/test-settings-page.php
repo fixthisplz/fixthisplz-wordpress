@@ -65,11 +65,20 @@ function settings_page_test( string $name, callable $fn ): void {
 			$user   = get_current_user_id();
 			$admins = get_users( array( 'role' => 'administrator', 'number' => 1, 'fields' => 'ID' ) );
 			wp_set_current_user( (int) $admins[0] );
-			Settings_Page::register_setting();
 			try {
-				with_settings_option( $fn );
+				// The original option is put back once the setting is unregistered: never through the sanitizer,
+				// which would merge it on the test values (a blank secret key keeps the stored one).
+				with_settings_option(
+					static function () use ( $fn ) {
+						Settings_Page::register_setting();
+						try {
+							$fn();
+						} finally {
+							unregister_setting( Settings_Page::GROUP, Settings::OPTION );
+						}
+					}
+				);
 			} finally {
-				unregister_setting( Settings_Page::GROUP, Settings::OPTION );
 				Installer::sync_capabilities( Settings::get()['management']['roles'] );
 				wp_set_current_user( $user );
 			}

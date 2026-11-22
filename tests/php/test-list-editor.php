@@ -1,39 +1,45 @@
 <?php
 
+use Bug_Spotter\List_Editor;
 use Bug_Spotter\Reports_Repository;
 use Bug_Spotter\Settings;
-use Bug_Spotter\Status_Editor;
 use Bug_Spotter\Statuses;
 
 // settings_page_test(), settings_page_form_post(), settings_page_tab_html() and repo_make(), also when run alone.
 require_once __DIR__ . '/test-settings-page.php';
 require_once __DIR__ . '/test-repository.php';
 
-/** The rows the Statuses tab posts as rendered (the <template> row has no name, so it is dropped on save). @return array<string,array> */
-function status_editor_rows(): array {
-	$post = settings_page_form_post( settings_page_tab_html( 'statuses' ) );
-	assert_same( array( 'status_rows' ), array_keys( $post[ Settings::OPTION ] ), 'the tab posts only its rows' );
-	return $post[ Settings::OPTION ]['status_rows'];
+/** The rows a list tab ("statuses" or "priorities") posts as rendered (the <template> row has no name, so it is dropped on save). @return array<string,array> */
+function list_editor_rows( string $tab, string $field ): array {
+	$post = settings_page_form_post( settings_page_tab_html( $tab ) );
+	assert_same( array( $field . '_rows' ), array_keys( $post[ Settings::OPTION ] ), 'the tab posts only its rows' );
+	return $post[ Settings::OPTION ][ $field . '_rows' ];
 }
 
 /** Saves like options.php: the sanitize callback, then the post-save moves through the real hooks. */
-function status_editor_save( array $rows, array $moves = array() ): void {
-	update_option( Settings::OPTION, array( 'status_rows' => $rows, 'status_moves' => $moves ) );
+function list_editor_save( string $field, array $rows, array $moves = array() ): void {
+	update_option( Settings::OPTION, array( $field . '_rows' => $rows, $field . '_moves' => $moves ) );
 }
 
-/** settings_page_test() with the Status_Editor hooks registered (wp-admin only otherwise), removed afterwards. */
+function status_editor_rows(): array {
+	return list_editor_rows( 'statuses', 'status' );
+}
+
+function status_editor_save( array $rows, array $moves = array() ): void {
+	list_editor_save( 'status', $rows, $moves );
+}
+
+/** settings_page_test() with the List_Editor hooks registered (wp-admin only otherwise), removed afterwards. */
 function status_editor_test( string $name, callable $fn ): void {
 	settings_page_test(
 		$name,
 		static function () use ( $fn ) {
-			// Another test file may have posted the tab without the hooks: start with no pending move.
-			( new ReflectionProperty( Status_Editor::class, 'pending' ) )->setValue( null, null );
-			Status_Editor::register_hooks();
+			List_Editor::register_hooks();
 			try {
 				$fn();
 			} finally {
-				remove_action( 'update_option_' . Settings::OPTION, array( Status_Editor::class, 'apply_moves' ) );
-				remove_action( 'add_option_' . Settings::OPTION, array( Status_Editor::class, 'apply_moves' ) );
+				remove_action( 'update_option_' . Settings::OPTION, array( List_Editor::class, 'apply_moves' ) );
+				remove_action( 'add_option_' . Settings::OPTION, array( List_Editor::class, 'apply_moves' ) );
 			}
 		}
 	);
@@ -83,7 +89,7 @@ status_editor_test(
 		assert_same( array( 'a_tester', 'a_tester_2', 'fixed_2', 'a_very_long_status_n', 'a_very_long_status_2' ), array_slice( $keys, 7 ) );
 		assert_same( 'À tester', Statuses::label( 'a_tester' ) );
 		assert_same( array( 'fixed', 'wont_fix', 'duplicate', 'a_tester_2' ), Statuses::closed() );
-		assert_same( 'status_2', Status_Editor::new_key( '测试', array( 'status' => true ) ), 'a name without a usable letter' );
+		assert_same( 'status_2', List_Editor::new_key( Statuses::class, '测试', array( 'status' => true ) ), 'a name without a usable letter' );
 
 		// Saved again: keys never change, even when the name does.
 		$rows             = status_editor_rows();

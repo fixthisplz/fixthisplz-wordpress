@@ -57,7 +57,8 @@ final class Reports_Repository {
 	}
 
 	/**
-	 * Only `status` and `priority` can change; any invalid value rejects the whole update.
+	 * Only `status` and `priority` can change; any invalid value rejects the whole update. A value unknown to the
+	 * settings may be kept, never newly set.
 	 *
 	 * @param array|null $current The full row find() returned for $id (seen_at is read), when the caller already has it;
 	 *                           never a light query() / find_many() row.
@@ -73,7 +74,6 @@ final class Reports_Repository {
 		$data = array();
 		if ( array_key_exists( 'status', $fields ) ) {
 			$status = (string) $fields['status'];
-			// A status unknown to the settings may be kept, never newly set.
 			if ( $status !== $current['status'] && ! Statuses::is_valid( $status ) ) {
 				return false;
 			}
@@ -81,7 +81,7 @@ final class Reports_Repository {
 		}
 		if ( array_key_exists( 'priority', $fields ) ) {
 			$priority = (string) $fields['priority'];
-			if ( ! Statuses::is_valid_priority( $priority ) ) {
+			if ( $priority !== $current['priority'] && ! Priorities::is_valid( $priority ) ) {
 				return false;
 			}
 			$data['priority'] = $priority;
@@ -119,13 +119,15 @@ final class Reports_Repository {
 		return is_int( $rows ) && $rows > 0;
 	}
 
-	/** Moves every report of a deleted status $from to $to. */
-	public function reassign_status( string $from, string $to ): void {
+	/** Moves every report of a deleted choice $from of $list to $to. @param class-string<Choice_List> $list */
+	public function reassign( string $list, string $from, string $to ): void {
 		global $wpdb;
-		$now = self::now();
-		$wpdb->query(
-			$wpdb->prepare( 'UPDATE %i SET status = %s, status_changed_at = %s, updated_at = %s WHERE status = %s', Installer::table(), $to, $now, $now, $from )
-		);
+		$now  = self::now();
+		$data = array( $list::FIELD => $to, 'updated_at' => $now );
+		if ( Statuses::class === $list ) {
+			$data['status_changed_at'] = $now;
+		}
+		$wpdb->update( Installer::table(), $data, array( $list::FIELD => $from ) );
 	}
 
 	public function delete( int $id ): bool {
@@ -144,27 +146,25 @@ final class Reports_Repository {
 	/**
 	 * Light rows (LIST_COLUMNS, plus the decrypted reporter_email unless `with_email` is false); find() has the rest.
 	 *
-	 * @param array $args status, priority, from, to (Y-m-d, site timezone), search, orderby (created_at|priority),
-	 *                    order (DESC|ASC), per_page (1-200, default 20), page (>= 1), with_email (default true).
+	 * @param array $args status, priority, from, to (Y-m-d, site timezone), search, orderby (created_at, or priority in
+	 *                    the order of the settings), order (DESC|ASC), per_page (1-200, default 20), page (>= 1), with_email (default true).
 	 * @return array{items: array[], total: int}
 	 */
 	public function query( array $args ): array {
 		global $wpdb;
 		$table   = Installer::table();
-		$where   = $this->where( $args, true );
+		$where   = Report_Query::where( $args );
 		$columns = self::LIST_COLUMNS . ( false === ( $args['with_email'] ?? true ) ? '' : ', reporter_email' );
 
 		$per_page = max( 1, min( self::MAX_PER_PAGE, (int) ( $args['per_page'] ?? 20 ) ) );
 		$page     = max( 1, (int) ( $args['page'] ?? 1 ) );
 		$dir      = 'ASC' === strtoupper( (string) ( $args['order'] ?? 'DESC' ) ) ? 'ASC' : 'DESC';
-		$primary  = 'priority' === ( $args['orderby'] ?? '' )
-			? "FIELD(priority, 'low', 'normal', 'high', 'critical') {$dir}"
-			: "created_at {$dir}";
+		$primary  = 'priority' === ( $args['orderby'] ?? '' ) ? Report_Query::priority_order( $dir ) : "created_at {$dir}";
 
 		$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $table ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where is built from prepare() fragments.
 		$rows  = $wpdb->get_results( // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- see the prepare() below.
 			$wpdb->prepare(
-				"SELECT {$columns} FROM %i {$where} ORDER BY {$primary}, id DESC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $columns and $primary come from fixed lists, $where from prepare() fragments.
+				"SELECT {$columns} FROM %i {$where} ORDER BY {$primary}, id DESC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $columns comes from a fixed list, $primary and $where from fixed text or prepare() fragments.
 				$table,
 				$per_page,
 				( $page - 1 ) * $per_page
@@ -197,16 +197,24 @@ final class Reports_Repository {
 		return array_map( array( self::class, 'hydrate' ), is_array( $rows ) ? $rows : array() );
 	}
 
-	/** @return array<string,int> One entry per status key in order (0 when empty), then stored keys unknown to the settings; the `status` filter is ignored. */
+	/** @return array<string,int> count_by() of the statuses. */
 	public function count_by_status( array $args ): array {
-		global $wpdb;
-		$table = Installer::table();
-		$where = $this->where( $args, false );
+		return $this->count_by( Statuses::class, $args );
+	}
 
-		$rows   = $wpdb->get_results( $wpdb->prepare( "SELECT status, COUNT(*) AS n FROM %i {$where} GROUP BY status", $table ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where is built from prepare() fragments.
-		$counts = array_fill_keys( array_keys( Statuses::all() ), 0 );
+	/**
+	 * @param class-string<Choice_List> $list
+	 * @return array<string,int> One entry per key of $list in order (0 when empty), then stored keys unknown to the
+	 *                           settings; the filter on that same column is ignored.
+	 */
+	public function count_by( string $list, array $args ): array {
+		global $wpdb;
+		$where = Report_Query::where( array_diff_key( $args, array( $list::FIELD => true ) ) );
+
+		$rows   = $wpdb->get_results( $wpdb->prepare( "SELECT %i AS k, COUNT(*) AS n FROM %i {$where} GROUP BY k", $list::FIELD, Installer::table() ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where is built from prepare() fragments.
+		$counts = array_fill_keys( array_keys( $list::all() ), 0 );
 		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
-			$counts[ $row['status'] ] = (int) $row['n'];
+			$counts[ $row['k'] ] = (int) $row['n'];
 		}
 		return $counts;
 	}
@@ -247,47 +255,6 @@ final class Reports_Repository {
 			}
 		}
 		return $deleted;
-	}
-
-	/** Builds a WHERE clause (possibly empty) from prepared fragments only. */
-	private function where( array $args, bool $with_status ): string {
-		global $wpdb;
-		$clauses = array();
-
-		if ( $with_status && ! empty( $args['status'] ) ) {
-			$clauses[] = $wpdb->prepare( 'status = %s', (string) $args['status'] );
-		}
-		if ( ! empty( $args['priority'] ) ) {
-			$clauses[] = $wpdb->prepare( 'priority = %s', (string) $args['priority'] );
-		}
-		$from = self::local_day_bound( $args['from'] ?? '', '00:00:00' );
-		if ( null !== $from ) {
-			$clauses[] = $wpdb->prepare( 'created_at >= %s', $from );
-		}
-		$to = self::local_day_bound( $args['to'] ?? '', '23:59:59' );
-		if ( null !== $to ) {
-			$clauses[] = $wpdb->prepare( 'created_at <= %s', $to );
-		}
-		$search = trim( (string) ( $args['search'] ?? '' ) );
-		if ( '' !== $search ) {
-			$like      = '%' . $wpdb->esc_like( $search ) . '%';
-			$clauses[] = $wpdb->prepare( '(description LIKE %s OR page_url LIKE %s)', $like, $like );
-		}
-
-		return $clauses ? 'WHERE ' . implode( ' AND ', $clauses ) : '';
-	}
-
-	/** A site-timezone "Y-m-d" day at $time, converted to a UTC datetime string; null when the date is invalid. */
-	private static function local_day_bound( mixed $date, string $time ): ?string {
-		if ( ! is_string( $date ) || ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date ) ) {
-			return null;
-		}
-		$parsed = \DateTimeImmutable::createFromFormat( '!Y-m-d H:i:s', $date . ' ' . $time, wp_timezone() );
-		$errors = \DateTimeImmutable::getLastErrors();
-		if ( false === $parsed || ( is_array( $errors ) && ( $errors['warning_count'] > 0 || $errors['error_count'] > 0 ) ) ) {
-			return null;
-		}
-		return $parsed->setTimezone( new \DateTimeZone( 'UTC' ) )->format( 'Y-m-d H:i:s' );
 	}
 
 	/** Unix timestamp of a stored UTC "Y-m-d H:i:s" datetime; null when absent or invalid. */

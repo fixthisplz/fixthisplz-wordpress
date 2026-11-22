@@ -32,12 +32,8 @@ final class Settings_Sanitizer {
 			}
 		}
 
-		// The Statuses tab posts editor rows (keys made or kept server-side) rather than the stored list.
-		if ( array_key_exists( 'status_rows', $input ) ) {
-			$input['statuses'] = Status_Editor::from_post( $input['status_rows'], $input['status_moves'] ?? array() );
-		}
-
-		return self::validate( self::merge( $current, $input ) );
+		// The Statuses and Priorities tabs post editor rows (keys made or kept server-side) rather than the stored list.
+		return self::validate( self::merge( $current, List_Editor::apply_post( $input ) ) );
 	}
 
 	/**
@@ -126,6 +122,7 @@ final class Settings_Sanitizer {
 			'data'          => self::validate_data( $s['data'], $d['data'] ),
 			'management'    => self::validate_management( $s['management'] ),
 			'statuses'      => Statuses::sanitize( $s['statuses'] ),
+			'priorities'    => Priorities::sanitize( $s['priorities'] ),
 		);
 	}
 
@@ -209,6 +206,7 @@ final class Settings_Sanitizer {
 			'menu_badge'    => self::bool( $m['menu_badge'] ),
 			'menu_label'    => mb_substr( self::text_field( $m['menu_label'] ), 0, Settings::MENU_LABEL_MAX ),
 			'list_label'    => mb_substr( self::text_field( $m['list_label'] ), 0, Settings::MENU_LABEL_MAX ),
+			'item_label'    => mb_substr( self::text_field( $m['item_label'] ), 0, Settings::MENU_LABEL_MAX ),
 			'menu_position' => Settings::menu_position( $m['menu_position'] ),
 		);
 	}

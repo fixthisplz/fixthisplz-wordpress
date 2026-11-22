@@ -4,6 +4,7 @@ namespace Bug_Spotter\Rest;
 
 use Bug_Spotter\Client_Ip;
 use Bug_Spotter\Installer;
+use Bug_Spotter\Priorities;
 use Bug_Spotter\Report_Submission;
 use Bug_Spotter\Reports_Repository;
 use Bug_Spotter\Screenshot_Store;
@@ -152,13 +153,13 @@ final class Reports_Controller {
 		}
 
 		$fields = array();
-		foreach ( array( 'status', 'priority' ) as $key ) {
-			if ( null === $request->get_param( $key ) ) {
+		foreach ( array( Statuses::class, Priorities::class ) as $list ) {
+			$key   = $list::FIELD;
+			$value = $request->get_param( $key );
+			if ( null === $value ) {
 				continue;
 			}
-			$value = $request->get_param( $key );
-			$valid = is_string( $value ) && ( 'status' === $key ? Statuses::is_valid( $value ) : Statuses::is_valid_priority( $value ) );
-			if ( ! $valid ) {
+			if ( ! is_string( $value ) || ! $list::is_valid( $value ) ) {
 				/* translators: %s: field name (status or priority) */
 				return Report_Submission::invalid( sprintf( __( 'Invalid value for "%s".', 'bug-spotter' ), $key ) );
 			}

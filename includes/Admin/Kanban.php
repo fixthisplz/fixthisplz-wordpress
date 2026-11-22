@@ -2,6 +2,7 @@
 
 namespace Bug_Spotter\Admin;
 
+use Bug_Spotter\Priorities;
 use Bug_Spotter\Report_Format;
 use Bug_Spotter\Reports_Repository;
 use Bug_Spotter\Rest\Reports_Controller;
@@ -52,7 +53,7 @@ final class Kanban {
 		$limit = self::column_limit( $status );
 
 		echo '<section class="bugspot-column" data-status="' . esc_attr( $status ) . '">';
-		echo '<h2 class="bugspot-column-title">' . Report_Format::status_pill( $status ) . ' <span class="bugspot-count" data-status="' . esc_attr( $status ) . '">' . esc_html( (string) $total ) . '</span></h2>'; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
+		echo '<h2 class="bugspot-column-title">' . Report_Format::pill( Statuses::class, $status ) . ' <span class="bugspot-count" data-status="' . esc_attr( $status ) . '">' . esc_html( (string) $total ) . '</span></h2>'; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
 		echo '<ul class="bugspot-cards" data-status="' . esc_attr( $status ) . '">';
 		foreach ( self::fetch( $repo, $criteria, $status, $limit ) as $item ) {
 			self::render_card( $item );
@@ -103,15 +104,13 @@ final class Kanban {
 		$path     = wp_parse_url( (string) $item['page_url'], PHP_URL_PATH );
 		$path     = is_string( $path ) && '' !== $path ? $path : (string) $item['page_url'];
 		$created  = Reports_Repository::timestamp( $item['created_at'] );
-		$priority = (string) $item['priority'];
-		$labels   = Statuses::priorities();
 
 		echo '<li class="bugspot-card" data-id="' . esc_attr( (string) $id ) . '" data-status="' . esc_attr( (string) $item['status'] ) . '">';
 		echo '<div class="bugspot-card-head"><a class="bugspot-card-id" href="' . esc_url( Detail_Page::url( $id ) ) . '">#' . esc_html( (string) $id ) . '</a>';
 		if ( is_string( $item['screenshot'] ?? null ) && '' !== $item['screenshot'] ) {
 			echo ' <span class="dashicons dashicons-camera" title="' . esc_attr__( 'Has a screenshot', 'bug-spotter' ) . '" aria-label="' . esc_attr__( 'Has a screenshot', 'bug-spotter' ) . '"></span>';
 		}
-		echo ' <span class="bugspot-pill bugspot-priority-' . esc_attr( $priority ) . '">' . esc_html( $labels[ $priority ] ?? $priority ) . '</span></div>';
+		echo ' ' . Report_Format::pill( Priorities::class, (string) $item['priority'] ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
 		echo '<p class="bugspot-card-text">' . esc_html( $excerpt ) . '</p>';
 		echo '<p class="bugspot-card-meta bugspot-muted"><span class="bugspot-card-page">' . esc_html( $path ) . '</span>';
 		if ( null !== $created ) {

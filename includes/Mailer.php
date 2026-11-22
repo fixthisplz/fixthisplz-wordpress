@@ -25,8 +25,8 @@ final class Mailer {
 		}
 
 		$blogname = wp_specialchars_decode( (string) get_option( 'blogname' ), ENT_QUOTES );
-		/* translators: 1: site name, 2: report number */
-		$subject = sprintf( __( '[%1$s] New bug #%2$d', 'bug-spotter' ), $blogname, $report_id );
+		/* translators: 1: site name, 2: report title, such as "Bug #12". */
+		$subject = sprintf( __( '[%1$s] New report: %2$s', 'bug-spotter' ), $blogname, Report_Format::title( $report_id ) );
 
 		$values = self::values( $report_id, $report );
 		$text   = self::build_text( $values );
@@ -59,7 +59,7 @@ final class Mailer {
 	 */
 	private static function values( int $report_id, array $report ): array {
 		return array(
-			'number'      => '#' . $report_id,
+			'number'      => Report_Format::title( $report_id ),
 			'description' => Report_Format::excerpt( (string) $report['description'], self::EXCERPT_LENGTH ),
 			'page'        => (string) $report['page_url'],
 			'reporter'    => Report_Format::reporter_label( $report ),

@@ -2,6 +2,7 @@
 
 namespace Bug_Spotter\Admin;
 
+use Bug_Spotter\Priorities;
 use Bug_Spotter\Statuses;
 
 defined( 'ABSPATH' ) || exit;
@@ -26,7 +27,7 @@ final class Report_Query_Args {
 
 		return array(
 			'status'   => Statuses::is_valid( $status ) ? $status : '',
-			'priority' => Statuses::is_valid_priority( $priority ) ? $priority : '',
+			'priority' => Priorities::is_valid( $priority ) ? $priority : '',
 			'from'     => $date( $text( 'from' ) ),
 			'to'       => $date( $text( 'to' ) ),
 			'search'   => trim( sanitize_text_field( $text( 's' ) ) ),

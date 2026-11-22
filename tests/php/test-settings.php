@@ -1,5 +1,6 @@
 <?php
 
+use Bug_Spotter\Priorities;
 use Bug_Spotter\Settings;
 use Bug_Spotter\Settings_Sanitizer;
 use Bug_Spotter\Statuses;
@@ -146,11 +147,11 @@ settings_test(
 	'statuses: order matches spec',
 	function () {
 		assert_same( array( 'new', 'seen', 'confirmed', 'in_progress', 'fixed', 'wont_fix', 'duplicate' ), array_keys( Statuses::all() ) );
-		assert_same( array( 'low', 'normal', 'high', 'critical' ), array_keys( Statuses::priorities() ) );
+		assert_same( array( 'low', 'normal', 'high', 'critical' ), array_keys( Priorities::all() ) );
 		assert_true( Statuses::is_valid( 'seen' ) );
 		assert_true( ! Statuses::is_valid( 'x' ) );
-		assert_true( Statuses::is_valid_priority( 'high' ) );
-		assert_true( ! Statuses::is_valid_priority( 'urgent' ) );
+		assert_true( Priorities::is_valid( 'high' ) );
+		assert_true( ! Priorities::is_valid( 'urgent' ) );
 	}
 );
 

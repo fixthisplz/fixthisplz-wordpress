@@ -115,6 +115,7 @@ final class Settings {
 				'menu_badge'    => true,
 				'menu_label'    => '',
 				'list_label'    => '',
+				'item_label'    => '',
 				'menu_position' => self::MENU_POSITION,
 			),
 			// Ordered list (Kanban columns, selectors); an empty label shows the translated default name.
@@ -126,6 +127,13 @@ final class Settings {
 				array( 'key' => 'fixed', 'label' => '', 'color' => '#008a20', 'closed' => true ),
 				array( 'key' => 'wont_fix', 'label' => '', 'color' => '#8c8f94', 'closed' => true ),
 				array( 'key' => 'duplicate', 'label' => '', 'color' => '#8c8f94', 'closed' => true ),
+			),
+			// Lowest first: the order sorting by priority follows.
+			'priorities'    => array(
+				array( 'key' => 'low', 'label' => '', 'color' => '#787c82' ),
+				array( 'key' => 'normal', 'label' => '', 'color' => '#2271b1' ),
+				array( 'key' => 'high', 'label' => '', 'color' => '#b26200' ),
+				array( 'key' => 'critical', 'label' => '', 'color' => '#d63638' ),
 			),
 		);
 	}
@@ -191,6 +199,8 @@ final class Settings {
 				return __( 'Bugs', 'bug-spotter' );
 			case 'management.list_label':
 				return __( 'All bugs', 'bug-spotter' );
+			case 'management.item_label':
+				return __( 'Bug', 'bug-spotter' );
 			case 'button.label':
 			case 'button.tooltip':
 				return __( 'Report a bug', 'bug-spotter' );

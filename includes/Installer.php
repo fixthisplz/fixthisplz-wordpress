@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) || exit;
 
 final class Installer {
 
-	public const DB_VERSION        = '1';
+	public const DB_VERSION        = '2';
 	public const DB_VERSION_OPTION = 'bugspot_db_version';
 	public const CAPABILITY        = 'bugspot_manage';
 	public const CRON_HOOK         = 'bugspot_daily_purge';
@@ -30,6 +30,7 @@ final class Installer {
 		wp_clear_scheduled_hook( self::CRON_HOOK );
 	}
 
+	/** Version 2: priority varchar(20) (configurable priorities). dbDelta only widens the column, rows are kept. */
 	public static function maybe_upgrade(): void {
 		if ( self::DB_VERSION !== get_option( self::DB_VERSION_OPTION ) ) {
 			self::create_table();
@@ -74,7 +75,7 @@ final class Installer {
 		$sql     = "CREATE TABLE {$table} (
   id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   status varchar(20) NOT NULL DEFAULT 'new',
-  priority varchar(10) NOT NULL DEFAULT 'normal',
+  priority varchar(20) NOT NULL DEFAULT 'normal',
   description text NOT NULL,
   page_url varchar(2048) NOT NULL DEFAULT '',
   context longtext NULL,
@@ -95,6 +96,11 @@ final class Installer {
 ) {$charset};";
 
 		dbDelta( $sql );
-		update_option( self::DB_VERSION_OPTION, self::DB_VERSION );
+		// dbDelta() reports no failure: the version is stored only once the table has its version-2 shape, so an
+		// upgrade that did not apply is tried again on the next load.
+		$priority = $wpdb->get_row( $wpdb->prepare( 'SHOW COLUMNS FROM %i LIKE %s', $table, 'priority' ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- schema check.
+		if ( is_array( $priority ) && 'varchar(20)' === strtolower( (string) $priority['Type'] ) ) {
+			update_option( self::DB_VERSION_OPTION, self::DB_VERSION );
+		}
 	}
 }
