@@ -24,18 +24,15 @@ msgstr "Bug Spotter"
 msgid "Lets visitors and editors report bugs from any page of a WordPress site."
 msgstr "Permet aux visiteurs et aux éditeurs de signaler des bugs depuis n’importe quelle page d’un site WordPress."
 
-#: includes/Admin/Bugs_Page.php:26
+#: includes/Admin/Bugs_Page.php:28
 msgid "Bugs per page"
 msgstr "Bugs par page"
 
-#: includes/Admin/Bugs_Page.php:84
-#: includes/Admin/Bugs_Page.php:95
-#: includes/Admin/Csv_Export.php:34
-#: includes/Admin/Detail_Page.php:68
+#: includes/Admin/Request.php:20
 msgid "Sorry, you are not allowed to do that."
 msgstr "Désolé, vous n’avez pas l’autorisation d’effectuer cette action."
 
-#: includes/Admin/Bugs_Page.php:146
+#: includes/Admin/Bugs_Page.php:153
 msgid "Sorry, you are not allowed to access this page."
 msgstr "Désolé, vous n’avez pas l’autorisation d’accéder à cette page."
 
@@ -45,7 +42,7 @@ msgid "Bugs"
 msgstr "Bugs"
 
 #. translators: %d: number of reports.
-#: includes/Admin/Bugs_Page.php:191
+#: includes/Admin/Bugs_Page.php:198
 #, php-format
 msgid "%d report deleted."
 msgid_plural "%d reports deleted."
@@ -53,53 +50,54 @@ msgstr[0] "%d signalement supprimé."
 msgstr[1] "%d signalements supprimés."
 
 #. translators: %d: number of reports.
-#: includes/Admin/Bugs_Page.php:193
+#: includes/Admin/Bugs_Page.php:200
 #, php-format
 msgid "%d report updated."
 msgid_plural "%d reports updated."
 msgstr[0] "%d signalement mis à jour."
 msgstr[1] "%d signalements mis à jour."
 
-#: includes/Admin/Bugs_Page.php:204
+#: includes/Admin/Bugs_Page.php:211
 msgid "List"
 msgstr "Liste"
 
-#: includes/Admin/Bugs_Page.php:210
+#: includes/Admin/Bugs_Page.php:217
 msgid "Kanban"
 msgstr "Kanban"
 
-#: includes/Admin/Bugs_Page.php:231
+#: includes/Admin/Bugs_Page.php:238
 msgid "From"
 msgstr "Du"
 
-#: includes/Admin/Bugs_Page.php:232
+#: includes/Admin/Bugs_Page.php:239
 msgid "To"
 msgstr "Au"
 
-#: includes/Admin/Bugs_Page.php:233
-#: includes/Admin/Csv_Export.php:73
-#: includes/Admin/Detail_Page.php:294
-#: includes/Admin/List_Table.php:41
+#: includes/Admin/Bugs_Page.php:240
+#: includes/Admin/Csv_Export.php:70
+#: includes/Admin/Detail_Page.php:148
+#: includes/Admin/List_Table.php:42
+#: includes/Report_Format.php:73
 msgid "Priority"
 msgstr "Priorité"
 
-#: includes/Admin/Bugs_Page.php:234
+#: includes/Admin/Bugs_Page.php:241
 msgid "All priorities"
 msgstr "Toutes les priorités"
 
-#: includes/Admin/Bugs_Page.php:239
+#: includes/Admin/Bugs_Page.php:247
 msgid "Search reports"
 msgstr "Rechercher des signalements"
 
-#: includes/Admin/Bugs_Page.php:240
+#: includes/Admin/Bugs_Page.php:248
 msgid "Search description or URL"
 msgstr "Rechercher dans la description ou l’URL"
 
-#: includes/Admin/Bugs_Page.php:241
+#: includes/Admin/Bugs_Page.php:249
 msgid "Filter"
 msgstr "Filtrer"
 
-#: includes/Admin/Bugs_Page.php:242
+#: includes/Admin/Bugs_Page.php:250
 msgid "Export CSV"
 msgstr "Exporter en CSV"
 
@@ -107,290 +105,292 @@ msgstr "Exporter en CSV"
 msgid "Visitor"
 msgstr "Visiteur"
 
-#: includes/Admin/Csv_Export.php:43
+#: includes/Admin/Csv_Export.php:40
 msgid "The export could not start because output was already sent."
 msgstr "L’export n’a pas pu démarrer car du contenu avait déjà été envoyé."
 
-#: includes/Admin/Csv_Export.php:70
-#: includes/Admin/List_Table.php:37
+#: includes/Admin/Csv_Export.php:67
+#: includes/Admin/List_Table.php:38
 msgid "No."
 msgstr "N°"
 
-#: includes/Admin/Csv_Export.php:71
-#: includes/Admin/List_Table.php:43
-#: includes/Privacy.php:45
+#: includes/Admin/Csv_Export.php:68
+#: includes/Admin/List_Table.php:45
+#: includes/Privacy.php:54
+#: includes/Privacy.php:128
 msgid "Date"
 msgstr "Date"
 
-#: includes/Admin/Csv_Export.php:72
-#: includes/Admin/Detail_Page.php:246
-#: includes/Admin/Detail_Page.php:283
-#: includes/Admin/Detail_Page.php:289
-#: includes/Admin/List_Table.php:42
-#: includes/Privacy.php:48
+#: includes/Admin/Csv_Export.php:69
+#: includes/Admin/Detail_Page.php:137
+#: includes/Admin/Detail_Page.php:143
+#: includes/Admin/List_Table.php:43
+#: includes/Admin/Report_Context_View.php:125
+#: includes/Privacy.php:57
+#: includes/Report_Format.php:72
 msgid "Status"
 msgstr "Statut"
 
-#: includes/Admin/Csv_Export.php:74
-#: includes/Admin/Detail_Page.php:102
-#: includes/Admin/List_Table.php:39
-#: includes/Mailer.php:76
-#: includes/Privacy.php:46
+#: includes/Admin/Csv_Export.php:71
+#: includes/Admin/Detail_Page.php:96
+#: includes/Admin/List_Table.php:40
+#: includes/Mailer.php:152
+#: includes/Privacy.php:55
 msgid "Page"
 msgstr "Page"
 
-#: includes/Admin/Csv_Export.php:75
-#: includes/Admin/Detail_Page.php:101
-#: includes/Admin/List_Table.php:40
+#: includes/Admin/Csv_Export.php:72
+#: includes/Admin/Detail_Page.php:95
+#: includes/Admin/List_Table.php:41
 msgid "Reporter"
 msgstr "Déclarant"
 
-#: includes/Admin/Csv_Export.php:76
-#: includes/Admin/Detail_Page.php:98
-#: includes/Admin/List_Table.php:38
+#: includes/Admin/Csv_Export.php:73
+#: includes/Admin/Detail_Page.php:91
+#: includes/Admin/List_Table.php:39
 #: includes/Frontend/Assets.php:178
-#: includes/Mailer.php:75
-#: includes/Privacy.php:47
+#: includes/Mailer.php:151
+#: includes/Privacy.php:56
 msgid "Description"
 msgstr "Description"
 
-#: includes/Admin/Detail_Page.php:83
+#: includes/Admin/Detail_Page.php:76
 #: includes/Rest/Reports_Controller.php:152
 msgid "Report not found."
 msgstr "Signalement introuvable."
 
-#: includes/Admin/Detail_Page.php:103
+#: includes/Admin/Detail_Page.php:97
 msgid "Element"
 msgstr "Élément"
 
-#: includes/Admin/Detail_Page.php:104
+#: includes/Admin/Detail_Page.php:98
 msgid "Browser"
 msgstr "Navigateur"
 
-#: includes/Admin/Detail_Page.php:105
+#: includes/Admin/Detail_Page.php:99
 #: includes/Admin/Settings_Tabs.php:261
 msgid "Console errors"
 msgstr "Erreurs de la console"
 
-#: includes/Admin/Detail_Page.php:106
+#: includes/Admin/Detail_Page.php:100
 #: includes/Admin/Settings_Tabs.php:265
 #: includes/Frontend/Assets.php:227
 msgid "Failed requests"
 msgstr "Requêtes en échec"
 
-#: includes/Admin/Detail_Page.php:107
+#: includes/Admin/Detail_Page.php:101
 #: includes/Admin/Settings_Tabs.php:98
 #: includes/Admin/Settings_Tabs.php:215
 #: includes/Frontend/Assets.php:234
-#: includes/Mailer.php:78
+#: includes/Mailer.php:154
 msgid "Screenshot"
 msgstr "Capture d’écran"
 
-#: includes/Admin/Detail_Page.php:108
+#: includes/Admin/Detail_Page.php:102
 msgid "Raw data"
 msgstr "Données brutes"
 
-#: includes/Admin/Detail_Page.php:110
+#: includes/Admin/Report_Context_View.php:160
 msgid "Show the raw JSON"
 msgstr "Afficher le JSON brut"
 
-#: includes/Admin/Detail_Page.php:120
+#: includes/Admin/Detail_Page.php:110
 msgid "Back to the list"
 msgstr "Retour à la liste"
 
-#: includes/Admin/Detail_Page.php:126
+#: includes/Admin/Detail_Page.php:116
 msgid "Report updated."
 msgstr "Signalement mis à jour."
 
-#: includes/Admin/Detail_Page.php:128
+#: includes/Admin/Detail_Page.php:117
 msgid "The report could not be updated."
 msgstr "Le signalement n’a pas pu être mis à jour."
 
-#: includes/Admin/Detail_Page.php:139
+#: includes/Admin/Report_Context_View.php:18
 #: includes/Admin/Settings_Button_Tab.php:162
 #: includes/Admin/Settings_Tabs.php:150
 msgid "None"
 msgstr "Aucun"
 
-#: includes/Admin/Detail_Page.php:164
+#: includes/Admin/Report_Context_View.php:43
 msgid "Contact e-mail:"
 msgstr "E-mail de contact :"
 
-#: includes/Admin/Detail_Page.php:176
+#: includes/Admin/Report_Context_View.php:55
 #: includes/Admin/Settings_Tabs.php:77
 msgid "Title"
 msgstr "Titre"
 
-#: includes/Admin/Detail_Page.php:177
+#: includes/Admin/Report_Context_View.php:56
 msgid "WordPress page"
 msgstr "Page WordPress"
 
-#: includes/Admin/Detail_Page.php:203
+#: includes/Admin/Report_Context_View.php:82
 msgid "Selector"
 msgstr "Sélecteur"
 
-#: includes/Admin/Detail_Page.php:204
+#: includes/Admin/Report_Context_View.php:83
 msgid "Tag"
 msgstr "Balise"
 
-#: includes/Admin/Detail_Page.php:205
+#: includes/Admin/Report_Context_View.php:84
 msgid "Role"
 msgstr "Rôle"
 
-#: includes/Admin/Detail_Page.php:206
+#: includes/Admin/Report_Context_View.php:85
 #: includes/Admin/Settings_List_Tab.php:34
 msgid "Name"
 msgstr "Nom"
 
-#: includes/Admin/Detail_Page.php:207
+#: includes/Admin/Report_Context_View.php:86
 #: includes/Admin/Settings_Button_Tab.php:119
 #: includes/Frontend/Assets.php:190
 msgid "Text"
 msgstr "Texte"
 
-#: includes/Admin/Detail_Page.php:208
+#: includes/Admin/Report_Context_View.php:87
 #: includes/Admin/Settings_Button_Tab.php:55
 msgid "Position"
 msgstr "Position"
 
-#: includes/Admin/Detail_Page.php:217
+#: includes/Admin/Report_Context_View.php:96
 msgid "Language"
 msgstr "Langue"
 
-#: includes/Admin/Detail_Page.php:218
+#: includes/Admin/Report_Context_View.php:97
 msgid "Time zone"
 msgstr "Fuseau horaire"
 
-#: includes/Admin/Detail_Page.php:219
+#: includes/Admin/Report_Context_View.php:98
 msgid "User agent"
 msgstr "User-agent"
 
-#: includes/Admin/Detail_Page.php:220
+#: includes/Admin/Report_Context_View.php:99
 msgid "Viewport"
 msgstr "Zone d’affichage"
 
-#: includes/Admin/Detail_Page.php:221
+#: includes/Admin/Report_Context_View.php:100
 msgid "Plugin version"
 msgstr "Version de l’extension"
 
-#: includes/Admin/Detail_Page.php:231
+#: includes/Admin/Report_Context_View.php:110
 msgid "Level"
 msgstr "Niveau"
 
-#: includes/Admin/Detail_Page.php:231
+#: includes/Admin/Report_Context_View.php:110
 msgid "Message"
 msgstr "Message"
 
-#: includes/Admin/Detail_Page.php:231
-#: includes/Admin/Detail_Page.php:246
+#: includes/Admin/Report_Context_View.php:110
+#: includes/Admin/Report_Context_View.php:125
 msgid "Time"
 msgstr "Heure"
 
-#: includes/Admin/Detail_Page.php:246
+#: includes/Admin/Report_Context_View.php:125
 msgid "Method"
 msgstr "Méthode"
 
-#: includes/Admin/Detail_Page.php:246
+#: includes/Admin/Report_Context_View.php:125
 msgid "URL"
 msgstr "URL"
 
-#: includes/Admin/Detail_Page.php:263
+#: includes/Admin/Report_Context_View.php:142
 msgid "No screenshot was attached."
 msgstr "Aucune capture d’écran n’était jointe."
 
-#: includes/Admin/Detail_Page.php:275
+#: includes/Admin/Report_Context_View.php:154
 msgid "Screenshot of the page (click for full size)"
 msgstr "Capture d’écran de la page (cliquez pour l’agrandir)"
 
-#: includes/Admin/Detail_Page.php:296
+#: includes/Admin/Detail_Page.php:155
 msgid "Update"
 msgstr "Mettre à jour"
 
-#: includes/Admin/Detail_Page.php:301
+#: includes/Admin/Detail_Page.php:160
 msgid "Dates"
 msgstr "Dates"
 
-#: includes/Admin/Detail_Page.php:304
+#: includes/Admin/Detail_Page.php:163
 msgid "Created"
 msgstr "Créé"
 
-#: includes/Admin/Detail_Page.php:305
+#: includes/Admin/Detail_Page.php:164
 #: includes/Statuses.php:31
 msgid "Seen"
 msgstr "Vu"
 
-#: includes/Admin/Detail_Page.php:306
+#: includes/Admin/Detail_Page.php:165
 msgid "Status changed"
 msgstr "Statut modifié"
 
-#: includes/Admin/Detail_Page.php:307
+#: includes/Admin/Detail_Page.php:166
 msgid "Updated"
 msgstr "Mis à jour"
 
-#: includes/Admin/Detail_Page.php:313
-#: includes/Admin/List_Table.php:72
-#: includes/Admin/List_Table.php:156
+#: includes/Admin/Detail_Page.php:172
+#: includes/Admin/List_Table.php:79
+#: includes/Admin/List_Table.php:164
 #: includes/Admin/Settings_List_Tab.php:130
 #: includes/Frontend/Assets.php:204
 msgid "Delete"
 msgstr "Supprimer"
 
-#: includes/Admin/Detail_Page.php:315
+#: includes/Admin/Detail_Page.php:174
 msgid "Delete this report permanently? This cannot be undone."
 msgstr "Supprimer définitivement ce signalement ? Cette action est irréversible."
 
-#: includes/Admin/Detail_Page.php:319
+#: includes/Admin/Detail_Page.php:178
 msgid "Delete this report"
 msgstr "Supprimer ce signalement"
 
-#: includes/Admin/Kanban.php:27
+#: includes/Admin/Kanban.php:28
 msgid "The report could not be moved. Please try again."
 msgstr "Le signalement n’a pas pu être déplacé. Veuillez réessayer."
 
-#: includes/Admin/Kanban.php:28
+#: includes/Admin/Kanban.php:29
 msgid "Dismiss this notice."
 msgstr "Ignorer cette notification."
 
-#: includes/Admin/Kanban.php:67
+#: includes/Admin/Kanban.php:75
 msgid "Show more"
 msgstr "Afficher plus"
 
-#: includes/Admin/Kanban.php:111
+#: includes/Admin/Kanban.php:119
 msgid "Has a screenshot"
 msgstr "Contient une capture d’écran"
 
 #. translators: %s: human-readable time difference, e.g. "2 hours".
-#: includes/Admin/Kanban.php:118
+#: includes/Admin/Kanban.php:133
 #, php-format
 msgid "%s ago"
 msgstr "il y a %s"
 
 #. translators: %s: status label.
-#: includes/Admin/List_Table.php:66
+#: includes/Admin/List_Table.php:68
 #, php-format
 msgid "Set status: %s"
 msgstr "Définir le statut : %s"
 
 #. translators: %s: priority label.
-#: includes/Admin/List_Table.php:70
+#: includes/Admin/List_Table.php:72
 #, php-format
 msgid "Set priority: %s"
 msgstr "Définir la priorité : %s"
 
-#: includes/Admin/List_Table.php:119
+#: includes/Admin/List_Table.php:127
 msgid "All"
 msgstr "Tous"
 
 #: includes/Admin/Dashboard_Widget.php:56
-#: includes/Admin/List_Table.php:127
+#: includes/Admin/List_Table.php:135
 msgid "No reports found."
 msgstr "Aucun signalement trouvé."
 
-#: includes/Admin/List_Table.php:151
+#: includes/Admin/List_Table.php:159
 msgid "View"
 msgstr "Voir"
 
-#: includes/Admin/List_Table.php:155
+#: includes/Admin/List_Table.php:163
 msgid "Delete this report permanently?"
 msgstr "Supprimer définitivement ce signalement ?"
 
@@ -855,7 +855,7 @@ msgstr "Permettre de joindre une capture d’écran de la page"
 
 #: includes/Admin/Settings_Tabs.php:117
 #: includes/Frontend/Assets.php:225
-#: includes/Privacy.php:51
+#: includes/Privacy.php:60
 msgid "Contact e-mail"
 msgstr "E-mail de contact"
 
@@ -1235,72 +1235,73 @@ msgstr "Veuillez compléter la vérification anti-spam."
 msgid "This page cannot be reported: its address is not a web address."
 msgstr "Cette page ne peut pas être signalée : son adresse n’est pas une adresse web."
 
-#: includes/Mailer.php:74
+#: includes/Mailer.php:150
 msgid "Report"
 msgstr "Signalement"
 
-#: includes/Mailer.php:77
+#: includes/Mailer.php:153
 msgid "Reported by"
 msgstr "Signalé par"
 
-#: includes/Mailer.php:79
+#: includes/Mailer.php:155
 msgid "Open the report"
 msgstr "Ouvrir le signalement"
 
-#: includes/Privacy.php:21
-#: includes/Privacy.php:29
+#: includes/Privacy.php:22
+#: includes/Privacy.php:34
 msgid "Bug Spotter reports"
 msgstr "Signalements Bug Spotter"
 
-#: includes/Privacy.php:44
+#: includes/Privacy.php:53
+#: includes/Privacy.php:127
 msgid "Report number"
 msgstr "Numéro du signalement"
 
-#: includes/Privacy.php:54
+#: includes/Privacy.php:63
 msgid "Screenshot attached"
 msgstr "Capture d’écran jointe"
 
-#: includes/Privacy.php:55
+#: includes/Privacy.php:64
 msgid "Yes"
 msgstr "Oui"
 
-#: includes/Privacy.php:55
+#: includes/Privacy.php:64
 msgid "No"
 msgstr "Non"
 
-#: includes/Privacy.php:60
+#: includes/Privacy.php:69
 msgid "Bug reports"
 msgstr "Signalements de bugs"
 
-#: includes/Privacy.php:61
+#: includes/Privacy.php:70
 msgid "Bug reports submitted from this site."
 msgstr "Signalements de bugs envoyés depuis ce site."
 
-#: includes/Privacy.php:92
+#: includes/Privacy.php:101
 msgid "Some bug reports could not be deleted."
 msgstr "Certains signalements n’ont pas pu être supprimés."
 
-#: includes/Privacy.php:116
+#: includes/Privacy.php:176
 msgid "Purpose: this site lets visitors and users report bugs they meet while browsing. Reports are used only to find and fix those problems."
 msgstr "Finalité : ce site permet aux visiteurs et aux utilisateurs de signaler les bugs qu’ils rencontrent en naviguant. Les signalements servent uniquement à trouver et corriger ces problèmes."
 
-#: includes/Privacy.php:117
+#: includes/Privacy.php:177
 msgid "Data collected: the description you write, the address of the page, technical context (browser, screen size, language, errors and failed requests seen by the page), an optional screenshot, an optional contact e-mail address (stored encrypted), your account if you are logged in, and a keyed hash of your IP address used only against abuse. Your IP address itself is never stored. Values typed into the site's own forms and fields (including passwords) are never collected; only the description and optional contact e-mail typed into the bug report form are stored. The optional screenshot is an image of the page as it appears on your screen, which you see before sending."
 msgstr "Données collectées : la description que vous rédigez, l’adresse de la page, le contexte technique (navigateur, taille d’écran, langue, erreurs et requêtes en échec observées par la page), une capture d’écran facultative, une adresse e-mail de contact facultative (stockée chiffrée), votre compte si vous êtes connecté, et une empreinte à clé de votre adresse IP, utilisée uniquement contre les abus. Votre adresse IP elle-même n’est jamais stockée. Les valeurs saisies dans les formulaires et champs du site (mots de passe compris) ne sont jamais collectées ; seuls la description et l’adresse e-mail de contact facultative saisies dans le formulaire de signalement sont conservées. La capture d’écran facultative est une image de la page telle qu’elle apparaît sur votre écran, que vous voyez avant l’envoi."
 
-#: includes/Privacy.php:118
+#: includes/Privacy.php:178
 msgid "Anti-bot check: when an anti-bot provider is enabled (Cloudflare Turnstile, Google reCAPTCHA or hCaptcha), that provider receives your IP address and browser data when you send a report, under its own privacy policy."
 msgstr "Vérification anti-robot : lorsqu’un fournisseur anti-robot est activé (Cloudflare Turnstile, Google reCAPTCHA ou hCaptcha), ce fournisseur reçoit votre adresse IP et des données de votre navigateur lors de l’envoi d’un signalement, selon sa propre politique de confidentialité."
 
-#: includes/Privacy.php:119
+#: includes/Privacy.php:179
 msgid "Retention: closed reports are deleted automatically after the retention period set by the site administrators; otherwise reports are kept until they are deleted."
 msgstr "Conservation : les signalements clos sont supprimés automatiquement à l’issue de la durée de conservation définie par les administrateurs du site ; sinon, les signalements sont conservés jusqu’à leur suppression."
 
-#: includes/Privacy.php:120
+#: includes/Privacy.php:180
 msgid "Legal basis: legitimate interest in maintaining and improving the site."
 msgstr "Base légale : intérêt légitime à maintenir et à améliorer le site."
 
-#: includes/Privacy.php:121
+#: includes/Privacy.php:182
 msgid "Recipients: only the site administrators and the people they authorise to manage bug reports."
 msgstr "Destinataires : uniquement les administrateurs du site et les personnes qu’ils autorisent à gérer les signalements de bugs."
 
@@ -1694,7 +1695,7 @@ msgid "Priorities"
 msgstr "Priorités"
 
 #. translators: 1: site name, 2: report title, such as "Bug #12".
-#: includes/Mailer.php:29
+#: includes/Mailer.php:35
 #, php-format
 msgid "[%1$s] New report: %2$s"
 msgstr "[%1$s] Nouveau signalement : %2$s"
@@ -1704,3 +1705,141 @@ msgstr "[%1$s] Nouveau signalement : %2$s"
 #, php-format
 msgid "%1$s #%2$d"
 msgstr "%1$s n° %2$d"
+
+#: includes/Admin/Activity_Box.php:52
+msgid "New note"
+msgstr "Nouvelle note"
+
+#: includes/Admin/Activity_Box.php:53
+msgid "Internal note, only visible to the team"
+msgstr "Note interne, visible seulement par l’équipe"
+
+#: includes/Admin/Activity_Box.php:54
+msgid "Add note"
+msgstr "Ajouter la note"
+
+#: includes/Admin/Activity_Box.php:58
+msgid "No notes or changes yet."
+msgstr "Aucune note ni modification pour l’instant."
+
+#: includes/Admin/Activity_Box.php:90
+msgid "Delete this note?"
+msgstr "Supprimer cette note ?"
+
+#: includes/Admin/Activity_Box.php:94
+msgid "Delete note"
+msgstr "Supprimer la note"
+
+#: includes/Report_Format.php:66
+msgid "System"
+msgstr "Système"
+
+#: includes/Admin/Bugs_Page.php:256
+#: includes/Admin/Detail_Page.php:150
+#: includes/Admin/List_Table.php:44
+#: includes/Report_Format.php:74
+msgid "Assigned to"
+msgstr "Attribué à"
+
+#: includes/Admin/Bugs_Page.php:258
+#: includes/Admin/List_Table.php:203
+#: includes/Report_Format.php:82
+msgid "Unassigned"
+msgstr "Non attribué"
+
+#: includes/Admin/Bugs_Page.php:257
+msgid "Everyone"
+msgstr "Tout le monde"
+
+#: includes/Admin/Bugs_Page.php:275
+msgid "My reports"
+msgstr "Mes signalements"
+
+#: includes/Admin/Detail_Page.php:94
+msgid "Notes and history"
+msgstr "Notes et historique"
+
+#: includes/Admin/Detail_Page.php:118
+msgid "Note added."
+msgstr "Note ajoutée."
+
+#: includes/Admin/Detail_Page.php:119
+msgid "Note deleted."
+msgstr "Note supprimée."
+
+#: includes/Admin/Detail_Page.php:120
+msgid "The note could not be added."
+msgstr "La note n’a pas pu être ajoutée."
+
+#: includes/Admin/Detail_Page.php:153
+msgid "— Unassigned —"
+msgstr "— Non attribué —"
+
+#. translators: %s: name of the person the report is assigned to.
+#: includes/Admin/Kanban.php:125
+#, php-format
+msgid "Assigned to %s"
+msgstr "Attribué à %s"
+
+#. translators: %s: name of a person who manages bugs.
+#: includes/Admin/List_Table.php:76
+#, php-format
+msgid "Assign to: %s"
+msgstr "Attribuer à : %s"
+
+#: includes/Admin/List_Table.php:78
+msgid "Unassign"
+msgstr "Retirer l’attribution"
+
+#. translators: 1: site name, 2: report title, such as "Bug #12".
+#: includes/Mailer.php:86
+#, php-format
+msgid "[%1$s] Assigned to you: %2$s"
+msgstr "[%1$s] Vous est attribué : %2$s"
+
+#: includes/Privacy.php:130
+msgid "Note"
+msgstr "Note"
+
+#: includes/Privacy.php:181
+msgid "Internal notes: the people who manage bug reports can write notes on them and assign them to each other; notes and the history of changes are only shown to them, never to the reporter."
+msgstr "Notes internes : les personnes qui gèrent les signalements peuvent y écrire des notes et se les attribuer ; les notes et l’historique des modifications ne sont visibles que par elles, jamais par la personne qui a signalé le bug."
+
+#: includes/Team.php:39
+msgid "Deleted user"
+msgstr "Utilisateur supprimé"
+
+#. translators: 1: site name, 2: number of reports.
+#: includes/Mailer.php:93
+#, php-format
+msgid "[%1$s] %2$d report assigned to you"
+msgid_plural "[%1$s] %2$d reports assigned to you"
+msgstr[0] "[%1$s] %2$d signalement vous est attribué"
+msgstr[1] "[%1$s] %2$d signalements vous sont attribués"
+
+#: includes/Mailer.php:94
+msgid "These reports are now assigned to you:"
+msgstr "Ces signalements vous sont maintenant attribués :"
+
+#: includes/Privacy.php:26
+#: includes/Privacy.php:38
+msgid "Bug Spotter notes and history"
+msgstr "Notes et historique de Bug Spotter"
+
+#: includes/Privacy.php:123
+msgid "Bug report notes and history"
+msgstr "Notes et historique des signalements de bugs"
+
+#: includes/Privacy.php:124
+msgid "Internal notes written on bug reports, and changes made to them."
+msgstr "Notes internes écrites sur les signalements de bugs, et modifications qui y ont été faites."
+
+#: includes/Privacy.php:131
+msgid "Change"
+msgstr "Modification"
+
+#. translators: 1: changed field (Status, Priority or Assigned to), 2: old value, 3: new value.
+#: includes/Report_Format.php:77
+#, php-format
+msgid "%1$s: %2$s → %3$s"
+msgstr "%1$s : %2$s → %3$s"

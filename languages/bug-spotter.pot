@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-22T22:27:03+00:00\n"
+"POT-Creation-Date: 2026-11-22T23:06:06+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: bug-spotter\n"
@@ -24,23 +24,40 @@ msgstr ""
 msgid "Lets visitors and editors report bugs from any page of a WordPress site."
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:26
+#: includes/Admin/Activity_Box.php:52
+msgid "New note"
+msgstr ""
+
+#: includes/Admin/Activity_Box.php:53
+msgid "Internal note, only visible to the team"
+msgstr ""
+
+#: includes/Admin/Activity_Box.php:54
+msgid "Add note"
+msgstr ""
+
+#: includes/Admin/Activity_Box.php:58
+msgid "No notes or changes yet."
+msgstr ""
+
+#: includes/Admin/Activity_Box.php:90
+msgid "Delete this note?"
+msgstr ""
+
+#: includes/Admin/Activity_Box.php:94
+msgid "Delete note"
+msgstr ""
+
+#: includes/Admin/Bugs_Page.php:28
 msgid "Bugs per page"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:84
-#: includes/Admin/Bugs_Page.php:95
-#: includes/Admin/Csv_Export.php:34
-#: includes/Admin/Detail_Page.php:68
-msgid "Sorry, you are not allowed to do that."
-msgstr ""
-
-#: includes/Admin/Bugs_Page.php:146
+#: includes/Admin/Bugs_Page.php:153
 msgid "Sorry, you are not allowed to access this page."
 msgstr ""
 
 #. translators: %d: number of reports.
-#: includes/Admin/Bugs_Page.php:191
+#: includes/Admin/Bugs_Page.php:198
 #, php-format
 msgid "%d report deleted."
 msgid_plural "%d reports deleted."
@@ -48,100 +65,124 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of reports.
-#: includes/Admin/Bugs_Page.php:193
+#: includes/Admin/Bugs_Page.php:200
 #, php-format
 msgid "%d report updated."
 msgid_plural "%d reports updated."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/Admin/Bugs_Page.php:204
+#: includes/Admin/Bugs_Page.php:211
 msgid "List"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:210
+#: includes/Admin/Bugs_Page.php:217
 msgid "Kanban"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:231
+#: includes/Admin/Bugs_Page.php:238
 msgid "From"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:232
+#: includes/Admin/Bugs_Page.php:239
 msgid "To"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:233
-#: includes/Admin/Csv_Export.php:73
-#: includes/Admin/Detail_Page.php:294
-#: includes/Admin/List_Table.php:41
+#: includes/Admin/Bugs_Page.php:240
+#: includes/Admin/Csv_Export.php:70
+#: includes/Admin/Detail_Page.php:148
+#: includes/Admin/List_Table.php:42
+#: includes/Report_Format.php:73
 msgid "Priority"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:234
+#: includes/Admin/Bugs_Page.php:241
 msgid "All priorities"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:239
+#: includes/Admin/Bugs_Page.php:247
 msgid "Search reports"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:240
+#: includes/Admin/Bugs_Page.php:248
 msgid "Search description or URL"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:241
+#: includes/Admin/Bugs_Page.php:249
 msgid "Filter"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:242
+#: includes/Admin/Bugs_Page.php:250
 msgid "Export CSV"
 msgstr ""
 
-#: includes/Admin/Csv_Export.php:43
+#: includes/Admin/Bugs_Page.php:256
+#: includes/Admin/Detail_Page.php:150
+#: includes/Admin/List_Table.php:44
+#: includes/Report_Format.php:74
+msgid "Assigned to"
+msgstr ""
+
+#: includes/Admin/Bugs_Page.php:257
+msgid "Everyone"
+msgstr ""
+
+#: includes/Admin/Bugs_Page.php:258
+#: includes/Admin/List_Table.php:203
+#: includes/Report_Format.php:82
+msgid "Unassigned"
+msgstr ""
+
+#: includes/Admin/Bugs_Page.php:275
+msgid "My reports"
+msgstr ""
+
+#: includes/Admin/Csv_Export.php:40
 msgid "The export could not start because output was already sent."
 msgstr ""
 
-#: includes/Admin/Csv_Export.php:70
-#: includes/Admin/List_Table.php:37
+#: includes/Admin/Csv_Export.php:67
+#: includes/Admin/List_Table.php:38
 msgid "No."
 msgstr ""
 
-#: includes/Admin/Csv_Export.php:71
-#: includes/Admin/List_Table.php:43
-#: includes/Privacy.php:45
+#: includes/Admin/Csv_Export.php:68
+#: includes/Admin/List_Table.php:45
+#: includes/Privacy.php:54
+#: includes/Privacy.php:128
 msgid "Date"
 msgstr ""
 
-#: includes/Admin/Csv_Export.php:72
-#: includes/Admin/Detail_Page.php:246
-#: includes/Admin/Detail_Page.php:283
-#: includes/Admin/Detail_Page.php:289
-#: includes/Admin/List_Table.php:42
-#: includes/Privacy.php:48
+#: includes/Admin/Csv_Export.php:69
+#: includes/Admin/Detail_Page.php:137
+#: includes/Admin/Detail_Page.php:143
+#: includes/Admin/List_Table.php:43
+#: includes/Admin/Report_Context_View.php:125
+#: includes/Privacy.php:57
+#: includes/Report_Format.php:72
 msgid "Status"
 msgstr ""
 
-#: includes/Admin/Csv_Export.php:74
-#: includes/Admin/Detail_Page.php:102
-#: includes/Admin/List_Table.php:39
-#: includes/Mailer.php:76
-#: includes/Privacy.php:46
+#: includes/Admin/Csv_Export.php:71
+#: includes/Admin/Detail_Page.php:96
+#: includes/Admin/List_Table.php:40
+#: includes/Mailer.php:152
+#: includes/Privacy.php:55
 msgid "Page"
 msgstr ""
 
-#: includes/Admin/Csv_Export.php:75
-#: includes/Admin/Detail_Page.php:101
-#: includes/Admin/List_Table.php:40
+#: includes/Admin/Csv_Export.php:72
+#: includes/Admin/Detail_Page.php:95
+#: includes/Admin/List_Table.php:41
 msgid "Reporter"
 msgstr ""
 
-#: includes/Admin/Csv_Export.php:76
-#: includes/Admin/Detail_Page.php:98
-#: includes/Admin/List_Table.php:38
+#: includes/Admin/Csv_Export.php:73
+#: includes/Admin/Detail_Page.php:91
+#: includes/Admin/List_Table.php:39
 #: includes/Frontend/Assets.php:178
-#: includes/Mailer.php:75
-#: includes/Privacy.php:47
+#: includes/Mailer.php:151
+#: includes/Privacy.php:56
 msgid "Description"
 msgstr ""
 
@@ -150,242 +191,178 @@ msgid "Latest reports"
 msgstr ""
 
 #: includes/Admin/Dashboard_Widget.php:56
-#: includes/Admin/List_Table.php:127
+#: includes/Admin/List_Table.php:135
 msgid "No reports found."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:83
+#: includes/Admin/Detail_Page.php:76
 #: includes/Rest/Reports_Controller.php:152
 msgid "Report not found."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:103
+#: includes/Admin/Detail_Page.php:94
+msgid "Notes and history"
+msgstr ""
+
+#: includes/Admin/Detail_Page.php:97
 msgid "Element"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:104
+#: includes/Admin/Detail_Page.php:98
 msgid "Browser"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:105
+#: includes/Admin/Detail_Page.php:99
 #: includes/Admin/Settings_Tabs.php:261
 msgid "Console errors"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:106
+#: includes/Admin/Detail_Page.php:100
 #: includes/Admin/Settings_Tabs.php:265
 #: includes/Frontend/Assets.php:227
 msgid "Failed requests"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:107
+#: includes/Admin/Detail_Page.php:101
 #: includes/Admin/Settings_Tabs.php:98
 #: includes/Admin/Settings_Tabs.php:215
 #: includes/Frontend/Assets.php:234
-#: includes/Mailer.php:78
+#: includes/Mailer.php:154
 msgid "Screenshot"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:108
+#: includes/Admin/Detail_Page.php:102
 msgid "Raw data"
 msgstr ""
 
 #: includes/Admin/Detail_Page.php:110
-msgid "Show the raw JSON"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:120
 msgid "Back to the list"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:126
+#: includes/Admin/Detail_Page.php:116
 msgid "Report updated."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:128
+#: includes/Admin/Detail_Page.php:117
 msgid "The report could not be updated."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:139
-#: includes/Admin/Settings_Button_Tab.php:162
-#: includes/Admin/Settings_Tabs.php:150
-msgid "None"
+#: includes/Admin/Detail_Page.php:118
+msgid "Note added."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:164
-msgid "Contact e-mail:"
+#: includes/Admin/Detail_Page.php:119
+msgid "Note deleted."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:176
-#: includes/Admin/Settings_Tabs.php:77
-msgid "Title"
+#: includes/Admin/Detail_Page.php:120
+msgid "The note could not be added."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:177
-msgid "WordPress page"
+#: includes/Admin/Detail_Page.php:153
+msgid "— Unassigned —"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:203
-msgid "Selector"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:204
-msgid "Tag"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:205
-msgid "Role"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:206
-#: includes/Admin/Settings_List_Tab.php:34
-msgid "Name"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:207
-#: includes/Admin/Settings_Button_Tab.php:119
-#: includes/Frontend/Assets.php:190
-msgid "Text"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:208
-#: includes/Admin/Settings_Button_Tab.php:55
-msgid "Position"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:217
-msgid "Language"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:218
-msgid "Time zone"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:219
-msgid "User agent"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:220
-msgid "Viewport"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:221
-msgid "Plugin version"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:231
-msgid "Level"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:231
-msgid "Message"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:231
-#: includes/Admin/Detail_Page.php:246
-msgid "Time"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:246
-msgid "Method"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:246
-msgid "URL"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:263
-msgid "No screenshot was attached."
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:275
-msgid "Screenshot of the page (click for full size)"
-msgstr ""
-
-#: includes/Admin/Detail_Page.php:296
+#: includes/Admin/Detail_Page.php:155
 msgid "Update"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:301
+#: includes/Admin/Detail_Page.php:160
 msgid "Dates"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:304
+#: includes/Admin/Detail_Page.php:163
 msgid "Created"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:305
+#: includes/Admin/Detail_Page.php:164
 #: includes/Statuses.php:31
 msgid "Seen"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:306
+#: includes/Admin/Detail_Page.php:165
 msgid "Status changed"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:307
+#: includes/Admin/Detail_Page.php:166
 msgid "Updated"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:313
-#: includes/Admin/List_Table.php:72
-#: includes/Admin/List_Table.php:156
+#: includes/Admin/Detail_Page.php:172
+#: includes/Admin/List_Table.php:79
+#: includes/Admin/List_Table.php:164
 #: includes/Admin/Settings_List_Tab.php:130
 #: includes/Frontend/Assets.php:204
 msgid "Delete"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:315
+#: includes/Admin/Detail_Page.php:174
 msgid "Delete this report permanently? This cannot be undone."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:319
+#: includes/Admin/Detail_Page.php:178
 msgid "Delete this report"
 msgstr ""
 
-#: includes/Admin/Kanban.php:27
+#: includes/Admin/Kanban.php:28
 msgid "The report could not be moved. Please try again."
 msgstr ""
 
-#: includes/Admin/Kanban.php:28
+#: includes/Admin/Kanban.php:29
 msgid "Dismiss this notice."
 msgstr ""
 
-#: includes/Admin/Kanban.php:67
+#: includes/Admin/Kanban.php:75
 msgid "Show more"
 msgstr ""
 
-#: includes/Admin/Kanban.php:111
+#: includes/Admin/Kanban.php:119
 msgid "Has a screenshot"
 msgstr ""
 
+#. translators: %s: name of the person the report is assigned to.
+#: includes/Admin/Kanban.php:125
+#, php-format
+msgid "Assigned to %s"
+msgstr ""
+
 #. translators: %s: human-readable time difference, e.g. "2 hours".
-#: includes/Admin/Kanban.php:118
+#: includes/Admin/Kanban.php:133
 #, php-format
 msgid "%s ago"
 msgstr ""
 
 #. translators: %s: status label.
-#: includes/Admin/List_Table.php:66
+#: includes/Admin/List_Table.php:68
 #, php-format
 msgid "Set status: %s"
 msgstr ""
 
 #. translators: %s: priority label.
-#: includes/Admin/List_Table.php:70
+#: includes/Admin/List_Table.php:72
 #, php-format
 msgid "Set priority: %s"
 msgstr ""
 
-#: includes/Admin/List_Table.php:119
+#. translators: %s: name of a person who manages bugs.
+#: includes/Admin/List_Table.php:76
+#, php-format
+msgid "Assign to: %s"
+msgstr ""
+
+#: includes/Admin/List_Table.php:78
+msgid "Unassign"
+msgstr ""
+
+#: includes/Admin/List_Table.php:127
 msgid "All"
 msgstr ""
 
-#: includes/Admin/List_Table.php:151
+#: includes/Admin/List_Table.php:159
 msgid "View"
 msgstr ""
 
-#: includes/Admin/List_Table.php:155
+#: includes/Admin/List_Table.php:163
 msgid "Delete this report permanently?"
 msgstr ""
 
@@ -396,6 +373,110 @@ msgstr ""
 
 #: includes/Admin/Menu.php:51
 msgid "Settings"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:18
+#: includes/Admin/Settings_Button_Tab.php:162
+#: includes/Admin/Settings_Tabs.php:150
+msgid "None"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:43
+msgid "Contact e-mail:"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:55
+#: includes/Admin/Settings_Tabs.php:77
+msgid "Title"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:56
+msgid "WordPress page"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:82
+msgid "Selector"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:83
+msgid "Tag"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:84
+msgid "Role"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:85
+#: includes/Admin/Settings_List_Tab.php:34
+msgid "Name"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:86
+#: includes/Admin/Settings_Button_Tab.php:119
+#: includes/Frontend/Assets.php:190
+msgid "Text"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:87
+#: includes/Admin/Settings_Button_Tab.php:55
+msgid "Position"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:96
+msgid "Language"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:97
+msgid "Time zone"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:98
+msgid "User agent"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:99
+msgid "Viewport"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:100
+msgid "Plugin version"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:110
+msgid "Level"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:110
+msgid "Message"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:110
+#: includes/Admin/Report_Context_View.php:125
+msgid "Time"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:125
+msgid "Method"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:125
+msgid "URL"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:142
+msgid "No screenshot was attached."
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:154
+msgid "Screenshot of the page (click for full size)"
+msgstr ""
+
+#: includes/Admin/Report_Context_View.php:160
+msgid "Show the raw JSON"
+msgstr ""
+
+#: includes/Admin/Request.php:20
+msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
 #: includes/Admin/Settings_Assets.php:58
@@ -1003,7 +1084,7 @@ msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:117
 #: includes/Frontend/Assets.php:225
-#: includes/Privacy.php:51
+#: includes/Privacy.php:60
 msgid "Contact e-mail"
 msgstr ""
 
@@ -1463,20 +1544,38 @@ msgid "This page cannot be reported: its address is not a web address."
 msgstr ""
 
 #. translators: 1: site name, 2: report title, such as "Bug #12".
-#: includes/Mailer.php:29
+#: includes/Mailer.php:35
 #, php-format
 msgid "[%1$s] New report: %2$s"
 msgstr ""
 
-#: includes/Mailer.php:74
+#. translators: 1: site name, 2: report title, such as "Bug #12".
+#: includes/Mailer.php:86
+#, php-format
+msgid "[%1$s] Assigned to you: %2$s"
+msgstr ""
+
+#. translators: 1: site name, 2: number of reports.
+#: includes/Mailer.php:93
+#, php-format
+msgid "[%1$s] %2$d report assigned to you"
+msgid_plural "[%1$s] %2$d reports assigned to you"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Mailer.php:94
+msgid "These reports are now assigned to you:"
+msgstr ""
+
+#: includes/Mailer.php:150
 msgid "Report"
 msgstr ""
 
-#: includes/Mailer.php:77
+#: includes/Mailer.php:153
 msgid "Reported by"
 msgstr ""
 
-#: includes/Mailer.php:79
+#: includes/Mailer.php:155
 msgid "Open the report"
 msgstr ""
 
@@ -1496,60 +1595,86 @@ msgstr ""
 msgid "Critical"
 msgstr ""
 
-#: includes/Privacy.php:21
-#: includes/Privacy.php:29
+#: includes/Privacy.php:22
+#: includes/Privacy.php:34
 msgid "Bug Spotter reports"
 msgstr ""
 
-#: includes/Privacy.php:44
+#: includes/Privacy.php:26
+#: includes/Privacy.php:38
+msgid "Bug Spotter notes and history"
+msgstr ""
+
+#: includes/Privacy.php:53
+#: includes/Privacy.php:127
 msgid "Report number"
 msgstr ""
 
-#: includes/Privacy.php:54
+#: includes/Privacy.php:63
 msgid "Screenshot attached"
 msgstr ""
 
-#: includes/Privacy.php:55
+#: includes/Privacy.php:64
 msgid "Yes"
 msgstr ""
 
-#: includes/Privacy.php:55
+#: includes/Privacy.php:64
 msgid "No"
 msgstr ""
 
-#: includes/Privacy.php:60
+#: includes/Privacy.php:69
 msgid "Bug reports"
 msgstr ""
 
-#: includes/Privacy.php:61
+#: includes/Privacy.php:70
 msgid "Bug reports submitted from this site."
 msgstr ""
 
-#: includes/Privacy.php:92
+#: includes/Privacy.php:101
 msgid "Some bug reports could not be deleted."
 msgstr ""
 
-#: includes/Privacy.php:116
+#: includes/Privacy.php:123
+msgid "Bug report notes and history"
+msgstr ""
+
+#: includes/Privacy.php:124
+msgid "Internal notes written on bug reports, and changes made to them."
+msgstr ""
+
+#: includes/Privacy.php:130
+msgid "Note"
+msgstr ""
+
+#: includes/Privacy.php:131
+msgid "Change"
+msgstr ""
+
+#: includes/Privacy.php:176
 msgid "Purpose: this site lets visitors and users report bugs they meet while browsing. Reports are used only to find and fix those problems."
 msgstr ""
 
-#: includes/Privacy.php:117
+#: includes/Privacy.php:177
 msgid "Data collected: the description you write, the address of the page, technical context (browser, screen size, language, errors and failed requests seen by the page), an optional screenshot, an optional contact e-mail address (stored encrypted), your account if you are logged in, and a keyed hash of your IP address used only against abuse. Your IP address itself is never stored. Values typed into the site's own forms and fields (including passwords) are never collected; only the description and optional contact e-mail typed into the bug report form are stored. The optional screenshot is an image of the page as it appears on your screen, which you see before sending."
 msgstr ""
 
-#: includes/Privacy.php:118
+#: includes/Privacy.php:178
 msgid "Anti-bot check: when an anti-bot provider is enabled (Cloudflare Turnstile, Google reCAPTCHA or hCaptcha), that provider receives your IP address and browser data when you send a report, under its own privacy policy."
 msgstr ""
 
-#: includes/Privacy.php:119
+#: includes/Privacy.php:179
 msgid "Retention: closed reports are deleted automatically after the retention period set by the site administrators; otherwise reports are kept until they are deleted."
 msgstr ""
 
-#: includes/Privacy.php:120
+#: includes/Privacy.php:180
 msgid "Legal basis: legitimate interest in maintaining and improving the site."
 msgstr ""
 
-#: includes/Privacy.php:121
+#: includes/Privacy.php:181
+msgid "Internal notes: the people who manage bug reports can write notes on them and assign them to each other; notes and the history of changes are only shown to them, never to the reporter."
+msgstr ""
+
+#: includes/Privacy.php:182
 msgid "Recipients: only the site administrators and the people they authorise to manage bug reports."
 msgstr ""
 
@@ -1561,6 +1686,16 @@ msgstr ""
 #: includes/Report_Format.php:55
 #, php-format
 msgid "%1$s #%2$d"
+msgstr ""
+
+#: includes/Report_Format.php:66
+msgid "System"
+msgstr ""
+
+#. translators: 1: changed field (Status, Priority or Assigned to), 2: old value, 3: new value.
+#: includes/Report_Format.php:77
+#, php-format
+msgid "%1$s: %2$s → %3$s"
 msgstr ""
 
 #: includes/Report_Submission.php:72
@@ -1703,4 +1838,8 @@ msgstr ""
 
 #: includes/Statuses.php:36
 msgid "Duplicate"
+msgstr ""
+
+#: includes/Team.php:39
+msgid "Deleted user"
 msgstr ""

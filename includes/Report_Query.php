@@ -25,6 +25,12 @@ final class Report_Query {
 		if ( ! empty( $args['priority'] ) ) {
 			$clauses[] = $wpdb->prepare( 'priority = %s', (string) $args['priority'] );
 		}
+		$assigned = (string) ( $args['assigned'] ?? '' );
+		if ( 'none' === $assigned ) {
+			$clauses[] = 'assigned_to IS NULL';
+		} elseif ( absint( $assigned ) > 0 ) {
+			$clauses[] = $wpdb->prepare( 'assigned_to = %d', absint( $assigned ) );
+		}
 		$from = self::local_day_bound( $args['from'] ?? '', '00:00:00' );
 		if ( null !== $from ) {
 			$clauses[] = $wpdb->prepare( 'created_at >= %s', $from );

@@ -7,6 +7,7 @@ use Bug_Spotter\Report_Format;
 use Bug_Spotter\Reports_Repository;
 use Bug_Spotter\Rest\Reports_Controller;
 use Bug_Spotter\Statuses;
+use Bug_Spotter\Team;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -42,20 +43,27 @@ final class Kanban {
 		$criteria = array_diff_key( $filters, array( 'status' => true ) ); // Columns replace the status filter.
 		$counts   = $repo->count_by_status( $criteria );
 
-		echo '<div class="bugspot-board-wrap"><div class="bugspot-board">';
+		$columns = array();
 		foreach ( array_keys( Statuses::all() ) as $status ) {
-			self::render_column( $repo, $criteria, $status, $counts[ $status ] ?? 0 );
+			$columns[ $status ] = self::fetch( $repo, $criteria, $status, self::column_limit( $status ) );
+		}
+		cache_users( array_filter( array_column( array_merge( ...array_values( $columns ) ), 'assigned_to' ) ) ); // One query for the initials.
+
+		echo '<div class="bugspot-board-wrap"><div class="bugspot-board">';
+		foreach ( $columns as $status => $items ) {
+			self::render_column( $criteria, $status, $items, $counts[ $status ] ?? 0 );
 		}
 		echo '</div></div>';
 	}
 
-	private static function render_column( Reports_Repository $repo, array $criteria, string $status, int $total ): void {
+	/** @param array[] $items The cards of the column, already fetched. */
+	private static function render_column( array $criteria, string $status, array $items, int $total ): void {
 		$limit = self::column_limit( $status );
 
 		echo '<section class="bugspot-column" data-status="' . esc_attr( $status ) . '">';
 		echo '<h2 class="bugspot-column-title">' . Report_Format::pill( Statuses::class, $status ) . ' <span class="bugspot-count" data-status="' . esc_attr( $status ) . '">' . esc_html( (string) $total ) . '</span></h2>'; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
 		echo '<ul class="bugspot-cards" data-status="' . esc_attr( $status ) . '">';
-		foreach ( self::fetch( $repo, $criteria, $status, $limit ) as $item ) {
+		foreach ( $items as $item ) {
 			self::render_card( $item );
 		}
 		echo '</ul>';
@@ -110,7 +118,14 @@ final class Kanban {
 		if ( is_string( $item['screenshot'] ?? null ) && '' !== $item['screenshot'] ) {
 			echo ' <span class="dashicons dashicons-camera" title="' . esc_attr__( 'Has a screenshot', 'bug-spotter' ) . '" aria-label="' . esc_attr__( 'Has a screenshot', 'bug-spotter' ) . '"></span>';
 		}
-		echo ' ' . Report_Format::pill( Priorities::class, (string) $item['priority'] ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
+		echo ' ' . Report_Format::pill( Priorities::class, (string) $item['priority'] ); // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
+		if ( null !== $item['assigned_to'] ) {
+			$name = Team::name( $item['assigned_to'] );
+			/* translators: %s: name of the person the report is assigned to. */
+			$label = sprintf( __( 'Assigned to %s', 'bug-spotter' ), $name );
+			echo '<span class="bugspot-assignee" title="' . esc_attr( $label ) . '" role="img" aria-label="' . esc_attr( $label ) . '">' . esc_html( Team::initials( $name ) ) . '</span>';
+		}
+		echo '</div>';
 		echo '<p class="bugspot-card-text">' . esc_html( $excerpt ) . '</p>';
 		echo '<p class="bugspot-card-meta bugspot-muted"><span class="bugspot-card-page">' . esc_html( $path ) . '</span>';
 		if ( null !== $created ) {

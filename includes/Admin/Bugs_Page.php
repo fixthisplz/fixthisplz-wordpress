@@ -3,9 +3,11 @@
 namespace Bug_Spotter\Admin;
 
 use Bug_Spotter\Installer;
+use Bug_Spotter\Mailer;
 use Bug_Spotter\Priorities;
 use Bug_Spotter\Reports_Repository;
 use Bug_Spotter\Settings;
+use Bug_Spotter\Team;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -41,7 +43,7 @@ final class Bugs_Page {
 	}
 
 	/**
-	 * Applies a bulk action (`status_{key}`, `priority_{key}`, `delete`).
+	 * Applies a bulk action (`status_{key}`, `priority_{key}`, `assign_{user ID}`, `unassign`, `delete`).
 	 *
 	 * @return array{0:string,1:int} notice type ('' when nothing happened) and affected count.
 	 */
@@ -62,13 +64,22 @@ final class Bugs_Page {
 			$fields = array( 'status' => substr( $action, 7 ) );
 		} elseif ( str_starts_with( $action, 'priority_' ) ) {
 			$fields = array( 'priority' => substr( $action, 9 ) );
+		} elseif ( str_starts_with( $action, 'assign_' ) && absint( substr( $action, 7 ) ) > 0 ) {
+			$fields = array( 'assigned_to' => absint( substr( $action, 7 ) ) );
+		} elseif ( 'unassign' === $action ) {
+			$fields = array( 'assigned_to' => 0 );
 		}
 		if ( null === $fields ) {
 			return array( '', 0 );
 		}
-		foreach ( $ids as $id ) {
-			$count += $repo->update( $id, $fields ) ? 1 : 0;
-		}
+		// Only real changes count; each new assignee gets one e-mail for all their reports.
+		Mailer::batch_assignments(
+			static function () use ( $repo, $ids, $fields, &$count ): void {
+				foreach ( $ids as $id ) {
+					$count += $repo->update( $id, $fields ) ? 1 : 0;
+				}
+			}
+		);
 		return array( $count > 0 ? 'updated' : '', $count );
 	}
 
@@ -80,9 +91,7 @@ final class Bugs_Page {
 		if ( isset( $request['bugspot_action'], $request['bug'] ) && 'delete' === $request['bugspot_action'] && is_scalar( $request['bug'] ) ) {
 			$id = absint( $request['bug'] );
 			check_admin_referer( 'bugspot_delete_' . $id );
-			if ( ! current_user_can( Installer::CAPABILITY ) ) {
-				wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'bug-spotter' ), 403 );
-			}
+			Request::require_manager();
 			list( $type, $count ) = self::apply_bulk( 'delete', array( $id ) );
 			self::redirect( array_merge( $back, self::notice_args( $type, $count ) ) );
 		}
@@ -91,9 +100,7 @@ final class Bugs_Page {
 		$action = self::bulk_action_name( $request );
 		if ( '' !== $action ) {
 			check_admin_referer( 'bulk-bugs' );
-			if ( ! current_user_can( Installer::CAPABILITY ) ) {
-				wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'bug-spotter' ), 403 );
-			}
+			Request::require_manager();
 			$ids = isset( $request['bug'] ) && is_array( $request['bug'] ) ? $request['bug'] : array();
 			list( $type, $count ) = self::apply_bulk( $action, $ids );
 			self::redirect( array_merge( $back, self::notice_args( $type, $count ) ) );
@@ -236,10 +243,36 @@ final class Bugs_Page {
 			printf( '<option value="%s"%s>%s</option>', esc_attr( $key ), selected( $filters['priority'], $key, false ), esc_html( $label ) );
 		}
 		echo '</select> ';
+		self::render_assignee_filter( $filters, $kanban );
 		echo '<label class="screen-reader-text" for="bugspot-search">' . esc_html__( 'Search reports', 'bug-spotter' ) . '</label>';
 		echo '<input type="search" id="bugspot-search" name="s" value="' . esc_attr( $filters['search'] ) . '" placeholder="' . esc_attr__( 'Search description or URL', 'bug-spotter' ) . '"> ';
 		echo '<button type="submit" class="button">' . esc_html__( 'Filter', 'bug-spotter' ) . '</button> ';
 		echo '<a class="button" href="' . esc_url( Csv_Export::url( $filters, ...Report_Query_Args::read_sort( $query ) ) ) . '">' . esc_html__( 'Export CSV', 'bug-spotter' ) . '</a>';
 		echo '</div>';
+	}
+
+	/** "Assigned to" selector, and the "My reports" quick view (the current user's reports, other filters kept). */
+	private static function render_assignee_filter( array $filters, bool $kanban ): void {
+		echo '<label class="screen-reader-text" for="bugspot-assigned-filter">' . esc_html__( 'Assigned to', 'bug-spotter' ) . '</label>';
+		echo '<select name="assigned" id="bugspot-assigned-filter"><option value="">' . esc_html__( 'Everyone', 'bug-spotter' ) . '</option>';
+		printf( '<option value="none"%s>%s</option>', selected( $filters['assigned'], 'none', false ), esc_html__( 'Unassigned', 'bug-spotter' ) );
+		foreach ( Team::members() as $id => $name ) {
+			printf( '<option value="%d"%s>%s</option>', (int) $id, selected( $filters['assigned'], (string) $id, false ), esc_html( $name ) );
+		}
+		echo '</select> ';
+
+		$me     = (string) get_current_user_id();
+		$active = $me === $filters['assigned'];
+		$args   = Report_Query_Args::filter_query_args( array_merge( $filters, array( 'assigned' => $active ? '' : $me ) ) );
+		if ( $kanban ) {
+			$args['view'] = 'kanban';
+		}
+		printf(
+			'<a class="button%s" href="%s"%s>%s</a> ',
+			$active ? ' bugspot-active' : '',
+			esc_url( self::page_url( $args ) ),
+			$active ? ' aria-current="true"' : '',
+			esc_html__( 'My reports', 'bug-spotter' )
+		);
 	}
 }

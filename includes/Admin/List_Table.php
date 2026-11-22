@@ -6,6 +6,7 @@ use Bug_Spotter\Priorities;
 use Bug_Spotter\Report_Format;
 use Bug_Spotter\Reports_Repository;
 use Bug_Spotter\Statuses;
+use Bug_Spotter\Team;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -40,6 +41,7 @@ final class List_Table extends \WP_List_Table {
 			'reporter'    => __( 'Reporter', 'bug-spotter' ),
 			'priority'    => __( 'Priority', 'bug-spotter' ),
 			'status'      => __( 'Status', 'bug-spotter' ),
+			'assigned'    => __( 'Assigned to', 'bug-spotter' ),
 			'created_at'  => __( 'Date', 'bug-spotter' ),
 		);
 	}
@@ -69,7 +71,12 @@ final class List_Table extends \WP_List_Table {
 			/* translators: %s: priority label. */
 			$actions[ 'priority_' . $key ] = sprintf( __( 'Set priority: %s', 'bug-spotter' ), $label );
 		}
-		$actions['delete'] = __( 'Delete', 'bug-spotter' );
+		foreach ( Team::members() as $id => $name ) {
+			/* translators: %s: name of a person who manages bugs. */
+			$actions[ 'assign_' . $id ] = sprintf( __( 'Assign to: %s', 'bug-spotter' ), $name );
+		}
+		$actions['unassign'] = __( 'Unassign', 'bug-spotter' );
+		$actions['delete']   = __( 'Delete', 'bug-spotter' );
 		return $actions;
 	}
 
@@ -92,6 +99,7 @@ final class List_Table extends \WP_List_Table {
 		);
 
 		$this->items = $result['items'];
+		cache_users( array_filter( array_column( $this->items, 'assigned_to' ) ) ); // One query for the "Assigned to" column.
 		$this->set_pagination_args(
 			array(
 				'total_items' => $result['total'],
@@ -189,6 +197,10 @@ final class List_Table extends \WP_List_Table {
 
 	protected function column_status( $item ): string {
 		return Report_Format::pill( Statuses::class, (string) $item['status'] );
+	}
+
+	protected function column_assigned( $item ): string {
+		return null !== $item['assigned_to'] ? esc_html( Team::name( $item['assigned_to'] ) ) : '<span class="bugspot-muted" aria-hidden="true">—</span><span class="screen-reader-text">' . esc_html__( 'Unassigned', 'bug-spotter' ) . '</span>';
 	}
 
 	protected function column_created_at( $item ): string {

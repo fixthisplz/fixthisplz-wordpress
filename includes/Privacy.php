@@ -8,6 +8,7 @@ defined( 'ABSPATH' ) || exit;
 final class Privacy {
 
 	public const GROUP_ID  = 'bug-spotter';
+	public const NOTES_ID  = 'bug-spotter-notes';
 	public const PER_PAGE  = 50;
 
 	public static function register_hooks(): void {
@@ -21,6 +22,10 @@ final class Privacy {
 			'exporter_friendly_name' => __( 'Bug Spotter reports', 'bug-spotter' ),
 			'callback'               => array( self::class, 'export' ),
 		);
+		$exporters[ self::NOTES_ID ] = array(
+			'exporter_friendly_name' => __( 'Bug Spotter notes and history', 'bug-spotter' ),
+			'callback'               => array( self::class, 'export_notes' ),
+		);
 		return $exporters;
 	}
 
@@ -28,6 +33,10 @@ final class Privacy {
 		$erasers[ self::GROUP_ID ] = array(
 			'eraser_friendly_name' => __( 'Bug Spotter reports', 'bug-spotter' ),
 			'callback'             => array( self::class, 'erase' ),
+		);
+		$erasers[ self::NOTES_ID ] = array(
+			'eraser_friendly_name' => __( 'Bug Spotter notes and history', 'bug-spotter' ),
+			'callback'             => array( self::class, 'erase_notes' ),
 		);
 		return $erasers;
 	}
@@ -95,6 +104,57 @@ final class Privacy {
 		);
 	}
 
+	/**
+	 * Notes and history entries signed by the WP account owning $email: what erase_notes() anonymises.
+	 *
+	 * @return array{data: array[], done: bool}
+	 */
+	public static function export_notes( string $email, int $page = 1 ): array {
+		$user = get_user_by( 'email', $email );
+		if ( ! $user instanceof \WP_User ) {
+			return array( 'data' => array(), 'done' => true );
+		}
+		$entries = Activity::by_user( (int) $user->ID, self::PER_PAGE, $page );
+		$items   = array();
+		foreach ( $entries['items'] as $entry ) {
+			$note    = Activity::NOTE === $entry['type'];
+			$items[] = array(
+				'group_id'          => self::NOTES_ID,
+				'group_label'       => __( 'Bug report notes and history', 'bug-spotter' ),
+				'group_description' => __( 'Internal notes written on bug reports, and changes made to them.', 'bug-spotter' ),
+				'item_id'           => 'bug-activity-' . $entry['id'],
+				'data'              => array(
+					array( 'name' => __( 'Report number', 'bug-spotter' ), 'value' => '#' . $entry['report_id'] ),
+					array( 'name' => __( 'Date', 'bug-spotter' ), 'value' => wp_date( 'Y-m-d H:i', (int) Reports_Repository::timestamp( $entry['created_at'] ) ) ),
+					$note
+						? array( 'name' => __( 'Note', 'bug-spotter' ), 'value' => $entry['content'] )
+						: array( 'name' => __( 'Change', 'bug-spotter' ), 'value' => Report_Format::change( (string) $entry['field'], $entry['old_value'], $entry['new_value'] ) ),
+				),
+			);
+		}
+		return array(
+			'data' => $items,
+			'done' => ( max( 1, $page ) * self::PER_PAGE ) >= $entries['total'],
+		);
+	}
+
+	/**
+	 * The WP account owning $email no longer signs its notes and history entries: they stay, as "Deleted user".
+	 *
+	 * @return array{items_removed: bool, items_retained: bool, messages: string[], done: bool}
+	 */
+	public static function erase_notes( string $email, int $page = 1 ): array {
+		unset( $page ); // One UPDATE does it all.
+		$user = get_user_by( 'email', $email );
+		$rows = $user instanceof \WP_User ? Activity::anonymise_user( (int) $user->ID ) : 0;
+		return array(
+			'items_removed'  => $rows > 0,
+			'items_retained' => false,
+			'messages'       => array(),
+			'done'           => true,
+		);
+	}
+
 	/** Reports left with this contact e-mail plus those of the WP account owning it, sorted by id. @return int[] */
 	private static function ids_for_email( string $email ): array {
 		$repo = new Reports_Repository();
@@ -118,6 +178,7 @@ final class Privacy {
 			__( 'Anti-bot check: when an anti-bot provider is enabled (Cloudflare Turnstile, Google reCAPTCHA or hCaptcha), that provider receives your IP address and browser data when you send a report, under its own privacy policy.', 'bug-spotter' ),
 			__( 'Retention: closed reports are deleted automatically after the retention period set by the site administrators; otherwise reports are kept until they are deleted.', 'bug-spotter' ),
 			__( 'Legal basis: legitimate interest in maintaining and improving the site.', 'bug-spotter' ),
+			__( 'Internal notes: the people who manage bug reports can write notes on them and assign them to each other; notes and the history of changes are only shown to them, never to the reporter.', 'bug-spotter' ),
 			__( 'Recipients: only the site administrators and the people they authorise to manage bug reports.', 'bug-spotter' ),
 		);
 		wp_add_privacy_policy_content( 'Bug Spotter', wp_kses_post( wpautop( implode( "\n\n", $paragraphs ) ) ) );

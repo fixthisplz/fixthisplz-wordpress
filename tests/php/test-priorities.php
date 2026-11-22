@@ -163,13 +163,13 @@ bugspot_test(
 				);
 				$repo = new Reports_Repository();
 				$id   = bugspot_admin_insert( 'prio-everywhere' );
-				assert_true( ! $repo->update( $id, array( 'priority' => 'high' ) ), 'a deleted priority cannot be set' );
+				assert_same( null, $repo->update( $id, array( 'priority' => 'high' ) ), 'a deleted priority cannot be set' );
 				assert_same( array( 'updated', 1 ), Bugs_Page::apply_bulk( 'priority_urgent', array( $id ) ) );
 				assert_same( 'urgent', $repo->find( $id )['priority'] );
 
 				$pill = '<span class="bugspot-pill bugspot-priority" style="--bugspot-color:#aa00cc">Urgent &amp; co</span>';
 				assert_same( $pill, Report_Format::pill( Priorities::class, 'urgent' ) );
-				$filters = array( 'status' => '', 'priority' => 'urgent', 'from' => '', 'to' => '', 'search' => 'prio-everywhere' );
+				$filters = array( 'status' => '', 'priority' => 'urgent', 'assigned' => '', 'from' => '', 'to' => '', 'search' => 'prio-everywhere' );
 				assert_same( $filters, Report_Query_Args::read_filters( array( 'priority' => 'urgent', 's' => 'prio-everywhere' ) ) );
 				assert_same( '', Report_Query_Args::read_filters( array( 'priority' => 'high' ) )['priority'] );
 				assert_true( str_contains( bugspot_capture( fn() => Kanban::render( $filters ) ), $pill ), 'Kanban card pill' );
@@ -194,7 +194,7 @@ bugspot_test(
 				// A priority unknown to the settings (stored by hand) is kept when another field changes.
 				$repo->update( $id, array( 'priority' => 'urgent' ) );
 				$GLOBALS['wpdb']->update( Bug_Spotter\Installer::table(), array( 'priority' => 'zz_gone' ), array( 'id' => $id ) );
-				assert_true( $repo->update( $id, array( 'status' => 'fixed', 'priority' => 'zz_gone' ) ) );
+				assert_true( null !== $repo->update( $id, array( 'status' => 'fixed', 'priority' => 'zz_gone' ) ) );
 				assert_same( 'zz_gone', Priorities::label( 'zz_gone' ) );
 				assert_same( Priorities::FALLBACK_COLOR, Priorities::color( 'zz_gone' ) );
 			}

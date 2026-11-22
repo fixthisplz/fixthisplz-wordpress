@@ -101,7 +101,7 @@ Yes. The button's HTML contains nothing that is specific to a user. The report i
 
 = What happens to my data if I deactivate or delete the plugin? =
 
-Deactivating keeps everything. Deleting the plugin keeps your reports, screenshots and settings too, unless you ticked "Delete all reports, screenshots and settings when the plugin is deleted" in **Bugs › Settings › Data and privacy**. In that case the table, the options, the capability and the private folder are removed.
+Deactivating keeps everything. Deleting the plugin keeps your reports, screenshots and settings too, unless you ticked "Delete all reports, screenshots and settings when the plugin is deleted" in **Bugs › Settings › Data and privacy**. In that case the tables (reports, notes and history), the options, the capability and the private folder are removed.
 
 = Does it work on multisite? =
 
@@ -129,6 +129,8 @@ The plugin adds suggested text to your privacy policy (Settings › Privacy), an
 * Configurable priorities (new Priorities settings tab): name, color, order (sorting by priority follows it); add up to 10 or delete one, moving its reports to another priority. "Normal" cannot be deleted. Priority pills take the chosen color in the list, the Kanban board and the detail screen.
 * Name of one report (Management tab), used in titles such as "Bug #12" on the detail screen and in the notification e-mail.
 * Dashboard widget for bug managers: open reports per status and the five latest reports.
+* Assignment: assign a report to a bug manager from its screen or with a bulk action; "Assigned to" column, initials on the Kanban cards, filter by person and "My reports". The new assignee gets an e-mail (not when assigning yourself).
+* Internal notes and history on the report screen: notes visible only to the team (deleted by their author or an administrator), and every change of status, priority or assignment with its author and date. Deleting a user unassigns their reports; the personal data exporter and eraser cover the notes.
 
 = 1.1.0 =
 * Screenshot annotation: before sending, the visitor can draw rectangles, arrows and freehand strokes on the screenshot, add text, pick one of six colors and one of three sizes (stroke width or text size), or hide an area, then select, move, resize, recolor, resize to a preset or delete each annotation, and undo any change.

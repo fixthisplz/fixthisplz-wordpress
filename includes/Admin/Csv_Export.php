@@ -2,7 +2,6 @@
 
 namespace Bug_Spotter\Admin;
 
-use Bug_Spotter\Installer;
 use Bug_Spotter\Priorities;
 use Bug_Spotter\Report_Format;
 use Bug_Spotter\Reports_Repository;
@@ -30,9 +29,7 @@ final class Csv_Export {
 
 	public static function handle(): void {
 		check_admin_referer( self::ACTION );
-		if ( ! current_user_can( Installer::CAPABILITY ) ) {
-			wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'bug-spotter' ), 403 );
-		}
+		Request::require_manager();
 
 		$request                 = wp_unslash( $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- verified above.
 		$filters                 = Report_Query_Args::read_filters( $request );

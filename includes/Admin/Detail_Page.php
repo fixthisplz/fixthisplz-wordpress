@@ -2,20 +2,19 @@
 
 namespace Bug_Spotter\Admin;
 
-use Bug_Spotter\Installer;
 use Bug_Spotter\Priorities;
 use Bug_Spotter\Report_Format;
 use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Rest\Reports_Controller;
-use Bug_Spotter\Screenshot_Store;
 use Bug_Spotter\Settings;
 use Bug_Spotter\Statuses;
+use Bug_Spotter\Team;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Single-report screen. Everything stored in a report comes from a visitor and is untrusted: it is escaped at
- * output. ip_hash and reporter_email_hash are internal and are never displayed.
+ * Single-report screen (its read-only parts are in Report_Context_View). Everything stored in a report comes from a
+ * visitor and is untrusted: it is escaped at output. ip_hash and reporter_email_hash are internal and are never
+ * displayed.
  */
 final class Detail_Page {
 
@@ -25,6 +24,7 @@ final class Detail_Page {
 	public static function register_hooks(): void {
 		add_action( 'admin_post_' . self::UPDATE_ACTION, array( self::class, 'handle_update' ) );
 		add_action( 'admin_post_' . self::DELETE_ACTION, array( self::class, 'handle_delete' ) );
+		Activity_Box::register_hooks();
 	}
 
 	public static function url( int $id, array $args = array() ): string {
@@ -32,9 +32,9 @@ final class Detail_Page {
 	}
 
 	public static function handle_update(): void {
-		$id = self::posted_id();
+		$id = Request::posted_id( 'report' );
 		check_admin_referer( self::UPDATE_ACTION . '_' . $id );
-		self::require_capability();
+		Request::require_manager();
 
 		$post   = wp_unslash( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verified above.
 		$fields = array();
@@ -43,30 +43,24 @@ final class Detail_Page {
 				$fields[ $key ] = sanitize_key( $post[ $key ] );
 			}
 		}
-		// The repository rejects invalid values as a whole; an unknown id is a plain failure too.
-		$ok = $fields && ( new Reports_Repository() )->update( $id, $fields );
-		wp_safe_redirect( self::url( $id, array( 'bugspot_notice' => $ok ? 'updated' : 'failed' ) ) );
+		if ( isset( $post['assigned_to'] ) && is_scalar( $post['assigned_to'] ) ) {
+			$fields['assigned_to'] = absint( $post['assigned_to'] );
+		}
+		// The repository rejects invalid values as a whole; an unknown id is a plain failure too. Nothing changed: no notice.
+		$changes = ( new Reports_Repository() )->update( $id, $fields );
+		$notice  = null === $changes ? array( 'bugspot_notice' => 'failed' ) : ( $changes ? array( 'bugspot_notice' => 'updated' ) : array() );
+		wp_safe_redirect( self::url( $id, $notice ) );
 		exit;
 	}
 
 	public static function handle_delete(): void {
-		$id = self::posted_id();
+		$id = Request::posted_id( 'report' );
 		check_admin_referer( self::DELETE_ACTION . '_' . $id );
-		self::require_capability();
+		Request::require_manager();
 
 		list( $type, $count ) = Bugs_Page::apply_bulk( 'delete', array( $id ) );
 		wp_safe_redirect( Bugs_Page::page_url( Bugs_Page::notice_args( $type, $count ) ) );
 		exit;
-	}
-
-	private static function posted_id(): int {
-		return isset( $_POST['report'] ) && is_scalar( $_POST['report'] ) ? absint( wp_unslash( $_POST['report'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verified right after, by id.
-	}
-
-	private static function require_capability(): void {
-		if ( ! current_user_can( Installer::CAPABILITY ) ) {
-			wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'bug-spotter' ), 403 );
-		}
 	}
 
 	public static function render( int $id ): void {
@@ -98,18 +92,15 @@ final class Detail_Page {
 		self::box( __( 'Description', 'bug-spotter' ), static function () use ( $report ): void {
 			echo '<p class="bugspot-description">' . nl2br( esc_html( (string) $report['description'] ) ) . '</p>';
 		} );
-		self::box( __( 'Reporter', 'bug-spotter' ), static fn() => self::render_reporter( $report ) );
-		self::box( __( 'Page', 'bug-spotter' ), static fn() => self::render_page( $report, $context ) );
-		self::box( __( 'Element', 'bug-spotter' ), static fn() => self::render_element( $context['element'] ?? null ) );
-		self::box( __( 'Browser', 'bug-spotter' ), static fn() => self::render_browser( $context ) );
-		self::box( __( 'Console errors', 'bug-spotter' ), static fn() => self::render_console( $context['console'] ?? array() ) );
-		self::box( __( 'Failed requests', 'bug-spotter' ), static fn() => self::render_network( $context['network'] ?? array() ) );
-		self::box( __( 'Screenshot', 'bug-spotter' ), static fn() => self::render_screenshot( $report ) );
-		self::box( __( 'Raw data', 'bug-spotter' ), static function () use ( $context ): void {
-			$json = wp_json_encode( $context, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
-			echo '<details><summary>' . esc_html__( 'Show the raw JSON', 'bug-spotter' ) . '</summary>';
-			echo '<pre class="bugspot-json">' . esc_html( is_string( $json ) ? $json : '' ) . '</pre></details>';
-		} );
+		self::box( __( 'Notes and history', 'bug-spotter' ), static fn() => Activity_Box::render( $id ) );
+		self::box( __( 'Reporter', 'bug-spotter' ), static fn() => Report_Context_View::render_reporter( $report ) );
+		self::box( __( 'Page', 'bug-spotter' ), static fn() => Report_Context_View::render_page( $report, $context ) );
+		self::box( __( 'Element', 'bug-spotter' ), static fn() => Report_Context_View::render_element( $context['element'] ?? null ) );
+		self::box( __( 'Browser', 'bug-spotter' ), static fn() => Report_Context_View::render_browser( $context ) );
+		self::box( __( 'Console errors', 'bug-spotter' ), static fn() => Report_Context_View::render_console( $context['console'] ?? array() ) );
+		self::box( __( 'Failed requests', 'bug-spotter' ), static fn() => Report_Context_View::render_network( $context['network'] ?? array() ) );
+		self::box( __( 'Screenshot', 'bug-spotter' ), static fn() => Report_Context_View::render_screenshot( $report ) );
+		self::box( __( 'Raw data', 'bug-spotter' ), static fn() => Report_Context_View::render_raw( $context ) );
 
 		echo '</div><div id="postbox-container-1" class="postbox-container">';
 		self::render_sidebar( $report );
@@ -121,11 +112,16 @@ final class Detail_Page {
 	}
 
 	private static function render_notice(): void {
-		$type = isset( $_GET['bugspot_notice'] ) && is_string( $_GET['bugspot_notice'] ) ? sanitize_key( wp_unslash( $_GET['bugspot_notice'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display only.
-		if ( 'updated' === $type ) {
-			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Report updated.', 'bug-spotter' ) . '</p></div>';
-		} elseif ( 'failed' === $type ) {
-			echo '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'The report could not be updated.', 'bug-spotter' ) . '</p></div>';
+		$type     = isset( $_GET['bugspot_notice'] ) && is_string( $_GET['bugspot_notice'] ) ? sanitize_key( wp_unslash( $_GET['bugspot_notice'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display only.
+		$messages = array(
+			'updated'      => array( 'success', __( 'Report updated.', 'bug-spotter' ) ),
+			'failed'       => array( 'error', __( 'The report could not be updated.', 'bug-spotter' ) ),
+			'note_added'   => array( 'success', __( 'Note added.', 'bug-spotter' ) ),
+			'note_deleted' => array( 'success', __( 'Note deleted.', 'bug-spotter' ) ),
+			'note_failed'  => array( 'error', __( 'The note could not be added.', 'bug-spotter' ) ),
+		);
+		if ( isset( $messages[ $type ] ) ) {
+			echo '<div class="notice notice-' . esc_attr( $messages[ $type ][0] ) . ' is-dismissible"><p>' . esc_html( $messages[ $type ][1] ) . '</p></div>';
 		}
 	}
 
@@ -133,147 +129,6 @@ final class Detail_Page {
 		echo '<div class="postbox"><div class="postbox-header"><h2 class="hndle">' . esc_html( $title ) . '</h2></div><div class="inside">';
 		$body();
 		echo '</div></div>';
-	}
-
-	private static function none(): void {
-		echo '<p class="bugspot-muted">' . esc_html__( 'None', 'bug-spotter' ) . '</p>';
-	}
-
-	/** A key / value table whose empty values are skipped. */
-	private static function render_pairs( array $pairs ): void {
-		$pairs = array_filter( $pairs, static fn( $v ) => '' !== $v );
-		if ( ! $pairs ) {
-			self::none();
-			return;
-		}
-		echo '<table class="bugspot-pairs"><tbody>';
-		foreach ( $pairs as $label => $value ) {
-			echo '<tr><th scope="row">' . esc_html( $label ) . '</th><td>' . esc_html( $value ) . '</td></tr>';
-		}
-		echo '</tbody></table>';
-	}
-
-	private static function render_reporter( array $report ): void {
-		$who = Report_Format::reporter( $report );
-		if ( '' !== $who['url'] ) {
-			echo '<p><a href="' . esc_url( $who['url'] ) . '">' . esc_html( $who['name'] ) . '</a></p>';
-		} else {
-			echo '<p>' . esc_html( $who['name'] ) . '</p>';
-		}
-		if ( '' !== $who['email'] ) {
-			echo '<p>' . esc_html__( 'Contact e-mail:', 'bug-spotter' ) . ' ' . esc_html( $who['email'] ) . '</p>';
-		}
-	}
-
-	private static function render_page( array $report, array $context ): void {
-		$url = (string) $report['page_url'];
-		if ( '' !== $url ) {
-			echo '<p>' . self::link_or_text( $url ) . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput -- link_or_text() escapes.
-		}
-		$title = isset( $context['title'] ) && is_string( $context['title'] ) ? $context['title'] : '';
-		self::render_pairs(
-			array(
-				__( 'Title', 'bug-spotter' )       => $title,
-				__( 'WordPress page', 'bug-spotter' ) => isset( $context['wp_page'] ) && is_string( $context['wp_page'] ) ? $context['wp_page'] : '',
-			)
-		);
-	}
-
-	/** Only http(s) URLs become links; anything else (javascript:, data:…) stays inert text. */
-	private static function link_or_text( string $url ): string {
-		if ( ! preg_match( '#^https?://#i', $url ) ) {
-			return esc_html( $url );
-		}
-		return '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $url ) . '</a>';
-	}
-
-	private static function render_element( mixed $element ): void {
-		if ( ! is_array( $element ) ) {
-			self::none();
-			return;
-		}
-		$rect     = isset( $element['rect'] ) && is_array( $element['rect'] ) ? $element['rect'] : null;
-		$position = '';
-		if ( $rect ) {
-			$position = sprintf( 'x %d, y %d — %d × %d px', (int) ( $rect['x'] ?? 0 ), (int) ( $rect['y'] ?? 0 ), (int) ( $rect['width'] ?? 0 ), (int) ( $rect['height'] ?? 0 ) );
-		}
-		$get = static fn( string $key ): string => isset( $element[ $key ] ) && is_string( $element[ $key ] ) ? $element[ $key ] : '';
-		self::render_pairs(
-			array(
-				__( 'Selector', 'bug-spotter' ) => $get( 'selector' ),
-				__( 'Tag', 'bug-spotter' )      => $get( 'tag' ),
-				__( 'Role', 'bug-spotter' )     => $get( 'role' ),
-				__( 'Name', 'bug-spotter' )     => $get( 'name' ),
-				__( 'Text', 'bug-spotter' )     => $get( 'text' ),
-				__( 'Position', 'bug-spotter' ) => $position,
-			)
-		);
-	}
-
-	private static function render_browser( array $context ): void {
-		$get = static fn( string $key ): string => isset( $context[ $key ] ) && is_string( $context[ $key ] ) ? $context[ $key ] : '';
-		self::render_pairs(
-			array(
-				__( 'Language', 'bug-spotter' )       => $get( 'locale' ),
-				__( 'Time zone', 'bug-spotter' )      => $get( 'timezone' ),
-				__( 'User agent', 'bug-spotter' )     => $get( 'user_agent' ),
-				__( 'Viewport', 'bug-spotter' )       => $get( 'viewport' ),
-				__( 'Plugin version', 'bug-spotter' ) => $get( 'plugin_version' ),
-			)
-		);
-	}
-
-	private static function render_console( mixed $entries ): void {
-		if ( ! is_array( $entries ) || ! $entries ) {
-			self::none();
-			return;
-		}
-		echo '<table class="widefat striped"><thead><tr><th>' . esc_html__( 'Level', 'bug-spotter' ) . '</th><th>' . esc_html__( 'Message', 'bug-spotter' ) . '</th><th>' . esc_html__( 'Time', 'bug-spotter' ) . '</th></tr></thead><tbody>';
-		foreach ( $entries as $entry ) {
-			if ( ! is_array( $entry ) ) {
-				continue;
-			}
-			echo '<tr><td>' . esc_html( self::str( $entry, 'level' ) ) . '</td><td class="bugspot-wrap">' . esc_html( self::str( $entry, 'message' ) ) . '</td><td>' . esc_html( self::str( $entry, 'at' ) ) . '</td></tr>';
-		}
-		echo '</tbody></table>';
-	}
-
-	private static function render_network( mixed $entries ): void {
-		if ( ! is_array( $entries ) || ! $entries ) {
-			self::none();
-			return;
-		}
-		echo '<table class="widefat striped"><thead><tr><th>' . esc_html__( 'Method', 'bug-spotter' ) . '</th><th>' . esc_html__( 'URL', 'bug-spotter' ) . '</th><th>' . esc_html__( 'Status', 'bug-spotter' ) . '</th><th>' . esc_html__( 'Time', 'bug-spotter' ) . '</th></tr></thead><tbody>';
-		foreach ( $entries as $entry ) {
-			if ( ! is_array( $entry ) ) {
-				continue;
-			}
-			echo '<tr><td>' . esc_html( self::str( $entry, 'method' ) ) . '</td><td class="bugspot-wrap">' . esc_html( self::str( $entry, 'url' ) ) . '</td><td>' . esc_html( self::str( $entry, 'status' ) ) . '</td><td>' . esc_html( self::str( $entry, 'at' ) ) . '</td></tr>';
-		}
-		echo '</tbody></table>';
-	}
-
-	private static function str( array $entry, string $key ): string {
-		$v = $entry[ $key ] ?? '';
-		return is_string( $v ) || is_int( $v ) ? (string) $v : '';
-	}
-
-	private static function render_screenshot( array $report ): void {
-		if ( ! is_string( $report['screenshot'] ?? null ) || '' === $report['screenshot'] ) {
-			echo '<p class="bugspot-muted">' . esc_html__( 'No screenshot was attached.', 'bug-spotter' ) . '</p>';
-			return;
-		}
-		$method = Screenshot_Store::capture_label( $report['context'] );
-		if ( '' !== $method ) {
-			echo '<p class="bugspot-muted">' . esc_html( $method ) . '</p>';
-		}
-		// An <img> cannot send X-WP-Nonce: cookie authentication accepts it as a query argument instead.
-		$src = add_query_arg( '_wpnonce', wp_create_nonce( 'wp_rest' ), rest_url( Reports_Controller::NAMESPACE . '/reports/' . (int) $report['id'] . '/screenshot' ) );
-		printf(
-			'<a href="%1$s" target="_blank" rel="noopener noreferrer"><img class="bugspot-screenshot" src="%1$s" alt="%2$s" loading="lazy"></a>',
-			esc_url( $src ),
-			esc_attr__( 'Screenshot of the page (click for full size)', 'bug-spotter' )
-		);
 	}
 
 	private static function render_sidebar( array $report ): void {
@@ -293,13 +148,18 @@ final class Detail_Page {
 				self::select( 'status', 'bugspot-status', Statuses::all() + array( $status => Statuses::label( $status ) ), $status );
 				echo '</p><p><label for="bugspot-priority-select"><strong>' . esc_html__( 'Priority', 'bug-spotter' ) . '</strong></label><br>';
 				self::select( 'priority', 'bugspot-priority-select', Priorities::all() + array( $priority => Priorities::label( $priority ) ), $priority );
+				echo '</p><p><label for="bugspot-assigned"><strong>' . esc_html__( 'Assigned to', 'bug-spotter' ) . '</strong></label><br>';
+				$assignee = (int) $report['assigned_to'];
+				// Like an unknown status: someone who left the team stays listed until the report is reassigned.
+				$people = array( 0 => __( '— Unassigned —', 'bug-spotter' ) ) + Team::members() + ( $assignee > 0 ? array( $assignee => Team::name( $assignee ) ) : array() );
+				self::select( 'assigned_to', 'bugspot-assigned', $people, (string) $assignee );
 				echo '</p><p><button type="submit" class="button button-primary">' . esc_html__( 'Update', 'bug-spotter' ) . '</button></p></form>';
 			}
 		);
 
 		self::box(
 			__( 'Dates', 'bug-spotter' ),
-			static fn() => self::render_pairs(
+			static fn() => Report_Context_View::render_pairs(
 				array(
 					__( 'Created', 'bug-spotter' )        => Report_Format::date( $report['created_at'] ?? null ),
 					__( 'Seen', 'bug-spotter' )           => Report_Format::date( $report['seen_at'] ?? null ),

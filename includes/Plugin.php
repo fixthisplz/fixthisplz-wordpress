@@ -14,6 +14,8 @@ final class Plugin {
 		Frontend\Assets::register_hooks();
 		Privacy::register_hooks();
 		Retention::register_hooks();
+		Mailer::register_hooks();
+		Team::register_hooks();
 		if ( is_admin() ) {
 			Admin\Menu::register_hooks();
 		}

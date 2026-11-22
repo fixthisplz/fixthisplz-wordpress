@@ -13,7 +13,7 @@ final class Report_Query_Args {
 	/**
 	 * Sanitised list filters from an already-unslashed request array.
 	 *
-	 * @return array{status:string,priority:string,from:string,to:string,search:string}
+	 * @return array{status:string,priority:string,assigned:string,from:string,to:string,search:string} assigned: '', 'none' or a user ID.
 	 */
 	public static function read_filters( array $src ): array {
 		$text = static fn( string $key ): string => isset( $src[ $key ] ) && is_string( $src[ $key ] ) ? $src[ $key ] : '';
@@ -24,10 +24,12 @@ final class Report_Query_Args {
 
 		$status   = sanitize_key( $text( 'status' ) );
 		$priority = sanitize_key( $text( 'priority' ) );
+		$assigned = $text( 'assigned' );
 
 		return array(
 			'status'   => Statuses::is_valid( $status ) ? $status : '',
 			'priority' => Priorities::is_valid( $priority ) ? $priority : '',
+			'assigned' => 'none' === $assigned ? 'none' : ( absint( $assigned ) > 0 ? (string) absint( $assigned ) : '' ),
 			'from'     => $date( $text( 'from' ) ),
 			'to'       => $date( $text( 'to' ) ),
 			'search'   => trim( sanitize_text_field( $text( 's' ) ) ),
@@ -46,6 +48,7 @@ final class Report_Query_Args {
 		$args = array(
 			'status'   => $filters['status'] ?? '',
 			'priority' => $filters['priority'] ?? '',
+			'assigned' => $filters['assigned'] ?? '',
 			'from'     => $filters['from'] ?? '',
 			'to'       => $filters['to'] ?? '',
 			's'        => $filters['search'] ?? '',

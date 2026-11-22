@@ -12,7 +12,7 @@ final class Reports_Repository {
 	public const MAX_PER_PAGE = 200;
 
 	/** What list screens, exports and cards read: no `context` JSON, no hashes, no dates they never show. */
-	private const LIST_COLUMNS = 'id, status, priority, description, page_url, user_id, screenshot, created_at';
+	private const LIST_COLUMNS = 'id, status, priority, description, page_url, user_id, screenshot, created_at, assigned_to';
 
 	/**
 	 * @param array $row Keys: description, page_url, context (array), user_id, reporter_email (plain), screenshot, ip_hash.
@@ -57,52 +57,45 @@ final class Reports_Repository {
 	}
 
 	/**
-	 * Only `status` and `priority` can change; any invalid value rejects the whole update. A value unknown to the
-	 * settings may be kept, never newly set.
+	 * Applies the changes Report_Changes::from() accepts; each one is recorded in the history under the current user,
+	 * and a new assignee fires `bugspot_report_assigned` ($id, assignee ID, ID of the user who assigned).
 	 *
 	 * @param array|null $current The full row find() returned for $id (seen_at is read), when the caller already has it;
 	 *                           never a light query() / find_many() row.
+	 * @return array<string,array{0:?string,1:?string}>|null The changes made (empty when nothing changed: nothing is
+	 *                                                       written); null when the report is missing, a value is
+	 *                                                       invalid or the write fails.
 	 */
-	public function update( int $id, array $fields, ?array $current = null ): bool {
+	public function update( int $id, array $fields, ?array $current = null ): ?array {
 		global $wpdb;
 
 		$current ??= $this->find( $id );
-		if ( null === $current ) {
-			return false;
+		$changes   = null !== $current ? Report_Changes::from( $current, $fields ) : null;
+		if ( ! $changes ) {
+			return $changes;
 		}
 
-		$data = array();
-		if ( array_key_exists( 'status', $fields ) ) {
-			$status = (string) $fields['status'];
-			if ( $status !== $current['status'] && ! Statuses::is_valid( $status ) ) {
-				return false;
-			}
-			$data['status'] = $status;
-		}
-		if ( array_key_exists( 'priority', $fields ) ) {
-			$priority = (string) $fields['priority'];
-			if ( $priority !== $current['priority'] && ! Priorities::is_valid( $priority ) ) {
-				return false;
-			}
-			$data['priority'] = $priority;
-		}
-		if ( ! $data ) {
-			return false;
-		}
-
-		$now = self::now();
-		if ( isset( $data['status'] ) && $data['status'] !== $current['status'] ) {
+		$now  = self::now();
+		$data = array_map( static fn( array $change ): ?string => $change[1], $changes ) + array( 'updated_at' => $now );
+		if ( isset( $changes['status'] ) ) {
 			$data['status_changed_at'] = $now;
+			if ( 'new' !== $changes['status'][1] && empty( $current['seen_at'] ) ) {
+				$data['seen_at'] = $now;
+			}
 		}
-		if ( isset( $data['status'] ) && 'new' !== $data['status'] && empty( $current['seen_at'] ) ) {
-			$data['seen_at'] = $now;
+		if ( false === $wpdb->update( Installer::table(), $data, array( 'id' => $id ) ) ) {
+			return null;
 		}
-		$data['updated_at'] = $now;
 
-		return false !== $wpdb->update( Installer::table(), $data, array( 'id' => $id ) );
+		$user = get_current_user_id();
+		Activity::record_changes( $id, $changes, $user );
+		if ( null !== ( $changes['assigned_to'][1] ?? null ) ) {
+			do_action( 'bugspot_report_assigned', $id, (int) $changes['assigned_to'][1], $user );
+		}
+		return $changes;
 	}
 
-	/** `new` -> `seen` only; atomic so two simultaneous opens cannot both transition. */
+	/** `new` -> `seen` only, recorded in the history; atomic so two simultaneous opens cannot both transition. */
 	public function mark_seen( int $id ): bool {
 		global $wpdb;
 		$now   = self::now();
@@ -116,18 +109,28 @@ final class Reports_Repository {
 				$id
 			)
 		);
-		return is_int( $rows ) && $rows > 0;
+		if ( ! is_int( $rows ) || $rows < 1 ) {
+			return false;
+		}
+		Activity::record_changes( $id, array( 'status' => array( 'new', 'seen' ) ), get_current_user_id() );
+		return true;
 	}
 
 	/** Moves every report of a deleted choice $from of $list to $to. @param class-string<Choice_List> $list */
 	public function reassign( string $list, string $from, string $to ): void {
+		$this->move_all( $list::FIELD, $from, $to, Statuses::class === $list ? array( 'status_changed_at' => self::now() ) : array() );
+	}
+
+	/** Every report assigned to $user_id becomes unassigned. */
+	public function unassign_user( int $user_id ): void {
+		$this->move_all( 'assigned_to', (string) $user_id, null );
+	}
+
+	/** Sets $field to $to on every report where it is $from, recorded in the history as a "System" change. */
+	private function move_all( string $field, string $from, ?string $to, array $extra = array() ): void {
 		global $wpdb;
-		$now  = self::now();
-		$data = array( $list::FIELD => $to, 'updated_at' => $now );
-		if ( Statuses::class === $list ) {
-			$data['status_changed_at'] = $now;
-		}
-		$wpdb->update( Installer::table(), $data, array( $list::FIELD => $from ) );
+		Activity::record_moves( $field, $from, $to );
+		$wpdb->update( Installer::table(), array( $field => $to, 'updated_at' => self::now() ) + $extra, array( $field => $from ) );
 	}
 
 	public function delete( int $id ): bool {
@@ -139,14 +142,17 @@ final class Reports_Repository {
 		if ( false === $wpdb->delete( Installer::table(), array( 'id' => $id ), array( '%d' ) ) ) {
 			return false;
 		}
-		self::delete_screenshot( $report['screenshot'] );
+		Activity::delete_for_report( $id );
+		if ( is_string( $report['screenshot'] ) && '' !== $report['screenshot'] ) {
+			Screenshot_Store::delete( $report['screenshot'] );
+		}
 		return true;
 	}
 
 	/**
 	 * Light rows (LIST_COLUMNS, plus the decrypted reporter_email unless `with_email` is false); find() has the rest.
 	 *
-	 * @param array $args status, priority, from, to (Y-m-d, site timezone), search, orderby (created_at, or priority in
+	 * @param array $args status, priority, assigned (a user ID, or 'none'), from, to (Y-m-d, site timezone), search, orderby (created_at, or priority in
 	 *                    the order of the settings), order (DESC|ASC), per_page (1-200, default 20), page (>= 1), with_email (default true).
 	 * @return array{items: array[], total: int}
 	 */
@@ -232,31 +238,6 @@ final class Reports_Repository {
 		return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( 'SELECT id FROM %i WHERE user_id = %d ORDER BY id', Installer::table(), $user_id ) ) );
 	}
 
-	/** Deletes closed reports whose last status change is older than $months months (and their screenshots). */
-	public function purge_closed_older_than( int $months ): int {
-		global $wpdb;
-		$closed = Statuses::closed();
-		if ( $months <= 0 || ! $closed ) {
-			return 0;
-		}
-		$table  = Installer::table();
-		$cutoff = ( new \DateTimeImmutable( 'now', new \DateTimeZone( 'UTC' ) ) )->modify( '-' . $months . ' months' )->format( 'Y-m-d H:i:s' );
-		$in     = implode( ',', array_fill( 0, count( $closed ), '%s' ) );
-
-		$rows = $wpdb->get_results(
-			$wpdb->prepare( "SELECT id, screenshot FROM %i WHERE status IN ({$in}) AND status_changed_at < %s", array_merge( array( $table ), $closed, array( $cutoff ) ) ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- $in is a list of %s placeholders, the values are passed as one array.
-			ARRAY_A
-		);
-		$deleted = 0;
-		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
-			if ( $wpdb->delete( $table, array( 'id' => (int) $row['id'] ), array( '%d' ) ) ) {
-				++$deleted;
-				self::delete_screenshot( $row['screenshot'] );
-			}
-		}
-		return $deleted;
-	}
-
 	/** Unix timestamp of a stored UTC "Y-m-d H:i:s" datetime; null when absent or invalid. */
 	public static function timestamp( mixed $utc ): ?int {
 		if ( ! is_string( $utc ) || '' === $utc ) {
@@ -268,8 +249,10 @@ final class Reports_Repository {
 
 	/** Types the columns that were selected; `context` and `reporter_email` are decoded only when present. */
 	private static function hydrate( array $row ): array {
-		$row['id']      = (int) $row['id'];
-		$row['user_id'] = null !== $row['user_id'] ? (int) $row['user_id'] : null;
+		$row['id'] = (int) $row['id'];
+		foreach ( array( 'user_id', 'assigned_to' ) as $key ) {
+			$row[ $key ] = isset( $row[ $key ] ) ? (int) $row[ $key ] : null;
+		}
 		if ( array_key_exists( 'context', $row ) ) {
 			$context        = is_string( $row['context'] ) ? json_decode( $row['context'], true ) : null;
 			$row['context'] = is_array( $context ) ? $context : array();
@@ -280,13 +263,8 @@ final class Reports_Repository {
 		return $row;
 	}
 
-	private static function delete_screenshot( mixed $name ): void {
-		if ( is_string( $name ) && '' !== $name ) {
-			Screenshot_Store::delete( $name );
-		}
-	}
-
-	private static function now(): string {
+	/** Current UTC datetime, as stored. */
+	public static function now(): string {
 		return gmdate( 'Y-m-d H:i:s' );
 	}
 }

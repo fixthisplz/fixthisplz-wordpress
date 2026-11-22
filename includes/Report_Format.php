@@ -60,4 +60,31 @@ final class Report_Format {
 		$time = Reports_Repository::timestamp( $utc );
 		return null !== $time ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $time ) : '';
 	}
+
+	/** Author of an activity entry: 0 is the plugin itself ("System"), null an erased author ("Deleted user"). */
+	public static function author( ?int $user_id ): string {
+		return 0 === $user_id ? __( 'System', 'bug-spotter' ) : Team::name( (int) $user_id );
+	}
+
+	/** A history entry, such as "Status: New → Fixed", with the names of the settings (unknown keys shown as is). */
+	public static function change( string $field, ?string $old, ?string $new ): string {
+		$labels = array(
+			'status'      => __( 'Status', 'bug-spotter' ),
+			'priority'    => __( 'Priority', 'bug-spotter' ),
+			'assigned_to' => __( 'Assigned to', 'bug-spotter' ),
+		);
+		/* translators: 1: changed field (Status, Priority or Assigned to), 2: old value, 3: new value. */
+		return sprintf( __( '%1$s: %2$s → %3$s', 'bug-spotter' ), $labels[ $field ] ?? $field, self::change_value( $field, $old ), self::change_value( $field, $new ) );
+	}
+
+	private static function change_value( string $field, ?string $value ): string {
+		if ( 'assigned_to' === $field ) {
+			return null === $value ? __( 'Unassigned', 'bug-spotter' ) : Team::name( (int) $value );
+		}
+		return match ( $field ) {
+			'status'   => Statuses::label( (string) $value ),
+			'priority' => Priorities::label( (string) $value ),
+			default    => (string) $value,
+		};
+	}
 }

@@ -168,7 +168,7 @@ final class Reports_Controller {
 		if ( ! $fields ) {
 			return Report_Submission::invalid( __( 'Nothing to update: send a status and/or a priority.', 'bug-spotter' ) );
 		}
-		if ( ! $repo->update( $id, $fields, $report ) ) {
+		if ( null === $repo->update( $id, $fields, $report ) ) {
 			return new \WP_Error( 'bugspot_save_failed', __( 'The report could not be saved.', 'bug-spotter' ), array( 'status' => 500 ) );
 		}
 

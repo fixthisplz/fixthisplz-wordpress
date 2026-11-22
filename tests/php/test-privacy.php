@@ -1,5 +1,6 @@
 <?php
 
+use Bug_Spotter\Activity;
 use Bug_Spotter\Installer;
 use Bug_Spotter\Privacy;
 use Bug_Spotter\Reports_Repository;
@@ -189,6 +190,7 @@ bugspot_test(
 				$secret = get_option( 'bugspot_secret' );
 				include BUGSPOT_DIR . 'uninstall.php';
 				assert_same( Installer::table(), $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', Installer::table() ) ), 'table kept' );
+				assert_same( Activity::table(), $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', Activity::table() ) ), 'activity table kept' );
 				assert_same( $secret, get_option( 'bugspot_secret' ), 'secret kept' );
 				assert_true( is_dir( Installer::private_dir() ), 'private dir kept' );
 
@@ -225,15 +227,24 @@ function privacy_table_exists( string $table ): bool {
 	return $table === $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) );
 }
 
+/** The plugin's tables, which the uninstall test parks as `{table}_bugspot_test_backup`. */
+function privacy_plugin_tables(): array {
+	global $wpdb;
+	return array( $wpdb->prefix . 'bugspot_reports', $wpdb->prefix . 'bugspot_activity' );
+}
+
 /**
- * Puts back what the uninstall test parked (backup table, then options and caps), with plain SQL / WordPress calls.
+ * Puts back what the uninstall test parked (backup tables, then options and caps), with plain SQL / WordPress calls.
  * Each part is restored only when its backup exists, so it also repairs a run that crashed half-way.
  */
-function privacy_restore_backup( string $table ): void {
+function privacy_restore_backup(): void {
 	global $wpdb;
-	$backup_table = $table . '_bugspot_test_backup';
-	if ( privacy_table_exists( $backup_table ) ) {
-		// After a crash the site may have recreated the table and received new reports: never drop those.
+	foreach ( privacy_plugin_tables() as $table ) {
+		$backup_table = $table . '_bugspot_test_backup';
+		if ( ! privacy_table_exists( $backup_table ) ) {
+			continue;
+		}
+		// After a crash the site may have recreated the table and received new rows: never drop those.
 		if ( privacy_table_exists( $table ) && (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" ) > 0 ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			throw new RuntimeException( $table . ' and ' . $backup_table . ' both hold rows: merge them by hand.' );
 		}
@@ -266,7 +277,7 @@ function privacy_restore_backup( string $table ): void {
 
 /**
  * The uninstall destroys real bench data (DROP TABLE is DDL: no rollback), so everything it touches is moved aside
- * before any plugin code runs and put back with plain SQL / WordPress / PHP calls: the table is renamed, the options
+ * before any plugin code runs and put back with plain SQL / WordPress / PHP calls: the tables are renamed, the options
  * and caps are parked in a stored option, the private dir is renamed. A crashed run leaves those backups in place;
  * the next run restores them and stops.
  */
@@ -274,15 +285,15 @@ bugspot_test(
 	'privacy: uninstall_removes_everything_when_enabled',
 	function () {
 		global $wpdb;
-		$table        = $wpdb->prefix . 'bugspot_reports';
-		$backup_table = $table . '_bugspot_test_backup';
+		$tables       = privacy_plugin_tables();
 		$dir          = wp_upload_dir( null, false )['basedir'] . '/bug-spotter';
 		$missing      = new stdClass();
 
 		// Backups left by a crashed run hold the real data: put them back and stop here.
-		if ( privacy_table_exists( $backup_table ) || false !== get_option( PRIVACY_BACKUP_OPTION ) ) {
-			privacy_restore_backup( $table );
-			throw new RuntimeException( 'Restored the reports table / options from a previous crashed run; run the tests again.' );
+		$parked_tables = array_filter( $tables, static fn( string $t ): bool => privacy_table_exists( $t . '_bugspot_test_backup' ) );
+		if ( $parked_tables || false !== get_option( PRIVACY_BACKUP_OPTION ) ) {
+			privacy_restore_backup();
+			throw new RuntimeException( 'Restored the plugin tables / options from a previous crashed run; run the tests again.' );
 		}
 		$left = glob( $dir . '.bugspot-test-backup-*' );
 		if ( $left ) {
@@ -311,8 +322,11 @@ bugspot_test(
 
 		try {
 			try {
-				if ( false === $wpdb->query( "RENAME TABLE {$table} TO {$backup_table}" ) || false === $wpdb->query( "CREATE TABLE {$table} LIKE {$backup_table}" ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					throw new RuntimeException( 'Could not move the reports table aside.' );
+				foreach ( $tables as $table ) {
+					$backup_table = $table . '_bugspot_test_backup';
+					if ( false === $wpdb->query( "RENAME TABLE {$table} TO {$backup_table}" ) || false === $wpdb->query( "CREATE TABLE {$table} LIKE {$backup_table}" ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+						throw new RuntimeException( 'Could not move ' . $table . ' aside.' );
+					}
 				}
 				if ( file_exists( $dir ) && ! rename( $dir, $backup ) ) {
 					throw new RuntimeException( 'Could not move the private dir aside.' );
@@ -332,7 +346,9 @@ bugspot_test(
 				update_option( 'bugspot_settings', array( 'data' => array( 'delete_on_uninstall' => true ) ) );
 				include BUGSPOT_DIR . 'uninstall.php';
 
-				assert_true( ! privacy_table_exists( $table ), 'table dropped' );
+				foreach ( $tables as $table ) {
+					assert_true( ! privacy_table_exists( $table ), $table . ' dropped' );
+				}
 				assert_same( $missing, get_option( 'bugspot_settings', $missing ), 'settings removed' );
 				assert_same( $missing, get_option( 'bugspot_secret', $missing ), 'secret removed' );
 				assert_same( $missing, get_option( 'bugspot_db_version', $missing ), 'db version removed' );
@@ -343,7 +359,7 @@ bugspot_test(
 				assert_true( ! file_exists( $dir ), 'private dir removed' );
 				assert_same( false, wp_next_scheduled( 'bugspot_daily_purge' ), 'cron cleared' );
 			} finally {
-				privacy_restore_backup( $table );
+				privacy_restore_backup();
 			}
 		} finally {
 			try {

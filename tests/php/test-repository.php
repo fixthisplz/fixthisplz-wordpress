@@ -64,7 +64,7 @@ bugspot_test(
 		$id   = repo_make( $repo, 'upd' );
 		$wpdb->update( Installer::table(), array( 'updated_at' => '2000-01-01 00:00:00' ), array( 'id' => $id ) );
 		assert_same( null, $repo->find( $id )['status_changed_at'] );
-		assert_true( $repo->update( $id, array( 'status' => 'confirmed', 'priority' => 'high' ) ) );
+		assert_true( null !== $repo->update( $id, array( 'status' => 'confirmed', 'priority' => 'high' ) ) );
 		$r = $repo->find( $id );
 		assert_same( 'confirmed', $r['status'] );
 		assert_same( 'high', $r['priority'] );
@@ -99,9 +99,9 @@ bugspot_test(
 	function () {
 		$repo = new Reports_Repository();
 		$id   = repo_make( $repo, 'bad' );
-		assert_true( ! $repo->update( $id, array( 'status' => 'bogus' ) ) );
-		assert_true( ! $repo->update( $id, array( 'priority' => 'urgent' ) ) );
-		assert_true( ! $repo->update( $id, array( 'description' => 'hack' ) ) );
+		assert_same( null, $repo->update( $id, array( 'status' => 'bogus' ) ) );
+		assert_same( null, $repo->update( $id, array( 'priority' => 'urgent' ) ) );
+		assert_same( null, $repo->update( $id, array( 'description' => 'hack' ) ) );
 		$r = $repo->find( $id );
 		assert_same( 'new', $r['status'] );
 		assert_same( 'normal', $r['priority'] );
@@ -236,9 +236,9 @@ bugspot_test(
 		$a    = repo_make( $repo, 'PRG', array(), array( 'status' => 'fixed', 'status_changed_at' => $old, 'created_at' => $new ) );
 		$b    = repo_make( $repo, 'PRG', array(), array( 'status' => 'in_progress', 'status_changed_at' => $old ) );
 		$c    = repo_make( $repo, 'PRG', array(), array( 'status' => 'fixed', 'status_changed_at' => $new, 'created_at' => $old ) );
-		assert_same( 0, $repo->purge_closed_older_than( 0 ), '0 months does nothing' );
+		assert_same( 0, Bug_Spotter\Retention::purge_closed_older_than( 0 ), '0 months does nothing' );
 		assert_true( null !== $repo->find( $a ) );
-		$deleted = $repo->purge_closed_older_than( 12 );
+		$deleted = Bug_Spotter\Retention::purge_closed_older_than( 12 );
 		assert_true( $deleted >= 1, 'at least the old closed row is purged' );
 		assert_same( null, $repo->find( $a ) );
 		assert_true( null !== $repo->find( $b ), 'in_progress kept' );
@@ -253,7 +253,7 @@ bugspot_test(
 		$id   = repo_make( $repo, 'LIGHT1', array( 'context' => array( 'big' => 'x' ), 'reporter_email' => 'light@example.test', 'ip_hash' => str_repeat( 'c', 64 ) ) );
 
 		$item = $repo->query( array( 'search' => 'LIGHT1' ) )['items'][0];
-		assert_same( array( 'id', 'status', 'priority', 'description', 'page_url', 'user_id', 'screenshot', 'created_at', 'reporter_email' ), array_keys( $item ) );
+		assert_same( array( 'id', 'status', 'priority', 'description', 'page_url', 'user_id', 'screenshot', 'created_at', 'assigned_to', 'reporter_email' ), array_keys( $item ) );
 		assert_same( $id, $item['id'] );
 		assert_same( 'light@example.test', $item['reporter_email'] );
 

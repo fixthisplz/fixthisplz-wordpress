@@ -15,7 +15,9 @@ final class Uninstaller {
 		}
 
 		global $wpdb;
-		$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', Installer::table() ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- removes the plugin's own table on uninstall.
+		foreach ( array( Installer::table(), Activity::table() ) as $table ) {
+			$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- removes the plugin's own tables on uninstall.
+		}
 
 		delete_option( Settings::OPTION );
 		delete_option( Installer::DB_VERSION_OPTION );

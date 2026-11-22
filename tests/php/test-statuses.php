@@ -91,7 +91,7 @@ bugspot_test(
 
 				statuses_save( array( array( 'key' => 'new' ), array( 'key' => 'seen' ) ) );
 				assert_same( array(), Statuses::closed() );
-				assert_same( 0, ( new Reports_Repository() )->purge_closed_older_than( 1 ), 'no closed status: nothing purged' );
+				assert_same( 0, Bug_Spotter\Retention::purge_closed_older_than( 1 ), 'no closed status: nothing purged' );
 			}
 		);
 	}
@@ -108,7 +108,7 @@ bugspot_test(
 				$old    = gmdate( 'Y-m-d H:i:s', strtotime( '-13 months' ) );
 				$closed = repo_make( $repo, 'STPRG', array(), array( 'status' => 'zz_test_closed', 'status_changed_at' => $old ) );
 				$fixed  = repo_make( $repo, 'STPRG', array(), array( 'status' => 'fixed', 'status_changed_at' => $old ) );
-				assert_same( 1, $repo->purge_closed_older_than( 12 ) );
+				assert_same( 1, Bug_Spotter\Retention::purge_closed_older_than( 12 ) );
 				assert_same( null, $repo->find( $closed ) );
 				assert_true( null !== $repo->find( $fixed ), '"fixed" is no longer closed here' );
 			}
@@ -124,10 +124,10 @@ bugspot_test(
 				$repo = new Reports_Repository();
 				$id   = repo_make( $repo, 'STUNK', array(), array( 'status' => 'zz_gone' ) );
 				assert_same( 1, $repo->count_by_status( array( 'search' => 'STUNK' ) )['zz_gone'] );
-				assert_true( $repo->update( $id, array( 'status' => 'zz_gone', 'priority' => 'high' ) ), 'unchanged unknown status is kept' );
+				assert_true( null !== $repo->update( $id, array( 'status' => 'zz_gone', 'priority' => 'high' ) ), 'unchanged unknown status is kept' );
 				assert_same( 'high', $repo->find( $id )['priority'] );
-				assert_true( ! $repo->update( $id, array( 'status' => 'zz_other' ) ), 'an unknown status is never newly set' );
-				assert_true( $repo->update( $id, array( 'status' => 'confirmed' ) ) );
+				assert_same( null, $repo->update( $id, array( 'status' => 'zz_other' ) ), 'an unknown status is never newly set' );
+				assert_true( null !== $repo->update( $id, array( 'status' => 'confirmed' ) ) );
 				assert_same( 'confirmed', $repo->find( $id )['status'] );
 			}
 		);

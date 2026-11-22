@@ -11,10 +11,14 @@ bugspot_test(
 		$columns = $wpdb->get_col( 'DESCRIBE ' . Installer::table(), 0 );
 		$expected = array(
 			'id', 'status', 'priority', 'description', 'page_url', 'context', 'user_id', 'reporter_email',
-			'reporter_email_hash', 'screenshot', 'ip_hash', 'created_at', 'updated_at', 'seen_at', 'status_changed_at',
+			'reporter_email_hash', 'screenshot', 'ip_hash', 'created_at', 'updated_at', 'seen_at', 'status_changed_at', 'assigned_to',
 		);
 		assert_same( $expected, $columns );
-		assert_same( '2', get_option( 'bugspot_db_version' ) );
+		assert_same(
+			array( 'id', 'report_id', 'user_id', 'type', 'field', 'old_value', 'new_value', 'content', 'created_at' ),
+			$wpdb->get_col( 'DESCRIBE ' . Bug_Spotter\Activity::table(), 0 )
+		);
+		assert_same( '3', get_option( 'bugspot_db_version' ) );
 		assert_true( false !== wp_next_scheduled( 'bugspot_daily_purge' ), 'daily purge must be scheduled' );
 	}
 );
@@ -72,53 +76,108 @@ bugspot_test(
 	}
 );
 
+/**
+ * Runs $fn( $table, $activity ) on a copy of the reports table under another prefix (DDL commits the test
+ * transaction, so the real tables are never touched), shaped by $downgrade SQL ALTER clauses, with no activity
+ * table and the stored schema version $version. Everything is dropped afterwards.
+ */
+function installer_on_old_schema( array $downgrade, string $version, callable $fn ): void {
+	global $wpdb;
+	$prefix  = $wpdb->prefix;
+	$stored  = get_option( Installer::DB_VERSION_OPTION );
+	$real    = Installer::table();
+	$wpdb->prefix = $prefix . 'bstest_'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride
+	$table    = Installer::table();
+	$activity = Bug_Spotter\Activity::table();
+	try {
+		$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i, %i', $table, $activity ) );
+		$wpdb->query( $wpdb->prepare( 'CREATE TABLE %i LIKE %i', $table, $real ) );
+		foreach ( $downgrade as $clause ) {
+			$wpdb->query( $wpdb->prepare( 'ALTER TABLE %i ', $table ) . $clause );
+		}
+		update_option( Installer::DB_VERSION_OPTION, $version );
+		$fn( $table, $activity );
+	} finally {
+		$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i, %i', $table, $activity ) );
+		$wpdb->prefix = $prefix; // phpcs:ignore WordPress.WP.GlobalVariablesOverride
+		update_option( Installer::DB_VERSION_OPTION, $stored );
+	}
+}
+
 bugspot_test(
 	'installer: upgrade_from_version_1_widens_priority_and_keeps_the_rows',
 	function () {
 		global $wpdb;
-		// DDL commits the test transaction: the upgrade runs on a copy of the table, under another prefix, dropped afterwards.
-		$prefix  = $wpdb->prefix;
-		$version = get_option( Installer::DB_VERSION_OPTION );
-		$real    = Installer::table();
-		$wpdb->prefix = $prefix . 'bstest_'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride
-		$table   = Installer::table();
-		try {
-			$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $table ) );
-			$wpdb->query( $wpdb->prepare( 'CREATE TABLE %i LIKE %i', $table, $real ) );
-			$wpdb->query( $wpdb->prepare( "ALTER TABLE %i MODIFY priority varchar(10) NOT NULL DEFAULT 'normal'", $table ) );
-			$now = gmdate( 'Y-m-d H:i:s' );
-			foreach ( array( 'low', 'normal', 'high', 'critical' ) as $priority ) {
-				$wpdb->insert( $table, array( 'status' => 'seen', 'priority' => $priority, 'description' => 'upgrade ' . $priority, 'created_at' => $now, 'updated_at' => $now ) );
-			}
-			$before = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM %i ORDER BY id', $table ), ARRAY_A );
-			update_option( Installer::DB_VERSION_OPTION, '1' );
+		$version1 = array( 'DROP INDEX assigned_to', 'DROP COLUMN assigned_to', "MODIFY priority varchar(10) NOT NULL DEFAULT 'normal'" );
+		installer_on_old_schema(
+			$version1,
+			'1',
+			function ( string $table, string $activity ) {
+				global $wpdb;
+				$now = gmdate( 'Y-m-d H:i:s' );
+				foreach ( array( 'low', 'normal', 'high', 'critical' ) as $priority ) {
+					$wpdb->insert( $table, array( 'status' => 'seen', 'priority' => $priority, 'description' => 'upgrade ' . $priority, 'created_at' => $now, 'updated_at' => $now ) );
+				}
+				$before = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM %i ORDER BY id', $table ), ARRAY_A );
 
-			// An upgrade that does not apply keeps the old version, so the next load tries again.
-			$skip = static fn() => array();
-			add_filter( 'dbdelta_queries', $skip );
-			try {
+				// An upgrade that does not apply keeps the old version, so the next load tries again.
+				$skip = static fn() => array();
+				add_filter( 'dbdelta_queries', $skip );
+				try {
+					Installer::maybe_upgrade();
+				} finally {
+					remove_filter( 'dbdelta_queries', $skip );
+				}
+				assert_same( '1', get_option( Installer::DB_VERSION_OPTION ), 'not applied: version kept' );
+				assert_same( 'varchar(10)', $wpdb->get_row( $wpdb->prepare( 'SHOW COLUMNS FROM %i LIKE %s', $table, 'priority' ), ARRAY_A )['Type'] );
+
 				Installer::maybe_upgrade();
-			} finally {
-				remove_filter( 'dbdelta_queries', $skip );
+
+				$column = $wpdb->get_row( $wpdb->prepare( 'SHOW COLUMNS FROM %i LIKE %s', $table, 'priority' ), ARRAY_A );
+				assert_same( 'varchar(20)', $column['Type'] );
+				assert_same( 'normal', $column['Default'] );
+				assert_same( '3', get_option( Installer::DB_VERSION_OPTION ) );
+				$after = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM %i ORDER BY id', $table ), ARRAY_A );
+				assert_same( array_fill( 0, 4, null ), array_column( $after, 'assigned_to' ), 'nobody assigned' );
+				assert_same( $before, array_map( static fn( array $row ): array => array_diff_key( $row, array( 'assigned_to' => true ) ), $after ), 'rows and values unchanged' );
+				assert_same( 4, count( $before ) );
+				// Raw INSERT: wpdb::insert() would check the column widths it cached before the upgrade.
+				$wpdb->query( $wpdb->prepare( 'INSERT INTO %i (priority, description, created_at, updated_at) VALUES (%s, %s, %s, %s)', $table, str_repeat( 'p', 20 ), 'long key', $now, $now ) );
+				assert_same( str_repeat( 'p', 20 ), $wpdb->get_var( $wpdb->prepare( "SELECT priority FROM %i WHERE description = 'long key'", $table ) ), 'a 20-character key fits' );
+				assert_same( $activity, $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $activity ) ), 'activity table created' );
 			}
-			assert_same( '1', get_option( Installer::DB_VERSION_OPTION ), 'not applied: version kept' );
-			assert_same( 'varchar(10)', $wpdb->get_row( $wpdb->prepare( 'SHOW COLUMNS FROM %i LIKE %s', $table, 'priority' ), ARRAY_A )['Type'] );
+		);
+	}
+);
 
-			Installer::maybe_upgrade();
+bugspot_test(
+	'installer: upgrade_from_version_2_adds_assignment_and_activity_and_keeps_the_rows',
+	function () {
+		installer_on_old_schema(
+			array( 'DROP INDEX assigned_to', 'DROP COLUMN assigned_to' ),
+			'2',
+			function ( string $table, string $activity ) {
+				global $wpdb;
+				$now = gmdate( 'Y-m-d H:i:s' );
+				foreach ( array( 'new', 'seen', 'fixed' ) as $status ) {
+					$wpdb->insert( $table, array( 'status' => $status, 'priority' => 'high', 'description' => 'v2 ' . $status, 'user_id' => 7, 'created_at' => $now, 'updated_at' => $now ) );
+				}
+				$before = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM %i ORDER BY id', $table ), ARRAY_A );
 
-			$column = $wpdb->get_row( $wpdb->prepare( 'SHOW COLUMNS FROM %i LIKE %s', $table, 'priority' ), ARRAY_A );
-			assert_same( 'varchar(20)', $column['Type'] );
-			assert_same( 'normal', $column['Default'] );
-			assert_same( '2', get_option( Installer::DB_VERSION_OPTION ) );
-			assert_same( $before, $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM %i ORDER BY id', $table ), ARRAY_A ), 'rows and values unchanged' );
-			assert_same( 4, count( $before ) );
-			// Raw INSERT: wpdb::insert() would check the column widths it cached before the upgrade.
-			$wpdb->query( $wpdb->prepare( 'INSERT INTO %i (priority, description, created_at, updated_at) VALUES (%s, %s, %s, %s)', $table, str_repeat( 'p', 20 ), 'long key', $now, $now ) );
-			assert_same( str_repeat( 'p', 20 ), $wpdb->get_var( $wpdb->prepare( "SELECT priority FROM %i WHERE description = 'long key'", $table ) ), 'a 20-character key fits' );
-		} finally {
-			$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $table ) );
-			$wpdb->prefix = $prefix; // phpcs:ignore WordPress.WP.GlobalVariablesOverride
-			update_option( Installer::DB_VERSION_OPTION, $version );
-		}
+				Installer::maybe_upgrade();
+
+				assert_same( '3', get_option( Installer::DB_VERSION_OPTION ) );
+				$column = $wpdb->get_row( $wpdb->prepare( 'SHOW COLUMNS FROM %i LIKE %s', $table, 'assigned_to' ), ARRAY_A );
+				assert_same( array( 'bigint unsigned', 'YES', 'MUL' ), array( $column['Type'], $column['Null'], $column['Key'] ), 'nullable, indexed' );
+				$after = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM %i ORDER BY id', $table ), ARRAY_A );
+				assert_same( $before, array_map( static fn( array $row ): array => array_diff_key( $row, array( 'assigned_to' => true ) ), $after ), 'rows and values unchanged' );
+				assert_same( 3, count( $after ) );
+				assert_same( $activity, $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $activity ) ), 'activity table created' );
+				assert_same( '0', $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i', $activity ) ) );
+
+				Installer::maybe_upgrade(); // Same version: nothing to do, nothing breaks.
+				assert_same( $after, $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM %i ORDER BY id', $table ), ARRAY_A ) );
+			}
+		);
 	}
 );
