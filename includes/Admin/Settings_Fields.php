@@ -30,14 +30,18 @@ final class Settings_Fields {
 	}
 
 	/** Start of a settings section: heading(), then its form-table (closed by table_close()). */
-	public static function section( string $title, string $intro ): void {
-		self::heading( $title, $intro );
+	public static function section( string $title, string $intro, string $anchor = '' ): void {
+		self::heading( $title, $intro, $anchor );
 		self::table_open();
 	}
 
-	/** Title of a settings section: a short <h2> and one sentence about the section. */
-	public static function heading( string $title, string $intro ): void {
-		echo '<h2>' . esc_html( $title ) . '</h2>';
+	/**
+	 * Title of a settings section: a short <h2> and one sentence about the section.
+	 *
+	 * @param string $anchor Id of the <h2>, for the links of the summary (Settings_Summary constants); '' for none.
+	 */
+	public static function heading( string $title, string $intro, string $anchor = '' ): void {
+		echo '<h2' . ( '' !== $anchor ? ' id="' . esc_attr( $anchor ) . '"' : '' ) . '>' . esc_html( $title ) . '</h2>';
 		self::description( $intro );
 	}
 

@@ -6,20 +6,22 @@ use Bug_Spotter\Admin\Settings_Fields as F;
 
 defined( 'ABSPATH' ) || exit;
 
-/** "General" tab of the settings screen: the main switch, who can report and where the button appears. */
+/** "General" tab of the settings screen: the summary, the main switch, who can report and where the button appears. */
 final class Settings_General_Tab {
 
 	/** @param array<string,mixed> $s */
 	public static function render( array $s ): void {
 		$v = $s['visibility'];
 
-		F::section( __( 'Activation', 'bug-spotter' ), __( 'Turn the report button on or off for the whole site.', 'bug-spotter' ) );
+		Settings_Summary::render( $s );
+
+		F::section( __( 'Activation', 'bug-spotter' ), __( 'Turn the report button on or off for the whole site.', 'bug-spotter' ), Settings_Summary::ACTIVATION );
 		F::row_open( __( 'Bug reporting', 'bug-spotter' ) );
 		F::checkbox( array( 'enabled' ), (bool) $s['enabled'], __( 'Show the bug report button', 'bug-spotter' ) );
 		F::row_close();
 		F::table_close();
 
-		F::section( __( 'Who can report', 'bug-spotter' ), __( 'Choose who sees the button and can send a report.', 'bug-spotter' ) );
+		F::section( __( 'Who can report', 'bug-spotter' ), __( 'Choose who sees the button and can send a report.', 'bug-spotter' ), Settings_Summary::WHO );
 		F::row_open( __( 'Who sees the button', 'bug-spotter' ), '', true );
 		echo '<fieldset><legend class="screen-reader-text">' . esc_html__( 'Who sees the button', 'bug-spotter' ) . '</legend>';
 		F::list_marker( array( 'visibility', 'roles' ) );
@@ -27,6 +29,10 @@ final class Settings_General_Tab {
 			F::checkbox_item( array( 'visibility', 'roles' ), $role, in_array( $role, $v['roles'], true ), $label );
 		}
 		F::checkbox( array( 'visibility', 'guests' ), (bool) $v['guests'], __( 'Guests (not logged in)', 'bug-spotter' ) );
+		if ( Settings_Page::no_spam_check( $s ) ) {
+			// Shown while the box is ticked: the service is chosen in another tab, so the saved one is what counts.
+			echo '<p class="description bugspot-warning"' . F::show_if( array( 'visibility', 'guests' ), '=', '1' ) . '>' . esc_html__( 'No spam check is configured: expect unwanted reports.', 'bug-spotter' ) . ' <a href="' . esc_url( Settings_Page::tab_url( 'spam' ) ) . '">' . esc_html__( 'Set up spam protection', 'bug-spotter' ) . '</a></p>'; // phpcs:ignore WordPress.Security.EscapeOutput -- show_if() is escaped.
+		}
 		echo '</fieldset>';
 		F::row_close();
 		F::table_close();

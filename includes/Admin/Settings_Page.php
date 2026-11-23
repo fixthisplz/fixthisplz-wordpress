@@ -204,14 +204,28 @@ final class Settings_Page {
 		}
 	}
 
+	/**
+	 * Whether guests (not logged in) can send reports with no spam check: the warning of guest_warning() and of the
+	 * summary of the General tab.
+	 *
+	 * @param array<string,mixed> $s Settings.
+	 */
+	public static function guests_unprotected( array $s ): bool {
+		return ! empty( $s['enabled'] ) && ! empty( $s['visibility']['guests'] ) && self::no_spam_check( $s );
+	}
+
+	/** Whether no spam check service is chosen (the warning under the "Guests" box of the General tab). @param array<string,mixed> $s */
+	public static function no_spam_check( array $s ): bool {
+		return 'none' === $s['captcha']['provider'];
+	}
+
 	/** Permanent warning on the plugin screens while guests can report without any anti-bot (spec 7). */
 	public static function guest_warning(): void {
 		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen check.
 		if ( Menu::SLUG !== $page && Menu::SETTINGS_SLUG !== $page ) {
 			return;
 		}
-		$s = Settings::get();
-		if ( empty( $s['enabled'] ) || empty( $s['visibility']['guests'] ) || 'none' !== $s['captcha']['provider'] ) {
+		if ( ! self::guests_unprotected( Settings::get() ) ) {
 			return;
 		}
 		echo '<div class="notice notice-warning"><p>';

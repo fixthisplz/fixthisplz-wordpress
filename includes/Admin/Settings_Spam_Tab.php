@@ -47,22 +47,27 @@ final class Settings_Spam_Tab {
 		F::advanced_close();
 	}
 
+	/** @return array<string,string> Spam check service => label ("none" first), also shown in the summary of the General tab. */
+	public static function provider_labels(): array {
+		return array(
+			'none'         => __( 'None', 'bug-spotter' ),
+			'turnstile'    => __( 'Cloudflare Turnstile', 'bug-spotter' ),
+			'recaptcha_v2' => __( 'Google reCAPTCHA v2 (checkbox)', 'bug-spotter' ),
+			'recaptcha_v3' => __( 'Google reCAPTCHA v3 (invisible, score-based)', 'bug-spotter' ),
+			'hcaptcha'     => __( 'hCaptcha', 'bug-spotter' ),
+		);
+	}
+
 	/** The provider, its keys and the "Test" button (its widget is printed after the form, see Settings_Page). @param array<string,mixed> $c */
 	private static function captcha( array $c ): void {
 		$provider = array( 'captcha', 'provider' );
-		F::section( __( 'Spam check', 'bug-spotter' ), __( 'Ask visitors to pass a check before sending, with the service of your choice.', 'bug-spotter' ) );
+		F::section( __( 'Spam check', 'bug-spotter' ), __( 'Ask visitors to pass a check before sending, with the service of your choice.', 'bug-spotter' ), Settings_Summary::SPAM );
 
 		F::select_row(
 			__( 'Provider', 'bug-spotter' ),
 			$provider,
 			$c['provider'],
-			array(
-				'none'         => __( 'None', 'bug-spotter' ),
-				'turnstile'    => __( 'Cloudflare Turnstile', 'bug-spotter' ),
-				'recaptcha_v2' => __( 'Google reCAPTCHA v2 (checkbox)', 'bug-spotter' ),
-				'recaptcha_v3' => __( 'Google reCAPTCHA v3 (invisible, score-based)', 'bug-spotter' ),
-				'hcaptcha'     => __( 'hCaptcha', 'bug-spotter' ),
-			)
+			self::provider_labels()
 		);
 
 		$keys = F::show_if( $provider, '!=', 'none' );

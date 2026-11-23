@@ -136,7 +136,7 @@ msgstr "Statut"
 #: includes/Admin/Csv_Export.php:73
 #: includes/Admin/Detail_Page.php:93
 #: includes/Admin/List_Table.php:40
-#: includes/Mailer.php:157
+#: includes/Mailer.php:175
 #: includes/Privacy.php:55
 #: includes/Webhook_Payload.php:120
 msgid "Page"
@@ -152,7 +152,7 @@ msgstr "Auteur"
 #: includes/Admin/Detail_Page.php:88
 #: includes/Admin/List_Table.php:39
 #: includes/Frontend/Assets.php:178
-#: includes/Mailer.php:156
+#: includes/Mailer.php:174
 #: includes/Privacy.php:56
 #: includes/Webhook_Payload.php:119
 msgid "Description"
@@ -185,7 +185,7 @@ msgstr "Requêtes réseau en erreur"
 #: includes/Admin/Detail_Page.php:98
 #: includes/Admin/Settings_Form_Tab.php:48
 #: includes/Frontend/Assets.php:234
-#: includes/Mailer.php:159
+#: includes/Mailer.php:177
 msgid "Screenshot"
 msgstr "Capture d’écran"
 
@@ -211,7 +211,7 @@ msgstr "Le signalement n’a pas pu être mis à jour."
 
 #: includes/Admin/Report_Context_View.php:18
 #: includes/Admin/Settings_Button_Tab.php:196
-#: includes/Admin/Settings_Spam_Tab.php:60
+#: includes/Admin/Settings_Spam_Tab.php:53
 msgid "None"
 msgstr "Aucun"
 
@@ -410,7 +410,7 @@ msgstr "Réglages de Bug Spotter"
 msgid "Settings"
 msgstr "Réglages"
 
-#: includes/Admin/Settings_Assets.php:63
+#: includes/Admin/Settings_Assets.php:67
 #: includes/Admin/Settings_Button_Tab.php:133
 #: includes/Admin/Settings_Button_Tab.php:139
 #: includes/Admin/Settings_Form_Tab.php:34
@@ -419,15 +419,15 @@ msgstr "Réglages"
 msgid "Report a bug"
 msgstr "Signaler un bug"
 
-#: includes/Admin/Settings_Assets.php:64
+#: includes/Admin/Settings_Assets.php:68
 msgid "Choose an SVG icon"
 msgstr "Choisir une icône SVG"
 
-#: includes/Admin/Settings_Assets.php:65
+#: includes/Admin/Settings_Assets.php:69
 msgid "Use this icon"
 msgstr "Utiliser cette icône"
 
-#: includes/Admin/Settings_Assets.php:66
+#: includes/Admin/Settings_Assets.php:70
 msgid "Please choose an SVG file."
 msgstr "Veuillez choisir un fichier SVG."
 
@@ -435,40 +435,40 @@ msgstr "Veuillez choisir un fichier SVG."
 msgid "Button preview"
 msgstr "Aperçu du bouton"
 
-#: includes/Admin/Settings_Assets.php:67
+#: includes/Admin/Settings_Assets.php:71
 msgid "The preview could not be updated."
 msgstr "L’aperçu n’a pas pu être mis à jour."
 
-#: includes/Admin/Settings_Assets.php:68
+#: includes/Admin/Settings_Assets.php:72
 msgid "Loading the provider widget…"
 msgstr "Chargement du widget du service…"
 
-#: includes/Admin/Settings_Assets.php:69
+#: includes/Admin/Settings_Assets.php:73
 msgid "Complete the check below to finish the test."
 msgstr "Terminez la vérification ci-dessous pour finir le test."
 
-#: includes/Admin/Settings_Assets.php:70
+#: includes/Admin/Settings_Assets.php:74
 msgid "Checking the keys…"
 msgstr "Vérification des clés…"
 
-#: includes/Admin/Settings_Assets.php:71
+#: includes/Admin/Settings_Assets.php:75
 #: includes/Rest/Settings_Controller.php:103
 msgid "Keys are valid."
 msgstr "Les clés sont valides."
 
-#: includes/Admin/Settings_Assets.php:72
+#: includes/Admin/Settings_Assets.php:76
 msgid "The test failed."
 msgstr "Le test a échoué."
 
-#: includes/Admin/Settings_Assets.php:73
+#: includes/Admin/Settings_Assets.php:77
 msgid "The provider widget could not be loaded. Check the site key, the provider choice and your connection; reload the page before testing another Google key."
 msgstr "Le widget du service n’a pas pu être chargé. Vérifiez la clé publique, le service choisi et votre connexion. Rechargez la page avant de tester une autre clé Google."
 
-#: includes/Admin/Settings_Assets.php:74
+#: includes/Admin/Settings_Assets.php:78
 msgid "No answer from the check. Try again."
 msgstr "Aucune réponse de la vérification. Réessayez."
 
-#: includes/Admin/Settings_Assets.php:75
+#: includes/Admin/Settings_Assets.php:79
 #: includes/Rest/Settings_Controller.php:81
 msgid "Enter the site key first."
 msgstr "Saisissez d’abord la clé publique."
@@ -710,40 +710,41 @@ msgstr "Désolé, vous n’avez pas l’autorisation de gérer ces réglages."
 msgid "Settings sections"
 msgstr "Onglets des réglages"
 
-#: includes/Admin/Settings_General_Tab.php:17
+#: includes/Admin/Settings_General_Tab.php:19
 msgid "Bug reporting"
 msgstr "Bouton de signalement"
 
-#: includes/Admin/Settings_General_Tab.php:18
+#: includes/Admin/Settings_General_Tab.php:20
 msgid "Show the bug report button"
 msgstr "Afficher le bouton de signalement sur le site"
 
-#: includes/Admin/Settings_General_Tab.php:23
-#: includes/Admin/Settings_General_Tab.php:24
+#: includes/Admin/Settings_General_Tab.php:25
+#: includes/Admin/Settings_General_Tab.php:26
 msgid "Who sees the button"
 msgstr "Qui voit le bouton"
 
-#: includes/Admin/Settings_General_Tab.php:29
+#: includes/Admin/Settings_General_Tab.php:31
+#: includes/Admin/Settings_Summary.php:79
 msgid "Guests (not logged in)"
 msgstr "Visiteurs non connectés"
 
-#: includes/Admin/Settings_General_Tab.php:59
+#: includes/Admin/Settings_General_Tab.php:65
 msgid "Excluded pages"
 msgstr "Pages sans bouton"
 
-#: includes/Admin/Settings_General_Tab.php:71
+#: includes/Admin/Settings_General_Tab.php:77
 msgid "Hold Ctrl (or Cmd) to select several pages, or to unselect one."
 msgstr "Maintenez Ctrl (ou Cmd) pour choisir plusieurs pages ou en retirer une."
 
-#: includes/Admin/Settings_General_Tab.php:40
+#: includes/Admin/Settings_General_Tab.php:46
 msgid "One path per line, for example /checkout/ or /my-account/. The button is hidden on every URL that starts with one of them."
 msgstr "Saisissez une adresse par ligne, par exemple /commande/ ou /mon-compte/. Le bouton est masqué sur toutes les pages dont l’adresse commence ainsi."
 
-#: includes/Admin/Settings_General_Tab.php:43
+#: includes/Admin/Settings_General_Tab.php:49
 msgid "Administration"
 msgstr "Administration"
 
-#: includes/Admin/Settings_General_Tab.php:44
+#: includes/Admin/Settings_General_Tab.php:50
 msgid "Also show the button in the WordPress administration"
 msgstr "Afficher aussi le bouton dans l’administration WordPress"
 
@@ -787,56 +788,56 @@ msgstr "JSON (.json)"
 msgid "Plain text (.txt)"
 msgstr "Texte brut (.txt)"
 
-#: includes/Admin/Settings_Spam_Tab.php:56
+#: includes/Admin/Settings_Spam_Tab.php:67
 msgid "Provider"
 msgstr "Service anti-spam"
 
-#: includes/Admin/Settings_Spam_Tab.php:61
+#: includes/Admin/Settings_Spam_Tab.php:54
 msgid "Cloudflare Turnstile"
 msgstr "Cloudflare Turnstile"
 
-#: includes/Admin/Settings_Spam_Tab.php:62
+#: includes/Admin/Settings_Spam_Tab.php:55
 msgid "Google reCAPTCHA v2 (checkbox)"
 msgstr "Google reCAPTCHA v2 (case à cocher)"
 
-#: includes/Admin/Settings_Spam_Tab.php:64
+#: includes/Admin/Settings_Spam_Tab.php:57
 msgid "hCaptcha"
 msgstr "hCaptcha"
 
-#: includes/Admin/Settings_Spam_Tab.php:71
+#: includes/Admin/Settings_Spam_Tab.php:76
 msgid "Site key"
 msgstr "Clé publique (clé du site)"
 
-#: includes/Admin/Settings_Spam_Tab.php:76
+#: includes/Admin/Settings_Spam_Tab.php:81
 msgid "Secret key"
 msgstr "Clé secrète"
 
-#: includes/Admin/Settings_Spam_Tab.php:86
+#: includes/Admin/Settings_Spam_Tab.php:91
 msgid "Saved — leave blank to keep it"
 msgstr "Enregistrée : laissez vide pour la garder"
 
-#: includes/Admin/Settings_Spam_Tab.php:90
+#: includes/Admin/Settings_Spam_Tab.php:95
 msgid "Kept on the server only, never sent to visitors."
 msgstr "Elle reste sur le serveur et n’est jamais envoyée aux visiteurs."
 
-#: includes/Admin/Settings_Spam_Tab.php:94
+#: includes/Admin/Settings_Spam_Tab.php:99
 msgid "Minimum score"
 msgstr "Score minimal"
 
-#: includes/Admin/Settings_Spam_Tab.php:96
+#: includes/Admin/Settings_Spam_Tab.php:101
 msgid "Between 0 (accept everything) and 1 (strictest). Default: 0.5."
 msgstr "Entre 0 (tout accepter) et 1 (le plus strict). Par défaut : 0,5."
 
-#: includes/Admin/Settings_Spam_Tab.php:99
+#: includes/Admin/Settings_Spam_Tab.php:104
 msgid "Test the keys"
 msgstr "Tester les clés"
 
-#: includes/Admin/Settings_Spam_Tab.php:100
+#: includes/Admin/Settings_Spam_Tab.php:105
 #: includes/Admin/Settings_Webhook_Fields.php:117
 msgid "Test"
 msgstr "Tester"
 
-#: includes/Admin/Settings_Spam_Tab.php:102
+#: includes/Admin/Settings_Spam_Tab.php:107
 msgid "Uses the provider and keys typed above, even before saving. A blank secret key tests the saved one. Requires JavaScript."
 msgstr "Teste le service et les clés saisis ci-dessus, sans enregistrer. Si la clé secrète est vide, la clé enregistrée est testée. Nécessite JavaScript."
 
@@ -920,16 +921,16 @@ msgid "Menu badge"
 msgstr "Compteur dans le menu"
 
 #. translators: %d: page ID.
-#: includes/Admin/Settings_General_Tab.php:78
+#: includes/Admin/Settings_General_Tab.php:84
 #, php-format
 msgid "Page #%d (no title)"
 msgstr "Page n° %d (sans titre)"
 
-#: includes/Captcha/Siteverify_Provider.php:63
+#: includes/Captcha/Siteverify_Provider.php:68
 msgid "The anti-bot check failed. Please try again."
 msgstr "La vérification anti-spam a échoué. Veuillez réessayer."
 
-#: includes/Captcha/Siteverify_Provider.php:67
+#: includes/Captcha/Siteverify_Provider.php:72
 msgid "The anti-bot check is currently unavailable. Please try again later."
 msgstr "La vérification anti-spam est momentanément indisponible. Veuillez réessayer plus tard."
 
@@ -1115,15 +1116,15 @@ msgstr "Veuillez compléter la vérification anti-spam."
 msgid "This page cannot be reported: its address is not a web address."
 msgstr "Cette page ne peut pas être signalée : son adresse n’est pas une adresse web."
 
-#: includes/Mailer.php:155
+#: includes/Mailer.php:173
 msgid "Report"
 msgstr "Signalement"
 
-#: includes/Mailer.php:158
+#: includes/Mailer.php:176
 msgid "Reported by"
 msgstr "Signalé par"
 
-#: includes/Mailer.php:160
+#: includes/Mailer.php:178
 #: includes/Webhook_Payload.php:137
 msgid "Open the report"
 msgstr "Ouvrir le signalement"
@@ -1557,7 +1558,7 @@ msgid "Priorities"
 msgstr "Priorités"
 
 #. translators: 1: site name, 2: report title, such as "Bug #12".
-#: includes/Mailer.php:36
+#: includes/Mailer.php:33
 #, php-format
 msgid "[%1$s] New report: %2$s"
 msgstr "[%1$s] Nouveau signalement : %2$s"
@@ -1657,7 +1658,7 @@ msgid "Unassign"
 msgstr "Retirer l’attribution"
 
 #. translators: 1: site name, 2: report title, such as "Bug #12".
-#: includes/Mailer.php:99
+#: includes/Mailer.php:117
 #, php-format
 msgid "[%1$s] Assigned to you: %2$s"
 msgstr "[%1$s] Vous est attribué : %2$s"
@@ -1675,14 +1676,14 @@ msgid "Deleted user"
 msgstr "Utilisateur supprimé"
 
 #. translators: 1: site name, 2: number of reports.
-#: includes/Mailer.php:106
+#: includes/Mailer.php:124
 #, php-format
 msgid "[%1$s] %2$d report assigned to you"
 msgid_plural "[%1$s] %2$d reports assigned to you"
 msgstr[0] "[%1$s] %2$d signalement vous est attribué"
 msgstr[1] "[%1$s] %2$d signalements vous sont attribués"
 
-#: includes/Mailer.php:107
+#: includes/Mailer.php:125
 msgid "These reports are now assigned to you:"
 msgstr "Ces signalements vous sont maintenant attribués :"
 
@@ -1710,11 +1711,11 @@ msgstr "Modification"
 msgid "%1$s: %2$s → %3$s"
 msgstr "%1$s : %2$s → %3$s"
 
-#: includes/Admin/Settings_Assets.php:76
+#: includes/Admin/Settings_Assets.php:80
 msgid "Sending the test…"
 msgstr "Envoi du test…"
 
-#: includes/Admin/Settings_Assets.php:77
+#: includes/Admin/Settings_Assets.php:81
 msgid "The test could not be sent."
 msgstr "Le test n’a pas pu être envoyé."
 
@@ -1809,7 +1810,7 @@ msgid "Report assigned"
 msgstr "Signalement attribué"
 
 #. translators: %s: the address typed for a webhook. The notice is printed as HTML: the address is escaped.
-#: includes/Webhooks.php:118
+#: includes/Webhooks.php:123
 #, php-format
 msgid "The webhook %s was not saved: its address must start with https:// and point to a public server (http://localhost and *.test addresses are accepted for development)."
 msgstr "Le webhook %s n’a pas été enregistré : son adresse doit commencer par https:// et pointer vers un serveur public (les adresses http://localhost et *.test sont acceptées pour le développement)."
@@ -1847,7 +1848,7 @@ msgid "Must start with https:// (in this development environment, http://localho
 msgstr "Doit commencer par https:// (dans cet environnement de développement, les adresses http://localhost et *.test sont aussi acceptées). Videz le champ pour supprimer ce webhook."
 
 #. translators: %s: the address typed for a webhook. The notice is printed as HTML: the address is escaped.
-#: includes/Webhooks.php:120
+#: includes/Webhooks.php:125
 #, php-format
 msgid "The webhook %s was not saved: its address must start with https:// and point to a public server."
 msgstr "Le webhook %s n’a pas été enregistré : son adresse doit commencer par https:// et pointer vers un serveur public."
@@ -1914,11 +1915,11 @@ msgctxt "status flag: the report is handled"
 msgid "Done"
 msgstr "Traité"
 
-#: includes/Admin/Settings_General_Tab.php:38
+#: includes/Admin/Settings_General_Tab.php:44
 msgid "Hidden on URLs starting with"
 msgstr "Adresses sans bouton"
 
-#: includes/Admin/Settings_Spam_Tab.php:63
+#: includes/Admin/Settings_Spam_Tab.php:56
 msgid "Google reCAPTCHA v3 (invisible, score-based)"
 msgstr "Google reCAPTCHA v3 (invisible, par score)"
 
@@ -1947,6 +1948,7 @@ msgid "Retention: reports whose status is marked Done are deleted automatically 
 msgstr "Conservation : les signalements dont le statut est marqué « Traité » sont supprimés automatiquement à l’issue de la durée de conservation définie par les administrateurs du site ; sinon, les signalements sont conservés jusqu’à leur suppression."
 
 #: includes/Admin/Settings_Alerts_Tab.php:16
+#: includes/Admin/Settings_Summary.php:55
 msgid "E-mail"
 msgstr "E-mail"
 
@@ -1955,6 +1957,7 @@ msgid "Send an e-mail to your team for every new report."
 msgstr "Envoyez un e-mail à votre équipe pour chaque nouveau signalement."
 
 #: includes/Admin/Settings_Alerts_Tab.php:35
+#: includes/Admin/Settings_Summary.php:56
 msgid "Webhooks"
 msgstr "Webhooks"
 
@@ -1990,7 +1993,7 @@ msgstr "Sur les écrans de 782 px de large ou moins, masquez le bouton ou donnez
 msgid "Hide the button on mobile"
 msgstr "Masquer le bouton sur mobile"
 
-#: includes/Admin/Settings_Fields.php:77
+#: includes/Admin/Settings_Fields.php:81
 msgid "Advanced settings"
 msgstr "Réglages avancés"
 
@@ -2081,27 +2084,28 @@ msgstr "Texte de la mention"
 msgid "Leave empty to use the privacy policy page set in the WordPress settings (Settings › Privacy)."
 msgstr "Laissez vide pour utiliser la page définie dans les réglages de WordPress (Réglages › Confidentialité)."
 
-#: includes/Admin/Settings_General_Tab.php:16
+#: includes/Admin/Settings_General_Tab.php:18
 msgid "Activation"
 msgstr "Activation"
 
-#: includes/Admin/Settings_General_Tab.php:16
+#: includes/Admin/Settings_General_Tab.php:18
 msgid "Turn the report button on or off for the whole site."
 msgstr "Activez ou désactivez le bouton de signalement sur tout le site."
 
-#: includes/Admin/Settings_General_Tab.php:22
+#: includes/Admin/Settings_General_Tab.php:24
+#: includes/Admin/Settings_Summary.php:53
 msgid "Who can report"
 msgstr "Qui peut signaler"
 
-#: includes/Admin/Settings_General_Tab.php:22
+#: includes/Admin/Settings_General_Tab.php:24
 msgid "Choose who sees the button and can send a report."
 msgstr "Choisissez qui voit le bouton et peut envoyer un signalement."
 
-#: includes/Admin/Settings_General_Tab.php:34
+#: includes/Admin/Settings_General_Tab.php:40
 msgid "Where the button appears"
 msgstr "Où afficher le bouton"
 
-#: includes/Admin/Settings_General_Tab.php:34
+#: includes/Admin/Settings_General_Tab.php:40
 msgid "Hide the button on some pages, or also show it in the administration."
 msgstr "Masquez le bouton sur certaines pages, ou affichez-le aussi dans l’administration."
 
@@ -2150,6 +2154,7 @@ msgid "Alerts"
 msgstr "Alertes"
 
 #: includes/Admin/Settings_Page.php:65
+#: includes/Admin/Settings_Summary.php:54
 msgid "Spam protection"
 msgstr "Anti-spam"
 
@@ -2186,6 +2191,7 @@ msgid "One CSS selector per line. The text of these areas is never collected. Wh
 msgstr "Saisissez un sélecteur CSS par ligne. Le texte de ces zones n’est jamais collecté. Quand le masquage est activé (Formulaire › Capture d’écran), elles sont aussi masquées sur les captures, comme les champs de formulaire."
 
 #: includes/Admin/Settings_Privacy_Tab.php:35
+#: includes/Admin/Settings_Summary.php:57
 msgid "Retention"
 msgstr "Conservation"
 
@@ -2217,11 +2223,11 @@ msgstr "Limitez le nombre de signalements qu’une même adresse IP peut envoyer
 msgid "Change this only if your site is behind a proxy or Cloudflare."
 msgstr "Ne modifiez ce réglage que si votre site est derrière un proxy ou Cloudflare."
 
-#: includes/Admin/Settings_Spam_Tab.php:53
+#: includes/Admin/Settings_Spam_Tab.php:64
 msgid "Spam check"
 msgstr "Vérification anti-spam"
 
-#: includes/Admin/Settings_Spam_Tab.php:53
+#: includes/Admin/Settings_Spam_Tab.php:64
 msgid "Ask visitors to pass a check before sending, with the service of your choice."
 msgstr "Faites passer une vérification aux visiteurs avant l’envoi, avec le service de votre choix."
 
@@ -2233,11 +2239,12 @@ msgstr "Emplacement"
 msgid "Allow screenshots"
 msgstr "Autoriser la capture"
 
-#: includes/Admin/Settings_Page.php:218
+#: includes/Admin/Settings_Page.php:232
 msgid "Guests (not logged in) can send bug reports, but no spam check is configured. Expect spam."
 msgstr "Les visiteurs non connectés peuvent envoyer des signalements, mais aucune vérification anti-spam n’est configurée. Attendez-vous à du spam."
 
-#: includes/Admin/Settings_Page.php:220
+#: includes/Admin/Settings_General_Tab.php:34
+#: includes/Admin/Settings_Page.php:234
 msgid "Set up spam protection"
 msgstr "Configurer l’anti-spam"
 
@@ -2332,3 +2339,89 @@ msgstr "Vérifier la signature (développeurs)"
 #: includes/Admin/Settings_Webhook_Fields.php:45
 msgid "When a bulk action changes several reports at once, Slack, Microsoft Teams and Discord receive a single summary instead: the number of reports, the new status or assignee and a link to the list. The generic JSON format still receives one message per report."
 msgstr "Quand une action groupée modifie plusieurs signalements à la fois, Slack, Microsoft Teams et Discord reçoivent à la place un seul résumé : le nombre de signalements, le nouveau statut ou le nouveau responsable et un lien vers la liste. Le format JSON reçoit toujours un message par signalement."
+
+#: includes/Admin/Settings_Summary.php:30
+msgid "Summary"
+msgstr "Résumé"
+
+#: includes/Admin/Settings_Summary.php:30
+msgid "What the saved settings do now. Each line leads to its setting."
+msgstr "Ce que font les réglages enregistrés. Chaque ligne mène à son réglage."
+
+#: includes/Admin/Settings_Summary.php:52
+msgid "Report button"
+msgstr "Bouton de signalement"
+
+#: includes/Admin/Settings_Summary.php:52
+msgctxt "report button state"
+msgid "On"
+msgstr "Actif"
+
+#: includes/Admin/Settings_Summary.php:52
+msgid "Off: nobody sees the button."
+msgstr "Désactivé : personne ne voit le bouton."
+
+#: includes/Admin/Settings_Summary.php:81
+msgid "Nobody"
+msgstr "Personne"
+
+#. translators: %s: "None", the spam check service.
+#: includes/Admin/Settings_Summary.php:95
+#, php-format
+msgid "%s: guests can send reports without any check."
+msgstr "%s : les visiteurs non connectés peuvent signaler sans aucune vérification."
+
+#: includes/Admin/Settings_Summary.php:103
+msgctxt "e-mail notification state"
+msgid "Off"
+msgstr "Désactivé"
+
+#. translators: %s: the site administration e-mail address.
+#: includes/Admin/Settings_Summary.php:108
+#, php-format
+msgid "Site administration address (%s)"
+msgstr "Adresse d’administration du site (%s)"
+
+#. translators: %d: number of e-mail addresses.
+#: includes/Admin/Settings_Summary.php:112
+#, php-format
+msgid "%d recipient"
+msgid_plural "%d recipients"
+msgstr[0] "%d destinataire"
+msgstr[1] "%d destinataires"
+
+#. translators: %d: number of webhooks switched on.
+#: includes/Admin/Settings_Summary.php:118
+#, php-format
+msgid "%d active"
+msgid_plural "%d active"
+msgstr[0] "%d actif"
+msgstr[1] "%d actifs"
+
+#: includes/Admin/Settings_Summary.php:128
+msgid "Without limit"
+msgstr "Sans limite"
+
+#. translators: %d: number of months.
+#: includes/Admin/Settings_Summary.php:131
+#, php-format
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] "%d mois"
+msgstr[1] "%d mois"
+
+#. translators: %s: a duration, such as "6 months".
+#: includes/Admin/Settings_Summary.php:136
+#, php-format
+msgid "%s, but no status is marked Done: nothing is deleted."
+msgstr "%s, mais aucun statut n’est marqué « Traité » : rien n’est supprimé."
+
+#: includes/Admin/Settings_General_Tab.php:34
+msgid "No spam check is configured: expect unwanted reports."
+msgstr "Aucun anti-spam n’est configuré : attendez-vous à des envois indésirables."
+
+#. translators: %s: the spam check service, such as "Cloudflare Turnstile".
+#: includes/Admin/Settings_Summary.php:91
+#, php-format
+msgid "%s: secret key missing, every report will fail."
+msgstr "%s : clé secrète manquante, tous les envois échoueront."

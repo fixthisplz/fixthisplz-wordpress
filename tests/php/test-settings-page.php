@@ -399,8 +399,8 @@ settings_page_test(
 			$html = settings_page_tab_html( $tab, $view );
 			assert_true( isset( $expected[ $key ] ), "$key expected" );
 			assert_same( 1, substr_count( $html, '<form ' ), "$key: one form" );
-			assert_true( substr_count( $html, '<h2>' ) >= ( 'tracking' === $tab && 'team' !== $view ? 1 : 2 ), "$key: section headings" );
-			assert_true( 1 === preg_match( '#<h2>[^<]+</h2><p class="description">[^<]+</p>#', $html ), "$key: a heading is followed by its sentence" );
+			assert_true( preg_match_all( '/<h2[\s>]/', $html ) >= ( 'tracking' === $tab && 'team' !== $view ? 1 : 2 ), "$key: section headings" );
+			assert_true( 1 === preg_match( '#<h2[^>]*>[^<]+</h2><p class="description">[^<]+</p>#', $html ), "$key: a heading is followed by its sentence" );
 			foreach ( $expected[ $key ] as $field ) {
 				assert_true( str_contains( $html, 'name="' . Settings::OPTION . $field . '"' ), "$key: $field" );
 				$owner[ $field ][] = $key;
@@ -495,7 +495,7 @@ settings_page_test(
 	'settings-page: scripts_follow_the_tab_and_view',
 	function () {
 		$saved_get = $_GET;
-		$handles   = array( 'bug-spotter-settings', 'bug-spotter-lists', 'bug-spotter-webhooks' );
+		$handles   = array( 'bug-spotter-settings', 'bug-spotter-lists', 'bug-spotter-webhooks', 'bug-spotter-captcha-test' );
 		$enqueued  = static function ( array $get ) use ( $handles ): array {
 			$_GET = $get + array( 'page' => 'bug-spotter-settings' );
 			foreach ( $handles as $handle ) {
@@ -511,6 +511,8 @@ settings_page_test(
 			assert_same( array( 'bug-spotter-settings', 'bug-spotter-lists' ), $enqueued( array( 'tab' => 'priorities' ) ), 'old slug' );
 			assert_same( array( 'bug-spotter-settings', 'bug-spotter-webhooks' ), $enqueued( array( 'tab' => 'alerts' ) ) );
 			assert_same( array( 'bug-spotter-settings', 'bug-spotter-webhooks' ), $enqueued( array( 'tab' => 'integrations' ) ), 'old slug' );
+			assert_same( array( 'bug-spotter-settings', 'bug-spotter-captcha-test' ), $enqueued( array( 'tab' => 'spam' ) ) );
+			assert_same( array( 'bug-spotter-settings', 'bug-spotter-captcha-test' ), $enqueued( array( 'tab' => 'captcha' ) ), 'old slug' );
 		} finally {
 			foreach ( $handles as $handle ) {
 				wp_dequeue_script( $handle );

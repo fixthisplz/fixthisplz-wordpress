@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-23T15:30:13+00:00\n"
+"POT-Creation-Date: 2026-11-23T15:49:39+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: bug-spotter\n"
@@ -171,7 +171,7 @@ msgstr ""
 #: includes/Admin/Csv_Export.php:73
 #: includes/Admin/Detail_Page.php:93
 #: includes/Admin/List_Table.php:40
-#: includes/Mailer.php:157
+#: includes/Mailer.php:175
 #: includes/Privacy.php:55
 #: includes/Webhook_Payload.php:120
 msgid "Page"
@@ -187,7 +187,7 @@ msgstr ""
 #: includes/Admin/Detail_Page.php:88
 #: includes/Admin/List_Table.php:39
 #: includes/Frontend/Assets.php:178
-#: includes/Mailer.php:156
+#: includes/Mailer.php:174
 #: includes/Privacy.php:56
 #: includes/Webhook_Payload.php:119
 msgid "Description"
@@ -233,7 +233,7 @@ msgstr ""
 #: includes/Admin/Detail_Page.php:98
 #: includes/Admin/Settings_Form_Tab.php:48
 #: includes/Frontend/Assets.php:234
-#: includes/Mailer.php:159
+#: includes/Mailer.php:177
 msgid "Screenshot"
 msgstr ""
 
@@ -384,7 +384,7 @@ msgstr ""
 
 #: includes/Admin/Report_Context_View.php:18
 #: includes/Admin/Settings_Button_Tab.php:196
-#: includes/Admin/Settings_Spam_Tab.php:60
+#: includes/Admin/Settings_Spam_Tab.php:53
 msgid "None"
 msgstr ""
 
@@ -485,6 +485,7 @@ msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
 #: includes/Admin/Settings_Alerts_Tab.php:16
+#: includes/Admin/Settings_Summary.php:55
 msgid "E-mail"
 msgstr ""
 
@@ -519,6 +520,7 @@ msgid "Attach the screenshot to the e-mail"
 msgstr ""
 
 #: includes/Admin/Settings_Alerts_Tab.php:35
+#: includes/Admin/Settings_Summary.php:56
 msgid "Webhooks"
 msgstr ""
 
@@ -526,7 +528,7 @@ msgstr ""
 msgid "Post each event to Slack, Microsoft Teams, Discord or your own service."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:63
+#: includes/Admin/Settings_Assets.php:67
 #: includes/Admin/Settings_Button_Tab.php:133
 #: includes/Admin/Settings_Button_Tab.php:139
 #: includes/Admin/Settings_Form_Tab.php:34
@@ -535,61 +537,61 @@ msgstr ""
 msgid "Report a bug"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:64
+#: includes/Admin/Settings_Assets.php:68
 msgid "Choose an SVG icon"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:65
+#: includes/Admin/Settings_Assets.php:69
 msgid "Use this icon"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:66
+#: includes/Admin/Settings_Assets.php:70
 msgid "Please choose an SVG file."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:67
+#: includes/Admin/Settings_Assets.php:71
 msgid "The preview could not be updated."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:68
+#: includes/Admin/Settings_Assets.php:72
 msgid "Loading the provider widget…"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:69
+#: includes/Admin/Settings_Assets.php:73
 msgid "Complete the check below to finish the test."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:70
+#: includes/Admin/Settings_Assets.php:74
 msgid "Checking the keys…"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:71
+#: includes/Admin/Settings_Assets.php:75
 #: includes/Rest/Settings_Controller.php:103
 msgid "Keys are valid."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:72
+#: includes/Admin/Settings_Assets.php:76
 msgid "The test failed."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:73
+#: includes/Admin/Settings_Assets.php:77
 msgid "The provider widget could not be loaded. Check the site key, the provider choice and your connection; reload the page before testing another Google key."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:74
+#: includes/Admin/Settings_Assets.php:78
 msgid "No answer from the check. Try again."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:75
+#: includes/Admin/Settings_Assets.php:79
 #: includes/Rest/Settings_Controller.php:81
 msgid "Enter the site key first."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:76
+#: includes/Admin/Settings_Assets.php:80
 msgid "Sending the test…"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:77
+#: includes/Admin/Settings_Assets.php:81
 msgid "The test could not be sent."
 msgstr ""
 
@@ -836,7 +838,7 @@ msgstr ""
 msgid "Updated as you change the settings below. The frame stands for a browser window; save to apply."
 msgstr ""
 
-#: includes/Admin/Settings_Fields.php:77
+#: includes/Admin/Settings_Fields.php:81
 msgid "Advanced settings"
 msgstr ""
 
@@ -978,73 +980,84 @@ msgstr ""
 msgid "Leave empty to use the privacy policy page set in the WordPress settings (Settings › Privacy)."
 msgstr ""
 
-#: includes/Admin/Settings_General_Tab.php:16
+#: includes/Admin/Settings_General_Tab.php:18
 msgid "Activation"
 msgstr ""
 
-#: includes/Admin/Settings_General_Tab.php:16
+#: includes/Admin/Settings_General_Tab.php:18
 msgid "Turn the report button on or off for the whole site."
 msgstr ""
 
-#: includes/Admin/Settings_General_Tab.php:17
+#: includes/Admin/Settings_General_Tab.php:19
 msgid "Bug reporting"
 msgstr ""
 
-#: includes/Admin/Settings_General_Tab.php:18
+#: includes/Admin/Settings_General_Tab.php:20
 msgid "Show the bug report button"
 msgstr ""
 
-#: includes/Admin/Settings_General_Tab.php:22
+#: includes/Admin/Settings_General_Tab.php:24
+#: includes/Admin/Settings_Summary.php:53
 msgid "Who can report"
 msgstr ""
 
-#: includes/Admin/Settings_General_Tab.php:22
+#: includes/Admin/Settings_General_Tab.php:24
 msgid "Choose who sees the button and can send a report."
 msgstr ""
 
-#: includes/Admin/Settings_General_Tab.php:23
-#: includes/Admin/Settings_General_Tab.php:24
+#: includes/Admin/Settings_General_Tab.php:25
+#: includes/Admin/Settings_General_Tab.php:26
 msgid "Who sees the button"
 msgstr ""
 
-#: includes/Admin/Settings_General_Tab.php:29
+#: includes/Admin/Settings_General_Tab.php:31
+#: includes/Admin/Settings_Summary.php:79
 msgid "Guests (not logged in)"
 msgstr ""
 
 #: includes/Admin/Settings_General_Tab.php:34
-msgid "Where the button appears"
+msgid "No spam check is configured: expect unwanted reports."
 msgstr ""
 
 #: includes/Admin/Settings_General_Tab.php:34
-msgid "Hide the button on some pages, or also show it in the administration."
-msgstr ""
-
-#: includes/Admin/Settings_General_Tab.php:38
-msgid "Hidden on URLs starting with"
+#: includes/Admin/Settings_Page.php:234
+msgid "Set up spam protection"
 msgstr ""
 
 #: includes/Admin/Settings_General_Tab.php:40
-msgid "One path per line, for example /checkout/ or /my-account/. The button is hidden on every URL that starts with one of them."
+msgid "Where the button appears"
 msgstr ""
 
-#: includes/Admin/Settings_General_Tab.php:43
-msgid "Administration"
+#: includes/Admin/Settings_General_Tab.php:40
+msgid "Hide the button on some pages, or also show it in the administration."
 msgstr ""
 
 #: includes/Admin/Settings_General_Tab.php:44
+msgid "Hidden on URLs starting with"
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:46
+msgid "One path per line, for example /checkout/ or /my-account/. The button is hidden on every URL that starts with one of them."
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:49
+msgid "Administration"
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:50
 msgid "Also show the button in the WordPress administration"
 msgstr ""
 
-#: includes/Admin/Settings_General_Tab.php:59
+#: includes/Admin/Settings_General_Tab.php:65
 msgid "Excluded pages"
 msgstr ""
 
-#: includes/Admin/Settings_General_Tab.php:71
+#: includes/Admin/Settings_General_Tab.php:77
 msgid "Hold Ctrl (or Cmd) to select several pages, or to unselect one."
 msgstr ""
 
 #. translators: %d: page ID.
-#: includes/Admin/Settings_General_Tab.php:78
+#: includes/Admin/Settings_General_Tab.php:84
 #, php-format
 msgid "Page #%d (no title)"
 msgstr ""
@@ -1226,6 +1239,7 @@ msgid "Alerts"
 msgstr ""
 
 #: includes/Admin/Settings_Page.php:65
+#: includes/Admin/Settings_Summary.php:54
 msgid "Spam protection"
 msgstr ""
 
@@ -1249,12 +1263,8 @@ msgstr ""
 msgid "Tracking pages"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:218
+#: includes/Admin/Settings_Page.php:232
 msgid "Guests (not logged in) can send bug reports, but no spam check is configured. Expect spam."
-msgstr ""
-
-#: includes/Admin/Settings_Page.php:220
-msgid "Set up spam protection"
 msgstr ""
 
 #: includes/Admin/Settings_Position_Fields.php:22
@@ -1378,6 +1388,7 @@ msgid "One CSS selector per line. The text of these areas is never collected. Wh
 msgstr ""
 
 #: includes/Admin/Settings_Privacy_Tab.php:35
+#: includes/Admin/Settings_Summary.php:57
 msgid "Retention"
 msgstr ""
 
@@ -1461,69 +1472,151 @@ msgstr ""
 msgid "Only choose a header if every request reaches this site through a proxy or CDN that sets it. Otherwise anyone can forge it and get around the per-IP limits."
 msgstr ""
 
-#: includes/Admin/Settings_Spam_Tab.php:53
-msgid "Spam check"
-msgstr ""
-
-#: includes/Admin/Settings_Spam_Tab.php:53
-msgid "Ask visitors to pass a check before sending, with the service of your choice."
-msgstr ""
-
-#: includes/Admin/Settings_Spam_Tab.php:56
-msgid "Provider"
-msgstr ""
-
-#: includes/Admin/Settings_Spam_Tab.php:61
+#: includes/Admin/Settings_Spam_Tab.php:54
 msgid "Cloudflare Turnstile"
 msgstr ""
 
-#: includes/Admin/Settings_Spam_Tab.php:62
+#: includes/Admin/Settings_Spam_Tab.php:55
 msgid "Google reCAPTCHA v2 (checkbox)"
 msgstr ""
 
-#: includes/Admin/Settings_Spam_Tab.php:63
+#: includes/Admin/Settings_Spam_Tab.php:56
 msgid "Google reCAPTCHA v3 (invisible, score-based)"
 msgstr ""
 
-#: includes/Admin/Settings_Spam_Tab.php:64
+#: includes/Admin/Settings_Spam_Tab.php:57
 msgid "hCaptcha"
 msgstr ""
 
-#: includes/Admin/Settings_Spam_Tab.php:71
-msgid "Site key"
+#: includes/Admin/Settings_Spam_Tab.php:64
+msgid "Spam check"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:64
+msgid "Ask visitors to pass a check before sending, with the service of your choice."
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:67
+msgid "Provider"
 msgstr ""
 
 #: includes/Admin/Settings_Spam_Tab.php:76
+msgid "Site key"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:81
 msgid "Secret key"
 msgstr ""
 
-#: includes/Admin/Settings_Spam_Tab.php:86
+#: includes/Admin/Settings_Spam_Tab.php:91
 msgid "Saved — leave blank to keep it"
 msgstr ""
 
-#: includes/Admin/Settings_Spam_Tab.php:90
+#: includes/Admin/Settings_Spam_Tab.php:95
 msgid "Kept on the server only, never sent to visitors."
 msgstr ""
 
-#: includes/Admin/Settings_Spam_Tab.php:94
+#: includes/Admin/Settings_Spam_Tab.php:99
 msgid "Minimum score"
 msgstr ""
 
-#: includes/Admin/Settings_Spam_Tab.php:96
+#: includes/Admin/Settings_Spam_Tab.php:101
 msgid "Between 0 (accept everything) and 1 (strictest). Default: 0.5."
 msgstr ""
 
-#: includes/Admin/Settings_Spam_Tab.php:99
+#: includes/Admin/Settings_Spam_Tab.php:104
 msgid "Test the keys"
 msgstr ""
 
-#: includes/Admin/Settings_Spam_Tab.php:100
+#: includes/Admin/Settings_Spam_Tab.php:105
 #: includes/Admin/Settings_Webhook_Fields.php:117
 msgid "Test"
 msgstr ""
 
-#: includes/Admin/Settings_Spam_Tab.php:102
+#: includes/Admin/Settings_Spam_Tab.php:107
 msgid "Uses the provider and keys typed above, even before saving. A blank secret key tests the saved one. Requires JavaScript."
+msgstr ""
+
+#: includes/Admin/Settings_Summary.php:30
+msgid "Summary"
+msgstr ""
+
+#: includes/Admin/Settings_Summary.php:30
+msgid "What the saved settings do now. Each line leads to its setting."
+msgstr ""
+
+#: includes/Admin/Settings_Summary.php:52
+msgid "Report button"
+msgstr ""
+
+#: includes/Admin/Settings_Summary.php:52
+msgctxt "report button state"
+msgid "On"
+msgstr ""
+
+#: includes/Admin/Settings_Summary.php:52
+msgid "Off: nobody sees the button."
+msgstr ""
+
+#: includes/Admin/Settings_Summary.php:81
+msgid "Nobody"
+msgstr ""
+
+#. translators: %s: the spam check service, such as "Cloudflare Turnstile".
+#: includes/Admin/Settings_Summary.php:91
+#, php-format
+msgid "%s: secret key missing, every report will fail."
+msgstr ""
+
+#. translators: %s: "None", the spam check service.
+#: includes/Admin/Settings_Summary.php:95
+#, php-format
+msgid "%s: guests can send reports without any check."
+msgstr ""
+
+#: includes/Admin/Settings_Summary.php:103
+msgctxt "e-mail notification state"
+msgid "Off"
+msgstr ""
+
+#. translators: %s: the site administration e-mail address.
+#: includes/Admin/Settings_Summary.php:108
+#, php-format
+msgid "Site administration address (%s)"
+msgstr ""
+
+#. translators: %d: number of e-mail addresses.
+#: includes/Admin/Settings_Summary.php:112
+#, php-format
+msgid "%d recipient"
+msgid_plural "%d recipients"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of webhooks switched on.
+#: includes/Admin/Settings_Summary.php:118
+#, php-format
+msgid "%d active"
+msgid_plural "%d active"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Admin/Settings_Summary.php:128
+msgid "Without limit"
+msgstr ""
+
+#. translators: %d: number of months.
+#: includes/Admin/Settings_Summary.php:131
+#, php-format
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: a duration, such as "6 months".
+#: includes/Admin/Settings_Summary.php:136
+#, php-format
+msgid "%s, but no status is marked Done: nothing is deleted."
 msgstr ""
 
 #: includes/Admin/Settings_Webhook_Fields.php:25
@@ -1654,11 +1747,11 @@ msgstr ""
 msgid "The secret can no longer be read (the BUGSPOT_SECRET key changed): a new one is made when saving."
 msgstr ""
 
-#: includes/Captcha/Siteverify_Provider.php:63
+#: includes/Captcha/Siteverify_Provider.php:68
 msgid "The anti-bot check failed. Please try again."
 msgstr ""
 
-#: includes/Captcha/Siteverify_Provider.php:67
+#: includes/Captcha/Siteverify_Provider.php:72
 msgid "The anti-bot check is currently unavailable. Please try again later."
 msgstr ""
 
@@ -1937,38 +2030,38 @@ msgid "This page cannot be reported: its address is not a web address."
 msgstr ""
 
 #. translators: 1: site name, 2: report title, such as "Bug #12".
-#: includes/Mailer.php:36
+#: includes/Mailer.php:33
 #, php-format
 msgid "[%1$s] New report: %2$s"
 msgstr ""
 
 #. translators: 1: site name, 2: report title, such as "Bug #12".
-#: includes/Mailer.php:99
+#: includes/Mailer.php:117
 #, php-format
 msgid "[%1$s] Assigned to you: %2$s"
 msgstr ""
 
 #. translators: 1: site name, 2: number of reports.
-#: includes/Mailer.php:106
+#: includes/Mailer.php:124
 #, php-format
 msgid "[%1$s] %2$d report assigned to you"
 msgid_plural "[%1$s] %2$d reports assigned to you"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/Mailer.php:107
+#: includes/Mailer.php:125
 msgid "These reports are now assigned to you:"
 msgstr ""
 
-#: includes/Mailer.php:155
+#: includes/Mailer.php:173
 msgid "Report"
 msgstr ""
 
-#: includes/Mailer.php:158
+#: includes/Mailer.php:176
 msgid "Reported by"
 msgstr ""
 
-#: includes/Mailer.php:160
+#: includes/Mailer.php:178
 #: includes/Webhook_Payload.php:137
 msgid "Open the report"
 msgstr ""
@@ -2278,13 +2371,13 @@ msgid "Report assigned"
 msgstr ""
 
 #. translators: %s: the address typed for a webhook. The notice is printed as HTML: the address is escaped.
-#: includes/Webhooks.php:118
+#: includes/Webhooks.php:123
 #, php-format
 msgid "The webhook %s was not saved: its address must start with https:// and point to a public server (http://localhost and *.test addresses are accepted for development)."
 msgstr ""
 
 #. translators: %s: the address typed for a webhook. The notice is printed as HTML: the address is escaped.
-#: includes/Webhooks.php:120
+#: includes/Webhooks.php:125
 #, php-format
 msgid "The webhook %s was not saved: its address must start with https:// and point to a public server."
 msgstr ""

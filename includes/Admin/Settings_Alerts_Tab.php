@@ -13,7 +13,7 @@ final class Settings_Alerts_Tab {
 	public static function render( array $s ): void {
 		$n = $s['notifications'];
 
-		F::section( __( 'E-mail', 'bug-spotter' ), __( 'Send an e-mail to your team for every new report.', 'bug-spotter' ) );
+		F::section( __( 'E-mail', 'bug-spotter' ), __( 'Send an e-mail to your team for every new report.', 'bug-spotter' ), Settings_Summary::EMAIL );
 		F::row_open( __( 'E-mail notification', 'bug-spotter' ) );
 		F::checkbox( array( 'notifications', 'enabled' ), (bool) $n['enabled'], __( 'Send an e-mail for every new report', 'bug-spotter' ) );
 		F::row_close();
@@ -32,7 +32,7 @@ final class Settings_Alerts_Tab {
 		F::row_close();
 		F::table_close();
 
-		F::heading( __( 'Webhooks', 'bug-spotter' ), __( 'Post each event to Slack, Microsoft Teams, Discord or your own service.', 'bug-spotter' ) );
+		F::heading( __( 'Webhooks', 'bug-spotter' ), __( 'Post each event to Slack, Microsoft Teams, Discord or your own service.', 'bug-spotter' ), Settings_Summary::WEBHOOKS );
 		Settings_Webhook_Fields::render();
 	}
 }

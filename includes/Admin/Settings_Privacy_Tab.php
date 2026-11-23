@@ -32,7 +32,7 @@ final class Settings_Privacy_Tab {
 		F::row_close();
 		F::table_close();
 
-		F::section( __( 'Retention', 'bug-spotter' ), __( 'How long the handled reports are kept.', 'bug-spotter' ) );
+		F::section( __( 'Retention', 'bug-spotter' ), __( 'How long the handled reports are kept.', 'bug-spotter' ), Settings_Summary::RETENTION );
 		$id = F::id( array( 'data', 'retention_months' ) );
 		F::row_open( __( 'Automatic deletion', 'bug-spotter' ), $id );
 		F::input( 'number', array( 'data', 'retention_months' ), (string) $t['retention_months'], array( 'min' => '0', 'max' => '120', 'class' => 'small-text' ), true );

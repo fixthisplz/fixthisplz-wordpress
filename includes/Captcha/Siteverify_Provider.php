@@ -20,8 +20,13 @@ abstract class Siteverify_Provider implements Provider {
 
 	abstract protected function endpoint(): string;
 
+	/** Without its secret key, every check answers "unavailable": no report can be sent (also told by the settings summary). */
+	public function has_secret(): bool {
+		return '' !== $this->secret_key;
+	}
+
 	public function verify( string $token, string $ip ): bool|\WP_Error {
-		if ( '' === $this->secret_key ) {
+		if ( ! $this->has_secret() ) {
 			return $this->unavailable();
 		}
 		if ( '' === trim( $token ) ) {

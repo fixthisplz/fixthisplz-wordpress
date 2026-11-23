@@ -27,10 +27,7 @@ final class Mailer {
 			return false;
 		}
 
-		$recipients = array_values( array_filter( array_map( 'trim', explode( ',', (string) ( $notifications['recipients'] ?? '' ) ) ), 'is_email' ) );
-		if ( ! $recipients ) {
-			$recipients = array( (string) get_option( 'admin_email' ) );
-		}
+		$recipients = self::recipients( $notifications );
 
 		/* translators: 1: site name, 2: report title, such as "Bug #12". */
 		$subject = sprintf( __( '[%1$s] New report: %2$s', 'bug-spotter' ), Report_Format::site_name(), Report_Format::title( $report_id ) );
@@ -44,6 +41,27 @@ final class Mailer {
 		}
 		$values = self::values( $report_id, $report );
 		return self::send( $recipients, $subject, self::build_html( $values ), self::build_text( $values ), $attachments );
+	}
+
+	/**
+	 * Who gets the new-report e-mail: the valid addresses typed in Settings › Alerts › E-mail, else the site
+	 * administration address.
+	 *
+	 * @param array<string,mixed> $notifications The "notifications" block of the settings.
+	 * @return string[]
+	 */
+	public static function recipients( array $notifications ): array {
+		return self::typed_recipients( $notifications ) ?: array( (string) get_option( 'admin_email' ) );
+	}
+
+	/** Whether recipients() falls back on the site administration address. @param array<string,mixed> $notifications */
+	public static function uses_admin_email( array $notifications ): bool {
+		return ! self::typed_recipients( $notifications );
+	}
+
+	/** @param array<string,mixed> $notifications @return string[] */
+	private static function typed_recipients( array $notifications ): array {
+		return array_values( array_filter( array_map( 'trim', explode( ',', (string) ( $notifications['recipients'] ?? '' ) ) ), 'is_email' ) );
 	}
 
 	/** `bugspot_report_assigned` (Reports_Repository::update()): tells the new assignee, never the person who did it. */

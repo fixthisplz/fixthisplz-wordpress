@@ -17,19 +17,23 @@ final class Settings_Assets {
 	public static function enqueue(): void {
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_media();
-		// captcha.js (loaded by the captcha test) imports ./async.js: see Assets::lib_module_ids() for why.
-		wp_enqueue_script(
-			self::SCRIPT,
-			BUGSPOT_URL . 'assets/js/admin-settings.js',
-			array( 'jquery', 'wp-color-picker', 'wp-api-fetch' ),
-			BUGSPOT_VERSION,
-			array(
-				'in_footer'           => true,
-				'module_dependencies' => Assets::lib_module_ids(),
-			)
-		);
+		wp_enqueue_script( self::SCRIPT, BUGSPOT_URL . 'assets/js/admin-settings.js', array( 'jquery', 'wp-color-picker', 'wp-api-fetch' ), BUGSPOT_VERSION, true );
 		if ( in_array( Settings_Page::current_view(), array( 'statuses', 'priorities' ), true ) ) {
 			wp_enqueue_script( 'bug-spotter-lists', BUGSPOT_URL . 'assets/js/admin-lists.js', array( 'jquery', 'jquery-ui-sortable', 'wp-color-picker' ), BUGSPOT_VERSION, true );
+		}
+
+		if ( 'spam' === Settings_Page::current_tab() ) {
+			// captcha.js (imported by the test) imports ./async.js: see Assets::lib_module_ids() for why.
+			wp_enqueue_script(
+				'bug-spotter-captcha-test',
+				BUGSPOT_URL . 'assets/js/admin-captcha-test.js',
+				array( 'jquery', 'wp-api-fetch', self::SCRIPT ),
+				BUGSPOT_VERSION,
+				array(
+					'in_footer'           => true,
+					'module_dependencies' => Assets::lib_module_ids(),
+				)
+			);
 		}
 
 		if ( 'alerts' === Settings_Page::current_tab() ) {

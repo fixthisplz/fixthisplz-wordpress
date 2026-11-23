@@ -78,7 +78,14 @@ bugspot_test(
 		if ( ! $mod_wp_7 ) {
 			return;
 		}
-		list( $imports, $others ) = mod_printed( array( Settings_Assets::class, 'enqueue' ) );
+		// Declared by the anti-bot test script, loaded on the Spam protection tab only.
+		$saved_get = $_GET;
+		$_GET      = array( 'page' => 'bug-spotter-settings', 'tab' => 'spam' );
+		try {
+			list( $imports, $others ) = mod_printed( array( Settings_Assets::class, 'enqueue' ) );
+		} finally {
+			$_GET = $saved_get;
+		}
 		mod_assert_versioned_map( $imports, $others );
 	}
 );

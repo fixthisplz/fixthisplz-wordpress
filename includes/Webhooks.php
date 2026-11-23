@@ -42,6 +42,11 @@ final class Webhooks {
 		return array_values( array_filter( is_array( $rows ) ? $rows : array(), static fn( $row ): bool => is_array( $row ) && is_string( $row['url'] ?? null ) && '' !== $row['url'] ) );
 	}
 
+	/** The saved webhooks that are switched on. @return list<array<string,mixed>> */
+	public static function active(): array {
+		return array_values( array_filter( self::all(), static fn( array $w ): bool => ! empty( $w['enabled'] ) ) );
+	}
+
 	/**
 	 * Settings_Sanitizer: rows without an address are dropped, an invalid address is dropped with a notice.
 	 * The secret is kept only when it decrypts (the form posts the stored ciphertext back), otherwise a new

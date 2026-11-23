@@ -93,7 +93,17 @@
 .bugspot-disclosure>summary:hover{color:#135e96;text-decoration:underline}
 .bugspot-disclosure[open]>summary{margin-bottom:8px}
 .bugspot-disclosure .ul-disc{margin-top:4px}
+.bugspot-summary{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 16px;max-width:900px;margin:12px 0 0;padding:12px 16px;box-sizing:border-box;background:#fff;border:1px solid #c3c4c7;border-radius:4px}
+.bugspot-summary dt{font-weight:600}
+.bugspot-summary dd{margin:0;overflow-wrap:anywhere}
+.bugspot-summary .bugspot-summary-warning,.bugspot-settings .bugspot-warning{font-weight:600;color:#b32d2e}
+.bugspot-settings .bugspot-warning a{font-weight:400}
+.bugspot-summary-warning::before,.bugspot-settings .bugspot-warning::before{content:"\f534" / "";font:normal 18px/1 dashicons;vertical-align:-4px;margin-right:4px}
+html:has(.bugspot-settings-form){scroll-padding:50px 0 80px}
+.bugspot-settings-form>p.submit{position:sticky;bottom:0;z-index:4;background:#f0f0f1;border-top:1px solid #dcdcde}
 @media (max-width:782px){
+.bugspot-summary{grid-template-columns:minmax(0,1fr);gap:2px;padding:8px 12px}
+.bugspot-summary dd{margin-bottom:6px}
 .bugspot-list-scroll{position:relative;overflow-x:auto}
 .bugspot-settings .bugspot-wide{min-width:0}
 .bugspot-settings .bugspot-axis select,.bugspot-settings .bugspot-axis input,.bugspot-settings .bugspot-inline-fields input{display:inline-block;width:auto;max-width:100%}

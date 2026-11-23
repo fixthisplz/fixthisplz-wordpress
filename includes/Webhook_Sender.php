@@ -87,7 +87,7 @@ final class Webhook_Sender {
 
 	/** @return array<int,array<string,mixed>> The enabled webhooks that chose $event. */
 	private static function subscribed( string $event ): array {
-		return array_filter( Webhooks::all(), static fn( array $w ): bool => ! empty( $w['enabled'] ) && in_array( $event, (array) $w['events'], true ) );
+		return array_filter( Webhooks::active(), static fn( array $w ): bool => in_array( $event, (array) $w['events'], true ) );
 	}
 
 	/** @param array<int,array<string,mixed>> $webhooks */
