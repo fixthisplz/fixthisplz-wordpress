@@ -27,10 +27,6 @@ final class Detail_Page {
 		Activity_Box::register_hooks();
 	}
 
-	public static function url( int $id, array $args = array() ): string {
-		return Bugs_Page::page_url( array_merge( array( 'report' => $id ), $args ) );
-	}
-
 	public static function handle_update(): void {
 		$id = Request::posted_id( 'report' );
 		check_admin_referer( self::UPDATE_ACTION . '_' . $id );
@@ -49,7 +45,7 @@ final class Detail_Page {
 		// The repository rejects invalid values as a whole; an unknown id is a plain failure too. Nothing changed: no notice.
 		$changes = ( new Reports_Repository() )->update( $id, $fields );
 		$notice  = null === $changes ? array( 'bugspot_notice' => 'failed' ) : ( $changes ? array( 'bugspot_notice' => 'updated' ) : array() );
-		wp_safe_redirect( self::url( $id, $notice ) );
+		wp_safe_redirect( Report_Format::link( $id, $notice ) );
 		exit;
 	}
 
@@ -59,7 +55,7 @@ final class Detail_Page {
 		Request::require_manager();
 
 		list( $type, $count ) = Bugs_Page::apply_bulk( 'delete', array( $id ) );
-		wp_safe_redirect( Bugs_Page::page_url( Bugs_Page::notice_args( $type, $count ) ) );
+		wp_safe_redirect( Report_Format::list_link( Bugs_Page::notice_args( $type, $count ) ) );
 		exit;
 	}
 
@@ -108,7 +104,7 @@ final class Detail_Page {
 	}
 
 	private static function render_back_link(): void {
-		echo '<p><a href="' . esc_url( Bugs_Page::page_url() ) . '">&larr; ' . esc_html__( 'Back to the list', 'bug-spotter' ) . '</a></p>';
+		echo '<p><a href="' . esc_url( Report_Format::list_link() ) . '">&larr; ' . esc_html__( 'Back to the list', 'bug-spotter' ) . '</a></p>';
 	}
 
 	private static function render_notice(): void {

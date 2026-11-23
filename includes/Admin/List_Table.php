@@ -117,7 +117,7 @@ final class List_Table extends \WP_List_Table {
 			$base['status'] = $status;
 			return sprintf(
 				'<a href="%s"%s>%s <span class="count">(%d)</span></a>',
-				esc_url( Bugs_Page::page_url( Report_Query_Args::filter_query_args( $base ) ) ),
+				esc_url( Report_Format::list_link( Report_Query_Args::filter_query_args( $base ) ) ),
 				$current === $status ? ' class="current" aria-current="page"' : '',
 				esc_html( $label ),
 				$count
@@ -147,9 +147,9 @@ final class List_Table extends \WP_List_Table {
 		$id      = (int) $item['id'];
 		$text    = (string) $item['description'];
 		$excerpt = Report_Format::excerpt( $text, self::EXCERPT_LENGTH );
-		$view    = Bugs_Page::page_url( array( 'report' => $id ) );
+		$view    = Report_Format::link( $id );
 		$delete  = wp_nonce_url(
-			Bugs_Page::page_url( array_merge( Report_Query_Args::filter_query_args( $this->filters ), array( 'bugspot_action' => 'delete', 'bug' => $id ) ) ),
+			Report_Format::list_link( array_merge( Report_Query_Args::filter_query_args( $this->filters ), array( 'bugspot_action' => 'delete', 'bug' => $id ) ) ),
 			'bugspot_delete_' . $id
 		);
 

@@ -20,7 +20,7 @@ require_once ABSPATH . 'wp-admin/includes/user.php';
 /** A user of $role, given bugspot_manage unless $manager is false. */
 function activity_user( string $role = 'editor', bool $manager = true, string $name = '' ): int {
 	$login = 'bugspot_act_' . strtolower( wp_generate_password( 8, false ) );
-	$id    = wp_insert_user( array( 'user_login' => $login, 'user_pass' => wp_generate_password(), 'user_email' => $login . '@example.test', 'role' => $role, 'display_name' => '' !== $name ? $name : $login ) );
+	$id    = wp_insert_user( array( 'user_login' => $login, 'user_pass' => wp_generate_password(), 'user_email' => $login . '@example.test', 'role' => $role, 'locale' => 'en_US', 'display_name' => '' !== $name ? $name : $login ) );
 	assert_true( is_int( $id ), 'user fixture failed' );
 	if ( $manager ) {
 		( new WP_User( $id ) )->add_cap( 'bugspot_manage' );
@@ -409,6 +409,26 @@ bugspot_test(
 		assert_true( isset( $actions['unassign'] ) );
 		$cell = ( new ReflectionMethod( $table, 'column_assigned' ) )->invoke( $table, $repo->find_many( array( $mine ) )[0] );
 		assert_same( 'Kim Kanban', $cell );
+		wp_set_current_user( 0 );
+	}
+);
+
+bugspot_test(
+	'activity: the_assignment_email_is_written_in_the_language_of_the_assignee',
+	function () {
+		$me  = activity_user( 'editor', true, 'Locale Boss' );
+		$ana = activity_user( 'editor', true, 'Ana Locale' );
+		update_user_meta( $ana, 'locale', 'fr_FR' );
+		$ids  = array( bugspot_admin_insert( 'locale 1' ), bugspot_admin_insert( 'locale 2' ) );
+		$repo = new Reports_Repository();
+		wp_set_current_user( $me );
+
+		$mails = activity_mails( fn() => $repo->update( $ids[0], array( 'assigned_to' => $ana ) ) );
+		assert_true( str_contains( $mails[0]['subject'], '] Vous est attribué : ' ), 'single: ' . $mails[0]['subject'] );
+		$repo->update( $ids[0], array( 'assigned_to' => 0 ) );
+		$mails = activity_mails( fn() => Bugs_Page::apply_bulk( 'assign_' . $ana, $ids ) );
+		assert_true( str_ends_with( $mails[0]['subject'], '] 2 signalements vous sont attribués' ), 'batch: ' . $mails[0]['subject'] );
+		assert_same( 'Status', __( 'Status', 'bug-spotter' ), 'the request language comes back afterwards' );
 		wp_set_current_user( 0 );
 	}
 );

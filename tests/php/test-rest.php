@@ -476,6 +476,10 @@ bugspot_test(
 				assert_same( 422, $patch( $id, array( 'status' => 'bogus' ) )->get_status() );
 				assert_same( 422, $patch( $id, array( 'priority' => 'urgent' ) )->get_status() );
 				assert_same( 422, $patch( $id, array() )->get_status() );
+				global $wpdb;
+				$wpdb->update( Installer::table(), array( 'status' => 'retired' ), array( 'id' => $id ) );
+				assert_same( 200, $patch( $id, array( 'status' => 'retired', 'priority' => 'low' ) )->get_status(), 'a stored unknown status may be kept, as in every edit' );
+				assert_same( 'low', ( new Reports_Repository() )->find( $id )['priority'] );
 				assert_same( 404, $patch( 999999, array( 'status' => 'seen' ) )->get_status() );
 			}
 		);

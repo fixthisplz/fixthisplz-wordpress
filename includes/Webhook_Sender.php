@@ -5,8 +5,9 @@ namespace Bug_Spotter;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Posts the report events to the enabled webhooks that chose them (spec 7.12): right after the database change,
- * non-blocking, with no queue and no retry. Only the addresses saved by an administrator are called.
+ * Posts the report events to the enabled webhooks that chose them (spec 7.12): right after the database change (after
+ * the whole bulk action, see batch()), non-blocking, with no queue and no retry. Only the addresses saved by an
+ * administrator are called.
  */
 final class Webhook_Sender {
 
@@ -15,7 +16,7 @@ final class Webhook_Sender {
 	/** The settings "Send a test" button waits for the answer. */
 	private const TEST_TIMEOUT = 5;
 
-	/** Per event, the [report ID, change, new value] held for the chat webhooks while batch() runs; null outside it. @var array<string,list<array{0:int,1:string,2:string}>>|null */
+	/** Per event, the [report ID, change, new value] held while batch() runs; null outside it. @var array<string,list<array{0:int,1:?string,2:string}>>|null */
 	private static ?array $batch = null;
 
 	public static function register_hooks(): void {
@@ -45,8 +46,9 @@ final class Webhook_Sender {
 	}
 
 	/**
-	 * Runs $fn (a bulk action). Meanwhile the generic JSON webhooks still get one signed event per report; each chat
-	 * webhook then gets one message per event: the usual one when a single report changed, else a summary.
+	 * Runs $fn (a bulk action) and only then calls the webhooks, so a slow receiver can never interrupt the database
+	 * writes: the generic JSON webhooks get one signed event per report; each chat webhook one message per event,
+	 * the usual one when a single report changed, else a summary.
 	 */
 	public static function batch( callable $fn ): void {
 		self::$batch = array();
@@ -57,13 +59,17 @@ final class Webhook_Sender {
 			self::$batch = null;
 		}
 		foreach ( $batch as $event => $items ) {
-			$chat = array_filter( self::subscribed( $event ), static fn( array $w ): bool => 'generic' !== $w['format'] );
+			$webhooks = self::subscribed( $event );
 			if ( 1 === count( $items ) ) {
-				self::post( $chat, $event, $items[0][0], $items[0][1] );
+				self::post( $webhooks, $event, $items[0][0], $items[0][1] );
 				continue;
 			}
+			$generic = array_filter( $webhooks, static fn( array $w ): bool => 'generic' === $w['format'] );
+			foreach ( $items as $item ) {
+				self::post( $generic, $event, $item[0], $item[1] );
+			}
 			$data = Webhook_Payload::summary( $event, count( $items ), $items[0][2] );
-			foreach ( $chat as $webhook ) {
+			foreach ( array_diff_key( $webhooks, $generic ) as $webhook ) {
 				self::send( $webhook, $data, false );
 			}
 		}
@@ -72,11 +78,9 @@ final class Webhook_Sender {
 	/** @param string $value New status name or assignee name, for a bulk summary. */
 	private static function dispatch( string $event, int $report_id, ?string $change, string $value ): void {
 		$webhooks = self::subscribed( $event );
-		if ( null !== self::$batch ) {
-			if ( array_filter( $webhooks, static fn( array $w ): bool => 'generic' !== $w['format'] ) ) {
-				self::$batch[ $event ][] = array( $report_id, (string) $change, $value );
-			}
-			$webhooks = array_filter( $webhooks, static fn( array $w ): bool => 'generic' === $w['format'] );
+		if ( $webhooks && null !== self::$batch ) {
+			self::$batch[ $event ][] = array( $report_id, $change, $value );
+			return;
 		}
 		self::post( $webhooks, $event, $report_id, $change );
 	}

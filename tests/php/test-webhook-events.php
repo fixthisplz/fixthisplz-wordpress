@@ -193,6 +193,34 @@ bugspot_test(
 );
 
 bugspot_test(
+	'webhook-events: bulk_actions_call_the_webhooks_only_after_every_report_is_saved',
+	function () {
+		webhook_env(
+			array( webhook_row(), webhook_row( array( 'url' => 'http://localhost:8765/slack', 'format' => 'slack' ) ) ),
+			function () {
+				$ids     = array( bugspot_admin_insert( 'after-1' ), bugspot_admin_insert( 'after-2' ), bugspot_admin_insert( 'after-3' ) );
+				$repo    = new Reports_Repository();
+				$unsaved = array();
+				$check   = static function ( $pre ) use ( $ids, $repo, &$unsaved ) {
+					foreach ( $ids as $id ) {
+						$unsaved[] = 'fixed' === $repo->find( $id )['status'] ? 0 : $id;
+					}
+					return $pre;
+				};
+				add_filter( 'pre_http_request', $check, 5 );
+				try {
+					$sent = webhook_requests( fn() => Bugs_Page::apply_bulk( 'status_fixed', $ids ) );
+				} finally {
+					remove_filter( 'pre_http_request', $check, 5 );
+				}
+				assert_same( 4, count( $sent ), 'generic 3 + one Slack summary' );
+				assert_same( array(), array_values( array_filter( $unsaved ) ), 'every report was saved before the first call' );
+			}
+		);
+	}
+);
+
+bugspot_test(
 	'webhook-events: a_failing_webhook_breaks_neither_the_change_nor_the_others',
 	function () {
 		webhook_env(

@@ -179,7 +179,7 @@ final class Privacy {
 			__( 'Retention: closed reports are deleted automatically after the retention period set by the site administrators; otherwise reports are kept until they are deleted.', 'bug-spotter' ),
 			__( 'Legal basis: legitimate interest in maintaining and improving the site.', 'bug-spotter' ),
 			__( 'Internal notes: the people who manage bug reports can write notes on them and assign them to each other; notes and the history of changes are only shown to them, never to the reporter.', 'bug-spotter' ),
-			__( 'Recipients: only the site administrators and the people they authorise to manage bug reports.', 'bug-spotter' ),
+			__( 'Recipients: the site administrators, the people they authorise to manage bug reports, and the chat or project services they connect through webhooks (see below).', 'bug-spotter' ),
 			__( 'Webhooks: if the site administrators connect a chat or project service, it receives an excerpt of the description, the page address, the status, the priority and the name of the team member in charge, never your e-mail address, IP address or screenshot.', 'bug-spotter' ),
 		);
 		wp_add_privacy_policy_content( 'Bug Spotter', wp_kses_post( wpautop( implode( "\n\n", $paragraphs ) ) ) );

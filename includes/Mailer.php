@@ -72,12 +72,24 @@ final class Mailer {
 		}
 	}
 
-	/** One report: the full e-mail; several: their titles and links. @param int[] $report_ids */
+	/** In the assignee's language (their profile, else the site's), not the one of the person who assigned. @param int[] $report_ids */
 	private static function notify_assignee( int $user_id, array $report_ids ): bool {
 		$user = get_userdata( $user_id );
 		if ( ! $user || ! is_email( $user->user_email ) || ! $report_ids ) {
 			return false;
 		}
+		$switched = switch_to_user_locale( $user_id );
+		try {
+			return self::send_assignment( $user->user_email, $report_ids );
+		} finally {
+			if ( $switched ) {
+				restore_previous_locale();
+			}
+		}
+	}
+
+	/** One report: the full e-mail; several: their titles and links. @param int[] $report_ids Not empty. */
+	private static function send_assignment( string $email, array $report_ids ): bool {
 		if ( 1 === count( $report_ids ) ) {
 			$report = ( new Reports_Repository() )->find( $report_ids[0] );
 			if ( null === $report ) {
@@ -86,7 +98,7 @@ final class Mailer {
 			/* translators: 1: site name, 2: report title, such as "Bug #12". */
 			$subject = sprintf( __( '[%1$s] Assigned to you: %2$s', 'bug-spotter' ), Report_Format::site_name(), Report_Format::title( $report_ids[0] ) );
 			$values  = self::values( $report_ids[0], $report );
-			return self::send( array( $user->user_email ), $subject, self::build_html( $values ), self::build_text( $values ), array() );
+			return self::send( array( $email ), $subject, self::build_html( $values ), self::build_text( $values ), array() );
 		}
 
 		$count = count( $report_ids );
@@ -99,7 +111,7 @@ final class Mailer {
 			$html .= '<li><a href="' . esc_url( Report_Format::link( $id ) ) . '">' . esc_html( Report_Format::title( $id ) ) . '</a></li>';
 			$text .= '- ' . Report_Format::title( $id ) . ': ' . Report_Format::link( $id ) . "\n";
 		}
-		return self::send( array( $user->user_email ), $subject, $html . '</ul>', $text, array() );
+		return self::send( array( $email ), $subject, $html . '</ul>', $text, array() );
 	}
 
 	/**

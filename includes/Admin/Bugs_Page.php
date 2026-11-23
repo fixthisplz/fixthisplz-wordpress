@@ -5,6 +5,7 @@ namespace Bug_Spotter\Admin;
 use Bug_Spotter\Installer;
 use Bug_Spotter\Mailer;
 use Bug_Spotter\Priorities;
+use Bug_Spotter\Report_Format;
 use Bug_Spotter\Reports_Repository;
 use Bug_Spotter\Settings;
 use Bug_Spotter\Team;
@@ -37,10 +38,6 @@ final class Bugs_Page {
 
 	public static function save_screen_option( mixed $keep, string $option, mixed $value ): int {
 		return max( 1, min( Reports_Repository::MAX_PER_PAGE, (int) $value ) );
-	}
-
-	public static function page_url( array $args = array() ): string {
-		return add_query_arg( array_merge( array( 'page' => Menu::SLUG ), $args ), admin_url( 'admin.php' ) );
 	}
 
 	/**
@@ -144,7 +141,7 @@ final class Bugs_Page {
 	}
 
 	private static function redirect( array $args ): void {
-		wp_safe_redirect( self::page_url( $args ) );
+		wp_safe_redirect( Report_Format::list_link( $args ) );
 		exit;
 	}
 
@@ -206,13 +203,13 @@ final class Bugs_Page {
 		echo '<nav class="nav-tab-wrapper">';
 		printf(
 			'<a href="%s" class="nav-tab%s">%s</a>',
-			esc_url( self::page_url( $args ) ),
+			esc_url( Report_Format::list_link( $args ) ),
 			$kanban ? '' : ' nav-tab-active',
 			esc_html__( 'List', 'bug-spotter' )
 		);
 		printf(
 			'<a href="%s" class="nav-tab%s">%s</a>',
-			esc_url( self::page_url( array_merge( $args, array( 'view' => 'kanban' ) ) ) ),
+			esc_url( Report_Format::list_link( array_merge( $args, array( 'view' => 'kanban' ) ) ) ),
 			$kanban ? ' nav-tab-active' : '',
 			esc_html__( 'Kanban', 'bug-spotter' )
 		);
@@ -270,7 +267,7 @@ final class Bugs_Page {
 		printf(
 			'<a class="button%s" href="%s"%s>%s</a> ',
 			$active ? ' bugspot-active' : '',
-			esc_url( self::page_url( $args ) ),
+			esc_url( Report_Format::list_link( $args ) ),
 			$active ? ' aria-current="true"' : '',
 			esc_html__( 'My reports', 'bug-spotter' )
 		);

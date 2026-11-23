@@ -71,7 +71,7 @@ final class Kanban {
 		if ( $total > $limit && $limit < self::MAX_LIMIT ) {
 			$args = self::current_limits();
 			$args[ $status . '_limit' ] = min( self::MAX_LIMIT, $limit + self::STEP );
-			$url  = Bugs_Page::page_url( array_merge( Report_Query_Args::filter_query_args( $criteria ), array( 'view' => 'kanban' ), $args ) );
+			$url  = Report_Format::list_link( array_merge( Report_Query_Args::filter_query_args( $criteria ), array( 'view' => 'kanban' ), $args ) );
 			echo '<p class="bugspot-more"><a href="' . esc_url( $url ) . '">' . esc_html__( 'Show more', 'bug-spotter' ) . '</a></p>';
 		}
 		echo '</section>';
@@ -114,7 +114,7 @@ final class Kanban {
 		$created  = Reports_Repository::timestamp( $item['created_at'] );
 
 		echo '<li class="bugspot-card" data-id="' . esc_attr( (string) $id ) . '" data-status="' . esc_attr( (string) $item['status'] ) . '">';
-		echo '<div class="bugspot-card-head"><a class="bugspot-card-id" href="' . esc_url( Detail_Page::url( $id ) ) . '">#' . esc_html( (string) $id ) . '</a>';
+		echo '<div class="bugspot-card-head"><a class="bugspot-card-id" href="' . esc_url( Report_Format::link( $id ) ) . '">#' . esc_html( (string) $id ) . '</a>';
 		if ( is_string( $item['screenshot'] ?? null ) && '' !== $item['screenshot'] ) {
 			echo ' <span class="dashicons dashicons-camera" title="' . esc_attr__( 'Has a screenshot', 'bug-spotter' ) . '" aria-label="' . esc_attr__( 'Has a screenshot', 'bug-spotter' ) . '"></span>';
 		}

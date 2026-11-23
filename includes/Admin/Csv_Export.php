@@ -6,6 +6,7 @@ use Bug_Spotter\Priorities;
 use Bug_Spotter\Report_Format;
 use Bug_Spotter\Reports_Repository;
 use Bug_Spotter\Statuses;
+use Bug_Spotter\Team;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -68,6 +69,7 @@ final class Csv_Export {
 				__( 'Date', 'bug-spotter' ),
 				__( 'Status', 'bug-spotter' ),
 				__( 'Priority', 'bug-spotter' ),
+				__( 'Assigned to', 'bug-spotter' ),
 				__( 'Page', 'bug-spotter' ),
 				__( 'Reporter', 'bug-spotter' ),
 				__( 'Description', 'bug-spotter' ),
@@ -78,6 +80,7 @@ final class Csv_Export {
 		$sent = 0;
 		do {
 			$result = $repo->query( array_merge( $filters, array( 'orderby' => $orderby, 'order' => $order, 'per_page' => Reports_Repository::MAX_PER_PAGE, 'page' => $page ) ) );
+			cache_users( array_filter( array_column( $result['items'], 'assigned_to' ) ) ); // One query for the "Assigned to" column.
 			foreach ( $result['items'] as $item ) {
 				$time = Reports_Repository::timestamp( $item['created_at'] );
 				self::put_row(
@@ -87,6 +90,7 @@ final class Csv_Export {
 						null !== $time ? wp_date( 'Y-m-d H:i:s', $time ) : '',
 						Statuses::label( (string) $item['status'] ),
 						Priorities::label( (string) $item['priority'] ),
+						null !== $item['assigned_to'] ? Team::name( (int) $item['assigned_to'] ) : '',
 						(string) $item['page_url'],
 						Report_Format::reporter_label( $item ),
 						(string) $item['description'],

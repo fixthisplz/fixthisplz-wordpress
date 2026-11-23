@@ -26,7 +26,7 @@ final class Activity_Box {
 
 		$note = isset( $_POST['note'] ) && is_string( $_POST['note'] ) ? wp_unslash( $_POST['note'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- verified above; Activity::add_note() checks the encoding, the text is escaped at output.
 		$ok   = null !== ( new Reports_Repository() )->find( $id ) && Activity::add_note( $id, get_current_user_id(), $note ) > 0;
-		wp_safe_redirect( Detail_Page::url( $id, array( 'bugspot_notice' => $ok ? 'note_added' : 'note_failed' ) ) );
+		wp_safe_redirect( Report_Format::link( $id, array( 'bugspot_notice' => $ok ? 'note_added' : 'note_failed' ) ) );
 		exit;
 	}
 
@@ -40,7 +40,7 @@ final class Activity_Box {
 			Request::deny();
 		}
 		Activity::delete_note( $id );
-		wp_safe_redirect( Detail_Page::url( $note['report_id'], array( 'bugspot_notice' => 'note_deleted' ) ) );
+		wp_safe_redirect( Report_Format::link( $note['report_id'], array( 'bugspot_notice' => 'note_deleted' ) ) );
 		exit;
 	}
 

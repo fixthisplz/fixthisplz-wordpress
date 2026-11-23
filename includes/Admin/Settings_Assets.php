@@ -64,7 +64,6 @@ final class Settings_Assets {
 					'mediaTitle'   => __( 'Choose an SVG icon', 'bug-spotter' ),
 					'mediaButton'  => __( 'Use this icon', 'bug-spotter' ),
 					'notSvg'       => __( 'Please choose an SVG file.', 'bug-spotter' ),
-					'previewTitle' => __( 'Button preview', 'bug-spotter' ),
 					'previewError' => __( 'The preview could not be updated.', 'bug-spotter' ),
 					'testLoading'  => __( 'Loading the provider widget…', 'bug-spotter' ),
 					'testSolve'    => __( 'Complete the check below to finish the test.', 'bug-spotter' ),

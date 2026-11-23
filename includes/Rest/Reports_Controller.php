@@ -4,12 +4,11 @@ namespace Bug_Spotter\Rest;
 
 use Bug_Spotter\Client_Ip;
 use Bug_Spotter\Installer;
-use Bug_Spotter\Priorities;
+use Bug_Spotter\Report_Changes;
 use Bug_Spotter\Report_Submission;
 use Bug_Spotter\Reports_Repository;
 use Bug_Spotter\Screenshot_Store;
 use Bug_Spotter\Settings;
-use Bug_Spotter\Statuses;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -153,13 +152,13 @@ final class Reports_Controller {
 		}
 
 		$fields = array();
-		foreach ( array( Statuses::class, Priorities::class ) as $list ) {
-			$key   = $list::FIELD;
+		foreach ( array( 'status', 'priority' ) as $key ) {
 			$value = $request->get_param( $key );
 			if ( null === $value ) {
 				continue;
 			}
-			if ( ! is_string( $value ) || ! $list::is_valid( $value ) ) {
+			// The rule of every edit (Report_Changes): an unknown value is rejected, unless it is the stored one.
+			if ( ! is_string( $value ) || null === Report_Changes::from( $report, array( $key => $value ) ) ) {
 				/* translators: %s: field name (status or priority) */
 				return Report_Submission::invalid( sprintf( __( 'Invalid value for "%s".', 'bug-spotter' ), $key ) );
 			}

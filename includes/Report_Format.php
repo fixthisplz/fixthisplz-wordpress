@@ -55,14 +55,14 @@ final class Report_Format {
 		return sprintf( __( '%1$s #%2$d', 'bug-spotter' ), Settings::text( 'management.item_label' ), $id );
 	}
 
-	/** Address of the report's detail screen in the administration. */
-	public static function link( int $id ): string {
-		return admin_url( 'admin.php?page=bug-spotter&report=' . $id );
+	/** Address of the report's detail screen in the administration, with extra query $args. */
+	public static function link( int $id, array $args = array() ): string {
+		return self::list_link( array_merge( array( 'report' => $id ), $args ) );
 	}
 
-	/** Address of the list of reports in the administration. */
-	public static function list_link(): string {
-		return admin_url( 'admin.php?page=bug-spotter' );
+	/** Address of the list of reports in the administration, with extra query $args (filters, view, notice). */
+	public static function list_link( array $args = array() ): string {
+		return add_query_arg( array_merge( array( 'page' => Admin\Menu::SLUG ), $args ), admin_url( 'admin.php' ) );
 	}
 
 	/** The site name as plain text (e-mail subjects, webhooks). */

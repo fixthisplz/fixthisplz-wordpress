@@ -24,7 +24,7 @@ msgstr "Bug Spotter"
 msgid "Lets visitors and editors report bugs from any page of a WordPress site."
 msgstr "Permet aux visiteurs et aux éditeurs de signaler des bugs depuis n’importe quelle page d’un site WordPress."
 
-#: includes/Admin/Bugs_Page.php:29
+#: includes/Admin/Bugs_Page.php:30
 msgid "Bugs per page"
 msgstr "Bugs par page"
 
@@ -32,7 +32,7 @@ msgstr "Bugs par page"
 msgid "Sorry, you are not allowed to do that."
 msgstr "Désolé, vous n’avez pas l’autorisation d’effectuer cette action."
 
-#: includes/Admin/Bugs_Page.php:153
+#: includes/Admin/Bugs_Page.php:150
 msgid "Sorry, you are not allowed to access this page."
 msgstr "Désolé, vous n’avez pas l’autorisation d’accéder à cette page."
 
@@ -42,7 +42,7 @@ msgid "Bugs"
 msgstr "Bugs"
 
 #. translators: %d: number of reports.
-#: includes/Admin/Bugs_Page.php:198
+#: includes/Admin/Bugs_Page.php:195
 #, php-format
 msgid "%d report deleted."
 msgid_plural "%d reports deleted."
@@ -50,55 +50,55 @@ msgstr[0] "%d signalement supprimé."
 msgstr[1] "%d signalements supprimés."
 
 #. translators: %d: number of reports.
-#: includes/Admin/Bugs_Page.php:200
+#: includes/Admin/Bugs_Page.php:197
 #, php-format
 msgid "%d report updated."
 msgid_plural "%d reports updated."
 msgstr[0] "%d signalement mis à jour."
 msgstr[1] "%d signalements mis à jour."
 
-#: includes/Admin/Bugs_Page.php:211
+#: includes/Admin/Bugs_Page.php:208
 msgid "List"
 msgstr "Liste"
 
-#: includes/Admin/Bugs_Page.php:217
+#: includes/Admin/Bugs_Page.php:214
 msgid "Kanban"
 msgstr "Kanban"
 
-#: includes/Admin/Bugs_Page.php:238
+#: includes/Admin/Bugs_Page.php:235
 msgid "From"
 msgstr "Du"
 
-#: includes/Admin/Bugs_Page.php:239
+#: includes/Admin/Bugs_Page.php:236
 msgid "To"
 msgstr "Au"
 
-#: includes/Admin/Bugs_Page.php:240
-#: includes/Admin/Csv_Export.php:70
-#: includes/Admin/Detail_Page.php:149
+#: includes/Admin/Bugs_Page.php:237
+#: includes/Admin/Csv_Export.php:71
+#: includes/Admin/Detail_Page.php:145
 #: includes/Admin/List_Table.php:42
 #: includes/Report_Format.php:88
 #: includes/Webhook_Payload.php:122
 msgid "Priority"
 msgstr "Priorité"
 
-#: includes/Admin/Bugs_Page.php:241
+#: includes/Admin/Bugs_Page.php:238
 msgid "All priorities"
 msgstr "Toutes les priorités"
 
-#: includes/Admin/Bugs_Page.php:247
+#: includes/Admin/Bugs_Page.php:244
 msgid "Search reports"
 msgstr "Rechercher des signalements"
 
-#: includes/Admin/Bugs_Page.php:248
+#: includes/Admin/Bugs_Page.php:245
 msgid "Search description or URL"
 msgstr "Rechercher dans la description ou l’URL"
 
-#: includes/Admin/Bugs_Page.php:249
+#: includes/Admin/Bugs_Page.php:246
 msgid "Filter"
 msgstr "Filtrer"
 
-#: includes/Admin/Bugs_Page.php:250
+#: includes/Admin/Bugs_Page.php:247
 msgid "Export CSV"
 msgstr "Exporter en CSV"
 
@@ -106,25 +106,25 @@ msgstr "Exporter en CSV"
 msgid "Visitor"
 msgstr "Visiteur"
 
-#: includes/Admin/Csv_Export.php:40
+#: includes/Admin/Csv_Export.php:41
 msgid "The export could not start because output was already sent."
 msgstr "L’export n’a pas pu démarrer car du contenu avait déjà été envoyé."
 
-#: includes/Admin/Csv_Export.php:67
+#: includes/Admin/Csv_Export.php:68
 #: includes/Admin/List_Table.php:38
 msgid "No."
 msgstr "N°"
 
-#: includes/Admin/Csv_Export.php:68
+#: includes/Admin/Csv_Export.php:69
 #: includes/Admin/List_Table.php:45
 #: includes/Privacy.php:54
 #: includes/Privacy.php:128
 msgid "Date"
 msgstr "Date"
 
-#: includes/Admin/Csv_Export.php:69
-#: includes/Admin/Detail_Page.php:138
-#: includes/Admin/Detail_Page.php:144
+#: includes/Admin/Csv_Export.php:70
+#: includes/Admin/Detail_Page.php:134
+#: includes/Admin/Detail_Page.php:140
 #: includes/Admin/List_Table.php:43
 #: includes/Admin/Report_Context_View.php:125
 #: includes/Privacy.php:57
@@ -133,64 +133,64 @@ msgstr "Date"
 msgid "Status"
 msgstr "Statut"
 
-#: includes/Admin/Csv_Export.php:71
-#: includes/Admin/Detail_Page.php:97
+#: includes/Admin/Csv_Export.php:73
+#: includes/Admin/Detail_Page.php:93
 #: includes/Admin/List_Table.php:40
-#: includes/Mailer.php:145
+#: includes/Mailer.php:157
 #: includes/Privacy.php:55
 #: includes/Webhook_Payload.php:120
 msgid "Page"
 msgstr "Page"
 
-#: includes/Admin/Csv_Export.php:72
-#: includes/Admin/Detail_Page.php:96
+#: includes/Admin/Csv_Export.php:74
+#: includes/Admin/Detail_Page.php:92
 #: includes/Admin/List_Table.php:41
 msgid "Reporter"
 msgstr "Déclarant"
 
-#: includes/Admin/Csv_Export.php:73
-#: includes/Admin/Detail_Page.php:92
+#: includes/Admin/Csv_Export.php:75
+#: includes/Admin/Detail_Page.php:88
 #: includes/Admin/List_Table.php:39
 #: includes/Frontend/Assets.php:178
-#: includes/Mailer.php:144
+#: includes/Mailer.php:156
 #: includes/Privacy.php:56
 #: includes/Webhook_Payload.php:119
 msgid "Description"
 msgstr "Description"
 
-#: includes/Admin/Detail_Page.php:77
-#: includes/Rest/Reports_Controller.php:152
+#: includes/Admin/Detail_Page.php:73
+#: includes/Rest/Reports_Controller.php:151
 msgid "Report not found."
 msgstr "Signalement introuvable."
 
-#: includes/Admin/Detail_Page.php:98
+#: includes/Admin/Detail_Page.php:94
 msgid "Element"
 msgstr "Élément"
 
-#: includes/Admin/Detail_Page.php:99
+#: includes/Admin/Detail_Page.php:95
 msgid "Browser"
 msgstr "Navigateur"
 
-#: includes/Admin/Detail_Page.php:100
+#: includes/Admin/Detail_Page.php:96
 #: includes/Admin/Settings_Tabs.php:261
 msgid "Console errors"
 msgstr "Erreurs de la console"
 
-#: includes/Admin/Detail_Page.php:101
+#: includes/Admin/Detail_Page.php:97
 #: includes/Admin/Settings_Tabs.php:265
 #: includes/Frontend/Assets.php:227
 msgid "Failed requests"
 msgstr "Requêtes en échec"
 
-#: includes/Admin/Detail_Page.php:102
+#: includes/Admin/Detail_Page.php:98
 #: includes/Admin/Settings_Tabs.php:98
 #: includes/Admin/Settings_Tabs.php:215
 #: includes/Frontend/Assets.php:234
-#: includes/Mailer.php:147
+#: includes/Mailer.php:159
 msgid "Screenshot"
 msgstr "Capture d’écran"
 
-#: includes/Admin/Detail_Page.php:103
+#: includes/Admin/Detail_Page.php:99
 msgid "Raw data"
 msgstr "Données brutes"
 
@@ -198,15 +198,15 @@ msgstr "Données brutes"
 msgid "Show the raw JSON"
 msgstr "Afficher le JSON brut"
 
-#: includes/Admin/Detail_Page.php:111
+#: includes/Admin/Detail_Page.php:107
 msgid "Back to the list"
 msgstr "Retour à la liste"
 
-#: includes/Admin/Detail_Page.php:117
+#: includes/Admin/Detail_Page.php:113
 msgid "Report updated."
 msgstr "Signalement mis à jour."
 
-#: includes/Admin/Detail_Page.php:118
+#: includes/Admin/Detail_Page.php:114
 msgid "The report could not be updated."
 msgstr "Le signalement n’a pas pu être mis à jour."
 
@@ -306,33 +306,33 @@ msgstr "Aucune capture d’écran n’était jointe."
 msgid "Screenshot of the page (click for full size)"
 msgstr "Capture d’écran de la page (cliquez pour l’agrandir)"
 
-#: includes/Admin/Detail_Page.php:156
+#: includes/Admin/Detail_Page.php:152
 msgid "Update"
 msgstr "Mettre à jour"
 
-#: includes/Admin/Detail_Page.php:161
+#: includes/Admin/Detail_Page.php:157
 msgid "Dates"
 msgstr "Dates"
 
-#: includes/Admin/Detail_Page.php:164
+#: includes/Admin/Detail_Page.php:160
 msgid "Created"
 msgstr "Créé"
 
-#: includes/Admin/Detail_Page.php:165
-#: includes/Statuses.php:31
+#: includes/Admin/Detail_Page.php:161
+#: includes/Statuses.php:30
 msgid "Seen"
 msgstr "Vu"
 
-#: includes/Admin/Detail_Page.php:166
+#: includes/Admin/Detail_Page.php:162
 #: includes/Webhooks.php:34
 msgid "Status changed"
 msgstr "Statut modifié"
 
-#: includes/Admin/Detail_Page.php:167
+#: includes/Admin/Detail_Page.php:163
 msgid "Updated"
 msgstr "Mis à jour"
 
-#: includes/Admin/Detail_Page.php:173
+#: includes/Admin/Detail_Page.php:169
 #: includes/Admin/List_Table.php:79
 #: includes/Admin/List_Table.php:164
 #: includes/Admin/Settings_List_Tab.php:130
@@ -340,11 +340,11 @@ msgstr "Mis à jour"
 msgid "Delete"
 msgstr "Supprimer"
 
-#: includes/Admin/Detail_Page.php:175
+#: includes/Admin/Detail_Page.php:171
 msgid "Delete this report permanently? This cannot be undone."
 msgstr "Supprimer définitivement ce signalement ? Cette action est irréversible."
 
-#: includes/Admin/Detail_Page.php:179
+#: includes/Admin/Detail_Page.php:175
 msgid "Delete this report"
 msgstr "Supprimer ce signalement"
 
@@ -434,45 +434,44 @@ msgstr "Utiliser cette icône"
 msgid "Please choose an SVG file."
 msgstr "Veuillez choisir un fichier SVG."
 
-#: includes/Admin/Settings_Assets.php:67
 #: includes/Admin/Settings_Button_Tab.php:290
 msgid "Button preview"
 msgstr "Aperçu du bouton"
 
-#: includes/Admin/Settings_Assets.php:68
+#: includes/Admin/Settings_Assets.php:67
 msgid "The preview could not be updated."
 msgstr "L’aperçu n’a pas pu être mis à jour."
 
-#: includes/Admin/Settings_Assets.php:69
+#: includes/Admin/Settings_Assets.php:68
 msgid "Loading the provider widget…"
 msgstr "Chargement du widget du fournisseur…"
 
-#: includes/Admin/Settings_Assets.php:70
+#: includes/Admin/Settings_Assets.php:69
 msgid "Complete the check below to finish the test."
 msgstr "Terminez la vérification ci-dessous pour finir le test."
 
-#: includes/Admin/Settings_Assets.php:71
+#: includes/Admin/Settings_Assets.php:70
 msgid "Checking the keys…"
 msgstr "Vérification des clés…"
 
-#: includes/Admin/Settings_Assets.php:72
+#: includes/Admin/Settings_Assets.php:71
 #: includes/Rest/Settings_Controller.php:103
 msgid "Keys are valid."
 msgstr "Les clés sont valides."
 
-#: includes/Admin/Settings_Assets.php:73
+#: includes/Admin/Settings_Assets.php:72
 msgid "The test failed."
 msgstr "Le test a échoué."
 
-#: includes/Admin/Settings_Assets.php:74
+#: includes/Admin/Settings_Assets.php:73
 msgid "The provider widget could not be loaded. Check the site key, the provider choice and your connection; reload the page before testing another Google key."
 msgstr "Le widget du fournisseur n’a pas pu être chargé. Vérifiez la clé du site, le choix du fournisseur et votre connexion ; rechargez la page avant de tester une autre clé Google."
 
-#: includes/Admin/Settings_Assets.php:75
+#: includes/Admin/Settings_Assets.php:74
 msgid "No answer from the check. Try again."
 msgstr "Aucune réponse de la vérification. Réessayez."
 
-#: includes/Admin/Settings_Assets.php:76
+#: includes/Admin/Settings_Assets.php:75
 #: includes/Rest/Settings_Controller.php:81
 msgid "Enter the site key first."
 msgstr "Saisissez d’abord la clé du site."
@@ -1241,15 +1240,15 @@ msgstr "Veuillez compléter la vérification anti-spam."
 msgid "This page cannot be reported: its address is not a web address."
 msgstr "Cette page ne peut pas être signalée : son adresse n’est pas une adresse web."
 
-#: includes/Mailer.php:143
+#: includes/Mailer.php:155
 msgid "Report"
 msgstr "Signalement"
 
-#: includes/Mailer.php:146
+#: includes/Mailer.php:158
 msgid "Reported by"
 msgstr "Signalé par"
 
-#: includes/Mailer.php:148
+#: includes/Mailer.php:160
 #: includes/Webhook_Payload.php:137
 msgid "Open the report"
 msgstr "Ouvrir le signalement"
@@ -1308,10 +1307,6 @@ msgstr "Conservation : les signalements clos sont supprimés automatiquement à 
 msgid "Legal basis: legitimate interest in maintaining and improving the site."
 msgstr "Base légale : intérêt légitime à maintenir et à améliorer le site."
 
-#: includes/Privacy.php:182
-msgid "Recipients: only the site administrators and the people they authorise to manage bug reports."
-msgstr "Destinataires : uniquement les administrateurs du site et les personnes qu’ils autorisent à gérer les signalements de bugs."
-
 #: includes/Rest/Settings_Controller.php:69
 msgid "Choose an anti-bot provider to test."
 msgstr "Choisissez un fournisseur anti-robot à tester."
@@ -1325,7 +1320,7 @@ msgstr "La clé secrète est requise."
 msgid "The anti-bot check failed."
 msgstr "La vérification anti-robot a échoué."
 
-#: includes/Rest/Reports_Controller.php:90
+#: includes/Rest/Reports_Controller.php:89
 msgid "Bug reporting is disabled."
 msgstr "Le signalement de bugs est désactivé."
 
@@ -1342,21 +1337,21 @@ msgid "The report context is too large."
 msgstr "Le contexte du signalement est trop volumineux."
 
 #: includes/Report_Submission.php:153
-#: includes/Rest/Reports_Controller.php:172
+#: includes/Rest/Reports_Controller.php:171
 msgid "The report could not be saved."
 msgstr "Le signalement n’a pas pu être enregistré."
 
 #. translators: %s: field name (status or priority)
-#: includes/Rest/Reports_Controller.php:164
+#: includes/Rest/Reports_Controller.php:163
 #, php-format
 msgid "Invalid value for \"%s\"."
 msgstr "Valeur invalide pour « %s »."
 
-#: includes/Rest/Reports_Controller.php:169
+#: includes/Rest/Reports_Controller.php:168
 msgid "Nothing to update: send a status and/or a priority."
 msgstr "Rien à mettre à jour : envoyez un statut et/ou une priorité."
 
-#: includes/Rest/Reports_Controller.php:191
+#: includes/Rest/Reports_Controller.php:190
 msgid "Screenshot not found."
 msgstr "Capture d’écran introuvable."
 
@@ -1372,27 +1367,27 @@ msgstr "La capture d’écran doit être une image PNG ou JPEG."
 msgid "The screenshot could not be stored."
 msgstr "La capture d’écran n’a pas pu être stockée."
 
-#: includes/Statuses.php:30
+#: includes/Statuses.php:29
 msgid "New"
 msgstr "Non vu"
 
-#: includes/Statuses.php:32
+#: includes/Statuses.php:31
 msgid "Confirmed"
 msgstr "Confirmé"
 
-#: includes/Statuses.php:33
+#: includes/Statuses.php:32
 msgid "In progress"
 msgstr "En cours"
 
-#: includes/Statuses.php:34
+#: includes/Statuses.php:33
 msgid "Fixed"
 msgstr "Corrigé"
 
-#: includes/Statuses.php:35
+#: includes/Statuses.php:34
 msgid "Won't fix"
 msgstr "Ne sera pas corrigé"
 
-#: includes/Statuses.php:36
+#: includes/Statuses.php:35
 msgid "Duplicate"
 msgstr "Doublon"
 
@@ -1741,46 +1736,47 @@ msgstr "Supprimer la note"
 msgid "System"
 msgstr "Système"
 
-#: includes/Admin/Bugs_Page.php:256
-#: includes/Admin/Detail_Page.php:151
+#: includes/Admin/Bugs_Page.php:253
+#: includes/Admin/Csv_Export.php:72
+#: includes/Admin/Detail_Page.php:147
 #: includes/Admin/List_Table.php:44
 #: includes/Report_Format.php:89
 #: includes/Webhook_Payload.php:123
 msgid "Assigned to"
 msgstr "Attribué à"
 
-#: includes/Admin/Bugs_Page.php:258
+#: includes/Admin/Bugs_Page.php:255
 #: includes/Admin/List_Table.php:203
 #: includes/Report_Format.php:97
 #: includes/Webhook_Payload.php:123
 msgid "Unassigned"
 msgstr "Non attribué"
 
-#: includes/Admin/Bugs_Page.php:257
+#: includes/Admin/Bugs_Page.php:254
 msgid "Everyone"
 msgstr "Tout le monde"
 
-#: includes/Admin/Bugs_Page.php:275
+#: includes/Admin/Bugs_Page.php:272
 msgid "My reports"
 msgstr "Mes signalements"
 
-#: includes/Admin/Detail_Page.php:95
+#: includes/Admin/Detail_Page.php:91
 msgid "Notes and history"
 msgstr "Notes et historique"
 
-#: includes/Admin/Detail_Page.php:119
+#: includes/Admin/Detail_Page.php:115
 msgid "Note added."
 msgstr "Note ajoutée."
 
-#: includes/Admin/Detail_Page.php:120
+#: includes/Admin/Detail_Page.php:116
 msgid "Note deleted."
 msgstr "Note supprimée."
 
-#: includes/Admin/Detail_Page.php:121
+#: includes/Admin/Detail_Page.php:117
 msgid "The note could not be added."
 msgstr "La note n’a pas pu être ajoutée."
 
-#: includes/Admin/Detail_Page.php:154
+#: includes/Admin/Detail_Page.php:150
 msgid "— Unassigned —"
 msgstr "— Non attribué —"
 
@@ -1801,7 +1797,7 @@ msgid "Unassign"
 msgstr "Retirer l’attribution"
 
 #. translators: 1: site name, 2: report title, such as "Bug #12".
-#: includes/Mailer.php:87
+#: includes/Mailer.php:99
 #, php-format
 msgid "[%1$s] Assigned to you: %2$s"
 msgstr "[%1$s] Vous est attribué : %2$s"
@@ -1819,14 +1815,14 @@ msgid "Deleted user"
 msgstr "Utilisateur supprimé"
 
 #. translators: 1: site name, 2: number of reports.
-#: includes/Mailer.php:94
+#: includes/Mailer.php:106
 #, php-format
 msgid "[%1$s] %2$d report assigned to you"
 msgid_plural "[%1$s] %2$d reports assigned to you"
 msgstr[0] "[%1$s] %2$d signalement vous est attribué"
 msgstr[1] "[%1$s] %2$d signalements vous sont attribués"
 
-#: includes/Mailer.php:95
+#: includes/Mailer.php:107
 msgid "These reports are now assigned to you:"
 msgstr "Ces signalements vous sont maintenant attribués :"
 
@@ -1854,11 +1850,11 @@ msgstr "Modification"
 msgid "%1$s: %2$s → %3$s"
 msgstr "%1$s : %2$s → %3$s"
 
-#: includes/Admin/Settings_Assets.php:77
+#: includes/Admin/Settings_Assets.php:76
 msgid "Sending the test…"
 msgstr "Envoi du test…"
 
-#: includes/Admin/Settings_Assets.php:78
+#: includes/Admin/Settings_Assets.php:77
 msgid "The test could not be sent."
 msgstr "Le test n’a pas pu être envoyé."
 
@@ -2022,3 +2018,7 @@ msgstr[1] "%1$d signalements : statut → %2$s"
 #: includes/Webhook_Payload.php:144
 msgid "Open the list"
 msgstr "Ouvrir la liste"
+
+#: includes/Privacy.php:182
+msgid "Recipients: the site administrators, the people they authorise to manage bug reports, and the chat or project services they connect through webhooks (see below)."
+msgstr "Destinataires : les administrateurs du site, les personnes qu’ils autorisent à gérer les signalements de bugs, et les services de discussion ou de gestion de projet qu’ils connectent par webhook (voir ci-dessous)."

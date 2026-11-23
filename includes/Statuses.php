@@ -21,8 +21,7 @@ final class Statuses extends Choice_List {
 
 	/** The "closed" flag (spec 7.10), never set on a required status. @param array<string,mixed> $entry Untrusted. */
 	protected static function extra_fields( array $entry, bool $required ): array {
-		$closed = $entry['closed'] ?? false;
-		return array( 'closed' => ! $required && ( is_string( $closed ) ? filter_var( $closed, FILTER_VALIDATE_BOOLEAN ) : (bool) $closed ) );
+		return array( 'closed' => ! $required && Settings_Sanitizer::bool( $entry['closed'] ?? false ) );
 	}
 
 	protected static function default_labels(): array {

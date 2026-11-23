@@ -88,7 +88,7 @@ bugspot_test(
 				assert_true( ! str_contains( $html, 'status=fixed' ) && ! str_contains( $html, 'status=wont_fix' ), 'closed statuses left out' );
 				assert_true( str_contains( $html, '<span class="bugspot-count">' . number_format_i18n( $before['new'] + 6 ) . '</span>' ), 'count of new' );
 				foreach ( array_slice( array_reverse( $ids ), 0, 5 ) as $id ) {
-					assert_true( str_contains( $html, esc_url( Detail_Page::url( $id ) ) . '">Ticket #' . $id . '</a>' ), 'latest #' . $id );
+					assert_true( str_contains( $html, esc_url( Bug_Spotter\Report_Format::link( $id ) ) . '">Ticket #' . $id . '</a>' ), 'latest #' . $id );
 				}
 				assert_true( ! str_contains( $html, 'Ticket #' . $ids[0] . '<' ), 'only 5 reports' );
 				assert_true( ! str_contains( $html, '<script>' ) && str_contains( $html, '&lt;script&gt;' ), 'excerpt escaped' );

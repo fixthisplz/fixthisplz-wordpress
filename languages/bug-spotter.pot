@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-22T23:44:11+00:00\n"
+"POT-Creation-Date: 2026-11-23T00:06:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: bug-spotter\n"
@@ -48,16 +48,16 @@ msgstr ""
 msgid "Delete note"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:29
+#: includes/Admin/Bugs_Page.php:30
 msgid "Bugs per page"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:153
+#: includes/Admin/Bugs_Page.php:150
 msgid "Sorry, you are not allowed to access this page."
 msgstr ""
 
 #. translators: %d: number of reports.
-#: includes/Admin/Bugs_Page.php:198
+#: includes/Admin/Bugs_Page.php:195
 #, php-format
 msgid "%d report deleted."
 msgid_plural "%d reports deleted."
@@ -65,100 +65,101 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of reports.
-#: includes/Admin/Bugs_Page.php:200
+#: includes/Admin/Bugs_Page.php:197
 #, php-format
 msgid "%d report updated."
 msgid_plural "%d reports updated."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/Admin/Bugs_Page.php:211
+#: includes/Admin/Bugs_Page.php:208
 msgid "List"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:217
+#: includes/Admin/Bugs_Page.php:214
 msgid "Kanban"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:238
+#: includes/Admin/Bugs_Page.php:235
 msgid "From"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:239
+#: includes/Admin/Bugs_Page.php:236
 msgid "To"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:240
-#: includes/Admin/Csv_Export.php:70
-#: includes/Admin/Detail_Page.php:149
+#: includes/Admin/Bugs_Page.php:237
+#: includes/Admin/Csv_Export.php:71
+#: includes/Admin/Detail_Page.php:145
 #: includes/Admin/List_Table.php:42
 #: includes/Report_Format.php:88
 #: includes/Webhook_Payload.php:122
 msgid "Priority"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:241
+#: includes/Admin/Bugs_Page.php:238
 msgid "All priorities"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:247
+#: includes/Admin/Bugs_Page.php:244
 msgid "Search reports"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:248
+#: includes/Admin/Bugs_Page.php:245
 msgid "Search description or URL"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:249
+#: includes/Admin/Bugs_Page.php:246
 msgid "Filter"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:250
+#: includes/Admin/Bugs_Page.php:247
 msgid "Export CSV"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:256
-#: includes/Admin/Detail_Page.php:151
+#: includes/Admin/Bugs_Page.php:253
+#: includes/Admin/Csv_Export.php:72
+#: includes/Admin/Detail_Page.php:147
 #: includes/Admin/List_Table.php:44
 #: includes/Report_Format.php:89
 #: includes/Webhook_Payload.php:123
 msgid "Assigned to"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:257
+#: includes/Admin/Bugs_Page.php:254
 msgid "Everyone"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:258
+#: includes/Admin/Bugs_Page.php:255
 #: includes/Admin/List_Table.php:203
 #: includes/Report_Format.php:97
 #: includes/Webhook_Payload.php:123
 msgid "Unassigned"
 msgstr ""
 
-#: includes/Admin/Bugs_Page.php:275
+#: includes/Admin/Bugs_Page.php:272
 msgid "My reports"
 msgstr ""
 
-#: includes/Admin/Csv_Export.php:40
+#: includes/Admin/Csv_Export.php:41
 msgid "The export could not start because output was already sent."
 msgstr ""
 
-#: includes/Admin/Csv_Export.php:67
+#: includes/Admin/Csv_Export.php:68
 #: includes/Admin/List_Table.php:38
 msgid "No."
 msgstr ""
 
-#: includes/Admin/Csv_Export.php:68
+#: includes/Admin/Csv_Export.php:69
 #: includes/Admin/List_Table.php:45
 #: includes/Privacy.php:54
 #: includes/Privacy.php:128
 msgid "Date"
 msgstr ""
 
-#: includes/Admin/Csv_Export.php:69
-#: includes/Admin/Detail_Page.php:138
-#: includes/Admin/Detail_Page.php:144
+#: includes/Admin/Csv_Export.php:70
+#: includes/Admin/Detail_Page.php:134
+#: includes/Admin/Detail_Page.php:140
 #: includes/Admin/List_Table.php:43
 #: includes/Admin/Report_Context_View.php:125
 #: includes/Privacy.php:57
@@ -167,26 +168,26 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: includes/Admin/Csv_Export.php:71
-#: includes/Admin/Detail_Page.php:97
+#: includes/Admin/Csv_Export.php:73
+#: includes/Admin/Detail_Page.php:93
 #: includes/Admin/List_Table.php:40
-#: includes/Mailer.php:145
+#: includes/Mailer.php:157
 #: includes/Privacy.php:55
 #: includes/Webhook_Payload.php:120
 msgid "Page"
 msgstr ""
 
-#: includes/Admin/Csv_Export.php:72
-#: includes/Admin/Detail_Page.php:96
+#: includes/Admin/Csv_Export.php:74
+#: includes/Admin/Detail_Page.php:92
 #: includes/Admin/List_Table.php:41
 msgid "Reporter"
 msgstr ""
 
-#: includes/Admin/Csv_Export.php:73
-#: includes/Admin/Detail_Page.php:92
+#: includes/Admin/Csv_Export.php:75
+#: includes/Admin/Detail_Page.php:88
 #: includes/Admin/List_Table.php:39
 #: includes/Frontend/Assets.php:178
-#: includes/Mailer.php:144
+#: includes/Mailer.php:156
 #: includes/Privacy.php:56
 #: includes/Webhook_Payload.php:119
 msgid "Description"
@@ -201,101 +202,101 @@ msgstr ""
 msgid "No reports found."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:77
-#: includes/Rest/Reports_Controller.php:152
+#: includes/Admin/Detail_Page.php:73
+#: includes/Rest/Reports_Controller.php:151
 msgid "Report not found."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:95
+#: includes/Admin/Detail_Page.php:91
 msgid "Notes and history"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:98
+#: includes/Admin/Detail_Page.php:94
 msgid "Element"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:99
+#: includes/Admin/Detail_Page.php:95
 msgid "Browser"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:100
+#: includes/Admin/Detail_Page.php:96
 #: includes/Admin/Settings_Tabs.php:261
 msgid "Console errors"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:101
+#: includes/Admin/Detail_Page.php:97
 #: includes/Admin/Settings_Tabs.php:265
 #: includes/Frontend/Assets.php:227
 msgid "Failed requests"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:102
+#: includes/Admin/Detail_Page.php:98
 #: includes/Admin/Settings_Tabs.php:98
 #: includes/Admin/Settings_Tabs.php:215
 #: includes/Frontend/Assets.php:234
-#: includes/Mailer.php:147
+#: includes/Mailer.php:159
 msgid "Screenshot"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:103
+#: includes/Admin/Detail_Page.php:99
 msgid "Raw data"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:111
+#: includes/Admin/Detail_Page.php:107
 msgid "Back to the list"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:117
+#: includes/Admin/Detail_Page.php:113
 msgid "Report updated."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:118
+#: includes/Admin/Detail_Page.php:114
 msgid "The report could not be updated."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:119
+#: includes/Admin/Detail_Page.php:115
 msgid "Note added."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:120
+#: includes/Admin/Detail_Page.php:116
 msgid "Note deleted."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:121
+#: includes/Admin/Detail_Page.php:117
 msgid "The note could not be added."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:154
+#: includes/Admin/Detail_Page.php:150
 msgid "— Unassigned —"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:156
+#: includes/Admin/Detail_Page.php:152
 msgid "Update"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:161
+#: includes/Admin/Detail_Page.php:157
 msgid "Dates"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:164
+#: includes/Admin/Detail_Page.php:160
 msgid "Created"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:165
-#: includes/Statuses.php:31
+#: includes/Admin/Detail_Page.php:161
+#: includes/Statuses.php:30
 msgid "Seen"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:166
+#: includes/Admin/Detail_Page.php:162
 #: includes/Webhooks.php:34
 msgid "Status changed"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:167
+#: includes/Admin/Detail_Page.php:163
 msgid "Updated"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:173
+#: includes/Admin/Detail_Page.php:169
 #: includes/Admin/List_Table.php:79
 #: includes/Admin/List_Table.php:164
 #: includes/Admin/Settings_List_Tab.php:130
@@ -303,11 +304,11 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:175
+#: includes/Admin/Detail_Page.php:171
 msgid "Delete this report permanently? This cannot be undone."
 msgstr ""
 
-#: includes/Admin/Detail_Page.php:179
+#: includes/Admin/Detail_Page.php:175
 msgid "Delete this report"
 msgstr ""
 
@@ -508,53 +509,48 @@ msgid "Please choose an SVG file."
 msgstr ""
 
 #: includes/Admin/Settings_Assets.php:67
-#: includes/Admin/Settings_Button_Tab.php:290
-msgid "Button preview"
-msgstr ""
-
-#: includes/Admin/Settings_Assets.php:68
 msgid "The preview could not be updated."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:69
+#: includes/Admin/Settings_Assets.php:68
 msgid "Loading the provider widget…"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:70
+#: includes/Admin/Settings_Assets.php:69
 msgid "Complete the check below to finish the test."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:71
+#: includes/Admin/Settings_Assets.php:70
 msgid "Checking the keys…"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:72
+#: includes/Admin/Settings_Assets.php:71
 #: includes/Rest/Settings_Controller.php:103
 msgid "Keys are valid."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:73
+#: includes/Admin/Settings_Assets.php:72
 msgid "The test failed."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:74
+#: includes/Admin/Settings_Assets.php:73
 msgid "The provider widget could not be loaded. Check the site key, the provider choice and your connection; reload the page before testing another Google key."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:75
+#: includes/Admin/Settings_Assets.php:74
 msgid "No answer from the check. Try again."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:76
+#: includes/Admin/Settings_Assets.php:75
 #: includes/Rest/Settings_Controller.php:81
 msgid "Enter the site key first."
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:77
+#: includes/Admin/Settings_Assets.php:76
 msgid "Sending the test…"
 msgstr ""
 
-#: includes/Admin/Settings_Assets.php:78
+#: includes/Admin/Settings_Assets.php:77
 msgid "The test could not be sent."
 msgstr ""
 
@@ -806,6 +802,10 @@ msgstr ""
 #: includes/Admin/Settings_Button_Tab.php:288
 #: includes/Admin/Settings_Tabs.php:60
 msgid "Mobile"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:290
+msgid "Button preview"
 msgstr ""
 
 #: includes/Admin/Settings_Button_Tab.php:291
@@ -1633,32 +1633,32 @@ msgid "[%1$s] New report: %2$s"
 msgstr ""
 
 #. translators: 1: site name, 2: report title, such as "Bug #12".
-#: includes/Mailer.php:87
+#: includes/Mailer.php:99
 #, php-format
 msgid "[%1$s] Assigned to you: %2$s"
 msgstr ""
 
 #. translators: 1: site name, 2: number of reports.
-#: includes/Mailer.php:94
+#: includes/Mailer.php:106
 #, php-format
 msgid "[%1$s] %2$d report assigned to you"
 msgid_plural "[%1$s] %2$d reports assigned to you"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/Mailer.php:95
+#: includes/Mailer.php:107
 msgid "These reports are now assigned to you:"
 msgstr ""
 
-#: includes/Mailer.php:143
+#: includes/Mailer.php:155
 msgid "Report"
 msgstr ""
 
-#: includes/Mailer.php:146
+#: includes/Mailer.php:158
 msgid "Reported by"
 msgstr ""
 
-#: includes/Mailer.php:148
+#: includes/Mailer.php:160
 #: includes/Webhook_Payload.php:137
 msgid "Open the report"
 msgstr ""
@@ -1760,7 +1760,7 @@ msgid "Internal notes: the people who manage bug reports can write notes on them
 msgstr ""
 
 #: includes/Privacy.php:182
-msgid "Recipients: only the site administrators and the people they authorise to manage bug reports."
+msgid "Recipients: the site administrators, the people they authorise to manage bug reports, and the chat or project services they connect through webhooks (see below)."
 msgstr ""
 
 #: includes/Privacy.php:183
@@ -1815,25 +1815,25 @@ msgid "The screenshot could not be uploaded."
 msgstr ""
 
 #: includes/Report_Submission.php:153
-#: includes/Rest/Reports_Controller.php:172
+#: includes/Rest/Reports_Controller.php:171
 msgid "The report could not be saved."
 msgstr ""
 
-#: includes/Rest/Reports_Controller.php:90
+#: includes/Rest/Reports_Controller.php:89
 msgid "Bug reporting is disabled."
 msgstr ""
 
 #. translators: %s: field name (status or priority)
-#: includes/Rest/Reports_Controller.php:164
+#: includes/Rest/Reports_Controller.php:163
 #, php-format
 msgid "Invalid value for \"%s\"."
 msgstr ""
 
-#: includes/Rest/Reports_Controller.php:169
+#: includes/Rest/Reports_Controller.php:168
 msgid "Nothing to update: send a status and/or a priority."
 msgstr ""
 
-#: includes/Rest/Reports_Controller.php:191
+#: includes/Rest/Reports_Controller.php:190
 msgid "Screenshot not found."
 msgstr ""
 
@@ -1915,27 +1915,27 @@ msgstr ""
 msgid "After Settings"
 msgstr ""
 
-#: includes/Statuses.php:30
+#: includes/Statuses.php:29
 msgid "New"
 msgstr ""
 
-#: includes/Statuses.php:32
+#: includes/Statuses.php:31
 msgid "Confirmed"
 msgstr ""
 
-#: includes/Statuses.php:33
+#: includes/Statuses.php:32
 msgid "In progress"
 msgstr ""
 
-#: includes/Statuses.php:34
+#: includes/Statuses.php:33
 msgid "Fixed"
 msgstr ""
 
-#: includes/Statuses.php:35
+#: includes/Statuses.php:34
 msgid "Won't fix"
 msgstr ""
 
-#: includes/Statuses.php:36
+#: includes/Statuses.php:35
 msgid "Duplicate"
 msgstr ""
 

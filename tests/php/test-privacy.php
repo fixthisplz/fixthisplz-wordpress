@@ -222,6 +222,9 @@ function privacy_remove_dir( string $dir ): void {
 const PRIVACY_PLUGIN_OPTIONS = array( 'bugspot_settings', 'bugspot_secret', 'bugspot_db_version' );
 const PRIVACY_BACKUP_OPTION  = 'bugspot_test_backup';
 
+/** The list's screen option, removed for every user by the uninstall; parked with the options. */
+const PRIVACY_PER_PAGE_META = 'bugspot_per_page';
+
 function privacy_table_exists( string $table ): bool {
 	global $wpdb;
 	return $table === $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) );
@@ -265,6 +268,10 @@ function privacy_restore_backup(): void {
 			delete_option( $opt );
 		}
 	}
+	delete_metadata( 'user', 0, PRIVACY_PER_PAGE_META, '', true );
+	foreach ( $saved['per_page'] ?? array() as $user_id => $value ) {
+		update_user_meta( (int) $user_id, PRIVACY_PER_PAGE_META, $value );
+	}
 	foreach ( wp_roles()->role_objects as $name => $role ) {
 		if ( ! empty( $saved['caps'][ $name ] ) ) {
 			$role->add_cap( 'bugspot_manage' );
@@ -304,7 +311,7 @@ bugspot_test(
 		}
 
 		// Park everything the uninstall destroys.
-		$saved = array( 'options' => array(), 'caps' => array() );
+		$saved = array( 'options' => array(), 'caps' => array(), 'per_page' => array() );
 		foreach ( PRIVACY_PLUGIN_OPTIONS as $opt ) {
 			$value = get_option( $opt, $missing );
 			if ( $missing !== $value ) {
@@ -313,6 +320,9 @@ bugspot_test(
 		}
 		foreach ( wp_roles()->role_objects as $name => $role ) {
 			$saved['caps'][ $name ] = $role->has_cap( 'bugspot_manage' );
+		}
+		foreach ( $wpdb->get_results( $wpdb->prepare( "SELECT user_id, meta_value FROM {$wpdb->usermeta} WHERE meta_key = %s", PRIVACY_PER_PAGE_META ) ) as $row ) {
+			$saved['per_page'][ (int) $row->user_id ] = maybe_unserialize( $row->meta_value );
 		}
 		if ( ! add_option( PRIVACY_BACKUP_OPTION, $saved, '', false ) ) {
 			throw new RuntimeException( 'Could not store the options backup.' );
@@ -338,6 +348,8 @@ bugspot_test(
 				mkdir( $dir . '/nested' );
 				file_put_contents( $dir . '/nested/deep.txt', 'x' );
 				set_transient( 'bugspot_rl_h_test', 1, HOUR_IN_SECONDS );
+				$someone = (int) get_users( array( 'number' => 1, 'fields' => 'ID' ) )[0];
+				update_user_meta( $someone, PRIVACY_PER_PAGE_META, 37 );
 				wp_roles()->get_role( 'administrator' )->add_cap( 'bugspot_manage' );
 
 				if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
@@ -353,6 +365,7 @@ bugspot_test(
 				assert_same( $missing, get_option( 'bugspot_secret', $missing ), 'secret removed' );
 				assert_same( $missing, get_option( 'bugspot_db_version', $missing ), 'db version removed' );
 				assert_same( false, get_transient( 'bugspot_rl_h_test' ), 'rate-limit transient removed' );
+				assert_same( '', get_user_meta( $someone, PRIVACY_PER_PAGE_META, true ), 'per-page screen option removed' );
 				foreach ( wp_roles()->role_objects as $role ) {
 					assert_true( ! $role->has_cap( 'bugspot_manage' ), 'capability removed from ' . $role->name );
 				}

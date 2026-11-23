@@ -23,6 +23,7 @@ final class Uninstaller {
 		delete_option( Installer::DB_VERSION_OPTION );
 		delete_option( Secret::OPTION );
 		self::delete_rate_limit_transients();
+		delete_metadata( 'user', 0, 'bugspot_per_page', '', true ); // Screen option of the list (Admin\Bugs_Page::PER_PAGE_OPTION; the admin is not loaded here).
 
 		foreach ( wp_roles()->role_objects as $role ) {
 			if ( $role->has_cap( Installer::CAPABILITY ) ) {

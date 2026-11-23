@@ -23,9 +23,10 @@ Everything is built natively for WordPress: PHP and hooks, a dedicated database 
 * Accessible modal dialog: description, optional contact e-mail for guests, optional screenshot with preview, privacy notice, and a "Technical details sent with your report" panel that shows exactly what is sent.
 * Two screenshot methods: a real capture of the browser tab (exact image; the browser asks the visitor for permission), or a reconstruction of the page (no permission prompt, may differ slightly from the screen). Phones and browsers without screen sharing always use the reconstruction.
 * Optional masking of typed fields and sensitive areas in the screenshot.
-* Screenshot annotation before sending: rectangles, arrows, freehand strokes, text and hidden areas, drawn with a mouse, a finger or a pen, in six colors; select, move, resize, recolor or delete each one; undo, clear all, cancel or apply.
+* Screenshot annotation before sending: rectangles, arrows, freehand strokes, text and hidden areas, drawn with a mouse, a finger or a pen, in six colors and three sizes; select, move, resize, recolor or delete each one; undo, clear all, cancel or apply.
 * Download of the report as Markdown, JSON or plain text, plus the screenshot, built in the browser.
 * Bugs menu with a filterable and sortable list (status, priority, period, search), bulk actions, CSV export, a Kanban board with drag and drop, and a detail screen. The menu name, the list sub-menu name, the name of one report and the menu position can be changed.
+* Assignment, internal notes and a change history on each report (team only): assign a report to a bug manager, who gets an e-mail; filter by person or "My reports"; the CSV export includes the assignee.
 * Configurable statuses: name, color, order (also the order of the Kanban columns) and a "Closed" flag; add your own or delete one, moving its reports to another status. Defaults: New, Seen, Confirmed, In progress, Fixed, Won't fix, Duplicate.
 * Configurable priorities, the same way (name, color, order). Defaults: Low, Normal, High, Critical.
 * A dashboard widget shows the bug managers the open reports per status and the latest reports.
@@ -45,7 +46,7 @@ Bug Spotter connects to an external service only when you choose an anti-bot pro
 * Google reCAPTCHA v2 and v3: [terms](https://policies.google.com/terms), [privacy policy](https://policies.google.com/privacy).
 * hCaptcha: [terms](https://www.hcaptcha.com/terms), [privacy policy](https://www.hcaptcha.com/privacy).
 
-Webhooks (**Bugs › Settings › Integrations**, none by default): your server calls only the addresses an administrator saves there, for the events ticked for each one (new report, status changed, report assigned), right after the change, and when you click "Send a test". Opening a new report (New → Seen) sends nothing. After a bulk action, Slack, Discord and Teams get one summary message (for example "12 reports: status → Fixed", with a link to the list), while the generic JSON gets one signed event per report. Each call sends the report number and title, an excerpt of the description (300 characters), the page address, the status, the priority, the display name of the assignee, a link to the report in your dashboard, the event, the site name and address, and the time. It never sends the reporter's e-mail address, IP address, screenshot or technical context. What the receiving service does with it is covered by its own terms, for example [Slack](https://slack.com/terms-of-service) ([privacy](https://slack.com/trust/privacy/privacy-policy)), [Discord](https://discord.com/terms) ([privacy](https://discord.com/privacy)) or [Microsoft Teams](https://www.microsoft.com/servicesagreement) ([privacy](https://privacy.microsoft.com/privacystatement)).
+Webhooks (**Bugs › Settings › Integrations**, none by default): your server calls only the addresses an administrator saves there, for the events ticked for each one (new report, status changed, report assigned), right after the change, and when you click "Send a test". Opening a new report (New → Seen) sends nothing. After a bulk action, once all the changes are saved, Slack, Discord and Teams get one summary message (for example "12 reports: status → Fixed", with a link to the list), while the generic JSON gets one signed event per report. Each call sends the report number and title, an excerpt of the description (300 characters), the page address, the status, the priority, the display name of the assignee, a link to the report in your dashboard, the event, the site name and address, and the time. It never sends the reporter's e-mail address, IP address, screenshot or technical context. What the receiving service does with it is covered by its own terms, for example [Slack](https://slack.com/terms-of-service) ([privacy](https://slack.com/trust/privacy/privacy-policy)), [Discord](https://discord.com/terms) ([privacy](https://discord.com/privacy)) or [Microsoft Teams](https://www.microsoft.com/servicesagreement) ([privacy](https://privacy.microsoft.com/privacystatement)).
 
 = Third-party libraries =
 
@@ -117,7 +118,7 @@ Choose the "Generic JSON (signed)" format. Each request is a POST with a JSON bo
 `$expected = 'sha256=' . hash_hmac( 'sha256', file_get_contents( 'php://input' ), $secret );`
 `$valid    = hash_equals( $expected, $_SERVER['HTTP_X_BUG_SPOTTER_SIGNATURE'] ?? '' );`
 
-Use the `timestamp` field of the body to refuse old requests. Requests are sent once, without waiting for the answer (2-second limit) and without retry. Addresses must use https and point to a public server; addresses on a private network are refused. On a site whose environment type (`WP_ENVIRONMENT_TYPE`) is `local` or `development`, `localhost`, `127.0.0.1`, `*.localhost` and `*.test` are also accepted, over http; the `bugspot_allow_dev_webhooks` filter (true or false) overrides that choice.
+Use the `timestamp` field of the body to refuse old requests. Requests are sent once, without waiting for the answer (2-second limit) and without retry. A bulk action sends its requests only after all its changes are saved, one per changed report for the generic JSON: a slow or unreachable service can slow the page down, but never leaves the action half done. Addresses must use https and point to a public server; addresses on a private network are refused. On a site whose environment type (`WP_ENVIRONMENT_TYPE`) is `local` or `development`, `localhost`, `127.0.0.1`, `*.localhost` and `*.test` are also accepted, over http; the `bugspot_allow_dev_webhooks` filter (true or false) overrides that choice.
 
 = Who can manage the reports? =
 
@@ -141,12 +142,13 @@ The plugin adds suggested text to your privacy policy (Settings › Privacy), an
 * Configurable priorities (new Priorities settings tab): name, color, order (sorting by priority follows it); add up to 10 or delete one, moving its reports to another priority. "Normal" cannot be deleted. Priority pills take the chosen color in the list, the Kanban board and the detail screen.
 * Name of one report (Management tab), used in titles such as "Bug #12" on the detail screen and in the notification e-mail.
 * Dashboard widget for bug managers: open reports per status and the five latest reports.
-* Assignment: assign a report to a bug manager from its screen or with a bulk action; "Assigned to" column, initials on the Kanban cards, filter by person and "My reports". The new assignee gets an e-mail (not when assigning yourself).
+* Assignment: assign a report to a bug manager from its screen or with a bulk action; "Assigned to" column, initials on the Kanban cards, filter by person and "My reports". The new assignee gets an e-mail, in their own language (not when assigning yourself). The CSV export has an "Assigned to" column.
 * Internal notes and history on the report screen: notes visible only to the team (deleted by their author or an administrator), and every change of status, priority or assignment with its author and date. Deleting a user unassigns their reports; the personal data exporter and eraser cover the notes.
-* Webhooks (new Integrations settings tab): up to five addresses, each with a format (generic signed JSON, Slack, Discord or Microsoft Teams), its events (new report, status changed, report assigned), an on/off switch and a "Send a test" button. Bulk actions send one summary message to chat services.
+* Webhooks (new Integrations settings tab): up to five addresses, each with a format (generic signed JSON, Slack, Discord or Microsoft Teams), its events (new report, status changed, report assigned), an on/off switch and a "Send a test" button. Bulk actions send one summary message to chat services, after all their changes are saved.
+* Richer screenshot annotation: freehand pen, text, six colors and three sizes (stroke width or text size); select, move, resize, recolor, change the size of or delete each annotation.
 
 = 1.1.0 =
-* Screenshot annotation: before sending, the visitor can draw rectangles, arrows and freehand strokes on the screenshot, add text, pick one of six colors and one of three sizes (stroke width or text size), or hide an area, then select, move, resize, recolor, resize to a preset or delete each annotation, and undo any change.
+* Screenshot annotation: before sending, the visitor can draw rectangles and arrows on the screenshot, or hide an area, and undo them at any time.
 * Fix: after an update, browsers no longer mix old and new script files (WordPress 7.0+).
 
 = 1.0.0 =
@@ -155,7 +157,7 @@ The plugin adds suggested text to your privacy policy (Settings › Privacy), an
 == Upgrade Notice ==
 
 = 1.2.0 =
-Adds configurable priorities, assignment, internal notes and history, a dashboard widget and webhooks. The database is upgraded automatically.
+Adds configurable priorities, assignment, internal notes and history, a dashboard widget, webhooks and richer screenshot annotation. The database is upgraded automatically.
 
 = 1.1.0 =
 Adds screenshot annotation and makes updates safe for browsers that cached the previous script files.

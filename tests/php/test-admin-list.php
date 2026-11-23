@@ -264,7 +264,8 @@ bugspot_test(
 		$user_id = (int) $admins[0];
 
 		bugspot_admin_insert( '=HYPERLINK("http://evil.test")', array( 'reporter_email' => 'visitor@example.test' ) );
-		bugspot_admin_insert( "multi\nline; \"quoted\" csvmarker", array( 'user_id' => $user_id ) );
+		$multi_id = bugspot_admin_insert( "multi\nline; \"quoted\" csvmarker", array( 'user_id' => $user_id ) );
+		( new Reports_Repository() )->update( $multi_id, array( 'assigned_to' => $user_id ) );
 		$low_id = bugspot_admin_insert( 'other thing' );
 		( new Reports_Repository() )->update( $low_id, array( 'priority' => 'low' ) );
 
@@ -283,7 +284,10 @@ bugspot_test(
 		assert_true( str_contains( $raw, "multi\nline; \"\"quoted\"\" csvmarker" ), 'quoting' );
 
 		$lines = str_getcsv( substr( $raw, 3 ), "\n", '"', '' );
-		assert_true( str_starts_with( $lines[0], 'No.;Date;Status;Priority;Page;Reporter;Description' ) || str_contains( $lines[0], ';' ), 'header' );
+		assert_same( 'No.;Date;Status;Priority;"Assigned to";Page;Reporter;Description', $lines[0], 'header' );
+		$name = get_userdata( $user_id )->display_name;
+		assert_true( str_contains( $raw, ';Normal;' . ( str_contains( $name, ' ' ) ? '"' . $name . '"' : $name ) . ';' ), 'assignee name' );
+		assert_true( str_contains( $raw, ';Normal;;' ), 'empty when nobody is assigned' );
 
 		// Filters are honoured: priority=low only returns the third report.
 		$stream = fopen( 'php://memory', 'w+' );

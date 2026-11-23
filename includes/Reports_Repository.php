@@ -243,6 +243,24 @@ final class Reports_Repository {
 		return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( 'SELECT id FROM %i WHERE user_id = %d ORDER BY id', Installer::table(), $user_id ) ) );
 	}
 
+	/**
+	 * The reports in one of the $statuses whose status last changed before $cutoff (retention purge).
+	 *
+	 * @param string[] $statuses Not empty.
+	 * @param string   $cutoff   UTC "Y-m-d H:i:s".
+	 * @return int[]
+	 */
+	public function ids_closed_before( array $statuses, string $cutoff ): array {
+		global $wpdb;
+		$in = implode( ',', array_fill( 0, count( $statuses ), '%s' ) );
+		return array_map(
+			'intval',
+			$wpdb->get_col(
+				$wpdb->prepare( "SELECT id FROM %i WHERE status IN ({$in}) AND status_changed_at < %s ORDER BY id", array_merge( array( Installer::table() ), $statuses, array( $cutoff ) ) ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- $in is a list of %s placeholders, the values are passed as one array.
+			)
+		);
+	}
+
 	/** Unix timestamp of a stored UTC "Y-m-d H:i:s" datetime; null when absent or invalid. */
 	public static function timestamp( mixed $utc ): ?int {
 		if ( ! is_string( $utc ) || '' === $utc ) {
