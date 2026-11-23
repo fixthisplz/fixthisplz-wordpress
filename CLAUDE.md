@@ -32,6 +32,9 @@ https://github.com/fixthisplz/fixthisplz
 
 ## Méthode
 
+- **Catalogue d'abord** : avant d'écrire du code, lire `CATALOGUE.md` puis faire un grep ; réutiliser ce qui existe.
+  Tout élément réutilisable ajouté (helper, constante, hook, option, route, export JS, token CSS, helper de test)
+  entre au catalogue **dans le même commit**.
 - Une tâche à la fois, exécutée par des sous-agents, avec une **relecture indépendante** avant la suivante,
   puis une relecture d'ensemble à la fin.
 - Chaque tâche : test qui échoue → code → test qui passe ; **tous les tests passent avant un commit**.
