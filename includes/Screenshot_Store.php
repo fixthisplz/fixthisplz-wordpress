@@ -1,8 +1,8 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
-use Bug_Spotter\Image\Stripping_Imagick_Editor;
+use FixThisPlz\Image\Stripping_Imagick_Editor;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -110,21 +110,21 @@ final class Screenshot_Store {
 	}
 
 	private static function bad_type(): \WP_Error {
-		return new \WP_Error( 'bugspot_bad_type', __( 'The screenshot must be a PNG or JPEG image.', 'bug-spotter' ), array( 'status' => 422 ) );
+		return new \WP_Error( 'fixthisplz_bad_type', __( 'The screenshot must be a PNG or JPEG image.', 'fixthisplz' ), array( 'status' => 422 ) );
 	}
 
 	/** 413 for a screenshot over MAX_BYTES (also used when PHP itself dropped an oversized upload). */
 	public static function too_large(): \WP_Error {
 		return new \WP_Error(
-			'bugspot_too_large',
+			'fixthisplz_too_large',
 			/* translators: %s: maximum screenshot size in megabytes, for example "5". */
-			sprintf( __( 'The screenshot is too large (%s MB maximum).', 'bug-spotter' ), number_format_i18n( self::MAX_BYTES / MB_IN_BYTES ) ),
+			sprintf( __( 'The screenshot is too large (%s MB maximum).', 'fixthisplz' ), number_format_i18n( self::MAX_BYTES / MB_IN_BYTES ) ),
 			array( 'status' => 413 )
 		);
 	}
 
 	private static function store_failed(): \WP_Error {
-		return new \WP_Error( 'bugspot_store_failed', __( 'The screenshot could not be stored.', 'bug-spotter' ), array( 'status' => 500 ) );
+		return new \WP_Error( 'fixthisplz_store_failed', __( 'The screenshot could not be stored.', 'fixthisplz' ), array( 'status' => 500 ) );
 	}
 
 	/** "Real capture" or "Page reconstruction", plus "(masked)", from the context's `capture` key; '' when absent. */
@@ -133,11 +133,11 @@ final class Screenshot_Store {
 		if ( ! is_array( $capture ) || ! in_array( $capture['method'] ?? null, self::METHODS, true ) ) {
 			return '';
 		}
-		$label = 'tab' === $capture['method'] ? __( 'Real capture', 'bug-spotter' ) : __( 'Page reconstruction', 'bug-spotter' );
+		$label = 'tab' === $capture['method'] ? __( 'Real capture', 'fixthisplz' ) : __( 'Page reconstruction', 'fixthisplz' );
 		if ( true !== ( $capture['masked'] ?? null ) ) {
 			return $label;
 		}
 		/* translators: %s: capture method, for example "Real capture". */
-		return sprintf( __( '%s (masked)', 'bug-spotter' ), $label );
+		return sprintf( __( '%s (masked)', 'fixthisplz' ), $label );
 	}
 }

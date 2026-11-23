@@ -12,14 +12,14 @@ async function failedRequests(calls) {
 	context.window = context;
 	context.location = { href: 'http://site.test/page/' };
 	context.document = { readyState: 'loading', addEventListener() {} };
-	context.bugSpotterConfig = { collect: { network: true }, restUrl: 'http://site.test/wp-json/bug-spotter/v1/' };
+	context.fixThisPlzConfig = { collect: { network: true }, restUrl: 'http://site.test/wp-json/fixthisplz/v1/' };
 	context.fetch = (input, init) => Promise.reject(Object.assign(new Error('x'), { name: init?.failWith ?? 'TypeError' }));
 	vm.runInContext(SOURCE, context);
 	for (const [url, init] of calls) {
 		await context.fetch(url, init).catch(() => {});
 	}
 	await new Promise((resolve) => setImmediate(resolve));
-	return Array.from(vm.runInContext("globalThis[Symbol.for('bugspot.diagnostics')].network", context), (entry) => entry.url);
+	return Array.from(vm.runInContext("globalThis[Symbol.for('fixthisplz.diagnostics')].network", context), (entry) => entry.url);
 }
 
 test('loader logs a page fetch that fails', async () => {
@@ -27,7 +27,7 @@ test('loader logs a page fetch that fails', async () => {
 });
 
 test('loader does not log a fetch made by the capture itself', async () => {
-	assert.deepEqual(await failedRequests([['http://cdn.test/a.css', { bugspotInternal: true }]]), []);
+	assert.deepEqual(await failedRequests([['http://cdn.test/a.css', { fixThisPlzInternal: true }]]), []);
 });
 
 test('loader does not log aborted or timed-out fetches', async () => {
@@ -43,12 +43,12 @@ function loggedMessages(messages) {
 	const context = vm.createContext({ console: { error() {}, warn() {} }, addEventListener() {} });
 	context.window = context;
 	context.document = { readyState: 'loading', addEventListener() {} };
-	context.bugSpotterConfig = { collect: { console: true } };
+	context.fixThisPlzConfig = { collect: { console: true } };
 	vm.runInContext(SOURCE, context);
 	for (const message of messages) {
 		context.console.error(message);
 	}
-	return Array.from(vm.runInContext("globalThis[Symbol.for('bugspot.diagnostics')].console", context), (entry) => entry.message);
+	return Array.from(vm.runInContext("globalThis[Symbol.for('fixthisplz.diagnostics')].console", context), (entry) => entry.message);
 }
 
 test('loader redacts console messages exactly like lib/redact.js', () => {

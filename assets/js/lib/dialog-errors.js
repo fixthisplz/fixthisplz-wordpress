@@ -21,12 +21,12 @@ export function serverMessage(status, body, t) {
 	const serverText = body && typeof body.message === 'string' ? body.message : '';
 	switch (status) {
 		case 403:
-			if (code === 'bugspot_not_allowed') {
+			if (code === 'fixthisplz_not_allowed') {
 				return t('errorNotAllowed');
 			}
-			return code === 'bugspot_captcha_failed' ? t('errorCaptcha') : t('errorGeneric');
+			return code === 'fixthisplz_captcha_failed' ? t('errorCaptcha') : t('errorGeneric');
 		case 404:
-			return code === 'bugspot_disabled' ? t('errorDisabled') : t('errorGeneric');
+			return code === 'fixthisplz_disabled' ? t('errorDisabled') : t('errorGeneric');
 		case 413:
 			return t('errorTooLarge');
 		case 422:

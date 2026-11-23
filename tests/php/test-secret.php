@@ -1,6 +1,6 @@
 <?php
 
-use Bug_Spotter\Secret;
+use FixThisPlz\Secret;
 
 /** Drops cached copies of the key option: the runner's ROLLBACK does not roll back WP's object cache. */
 function flush_secret_option_cache(): void {
@@ -9,7 +9,7 @@ function flush_secret_option_cache(): void {
 	wp_cache_delete( 'notoptions', 'options' );
 }
 
-/** Runs $fn with the real bugspot_secret option saved and restored (rotating it would orphan stored data). */
+/** Runs $fn with the real fixthisplz_secret option saved and restored (rotating it would orphan stored data). */
 function with_secret_option( callable $fn ): void {
 	flush_secret_option_cache();
 	$missing  = new stdClass();
@@ -26,7 +26,7 @@ function with_secret_option( callable $fn ): void {
 	}
 }
 
-bugspot_test(
+fixthisplz_test(
 	'secret: encrypt_roundtrip',
 	function () {
 		$cipher = Secret::encrypt( 'jane@example.com' );
@@ -36,7 +36,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'secret: decrypt_garbage_returns_null',
 	function () {
 		assert_same( null, Secret::decrypt( '' ) );
@@ -48,7 +48,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'secret: hmac_is_stable_and_64_hex',
 	function () {
 		$a = Secret::hmac( 'jane@example.com' );
@@ -58,7 +58,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'secret: key_is_32_bytes_and_persisted_without_autoload',
 	function () {
 		with_secret_option(
@@ -77,7 +77,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'secret: constant_value_is_hashed_into_the_key',
 	function () {
 		assert_same( hash( 'sha256', 'wp-config-secret', true ), Secret::from_constant( 'wp-config-secret' ) );
@@ -87,11 +87,11 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'secret: key_uses_the_constant_when_defined_else_the_option',
 	function () {
 		$key           = Secret::key();
-		$from_constant = defined( 'BUGSPOT_SECRET' ) ? Secret::from_constant( BUGSPOT_SECRET ) : null;
+		$from_constant = defined( 'FIXTHISPLZ_SECRET' ) ? Secret::from_constant( FIXTHISPLZ_SECRET ) : null;
 		assert_same( $from_constant ?? base64_decode( (string) get_option( Secret::OPTION ), true ), $key );
 	}
 );

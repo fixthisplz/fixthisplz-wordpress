@@ -1,22 +1,22 @@
 <?php
 
-use Bug_Spotter\Installer;
-use Bug_Spotter\Rest\Reports_Controller;
-use Bug_Spotter\Reports_Repository;
+use FixThisPlz\Installer;
+use FixThisPlz\Rest\Reports_Controller;
+use FixThisPlz\Reports_Repository;
 
 /** Settings with the plugin enabled and the anti-bot off, merged with $over (top-level blocks replaced key by key). */
 function rest_enable( array $over = array() ): void {
-	$s            = Bug_Spotter\Settings::get();
+	$s            = FixThisPlz\Settings::get();
 	$s['enabled'] = true;
 	foreach ( $over as $block => $values ) {
 		$s[ $block ] = is_array( $values ) ? array_merge( (array) ( $s[ $block ] ?? array() ), $values ) : $values;
 	}
-	update_option( 'bugspot_settings', $s );
+	update_option( 'fixthisplz_settings', $s );
 }
 
 function rest_post( array $params = array(), array $files = array(), array $headers = array() ): WP_REST_Response {
 	rest_get_server(); // Registers the routes (rest_api_init).
-	$req = new WP_REST_Request( 'POST', '/bug-spotter/v1/reports' );
+	$req = new WP_REST_Request( 'POST', '/fixthisplz/v1/reports' );
 	$req->set_body_params(
 		array_merge(
 			array(
@@ -38,7 +38,7 @@ function rest_post( array $params = array(), array $files = array(), array $head
 }
 
 function rest_upload( string $bytes, int $error = UPLOAD_ERR_OK ): array {
-	$tmp = wp_tempnam( 'bugspot-rest' );
+	$tmp = wp_tempnam( 'fixthisplz-rest' );
 	file_put_contents( $tmp, $bytes );
 	return array(
 		'screenshot' => array(
@@ -61,7 +61,7 @@ function rest_png(): string {
 function rest_user( string $role ): int {
 	return wp_insert_user(
 		array(
-			'user_login' => 'bugspot_' . wp_generate_password( 8, false ),
+			'user_login' => 'fixthisplz_' . wp_generate_password( 8, false ),
 			'user_pass'  => wp_generate_password(),
 			'user_email' => wp_generate_password( 8, false ) . '@example.org',
 			'role'       => $role,
@@ -71,11 +71,11 @@ function rest_user( string $role ): int {
 
 /** Clears the limiter counters of the CLI client IP (also from the in-memory object cache). */
 function rest_reset_limiter(): void {
-	$short = substr( Bug_Spotter\Secret::hmac( Bug_Spotter\Rate_Limiter::bucket( Bug_Spotter\Client_Ip::get( '' ) ) ), 0, 16 );
-	delete_transient( 'bugspot_rl_h_' . $short );
-	delete_transient( 'bugspot_rl_d_' . $short );
+	$short = substr( FixThisPlz\Secret::hmac( FixThisPlz\Rate_Limiter::bucket( FixThisPlz\Client_Ip::get( '' ) ) ), 0, 16 );
+	delete_transient( 'fixthisplz_rl_h_' . $short );
+	delete_transient( 'fixthisplz_rl_d_' . $short );
 	// Rows created inside a rolled-back test transaction can linger in the in-memory options cache.
-	foreach ( array( 'bugspot_rl_h_', 'bugspot_rl_d_' ) as $prefix ) {
+	foreach ( array( 'fixthisplz_rl_h_', 'fixthisplz_rl_d_' ) as $prefix ) {
 		wp_cache_delete( '_transient_' . $prefix . $short, 'options' );
 		wp_cache_delete( '_transient_timeout_' . $prefix . $short, 'options' );
 	}
@@ -111,7 +111,7 @@ function rest_env( callable $fn ): void {
 	);
 }
 
-bugspot_test(
+fixthisplz_test(
 	'rest: create_saves_report_and_returns_number',
 	function () {
 		rest_env(
@@ -134,7 +134,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: create_when_disabled_is_404',
 	function () {
 		rest_env(
@@ -142,13 +142,13 @@ bugspot_test(
 				rest_enable( array( 'enabled' => false ) );
 				$res = rest_post();
 				assert_same( 404, $res->get_status() );
-				assert_same( 'bugspot_disabled', $res->as_error()->get_error_code() );
+				assert_same( 'fixthisplz_disabled', $res->as_error()->get_error_code() );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: honeypot_returns_201_without_writing',
 	function () {
 		rest_env(
@@ -166,13 +166,13 @@ bugspot_test(
 				);
 				assert_same( $before, (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . Installer::table() ) );
 				assert_same( 0, count( $sent ), 'no mail for a honeypot hit' );
-				assert_true( false === get_transient( 'bugspot_rl_h_' . substr( Bug_Spotter\Secret::hmac( Bug_Spotter\Rate_Limiter::bucket( Bug_Spotter\Client_Ip::get( '' ) ) ), 0, 16 ) ), 'honeypot must not be counted' );
+				assert_true( false === get_transient( 'fixthisplz_rl_h_' . substr( FixThisPlz\Secret::hmac( FixThisPlz\Rate_Limiter::bucket( FixThisPlz\Client_Ip::get( '' ) ) ), 0, 16 ) ), 'honeypot must not be counted' );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: create_rate_limited_is_429',
 	function () {
 		rest_env(
@@ -181,13 +181,13 @@ bugspot_test(
 				assert_same( 201, rest_post()->get_status() );
 				$res = rest_post();
 				assert_same( 429, $res->get_status() );
-				assert_same( 'bugspot_rate_limited', $res->as_error()->get_error_code() );
+				assert_same( 'fixthisplz_rate_limited', $res->as_error()->get_error_code() );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: create_with_failed_captcha_is_403',
 	function () {
 		rest_env(
@@ -198,13 +198,13 @@ bugspot_test(
 				$res = rest_post( array( 'captcha_token' => 'bad' ) );
 				remove_all_filters( 'pre_http_request' );
 				assert_same( 403, $res->get_status() );
-				assert_same( 'bugspot_captcha_failed', $res->as_error()->get_error_code() );
+				assert_same( 'fixthisplz_captcha_failed', $res->as_error()->get_error_code() );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: create_rejects_empty_description_422',
 	function () {
 		rest_env(
@@ -217,7 +217,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: create_rejects_bad_email_and_context_422',
 	function () {
 		rest_env(
@@ -227,13 +227,13 @@ bugspot_test(
 				assert_same( 422, rest_post( array( 'context' => '{"url":"ftp://x"}' ) )->get_status() );
 				$res = rest_post( array( 'context' => '{"url":"http://a.example/","pad":"' . str_repeat( 'a', 70000 ) . '"}' ) );
 				assert_same( 422, $res->get_status() );
-				assert_same( 'bugspot_invalid', $res->as_error()->get_error_code() );
+				assert_same( 'fixthisplz_invalid', $res->as_error()->get_error_code() );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: create_ignores_reporter_email_for_logged_in_user',
 	function () {
 		rest_env(
@@ -250,7 +250,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: create_stores_screenshot_and_rejects_bad_uploads',
 	function () {
 		rest_env(
@@ -258,12 +258,12 @@ bugspot_test(
 				$res = rest_post( array(), rest_upload( rest_png() ) );
 				assert_same( 201, $res->get_status() );
 				$row = ( new Reports_Repository() )->find( $res->get_data()['id'] );
-				assert_true( is_file( Bug_Spotter\Screenshot_Store::path( (string) $row['screenshot'] ) ) );
-				Bug_Spotter\Screenshot_Store::delete( (string) $row['screenshot'] );
+				assert_true( is_file( FixThisPlz\Screenshot_Store::path( (string) $row['screenshot'] ) ) );
+				FixThisPlz\Screenshot_Store::delete( (string) $row['screenshot'] );
 
 				$bad = rest_post( array(), rest_upload( 'definitely not an image' ) );
 				assert_same( 422, $bad->get_status() );
-				assert_same( 'bugspot_bad_type', $bad->as_error()->get_error_code() );
+				assert_same( 'fixthisplz_bad_type', $bad->as_error()->get_error_code() );
 
 				// Screenshots disabled: the file is ignored, the report is still saved.
 				rest_enable( array( 'dialog' => array( 'allow_screenshot' => false ) ) );
@@ -275,7 +275,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: create_keeps_the_capture_method_only_when_a_screenshot_is_stored',
 	function () {
 		rest_env(
@@ -284,7 +284,7 @@ bugspot_test(
 				$with    = rest_post( array( 'context' => $context ), rest_upload( rest_png() ) );
 				$row     = ( new Reports_Repository() )->find( $with->get_data()['id'] );
 				assert_same( 'tab', $row['context']['capture']['method'] );
-				Bug_Spotter\Screenshot_Store::delete( (string) $row['screenshot'] );
+				FixThisPlz\Screenshot_Store::delete( (string) $row['screenshot'] );
 
 				$without = rest_post( array( 'context' => $context ) );
 				assert_same( 201, $without->get_status() );
@@ -295,7 +295,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: create_rejects_oversized_screenshot_with_413',
 	function () {
 		rest_env(
@@ -303,14 +303,14 @@ bugspot_test(
 				$res = rest_post( array(), rest_upload( '', UPLOAD_ERR_INI_SIZE ) );
 				assert_same( 413, $res->get_status() );
 				assert_same( 413, rest_post( array(), rest_upload( '', UPLOAD_ERR_FORM_SIZE ) )->get_status() );
-				$big = rest_post( array(), rest_upload( str_repeat( 'a', Bug_Spotter\Screenshot_Store::MAX_BYTES + 1 ) ) );
+				$big = rest_post( array(), rest_upload( str_repeat( 'a', FixThisPlz\Screenshot_Store::MAX_BYTES + 1 ) ) );
 				assert_same( 413, $big->get_status() );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: create_with_stale_nonce_saves_without_user',
 	function () {
 		rest_env(
@@ -319,7 +319,7 @@ bugspot_test(
 				wp_set_current_user( $uid );
 				$GLOBALS['wp_rest_auth_cookie']                = true; // As set by core's auth_cookie_valid hook on a real cookie-authenticated request.
 				$_SERVER['HTTP_X_WP_NONCE']                    = 'deadbeef';
-				$GLOBALS['wp']->query_vars['rest_route']       = '/bug-spotter/v1/reports';
+				$GLOBALS['wp']->query_vars['rest_route']       = '/fixthisplz/v1/reports';
 				$_SERVER['REQUEST_METHOD']                     = 'POST';
 
 				// Observed: core itself rejects a stale nonce with 403 before any route runs.
@@ -340,7 +340,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: stale_nonce_still_rejected_on_other_routes',
 	function () {
 		rest_env(
@@ -350,11 +350,11 @@ bugspot_test(
 				$GLOBALS['wp_rest_auth_cookie']          = true;
 				$_SERVER['HTTP_X_WP_NONCE']              = 'deadbeef';
 				$_SERVER['REQUEST_METHOD']               = 'PATCH';
-				$GLOBALS['wp']->query_vars['rest_route'] = '/bug-spotter/v1/reports/1';
+				$GLOBALS['wp']->query_vars['rest_route'] = '/fixthisplz/v1/reports/1';
 				assert_wp_error( apply_filters( 'rest_authentication_errors', null ), 'rest_cookie_invalid_nonce' );
 				// Same route as the public one but another method: still strict.
 				$_SERVER['REQUEST_METHOD']               = 'GET';
-				$GLOBALS['wp']->query_vars['rest_route'] = '/bug-spotter/v1/reports';
+				$GLOBALS['wp']->query_vars['rest_route'] = '/fixthisplz/v1/reports';
 				wp_set_current_user( $uid );
 				assert_wp_error( apply_filters( 'rest_authentication_errors', null ), 'rest_cookie_invalid_nonce' );
 				$_SERVER['REQUEST_METHOD'] = 'POST';
@@ -364,7 +364,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: create_with_valid_nonce_saves_user',
 	function () {
 		rest_env(
@@ -383,7 +383,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: create_sends_mail_to_admin_email_by_default',
 	function () {
 		rest_env(
@@ -394,13 +394,13 @@ bugspot_test(
 				assert_same( array( get_option( 'admin_email' ) ), (array) $sent[0]['to'] );
 				$id = $res->get_data()['id'];
 				assert_true( false !== strpos( $sent[0]['subject'], '#' . $id ), 'subject has the number' );
-				assert_true( false !== strpos( $sent[0]['message'], admin_url( 'admin.php?page=bug-spotter&report=' . $id ) ) || false !== strpos( $sent[0]['message'], esc_url( admin_url( 'admin.php?page=bug-spotter&#038;report=' . $id ) ) ), 'link in body' );
+				assert_true( false !== strpos( $sent[0]['message'], admin_url( 'admin.php?page=fixthisplz&report=' . $id ) ) || false !== strpos( $sent[0]['message'], esc_url( admin_url( 'admin.php?page=fixthisplz&#038;report=' . $id ) ) ), 'link in body' );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: mailer_uses_recipients_escapes_html_and_skips_when_disabled',
 	function () {
 		rest_env(
@@ -415,13 +415,13 @@ bugspot_test(
 				rest_enable( array( 'notifications' => array( 'enabled' => false ) ) );
 				rest_post();
 				assert_same( 0, count( $sent ) );
-				assert_same( false, Bug_Spotter\Mailer::notify( $res->get_data()['id'] ) );
+				assert_same( false, FixThisPlz\Mailer::notify( $res->get_data()['id'] ) );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: patch_requires_capability',
 	function () {
 		rest_env(
@@ -430,7 +430,7 @@ bugspot_test(
 				$id = ( new Reports_Repository() )->insert( array( 'description' => 'd', 'page_url' => 'http://x/', 'context' => array() ) );
 				rest_get_server();
 				wp_set_current_user( rest_user( 'subscriber' ) );
-				$req = new WP_REST_Request( 'PATCH', '/bug-spotter/v1/reports/' . $id );
+				$req = new WP_REST_Request( 'PATCH', '/fixthisplz/v1/reports/' . $id );
 				$req->set_body_params( array( 'status' => 'fixed' ) );
 				assert_same( 403, rest_do_request( $req )->get_status() );
 				wp_set_current_user( 0 );
@@ -440,7 +440,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: patch_changes_status',
 	function () {
 		rest_env(
@@ -450,7 +450,7 @@ bugspot_test(
 				$admin = rest_user( 'administrator' );
 				wp_set_current_user( $admin );
 				$patch = function ( int $id, array $body ): WP_REST_Response {
-					$req = new WP_REST_Request( 'PATCH', '/bug-spotter/v1/reports/' . $id );
+					$req = new WP_REST_Request( 'PATCH', '/fixthisplz/v1/reports/' . $id );
 					$req->set_body_params( $body );
 					return rest_do_request( $req );
 				};
@@ -486,20 +486,20 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: screenshot_requires_capability',
 	function () {
 		rest_env(
 			function () {
-				$tmp  = wp_tempnam( 'bugspot-rest' );
+				$tmp  = wp_tempnam( 'fixthisplz-rest' );
 				file_put_contents( $tmp, rest_png() );
-				$name = Bug_Spotter\Screenshot_Store::store( $tmp );
+				$name = FixThisPlz\Screenshot_Store::store( $tmp );
 				unlink( $tmp );
 				assert_true( is_string( $name ) );
 				$id = ( new Reports_Repository() )->insert( array( 'description' => 'd', 'page_url' => 'http://x/', 'context' => array(), 'screenshot' => $name ) );
 				try {
 					$server = rest_get_server();
-					$get    = fn() => rest_do_request( new WP_REST_Request( 'GET', '/bug-spotter/v1/reports/' . $id . '/screenshot' ) );
+					$get    = fn() => rest_do_request( new WP_REST_Request( 'GET', '/fixthisplz/v1/reports/' . $id . '/screenshot' ) );
 
 					wp_set_current_user( rest_user( 'subscriber' ) );
 					assert_same( 403, $get()->get_status() );
@@ -520,17 +520,17 @@ bugspot_test(
 					assert_same( 'image/jpeg', getimagesizefromstring( $body )['mime'] );
 
 					$none = ( new Reports_Repository() )->insert( array( 'description' => 'd', 'page_url' => 'http://x/', 'context' => array() ) );
-					$res  = rest_do_request( new WP_REST_Request( 'GET', '/bug-spotter/v1/reports/' . $none . '/screenshot' ) );
+					$res  = rest_do_request( new WP_REST_Request( 'GET', '/fixthisplz/v1/reports/' . $none . '/screenshot' ) );
 					assert_same( 404, $res->get_status() );
 				} finally {
-					Bug_Spotter\Screenshot_Store::delete( $name );
+					FixThisPlz\Screenshot_Store::delete( $name );
 				}
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: oversized_body_dropped_by_php_gives_413_and_is_not_counted',
 	function () {
 		rest_env(
@@ -539,12 +539,12 @@ bugspot_test(
 				try {
 					$_SERVER['CONTENT_LENGTH'] = (string) ( wp_convert_hr_to_bytes( (string) ini_get( 'post_max_size' ) ) + 1 );
 					rest_get_server();
-					$req = new WP_REST_Request( 'POST', '/bug-spotter/v1/reports' );
+					$req = new WP_REST_Request( 'POST', '/fixthisplz/v1/reports' );
 					$res = rest_do_request( $req );
 					assert_same( 413, $res->get_status() );
-					assert_same( 'bugspot_too_large', $res->as_error()->get_error_code() );
-					$short = substr( Bug_Spotter\Secret::hmac( Bug_Spotter\Rate_Limiter::bucket( Bug_Spotter\Client_Ip::get( '' ) ) ), 0, 16 );
-					assert_true( false === get_transient( 'bugspot_rl_h_' . $short ), 'not counted by the limiter' );
+					assert_same( 'fixthisplz_too_large', $res->as_error()->get_error_code() );
+					$short = substr( FixThisPlz\Secret::hmac( FixThisPlz\Rate_Limiter::bucket( FixThisPlz\Client_Ip::get( '' ) ) ), 0, 16 );
+					assert_true( false === get_transient( 'fixthisplz_rl_h_' . $short ), 'not counted by the limiter' );
 					// A normal body with a big CONTENT_LENGTH is not mistaken for a dropped one.
 					assert_same( 201, rest_post()->get_status() );
 				} finally {
@@ -559,7 +559,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: honeypot_array_value_is_a_hit',
 	function () {
 		rest_env(
@@ -576,21 +576,21 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: array_context_is_bounded_like_string_context',
 	function () {
 		rest_env(
 			function () {
 				$big = rest_post( array( 'context' => array( 'url' => 'http://a.example/', 'pad' => str_repeat( 'a', 70000 ) ) ) );
 				assert_same( 422, $big->get_status() );
-				assert_same( 'bugspot_invalid', $big->as_error()->get_error_code() );
+				assert_same( 'fixthisplz_invalid', $big->as_error()->get_error_code() );
 				assert_same( 201, rest_post( array( 'context' => array( 'url' => 'http://a.example/' ) ) )->get_status() );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: throwing_mail_hook_does_not_turn_saved_report_into_500',
 	function () {
 		rest_env(
@@ -609,13 +609,13 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: create_enforces_visibility_roles_and_guests',
 	function () {
 		rest_env(
 			function () {
 				global $wpdb;
-				$table = $wpdb->prefix . 'bugspot_reports';
+				$table = $wpdb->prefix . 'fixthisplz_reports';
 				$count = fn() => (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" ); // phpcs:ignore WordPress.DB
 
 				rest_enable( array( 'visibility' => array( 'guests' => false, 'roles' => array( 'administrator' ) ) ) );
@@ -623,13 +623,13 @@ bugspot_test(
 				$before = $count();
 				$res    = rest_post();
 				assert_same( 403, $res->get_status() );
-				assert_same( 'bugspot_not_allowed', $res->as_error()->get_error_code() );
+				assert_same( 'fixthisplz_not_allowed', $res->as_error()->get_error_code() );
 				assert_same( $before, $count(), 'nothing written for a refused guest' );
 
 				wp_set_current_user( rest_user( 'subscriber' ) );
 				$res = rest_post();
 				assert_same( 403, $res->get_status() );
-				assert_same( 'bugspot_not_allowed', $res->as_error()->get_error_code() );
+				assert_same( 'fixthisplz_not_allowed', $res->as_error()->get_error_code() );
 				assert_same( $before, $count(), 'nothing written for a role not checked' );
 
 				wp_set_current_user( rest_user( 'administrator' ) );
@@ -643,7 +643,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: create_keeps_description_as_typed',
 	function () {
 		rest_env(
@@ -664,7 +664,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rest: mailer_states_the_capture_method_only_with_a_screenshot',
 	function () {
 		rest_env(
@@ -673,8 +673,8 @@ bugspot_test(
 				$context = array( 'capture' => array( 'method' => 'tab', 'masked' => true ) );
 				$with    = $repo->insert( array( 'description' => 'd', 'page_url' => 'http://x/', 'context' => $context, 'screenshot' => str_repeat( 'b', 32 ) . '.jpg' ) );
 				$without = $repo->insert( array( 'description' => 'd', 'page_url' => 'http://x/', 'context' => $context ) );
-				Bug_Spotter\Mailer::notify( $with );
-				Bug_Spotter\Mailer::notify( $without );
+				FixThisPlz\Mailer::notify( $with );
+				FixThisPlz\Mailer::notify( $without );
 				assert_true( false !== strpos( $sent[0]['message'], '<strong>Screenshot:</strong> Real capture (masked)' ), 'HTML line' );
 				assert_true( false === strpos( $sent[1]['message'], 'Real capture' ), 'no line without screenshot' );
 				$repo->delete( $with );

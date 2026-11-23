@@ -1,8 +1,8 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
-use Bug_Spotter\Captcha\Factory;
+use FixThisPlz\Captcha\Factory;
 
 defined( 'ABSPATH' ) || exit;
 

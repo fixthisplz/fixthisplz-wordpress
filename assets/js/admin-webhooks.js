@@ -1,9 +1,9 @@
-/* Bug Spotter settings, Alerts › Webhooks: the "Send a test" button of each saved webhook. No build step.
- * Every user-visible string comes from bugspotSettings.i18n or from the server answer. */
+/* FixThisPlz settings, Alerts › Webhooks: the "Send a test" button of each saved webhook. No build step.
+ * Every user-visible string comes from fixThisPlzSettings.i18n or from the server answer. */
 ( function ( $, apiFetch ) {
 	'use strict';
 
-	var config = window.bugspotSettings || {};
+	var config = window.fixThisPlzSettings || {};
 	var i18n = config.i18n || {};
 
 	function showResult( $result, type, message ) {
@@ -11,9 +11,9 @@
 		$result.empty().append( $notice.append( $( '<p></p>' ).text( message ) ) );
 	}
 
-	$( '.bugspot-webhook-test' ).prop( 'hidden', false ).on( 'click', function () {
+	$( '.fixthisplz-webhook-test' ).prop( 'hidden', false ).on( 'click', function () {
 		var $button = $( this ).prop( 'disabled', true );
-		var $result = $button.closest( 'td' ).find( '.bugspot-webhook-result' );
+		var $result = $button.closest( 'td' ).find( '.fixthisplz-webhook-result' );
 		showResult( $result, 'info', i18n.hookSending || '' );
 		apiFetch( { path: config.webhookPath, method: 'POST', data: { index: Number( $button.attr( 'data-index' ) ) } } )
 			.then( function ( response ) {

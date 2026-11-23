@@ -1,6 +1,6 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -10,11 +10,11 @@ defined( 'ABSPATH' ) || exit;
  */
 final class Secret {
 
-	public const OPTION = 'bugspot_secret';
+	public const OPTION = 'fixthisplz_secret';
 
-	/** Raw 32-byte key: BUGSPOT_SECRET (hashed) if defined, otherwise a generated option. */
+	/** Raw 32-byte key: FIXTHISPLZ_SECRET (hashed) if defined, otherwise a generated option. */
 	public static function key(): string {
-		$from_constant = self::from_constant( defined( 'BUGSPOT_SECRET' ) ? BUGSPOT_SECRET : null );
+		$from_constant = self::from_constant( defined( 'FIXTHISPLZ_SECRET' ) ? FIXTHISPLZ_SECRET : null );
 		if ( null !== $from_constant ) {
 			return $from_constant;
 		}
@@ -30,7 +30,7 @@ final class Secret {
 		return $raw;
 	}
 
-	/** 32-byte key derived from the BUGSPOT_SECRET value; null when it is not a non-empty string. */
+	/** 32-byte key derived from the FIXTHISPLZ_SECRET value; null when it is not a non-empty string. */
 	public static function from_constant( mixed $value ): ?string {
 		return is_string( $value ) && '' !== $value ? hash( 'sha256', $value, true ) : null;
 	}

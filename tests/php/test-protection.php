@@ -1,8 +1,8 @@
 <?php
 
-use Bug_Spotter\Captcha\Factory;
-use Bug_Spotter\Client_Ip;
-use Bug_Spotter\Rate_Limiter;
+use FixThisPlz\Captcha\Factory;
+use FixThisPlz\Client_Ip;
+use FixThisPlz\Rate_Limiter;
 
 /**
  * Runs $fn with every outgoing HTTP request answered by $responder (no real network).
@@ -53,12 +53,12 @@ function with_rate_hash( callable $fn ): void {
 	try {
 		$fn( $hash );
 	} finally {
-		delete_transient( 'bugspot_rl_h_' . $short );
-		delete_transient( 'bugspot_rl_d_' . $short );
+		delete_transient( 'fixthisplz_rl_h_' . $short );
+		delete_transient( 'fixthisplz_rl_d_' . $short );
 	}
 }
 
-bugspot_test(
+fixthisplz_test(
 	'turnstile_success',
 	function () {
 		with_fake_http(
@@ -72,7 +72,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'turnstile_sends_secret_token_and_ip_to_official_endpoint',
 	function () {
 		with_fake_http(
@@ -107,41 +107,41 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'turnstile_failure_is_403',
 	function () {
 		with_fake_http(
 			fn() => fake_json( array( 'success' => false ) ),
 			function () {
 				$result = Factory::from_settings( captcha_settings( 'turnstile' ) )->verify( 'tok', '203.0.113.9' );
-				assert_wp_error( $result, 'bugspot_captcha_failed' );
+				assert_wp_error( $result, 'fixthisplz_captcha_failed' );
 				assert_same( 403, $result->get_error_data()['status'] );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'provider_unreachable_is_503',
 	function () {
 		with_fake_http(
 			fn() => new WP_Error( 'http_request_failed', 'timeout' ),
 			function () {
 				$result = Factory::from_settings( captcha_settings( 'hcaptcha' ) )->verify( 'tok', '203.0.113.9' );
-				assert_wp_error( $result, 'bugspot_captcha_unavailable' );
+				assert_wp_error( $result, 'fixthisplz_captcha_unavailable' );
 				assert_same( 503, $result->get_error_data()['status'] );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'provider_non_200_or_unreadable_json_is_503',
 	function () {
 		with_fake_http(
 			fn() => fake_json( array( 'success' => true ), 500 ),
 			function () {
-				assert_wp_error( Factory::from_settings( captcha_settings( 'recaptcha_v2' ) )->verify( 'tok', '203.0.113.9' ), 'bugspot_captcha_unavailable' );
+				assert_wp_error( Factory::from_settings( captcha_settings( 'recaptcha_v2' ) )->verify( 'tok', '203.0.113.9' ), 'fixthisplz_captcha_unavailable' );
 			}
 		);
 		with_fake_http(
@@ -155,13 +155,13 @@ bugspot_test(
 				'cookies'  => array(),
 			),
 			function () {
-				assert_wp_error( Factory::from_settings( captcha_settings( 'recaptcha_v2' ) )->verify( 'tok', '203.0.113.9' ), 'bugspot_captcha_unavailable' );
+				assert_wp_error( Factory::from_settings( captcha_settings( 'recaptcha_v2' ) )->verify( 'tok', '203.0.113.9' ), 'fixthisplz_captcha_unavailable' );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'empty_secret_on_real_provider_is_503_without_request',
 	function () {
 		with_fake_http(
@@ -170,13 +170,13 @@ bugspot_test(
 			},
 			function () {
 				$result = Factory::from_settings( captcha_settings( 'turnstile', array( 'secret_key' => '' ) ) )->verify( 'tok', '203.0.113.9' );
-				assert_wp_error( $result, 'bugspot_captcha_unavailable' );
+				assert_wp_error( $result, 'fixthisplz_captcha_unavailable' );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'empty_token_is_403',
 	function () {
 		with_fake_http(
@@ -185,14 +185,14 @@ bugspot_test(
 			},
 			function () {
 				foreach ( array( 'turnstile', 'recaptcha_v2', 'recaptcha_v3', 'hcaptcha' ) as $id ) {
-					assert_wp_error( Factory::from_settings( captcha_settings( $id ) )->verify( '  ', '203.0.113.9' ), 'bugspot_captcha_failed' );
+					assert_wp_error( Factory::from_settings( captcha_settings( $id ) )->verify( '  ', '203.0.113.9' ), 'fixthisplz_captcha_failed' );
 				}
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'recaptcha_v3_accepts_good_score_and_action',
 	function () {
 		with_fake_http(
@@ -210,7 +210,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'recaptcha_v3_low_score_is_403',
 	function () {
 		with_fake_http(
@@ -222,13 +222,13 @@ bugspot_test(
 				)
 			),
 			function () {
-				assert_wp_error( Factory::from_settings( captcha_settings( 'recaptcha_v3' ) )->verify( 'tok', '203.0.113.9' ), 'bugspot_captcha_failed' );
+				assert_wp_error( Factory::from_settings( captcha_settings( 'recaptcha_v3' ) )->verify( 'tok', '203.0.113.9' ), 'fixthisplz_captcha_failed' );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'recaptcha_v3_wrong_action_is_403',
 	function () {
 		with_fake_http(
@@ -240,13 +240,13 @@ bugspot_test(
 				)
 			),
 			function () {
-				assert_wp_error( Factory::from_settings( captcha_settings( 'recaptcha_v3' ) )->verify( 'tok', '203.0.113.9' ), 'bugspot_captcha_failed' );
+				assert_wp_error( Factory::from_settings( captcha_settings( 'recaptcha_v3' ) )->verify( 'tok', '203.0.113.9' ), 'fixthisplz_captcha_failed' );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'none_provider_always_passes_and_unknown_provider_is_none',
 	function () {
 		assert_same( true, Factory::from_settings( captcha_settings( 'none' ) )->verify( '', '' ) );
@@ -256,7 +256,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'script_urls_match_providers',
 	function () {
 		assert_same( 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit', Factory::from_settings( captcha_settings( 'turnstile' ) )->script_url() );
@@ -266,7 +266,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rate_limiter_blocks_sixth_attempt_in_hour',
 	function () {
 		with_rate_hash(
@@ -281,7 +281,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rate_limiter_daily_limit',
 	function () {
 		with_rate_hash(
@@ -296,7 +296,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rate_limiter_blocked_attempt_is_not_counted_and_isolates_hashes',
 	function () {
 		with_rate_hash(
@@ -306,7 +306,7 @@ bugspot_test(
 				assert_same( true, $limiter->attempt( $hash ) );
 				assert_same( false, $limiter->attempt( $hash ) );
 				assert_same( false, $limiter->attempt( $hash ) );
-				$hour = get_transient( 'bugspot_rl_h_' . substr( $hash, 0, 16 ) );
+				$hour = get_transient( 'fixthisplz_rl_h_' . substr( $hash, 0, 16 ) );
 				assert_same( 1, $hour['count'] );
 				assert_same( true, ( new Rate_Limiter( 100, 1 ) )->attempt( bin2hex( random_bytes( 16 ) ) ) );
 			}
@@ -314,14 +314,14 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rate_limiter_window_is_not_extended_by_later_hits',
 	function () {
 		with_rate_hash(
 			function ( string $hash ) {
 				$limiter = new Rate_Limiter( 5, 20 );
 				$limiter->attempt( $hash );
-				$key   = 'bugspot_rl_h_' . substr( $hash, 0, 16 );
+				$key   = 'fixthisplz_rl_h_' . substr( $hash, 0, 16 );
 				$first = get_transient( $key )['reset_at'];
 				$limiter->attempt( $hash );
 				assert_same( $first, get_transient( $key )['reset_at'] );
@@ -330,7 +330,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'rate_limiter_bucket_groups_ipv6_by_64',
 	function () {
 		$bucket = Rate_Limiter::bucket( '2001:db8:1:2:aaaa::1' );
@@ -343,7 +343,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'client_ip_xff_uses_rightmost_valid_entry',
 	function () {
 		$saved = array(
@@ -373,7 +373,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'client_ip_uses_proxy_header_only_when_configured',
 	function () {
 		$saved = array(

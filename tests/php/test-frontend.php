@@ -1,9 +1,9 @@
 <?php
 
-use Bug_Spotter\Frontend\Assets;
-use Bug_Spotter\Frontend\Button_Style;
-use Bug_Spotter\Frontend\Visibility;
-use Bug_Spotter\Settings;
+use FixThisPlz\Frontend\Assets;
+use FixThisPlz\Frontend\Button_Style;
+use FixThisPlz\Frontend\Visibility;
+use FixThisPlz\Settings;
 
 function fe_settings( array $visibility = array(), bool $enabled = true ): array {
 	$s                = Settings::defaults();
@@ -19,7 +19,7 @@ function fe_user( array $roles ): WP_User {
 	return $u;
 }
 
-bugspot_test(
+fixthisplz_test(
 	'visibility_hidden_when_disabled',
 	function () {
 		$s = fe_settings( array( 'guests' => true ), false );
@@ -27,7 +27,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'visibility_guest_only_when_guests_checked',
 	function () {
 		assert_same( false, Visibility::should_load( fe_settings(), null, '/', 0, false ) );
@@ -36,7 +36,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'visibility_role_match',
 	function () {
 		$s = fe_settings( array( 'roles' => array( 'editor' ) ) );
@@ -46,7 +46,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'visibility_excluded_page_and_prefix',
 	function () {
 		$s = fe_settings( array( 'guests' => true, 'excluded_pages' => array( 42 ), 'excluded_url_prefixes' => array( 'checkout', '/private/' ) ) );
@@ -58,7 +58,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'visibility_admin_only_when_show_in_admin',
 	function () {
 		$admin = fe_user( array( 'administrator' ) );
@@ -68,7 +68,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'button_css_never_contains_raw_user_input',
 	function () {
 		$b                           = Settings::defaults()['button'];
@@ -89,18 +89,18 @@ bugspot_test(
 		assert_true( '' !== $css );
 		assert_true( false === strpos( $css, 'body{' ), 'no injected selector' );
 		assert_true( 0 === preg_match( '/;\s*;/', $css ), 'no empty declarations from injected input' );
-		// Every rule must be on #bugspot-button, and braces must balance.
+		// Every rule must be on #fixthisplz-button, and braces must balance.
 		assert_same( substr_count( $css, '{' ), substr_count( $css, '}' ), 'balanced braces' );
 		preg_match_all( '/([^{}]+)\{/', $css, $m );
 		foreach ( $m[1] as $sel ) {
 			$sel = trim( $sel );
-			assert_true( 0 === strpos( $sel, '#bugspot-button' ) || 0 === strpos( $sel, '@media (max-width: 782px)' ), 'unexpected selector: ' . $sel );
+			assert_true( 0 === strpos( $sel, '#fixthisplz-button' ) || 0 === strpos( $sel, '@media (max-width: 782px)' ), 'unexpected selector: ' . $sel );
 		}
 		assert_true( false === strpos( $css, 'huge' ) && false === strpos( $css, 'em;' ) );
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'button_css_sizes_shapes_shadows',
 	function () {
 		$d = Settings::defaults()['button'];
@@ -113,11 +113,11 @@ bugspot_test(
 		assert_true( false !== strpos( Button_Style::css( array_merge( $d, array( 'shadow' => 'none' ) ) ), 'box-shadow:none' ) );
 		assert_true( false !== strpos( Button_Style::css( $d ), 'bottom:24px' ) );
 		assert_true( false !== strpos( Button_Style::css( $d ), 'z-index:99999' ) );
-		assert_true( false !== strpos( Button_Style::css( $d ), '#bugspot-button:hover' ) );
+		assert_true( false !== strpos( Button_Style::css( $d ), '#fixthisplz-button:hover' ) );
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'button_css_custom_position_uses_units',
 	function () {
 		$b             = Settings::defaults()['button'];
@@ -131,7 +131,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'button_css_mobile_hide_media_query',
 	function () {
 		$b = Settings::defaults()['button'];
@@ -139,8 +139,8 @@ bugspot_test(
 		$b['mobile_position_enabled']         = true;
 		$b['position_mobile']['anchor']       = 'top-left';
 		$css                                  = Button_Style::css( $b );
-		assert_true( 1 === preg_match( '/@media \(max-width: 782px\)\{#bugspot-button\{[^}]*top:24px[^}]*left:24px/', $css ), $css );
-		assert_true( false !== strpos( Button_Style::css( $b, true ), '@media (max-width: 782px){#bugspot-button{display:none}}' ) );
+		assert_true( 1 === preg_match( '/@media \(max-width: 782px\)\{#fixthisplz-button\{[^}]*top:24px[^}]*left:24px/', $css ), $css );
+		assert_true( false !== strpos( Button_Style::css( $b, true ), '@media (max-width: 782px){#fixthisplz-button{display:none}}' ) );
 	}
 );
 
@@ -159,7 +159,7 @@ function fe_with_clean_assets( callable $fn ): void {
 	}
 }
 
-bugspot_test(
+fixthisplz_test(
 	'enqueue_outputs_nothing_when_not_visible',
 	function () {
 		with_settings_option(
@@ -170,7 +170,7 @@ bugspot_test(
 						wp_set_current_user( 0 );
 						update_option( Settings::OPTION, array( 'enabled' => true, 'visibility' => array( 'guests' => false ) ) );
 						Assets::enqueue();
-						$loaded = wp_script_is( 'bugspot-loader', 'enqueued' );
+						$loaded = wp_script_is( 'fixthisplz-loader', 'enqueued' );
 						wp_set_current_user( $prev->ID );
 						assert_same( false, $loaded );
 					}
@@ -180,7 +180,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'enqueue_adds_loader_config_and_css_for_guests',
 	function () {
 		with_settings_option(
@@ -199,23 +199,23 @@ bugspot_test(
 						);
 						Assets::enqueue();
 						global $wp_scripts;
-						$before = $wp_scripts->get_data( 'bugspot-loader', 'before' );
-						$ok     = wp_script_is( 'bugspot-loader', 'enqueued' ) && wp_style_is( 'bugspot-front', 'enqueued' );
-						$defer  = $wp_scripts->get_data( 'bugspot-loader', 'strategy' );
+						$before = $wp_scripts->get_data( 'fixthisplz-loader', 'before' );
+						$ok     = wp_script_is( 'fixthisplz-loader', 'enqueued' ) && wp_style_is( 'fixthisplz-front', 'enqueued' );
+						$defer  = $wp_scripts->get_data( 'fixthisplz-loader', 'strategy' );
 						wp_set_current_user( $prev->ID );
 						assert_true( $ok, 'loader and css enqueued' );
 						assert_same( 'defer', $defer );
 						$js = implode( "\n", (array) $before );
-						assert_true( false !== strpos( $js, 'window.bugSpotterConfig = ' ) );
+						assert_true( false !== strpos( $js, 'window.fixThisPlzConfig = ' ) );
 						assert_true( false === strpos( $js, 'TOPSECRETVALUE' ) && false === strpos( $js, 'secret' ), 'no secret in config' );
-						$json   = trim( substr( $js, strlen( 'window.bugSpotterConfig = ' ) ), "; \n" );
+						$json   = trim( substr( $js, strlen( 'window.fixThisPlzConfig = ' ) ), "; \n" );
 						$config = json_decode( $json, true );
 						assert_true( is_array( $config ), 'config is valid JSON' );
 						foreach ( array( 'restUrl', 'nonce', 'moduleUrl', 'vendorUrl', 'version', 'hideOnMobile', 'mobileQuery', 'collect', 'sensitiveSelectors', 'button', 'dialog', 'captcha', 'isLoggedIn', 'wpPage', 'i18n' ) as $k ) {
 							assert_true( array_key_exists( $k, $config ), 'missing key ' . $k );
 						}
 						assert_same( '', $config['nonce'] );
-						assert_true( 'bug-spotter/v1/' === substr( $config['restUrl'], -15 ), 'restUrl is the namespace base: ' . $config['restUrl'] );
+						assert_true( str_ends_with( $config['restUrl'], 'fixthisplz/v1/' ), 'restUrl is the namespace base: ' . $config['restUrl'] );
 						assert_same( 'dashicons-flag', $config['button']['dashicon'] );
 						assert_same( 'pub', $config['captcha']['siteKey'] );
 						assert_true( '' !== $config['captcha']['scriptUrl'] );
@@ -229,7 +229,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'enqueue_ignores_term_id_on_archives_and_blanks_dashicon_for_svg',
 	function () {
 		with_settings_option(
@@ -238,7 +238,7 @@ bugspot_test(
 					function () {
 						$prev = wp_get_current_user();
 						wp_set_current_user( 0 );
-						$term = wp_insert_term( 'bugspot-test-term', 'category' );
+						$term = wp_insert_term( 'fixthisplz-test-term', 'category' );
 						$tid  = is_array( $term ) ? (int) $term['term_id'] : 0;
 						update_option(
 							Settings::OPTION,
@@ -254,9 +254,9 @@ bugspot_test(
 						$wp_query->queried_object    = get_term( $tid, 'category' );
 						$wp_query->queried_object_id = $tid;
 						Assets::enqueue();
-						$loaded = wp_script_is( 'bugspot-loader', 'enqueued' );
+						$loaded = wp_script_is( 'fixthisplz-loader', 'enqueued' );
 						global $wp_scripts;
-						$js = implode( "\n", (array) $wp_scripts->get_data( 'bugspot-loader', 'before' ) );
+						$js = implode( "\n", (array) $wp_scripts->get_data( 'fixthisplz-loader', 'before' ) );
 						$wp_query = $old;
 						wp_set_current_user( $prev->ID );
 						assert_true( $loaded, 'term id equal to an excluded page id must not hide the button' );
@@ -268,7 +268,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'enqueue_privacy_url_falls_back_to_wp_privacy_page',
 	function () {
 		with_settings_option(
@@ -283,13 +283,13 @@ bugspot_test(
 							update_option( Settings::OPTION, array( 'enabled' => true, 'visibility' => array( 'guests' => true ), 'dialog' => $dialog ) );
 							Assets::enqueue();
 							global $wp_scripts;
-							$js     = implode( "\n", (array) $wp_scripts->get_data( 'bugspot-loader', 'before' ) );
-							$config = json_decode( trim( substr( $js, strlen( 'window.bugSpotterConfig = ' ) ), "; \n" ), true );
+							$js     = implode( "\n", (array) $wp_scripts->get_data( 'fixthisplz-loader', 'before' ) );
+							$config = json_decode( trim( substr( $js, strlen( 'window.fixThisPlzConfig = ' ) ), "; \n" ), true );
 							return (string) $config['dialog']['privacyUrl'];
 						};
 						$empty = $read( array( 'privacy_url' => '' ) );
-						wp_dequeue_script( 'bugspot-loader' );
-						wp_deregister_script( 'bugspot-loader' );
+						wp_dequeue_script( 'fixthisplz-loader' );
+						wp_deregister_script( 'fixthisplz-loader' );
 						$own = $read( array( 'privacy_url' => 'https://example.test/own/' ) );
 						remove_filter( 'privacy_policy_url', $fallback );
 						wp_set_current_user( $prev->ID );
@@ -302,7 +302,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'enqueue_config_carries_capture_method_and_masking',
 	function () {
 		with_settings_option(
@@ -315,10 +315,10 @@ bugspot_test(
 							update_option( Settings::OPTION, array( 'enabled' => true, 'visibility' => array( 'guests' => true ), 'dialog' => $dialog ) );
 							Assets::enqueue();
 							global $wp_scripts;
-							$js = implode( "\n", (array) $wp_scripts->get_data( 'bugspot-loader', 'before' ) );
-							wp_dequeue_script( 'bugspot-loader' );
-							wp_deregister_script( 'bugspot-loader' );
-							return json_decode( trim( substr( $js, strlen( 'window.bugSpotterConfig = ' ) ), "; \n" ), true )['dialog'];
+							$js = implode( "\n", (array) $wp_scripts->get_data( 'fixthisplz-loader', 'before' ) );
+							wp_dequeue_script( 'fixthisplz-loader' );
+							wp_deregister_script( 'fixthisplz-loader' );
+							return json_decode( trim( substr( $js, strlen( 'window.fixThisPlzConfig = ' ) ), "; \n" ), true )['dialog'];
 						};
 						$default = $read( array() );
 						$custom  = $read( array( 'capture_method' => 'dom', 'mask_capture' => true ) );

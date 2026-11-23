@@ -1,14 +1,14 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
 defined( 'ABSPATH' ) || exit;
 
 /** WordPress personal-data tools: exporter, eraser and suggested privacy-policy text. */
 final class Privacy {
 
-	public const GROUP_ID  = 'bug-spotter';
-	public const NOTES_ID  = 'bug-spotter-notes';
+	public const GROUP_ID  = 'fixthisplz';
+	public const NOTES_ID  = 'fixthisplz-notes';
 	public const PER_PAGE  = 50;
 
 	public static function register_hooks(): void {
@@ -19,11 +19,11 @@ final class Privacy {
 
 	public static function register_exporter( array $exporters ): array {
 		$exporters[ self::GROUP_ID ] = array(
-			'exporter_friendly_name' => __( 'Bug Spotter reports', 'bug-spotter' ),
+			'exporter_friendly_name' => __( 'FixThisPlz reports', 'fixthisplz' ),
 			'callback'               => array( self::class, 'export' ),
 		);
 		$exporters[ self::NOTES_ID ] = array(
-			'exporter_friendly_name' => __( 'Bug Spotter notes and history', 'bug-spotter' ),
+			'exporter_friendly_name' => __( 'FixThisPlz notes and history', 'fixthisplz' ),
 			'callback'               => array( self::class, 'export_notes' ),
 		);
 		return $exporters;
@@ -31,11 +31,11 @@ final class Privacy {
 
 	public static function register_eraser( array $erasers ): array {
 		$erasers[ self::GROUP_ID ] = array(
-			'eraser_friendly_name' => __( 'Bug Spotter reports', 'bug-spotter' ),
+			'eraser_friendly_name' => __( 'FixThisPlz reports', 'fixthisplz' ),
 			'callback'             => array( self::class, 'erase' ),
 		);
 		$erasers[ self::NOTES_ID ] = array(
-			'eraser_friendly_name' => __( 'Bug Spotter notes and history', 'bug-spotter' ),
+			'eraser_friendly_name' => __( 'FixThisPlz notes and history', 'fixthisplz' ),
 			'callback'             => array( self::class, 'erase_notes' ),
 		);
 		return $erasers;
@@ -50,24 +50,24 @@ final class Privacy {
 
 		foreach ( $repo->find_many( $slice ) as $report ) {
 			$data = array(
-				array( 'name' => __( 'Report number', 'bug-spotter' ), 'value' => '#' . $report['id'] ),
-				array( 'name' => __( 'Date', 'bug-spotter' ), 'value' => wp_date( 'Y-m-d H:i', (int) Reports_Repository::timestamp( $report['created_at'] ) ) ),
-				array( 'name' => __( 'Page', 'bug-spotter' ), 'value' => $report['page_url'] ),
-				array( 'name' => __( 'Description', 'bug-spotter' ), 'value' => $report['description'] ),
-				array( 'name' => __( 'Status', 'bug-spotter' ), 'value' => Statuses::label( (string) $report['status'] ) ),
+				array( 'name' => __( 'Report number', 'fixthisplz' ), 'value' => '#' . $report['id'] ),
+				array( 'name' => __( 'Date', 'fixthisplz' ), 'value' => wp_date( 'Y-m-d H:i', (int) Reports_Repository::timestamp( $report['created_at'] ) ) ),
+				array( 'name' => __( 'Page', 'fixthisplz' ), 'value' => $report['page_url'] ),
+				array( 'name' => __( 'Description', 'fixthisplz' ), 'value' => $report['description'] ),
+				array( 'name' => __( 'Status', 'fixthisplz' ), 'value' => Statuses::label( (string) $report['status'] ) ),
 			);
 			if ( is_string( $report['reporter_email'] ) && '' !== $report['reporter_email'] ) {
-				$data[] = array( 'name' => __( 'Contact e-mail', 'bug-spotter' ), 'value' => $report['reporter_email'] );
+				$data[] = array( 'name' => __( 'Contact e-mail', 'fixthisplz' ), 'value' => $report['reporter_email'] );
 			}
 			$data[] = array(
-				'name'  => __( 'Screenshot attached', 'bug-spotter' ),
-				'value' => ! empty( $report['screenshot'] ) ? __( 'Yes', 'bug-spotter' ) : __( 'No', 'bug-spotter' ),
+				'name'  => __( 'Screenshot attached', 'fixthisplz' ),
+				'value' => ! empty( $report['screenshot'] ) ? __( 'Yes', 'fixthisplz' ) : __( 'No', 'fixthisplz' ),
 			);
 
 			$items[] = array(
 				'group_id'          => self::GROUP_ID,
-				'group_label'       => __( 'Bug reports', 'bug-spotter' ),
-				'group_description' => __( 'Bug reports submitted from this site.', 'bug-spotter' ),
+				'group_label'       => __( 'Bug reports', 'fixthisplz' ),
+				'group_description' => __( 'Bug reports submitted from this site.', 'fixthisplz' ),
 				'item_id'           => 'bug-report-' . $report['id'],
 				'data'              => $data,
 			);
@@ -98,7 +98,7 @@ final class Privacy {
 		return array(
 			'items_removed'  => $removed > 0,
 			'items_retained' => $failed > 0,
-			'messages'       => $failed > 0 ? array( __( 'Some bug reports could not be deleted.', 'bug-spotter' ) ) : array(),
+			'messages'       => $failed > 0 ? array( __( 'Some bug reports could not be deleted.', 'fixthisplz' ) ) : array(),
 			// No progress means the same batch would come back forever, so stop rather than loop.
 			'done'           => count( $ids ) <= self::PER_PAGE || 0 === $removed,
 		);
@@ -120,15 +120,15 @@ final class Privacy {
 			$note    = Activity::NOTE === $entry['type'];
 			$items[] = array(
 				'group_id'          => self::NOTES_ID,
-				'group_label'       => __( 'Bug report notes and history', 'bug-spotter' ),
-				'group_description' => __( 'Internal notes written on bug reports, and changes made to them.', 'bug-spotter' ),
+				'group_label'       => __( 'Bug report notes and history', 'fixthisplz' ),
+				'group_description' => __( 'Internal notes written on bug reports, and changes made to them.', 'fixthisplz' ),
 				'item_id'           => 'bug-activity-' . $entry['id'],
 				'data'              => array(
-					array( 'name' => __( 'Report number', 'bug-spotter' ), 'value' => '#' . $entry['report_id'] ),
-					array( 'name' => __( 'Date', 'bug-spotter' ), 'value' => wp_date( 'Y-m-d H:i', (int) Reports_Repository::timestamp( $entry['created_at'] ) ) ),
+					array( 'name' => __( 'Report number', 'fixthisplz' ), 'value' => '#' . $entry['report_id'] ),
+					array( 'name' => __( 'Date', 'fixthisplz' ), 'value' => wp_date( 'Y-m-d H:i', (int) Reports_Repository::timestamp( $entry['created_at'] ) ) ),
 					$note
-						? array( 'name' => __( 'Note', 'bug-spotter' ), 'value' => $entry['content'] )
-						: array( 'name' => __( 'Change', 'bug-spotter' ), 'value' => Report_Format::change( (string) $entry['field'], $entry['old_value'], $entry['new_value'] ) ),
+						? array( 'name' => __( 'Note', 'fixthisplz' ), 'value' => $entry['content'] )
+						: array( 'name' => __( 'Change', 'fixthisplz' ), 'value' => Report_Format::change( (string) $entry['field'], $entry['old_value'], $entry['new_value'] ) ),
 				),
 			);
 		}
@@ -173,15 +173,15 @@ final class Privacy {
 			return;
 		}
 		$paragraphs = array(
-			__( 'Purpose: this site lets visitors and users report bugs they meet while browsing. Reports are used only to find and fix those problems.', 'bug-spotter' ),
-			__( 'Data collected: the description you write, the address of the page, technical context (browser, screen size, language, errors and failed requests seen by the page), an optional screenshot, an optional contact e-mail address (stored encrypted), your account if you are logged in, and a keyed hash of your IP address used only against abuse. Your IP address itself is never stored. Values typed into the site\'s own forms and fields (including passwords) are never collected; only the description and optional contact e-mail typed into the bug report form are stored. The optional screenshot is an image of the page as it appears on your screen, which you see before sending.', 'bug-spotter' ),
-			__( 'Anti-bot check: when an anti-bot provider is enabled (Cloudflare Turnstile, Google reCAPTCHA or hCaptcha), that provider receives your IP address and browser data when you send a report, under its own privacy policy.', 'bug-spotter' ),
-			__( 'Retention: reports whose status is marked Done are deleted automatically after the retention period set by the site administrators; otherwise reports are kept until they are deleted.', 'bug-spotter' ),
-			__( 'Legal basis: legitimate interest in maintaining and improving the site.', 'bug-spotter' ),
-			__( 'Internal notes: the people who manage bug reports can write notes on them and assign them to each other; notes and the history of changes are only shown to them, never to the reporter.', 'bug-spotter' ),
-			__( 'Recipients: the site administrators, the people they authorise to manage bug reports, and the chat or project services they connect through webhooks (see below).', 'bug-spotter' ),
-			__( 'Webhooks: if the site administrators connect a chat or project service, it receives an excerpt of the description, the page address, the status, the priority and the name of the team member in charge, never your e-mail address, IP address or screenshot.', 'bug-spotter' ),
+			__( 'Purpose: this site lets visitors and users report bugs they meet while browsing. Reports are used only to find and fix those problems.', 'fixthisplz' ),
+			__( 'Data collected: the description you write, the address of the page, technical context (browser, screen size, language, errors and failed requests seen by the page), an optional screenshot, an optional contact e-mail address (stored encrypted), your account if you are logged in, and a keyed hash of your IP address used only against abuse. Your IP address itself is never stored. Values typed into the site\'s own forms and fields (including passwords) are never collected; only the description and optional contact e-mail typed into the bug report form are stored. The optional screenshot is an image of the page as it appears on your screen, which you see before sending.', 'fixthisplz' ),
+			__( 'Anti-bot check: when an anti-bot provider is enabled (Cloudflare Turnstile, Google reCAPTCHA or hCaptcha), that provider receives your IP address and browser data when you send a report, under its own privacy policy.', 'fixthisplz' ),
+			__( 'Retention: reports whose status is marked Done are deleted automatically after the retention period set by the site administrators; otherwise reports are kept until they are deleted.', 'fixthisplz' ),
+			__( 'Legal basis: legitimate interest in maintaining and improving the site.', 'fixthisplz' ),
+			__( 'Internal notes: the people who manage bug reports can write notes on them and assign them to each other; notes and the history of changes are only shown to them, never to the reporter.', 'fixthisplz' ),
+			__( 'Recipients: the site administrators, the people they authorise to manage bug reports, and the chat or project services they connect through webhooks (see below).', 'fixthisplz' ),
+			__( 'Webhooks: if the site administrators connect a chat or project service, it receives an excerpt of the description, the page address, the status, the priority and the name of the team member in charge, never your e-mail address, IP address or screenshot.', 'fixthisplz' ),
 		);
-		wp_add_privacy_policy_content( 'Bug Spotter', wp_kses_post( wpautop( implode( "\n\n", $paragraphs ) ) ) );
+		wp_add_privacy_policy_content( 'FixThisPlz', wp_kses_post( wpautop( implode( "\n\n", $paragraphs ) ) ) );
 	}
 }

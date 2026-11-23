@@ -1,16 +1,16 @@
 <?php
 
-use Bug_Spotter\Admin\Bugs_Page;
-use Bug_Spotter\Admin\Csv_Export;
-use Bug_Spotter\Admin\Menu;
-use Bug_Spotter\Admin\Report_Query_Args;
-use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Settings;
+use FixThisPlz\Admin\Bugs_Page;
+use FixThisPlz\Admin\Csv_Export;
+use FixThisPlz\Admin\Menu;
+use FixThisPlz\Admin\Report_Query_Args;
+use FixThisPlz\Reports_Repository;
+use FixThisPlz\Settings;
 
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
 /** Inserts a report with a distinctive description marker and returns its id. */
-function bugspot_admin_insert( string $description, array $extra = array() ): int {
+function fixthisplz_admin_insert( string $description, array $extra = array() ): int {
 	$id = ( new Reports_Repository() )->insert(
 		array_merge(
 			array(
@@ -26,7 +26,7 @@ function bugspot_admin_insert( string $description, array $extra = array() ): in
 }
 
 /** Runs $fn with a clean global admin menu and an administrator as current user; restores everything. */
-function bugspot_with_admin_menu( callable $fn ): void {
+function fixthisplz_with_admin_menu( callable $fn ): void {
 	global $menu, $submenu;
 	$saved_menu    = $menu ?? null;
 	$saved_submenu = $submenu ?? null;
@@ -45,31 +45,31 @@ function bugspot_with_admin_menu( callable $fn ): void {
 	}
 }
 
-bugspot_test(
+fixthisplz_test(
 	'admin-list: menu_registered_with_capability',
 	function () {
-		bugspot_with_admin_menu(
+		fixthisplz_with_admin_menu(
 			function () {
 				global $menu, $submenu;
 				$top = null;
 				foreach ( $menu as $entry ) {
-					if ( 'bug-spotter' === $entry[2] ) {
+					if ( 'fixthisplz' === $entry[2] ) {
 						$top = $entry;
 					}
 				}
 				assert_true( null !== $top, 'top-level menu missing' );
-				assert_same( 'bugspot_manage', $top[1] );
+				assert_same( 'fixthisplz_manage', $top[1] );
 				assert_true( str_starts_with( wp_strip_all_tags( $top[0] ), 'Bugs' ), 'menu title' );
 				assert_same( 'dashicons-flag', $top[6] );
-				$slugs = array_column( $submenu['bug-spotter'], 2 );
-				assert_same( array( 'bug-spotter', 'bug-spotter-settings' ), $slugs );
-				assert_same( 'bugspot_manage', $submenu['bug-spotter'][0][1] );
+				$slugs = array_column( $submenu['fixthisplz'], 2 );
+				assert_same( array( 'fixthisplz', 'fixthisplz-settings' ), $slugs );
+				assert_same( 'fixthisplz_manage', $submenu['fixthisplz'][0][1] );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'admin-list: menu_badge_counts_new_reports_and_can_be_disabled',
 	function () {
 		with_settings_option(
@@ -77,7 +77,7 @@ bugspot_test(
 				$prev = get_current_user_id();
 				try {
 					$expected = ( new Reports_Repository() )->count_by_status( array() )['new'] + 1;
-					bugspot_admin_insert( 'badge test' );
+					fixthisplz_admin_insert( 'badge test' );
 
 					wp_set_current_user( 0 );
 					assert_true( ! str_contains( Menu::menu_title(), 'awaiting-mod' ), 'no badge (and no count query) without the capability' );
@@ -87,7 +87,7 @@ bugspot_test(
 					$title = Menu::menu_title();
 					assert_true( str_contains( $title, '<span class="awaiting-mod count-' . $expected . '"><span class="pending-count">' . $expected . '</span></span>' ), 'badge: ' . $title );
 
-					update_option( 'bugspot_settings', array( 'management' => array( 'menu_badge' => false ) ) );
+					update_option( 'fixthisplz_settings', array( 'management' => array( 'menu_badge' => false ) ) );
 					assert_true( ! str_contains( Menu::menu_title(), 'awaiting-mod' ), 'badge must be hidden' );
 				} finally {
 					wp_set_current_user( $prev );
@@ -98,29 +98,29 @@ bugspot_test(
 );
 
 /** The plugin's top-level entry of the global $menu, with its position key. @return array{0:int|string,1:array} */
-function bugspot_admin_menu_entry(): array {
+function fixthisplz_admin_menu_entry(): array {
 	global $menu;
 	foreach ( $menu as $position => $entry ) {
-		if ( 'bug-spotter' === $entry[2] ) {
+		if ( 'fixthisplz' === $entry[2] ) {
 			return array( $position, $entry );
 		}
 	}
 	throw new RuntimeException( 'top-level menu missing' );
 }
 
-bugspot_test(
+fixthisplz_test(
 	'admin-list: default_menu_names_and_position_are_unchanged',
 	function () {
 		with_settings_option(
 			function () {
-				bugspot_with_admin_menu(
+				fixthisplz_with_admin_menu(
 					function () {
 						global $submenu;
-						list( $position, $top ) = bugspot_admin_menu_entry();
+						list( $position, $top ) = fixthisplz_admin_menu_entry();
 						assert_same( 26, $position );
 						assert_same( 'Bugs', $top[3], 'page title' );
 						assert_true( str_starts_with( $top[0], 'Bugs' ), 'menu title: ' . $top[0] );
-						assert_same( array( 'All bugs', 'bugspot_manage', 'bug-spotter', 'All bugs' ), array_slice( $submenu['bug-spotter'][0], 0, 4 ) );
+						assert_same( array( 'All bugs', 'fixthisplz_manage', 'fixthisplz', 'All bugs' ), array_slice( $submenu['fixthisplz'][0], 0, 4 ) );
 					}
 				);
 			}
@@ -128,13 +128,13 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'admin-list: custom_menu_names_are_escaped_and_keep_the_badge',
 	function () {
 		with_settings_option(
 			function () {
-				bugspot_admin_insert( 'menu name test' );
-				$saved = \Bug_Spotter\Settings_Sanitizer::sanitize( array( 'management' => array( 'menu_label' => 'Tickets & co', 'list_label' => 'All <b>tickets</b>', 'menu_position' => '21' ) ) )['management'];
+				fixthisplz_admin_insert( 'menu name test' );
+				$saved = \FixThisPlz\Settings_Sanitizer::sanitize( array( 'management' => array( 'menu_label' => 'Tickets & co', 'list_label' => 'All <b>tickets</b>', 'menu_position' => '21' ) ) )['management'];
 				assert_same( 'Tickets & co', $saved['menu_label'] );
 				assert_same( 'All tickets', $saved['list_label'], 'tags stripped on save' );
 				assert_same( 21, $saved['menu_position'] );
@@ -142,40 +142,40 @@ bugspot_test(
 				// A value that bypassed the sanitizer is still escaped on output.
 				$raw = array( 'management' => array( 'menu_label' => 'Tickets & co', 'list_label' => 'A <i>', 'menu_position' => 21 ) );
 				$pre = static fn() => $raw;
-				add_filter( 'pre_option_bugspot_settings', $pre );
+				add_filter( 'pre_option_fixthisplz_settings', $pre );
 				try {
-					bugspot_with_admin_menu(
+					fixthisplz_with_admin_menu(
 						function () {
 							global $submenu;
-							list( $position, $top ) = bugspot_admin_menu_entry();
+							list( $position, $top ) = fixthisplz_admin_menu_entry();
 							assert_same( 21, $position );
 							assert_same( 'Tickets & co', $top[3], 'page title (escaped by WordPress)' );
 							assert_true( str_starts_with( $top[0], 'Tickets &amp; co <span class="awaiting-mod count-' ), 'menu title: ' . $top[0] );
 							assert_true( str_contains( $top[0], '<span class="pending-count">' ), 'badge markup intact' );
-							assert_same( 'A &lt;i&gt;', $submenu['bug-spotter'][0][0] );
-							assert_same( 'A <i>', $submenu['bug-spotter'][0][3] );
+							assert_same( 'A &lt;i&gt;', $submenu['fixthisplz'][0][0] );
+							assert_same( 'A <i>', $submenu['fixthisplz'][0][3] );
 
 							$saved_get = $_GET;
 							$_GET      = array();
 							try {
-								$list = bugspot_capture( fn() => Bugs_Page::render() );
+								$list = fixthisplz_capture( fn() => Bugs_Page::render() );
 							} finally {
 								$_GET = $saved_get;
 							}
 							assert_true( str_contains( $list, '<h1 class="wp-heading-inline">Tickets &amp; co</h1>' ), 'list page h1' );
-							$missing = bugspot_capture( fn() => Bug_Spotter\Admin\Detail_Page::render( PHP_INT_MAX ) );
+							$missing = fixthisplz_capture( fn() => FixThisPlz\Admin\Detail_Page::render( PHP_INT_MAX ) );
 							assert_true( str_contains( $missing, '<h1>Tickets &amp; co</h1>' ), 'report-not-found h1' );
 						}
 					);
 				} finally {
-					remove_filter( 'pre_option_bugspot_settings', $pre );
+					remove_filter( 'pre_option_fixthisplz_settings', $pre );
 				}
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'admin-list: menu_position_outside_the_list_falls_back_to_the_default',
 	function () {
 		assert_same( 26, Settings::menu_position( 27 ) );
@@ -183,15 +183,15 @@ bugspot_test(
 		assert_same( 81, Settings::menu_position( '81' ) );
 		with_settings_option(
 			function () {
-				$out = \Bug_Spotter\Settings_Sanitizer::sanitize( array( 'management' => array( 'menu_position' => 999, 'menu_label' => str_repeat( 'é', 50 ) ) ) );
+				$out = \FixThisPlz\Settings_Sanitizer::sanitize( array( 'management' => array( 'menu_position' => 999, 'menu_label' => str_repeat( 'é', 50 ) ) ) );
 				assert_same( 26, $out['management']['menu_position'] );
 				assert_same( str_repeat( 'é', 40 ), $out['management']['menu_label'], 'at most 40 characters' );
 
 				// A stored value outside the list (never sanitized) still gives the default place.
-				update_option( 'bugspot_settings', array( 'management' => array( 'menu_position' => 50 ) ) );
-				bugspot_with_admin_menu(
+				update_option( 'fixthisplz_settings', array( 'management' => array( 'menu_position' => 50 ) ) );
+				fixthisplz_with_admin_menu(
 					function () {
-						assert_same( 26, bugspot_admin_menu_entry()[0] );
+						assert_same( 26, fixthisplz_admin_menu_entry()[0] );
 					}
 				);
 			}
@@ -199,25 +199,25 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'admin-list: settings_submenu_requires_manage_options',
 	function () {
-		$role = 'bugspot_tmp_manager';
-		add_role( $role, 'Tmp', array( 'read' => true, 'bugspot_manage' => true ) );
+		$role = 'fixthisplz_tmp_manager';
+		add_role( $role, 'Tmp', array( 'read' => true, 'fixthisplz_manage' => true ) );
 		$uid = 0;
 		try {
-			$uid = wp_insert_user( array( 'user_login' => 'bugspot_tmp_user', 'user_pass' => wp_generate_password(), 'role' => $role ) );
+			$uid = wp_insert_user( array( 'user_login' => 'fixthisplz_tmp_user', 'user_pass' => wp_generate_password(), 'role' => $role ) );
 			assert_true( is_int( $uid ), 'user creation' );
-			bugspot_with_admin_menu(
+			fixthisplz_with_admin_menu(
 				function () use ( $uid ) {
 					global $submenu;
 					$caps = array();
-					foreach ( $submenu['bug-spotter'] as $entry ) {
+					foreach ( $submenu['fixthisplz'] as $entry ) {
 						$caps[ $entry[2] ] = $entry[1];
 					}
-					assert_same( 'manage_options', $caps['bug-spotter-settings'] );
-					assert_true( user_can( $uid, $caps['bug-spotter'] ), 'manager sees the list' );
-					assert_true( ! user_can( $uid, $caps['bug-spotter-settings'] ), 'manager must not reach settings' );
+					assert_same( 'manage_options', $caps['fixthisplz-settings'] );
+					assert_true( user_can( $uid, $caps['fixthisplz'] ), 'manager sees the list' );
+					assert_true( ! user_can( $uid, $caps['fixthisplz-settings'] ), 'manager must not reach settings' );
 				}
 			);
 		} finally {
@@ -230,13 +230,13 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'admin-list: bulk_status_change_updates_rows',
 	function () {
 		$repo = new Reports_Repository();
-		$a    = bugspot_admin_insert( 'bulk a' );
-		$b    = bugspot_admin_insert( 'bulk b' );
-		$c    = bugspot_admin_insert( 'bulk c' );
+		$a    = fixthisplz_admin_insert( 'bulk a' );
+		$b    = fixthisplz_admin_insert( 'bulk b' );
+		$c    = fixthisplz_admin_insert( 'bulk c' );
 
 		$result = Bugs_Page::apply_bulk( 'status_confirmed', array( $a, $b, 999999 ) );
 		assert_same( array( 'updated', 2 ), $result );
@@ -257,16 +257,16 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'admin-list: csv_export_applies_filters_and_escapes',
 	function () {
 		$admins  = get_users( array( 'role' => 'administrator', 'number' => 1, 'fields' => 'ID' ) );
 		$user_id = (int) $admins[0];
 
-		bugspot_admin_insert( '=HYPERLINK("http://evil.test")', array( 'reporter_email' => 'visitor@example.test' ) );
-		$multi_id = bugspot_admin_insert( "multi\nline; \"quoted\" csvmarker", array( 'user_id' => $user_id ) );
+		fixthisplz_admin_insert( '=HYPERLINK("http://evil.test")', array( 'reporter_email' => 'visitor@example.test' ) );
+		$multi_id = fixthisplz_admin_insert( "multi\nline; \"quoted\" csvmarker", array( 'user_id' => $user_id ) );
 		( new Reports_Repository() )->update( $multi_id, array( 'assigned_to' => $user_id ) );
-		$low_id = bugspot_admin_insert( 'other thing' );
+		$low_id = fixthisplz_admin_insert( 'other thing' );
 		( new Reports_Repository() )->update( $low_id, array( 'priority' => 'low' ) );
 
 		$stream = fopen( 'php://memory', 'w+' );
@@ -300,7 +300,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'admin-list: csv_cell_guard_prefixes_formula_triggers',
 	function () {
 		foreach ( array( '=1+1', '+1', '-1', '@sum', "\tcmd", "\rcmd" ) as $value ) {
@@ -310,7 +310,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'admin-list: read_filters_sanitises_input',
 	function () {
 		$f = Report_Query_Args::read_filters(

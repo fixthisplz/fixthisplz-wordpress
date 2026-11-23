@@ -1,6 +1,6 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -26,13 +26,13 @@ final class Statuses extends Choice_List {
 
 	protected static function default_labels(): array {
 		return array(
-			'new'         => __( 'New', 'bug-spotter' ),
-			'seen'        => __( 'Seen', 'bug-spotter' ),
-			'confirmed'   => __( 'Confirmed', 'bug-spotter' ),
-			'in_progress' => __( 'In progress', 'bug-spotter' ),
-			'fixed'       => __( 'Fixed', 'bug-spotter' ),
-			'wont_fix'    => __( 'Won\'t fix', 'bug-spotter' ),
-			'duplicate'   => __( 'Duplicate', 'bug-spotter' ),
+			'new'         => __( 'New', 'fixthisplz' ),
+			'seen'        => __( 'Seen', 'fixthisplz' ),
+			'confirmed'   => __( 'Confirmed', 'fixthisplz' ),
+			'in_progress' => __( 'In progress', 'fixthisplz' ),
+			'fixed'       => __( 'Fixed', 'fixthisplz' ),
+			'wont_fix'    => __( 'Won\'t fix', 'fixthisplz' ),
+			'duplicate'   => __( 'Duplicate', 'fixthisplz' ),
 		);
 	}
 }

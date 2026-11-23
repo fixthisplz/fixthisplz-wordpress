@@ -1,15 +1,15 @@
 <?php
 
-use Bug_Spotter\Admin\Bugs_Page;
-use Bug_Spotter\Admin\Csv_Export;
-use Bug_Spotter\Admin\Kanban;
-use Bug_Spotter\Admin\Report_Query_Args;
-use Bug_Spotter\Priorities;
-use Bug_Spotter\Report_Format;
-use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Settings;
+use FixThisPlz\Admin\Bugs_Page;
+use FixThisPlz\Admin\Csv_Export;
+use FixThisPlz\Admin\Kanban;
+use FixThisPlz\Admin\Report_Query_Args;
+use FixThisPlz\Priorities;
+use FixThisPlz\Report_Format;
+use FixThisPlz\Reports_Repository;
+use FixThisPlz\Settings;
 
-// list_editor_rows(), list_editor_save(), status_editor_test(), repo_make(), bugspot_capture(), also when run alone.
+// list_editor_rows(), list_editor_save(), status_editor_test(), repo_make(), fixthisplz_capture(), also when run alone.
 require_once __DIR__ . '/test-list-editor.php';
 require_once __DIR__ . '/test-admin-list.php';
 require_once __DIR__ . '/test-admin-detail.php';
@@ -22,7 +22,7 @@ function priority_save( array $rows, array $moves = array() ): void {
 	list_editor_save( 'priority', $rows, $moves );
 }
 
-bugspot_test(
+fixthisplz_test(
 	'priorities: defaults_keep_the_four_former_priorities_lowest_first',
 	function () {
 		with_settings_option(
@@ -36,7 +36,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'priorities: sanitize_keeps_normal_first_when_missing_and_caps_at_10',
 	function () {
 		$out = Priorities::sanitize( array( array( 'key' => 'urgent', 'label' => '<i>Now</i>', 'color' => 'red' ), array( 'key' => 'Bad Key' ) ) );
@@ -60,8 +60,8 @@ status_editor_test(
 	function () {
 		$html = settings_page_tab_html( 'tracking', 'priorities' );
 		assert_true( ! str_contains( $html, '>Done<' ), 'no Done column' );
-		assert_same( 3 + 1, substr_count( $html, 'bugspot-list-delete' ), 'normal has no Delete button (+1: the new-row template)' );
-		assert_true( str_contains( $html, 'data-moves="bugspot_settings[priority_moves]"' ) && str_contains( $html, 'data-fallback="normal"' ) );
+		assert_same( 3 + 1, substr_count( $html, 'fixthisplz-list-delete' ), 'normal has no Delete button (+1: the new-row template)' );
+		assert_true( str_contains( $html, 'data-moves="fixthisplz_settings[priority_moves]"' ) && str_contains( $html, 'data-fallback="normal"' ) );
 
 		$statuses = Settings::get()['statuses'];
 		$rows     = priority_rows();
@@ -121,7 +121,7 @@ status_editor_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'priorities: sorting_by_priority_follows_the_settings_order',
 	function () {
 		with_settings_option(
@@ -147,7 +147,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'priorities: list_kanban_csv_bulk_detail_and_filters_follow_the_settings',
 	function () {
 		with_settings_option(
@@ -162,23 +162,23 @@ bugspot_test(
 					)
 				);
 				$repo = new Reports_Repository();
-				$id   = bugspot_admin_insert( 'prio-everywhere' );
+				$id   = fixthisplz_admin_insert( 'prio-everywhere' );
 				assert_same( null, $repo->update( $id, array( 'priority' => 'high' ) ), 'a deleted priority cannot be set' );
 				assert_same( array( 'updated', 1 ), Bugs_Page::apply_bulk( 'priority_urgent', array( $id ) ) );
 				assert_same( 'urgent', $repo->find( $id )['priority'] );
 
-				$pill = '<span class="bugspot-pill bugspot-priority" style="--bugspot-color:#aa00cc">Urgent &amp; co</span>';
+				$pill = '<span class="fixthisplz-pill fixthisplz-priority" style="--fixthisplz-color:#aa00cc">Urgent &amp; co</span>';
 				assert_same( $pill, Report_Format::pill( Priorities::class, 'urgent' ) );
 				$filters = array( 'status' => '', 'priority' => 'urgent', 'assigned' => '', 'from' => '', 'to' => '', 'search' => 'prio-everywhere' );
 				assert_same( $filters, Report_Query_Args::read_filters( array( 'priority' => 'urgent', 's' => 'prio-everywhere' ) ) );
 				assert_same( '', Report_Query_Args::read_filters( array( 'priority' => 'high' ) )['priority'] );
-				assert_true( str_contains( bugspot_capture( fn() => Kanban::render( $filters ) ), $pill ), 'Kanban card pill' );
+				assert_true( str_contains( fixthisplz_capture( fn() => Kanban::render( $filters ) ), $pill ), 'Kanban card pill' );
 
-				$detail = bugspot_capture( fn() => Bug_Spotter\Admin\Detail_Page::render( $id ) );
+				$detail = fixthisplz_capture( fn() => FixThisPlz\Admin\Detail_Page::render( $id ) );
 				assert_true( str_contains( $detail, '<option value="urgent" selected=\'selected\'>Urgent &amp; co</option>' ), 'detail select' );
 				assert_true( ! str_contains( $detail, 'value="high"' ), 'deleted priority not offered' );
 
-				$table   = new Bug_Spotter\Admin\List_Table();
+				$table   = new FixThisPlz\Admin\List_Table();
 				$actions = ( new ReflectionMethod( $table, 'get_bulk_actions' ) )->invoke( $table );
 				assert_same( 'Set priority: Urgent & co', $actions['priority_urgent'] );
 				assert_true( ! isset( $actions['priority_high'] ) );
@@ -193,7 +193,7 @@ bugspot_test(
 
 				// A priority unknown to the settings (stored by hand) is kept when another field changes.
 				$repo->update( $id, array( 'priority' => 'urgent' ) );
-				$GLOBALS['wpdb']->update( Bug_Spotter\Installer::table(), array( 'priority' => 'zz_gone' ), array( 'id' => $id ) );
+				$GLOBALS['wpdb']->update( FixThisPlz\Installer::table(), array( 'priority' => 'zz_gone' ), array( 'id' => $id ) );
 				assert_true( null !== $repo->update( $id, array( 'status' => 'fixed', 'priority' => 'zz_gone' ) ) );
 				assert_same( 'zz_gone', Priorities::label( 'zz_gone' ) );
 				assert_same( Priorities::FALLBACK_COLOR, Priorities::color( 'zz_gone' ) );

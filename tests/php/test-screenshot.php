@@ -1,12 +1,12 @@
 <?php
 
-use Bug_Spotter\Installer;
-use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Screenshot_Store;
+use FixThisPlz\Installer;
+use FixThisPlz\Reports_Repository;
+use FixThisPlz\Screenshot_Store;
 
 /** Writes a temp file with $bytes and returns its path. */
 function shot_tmp( string $bytes ): string {
-	$path = wp_tempnam( 'bugspot-shot' );
+	$path = wp_tempnam( 'fixthisplz-shot' );
 	file_put_contents( $path, $bytes );
 	return $path;
 }
@@ -20,7 +20,7 @@ function shot_png( int $w = 50, int $h = 50 ): string {
 	return (string) ob_get_clean();
 }
 
-bugspot_test(
+fixthisplz_test(
 	'screenshot: store_reencodes_png_to_private_jpeg',
 	function () {
 		$tmp    = shot_tmp( shot_png() );
@@ -38,7 +38,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'screenshot: store_rejects_text_file_renamed_png',
 	function () {
 		$tmp = shot_tmp( "not an image at all\n" );
@@ -46,19 +46,19 @@ bugspot_test(
 		rename( $tmp, $png );
 		$res = Screenshot_Store::store( $png );
 		unlink( $png );
-		assert_wp_error( $res, 'bugspot_bad_type' );
+		assert_wp_error( $res, 'fixthisplz_bad_type' );
 		assert_same( 422, $res->get_error_data()['status'] );
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'screenshot: store_rejects_missing_file',
 	function () {
-		assert_wp_error( Screenshot_Store::store( '/nonexistent/file.png' ), 'bugspot_bad_type' );
+		assert_wp_error( Screenshot_Store::store( '/nonexistent/file.png' ), 'fixthisplz_bad_type' );
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'screenshot: store_rejects_gif',
 	function () {
 		$im = imagecreatetruecolor( 10, 10 );
@@ -67,22 +67,22 @@ bugspot_test(
 		$tmp = shot_tmp( (string) ob_get_clean() );
 		$res = Screenshot_Store::store( $tmp );
 		unlink( $tmp );
-		assert_wp_error( $res, 'bugspot_bad_type' );
+		assert_wp_error( $res, 'fixthisplz_bad_type' );
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'screenshot: store_rejects_oversized',
 	function () {
 		$tmp = shot_tmp( shot_png() . str_repeat( "\0", Screenshot_Store::MAX_BYTES ) );
 		$res = Screenshot_Store::store( $tmp );
 		unlink( $tmp );
-		assert_wp_error( $res, 'bugspot_too_large' );
+		assert_wp_error( $res, 'fixthisplz_too_large' );
 		assert_same( 413, $res->get_error_data()['status'] );
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'screenshot: store_rejects_decompression_bomb_dimensions',
 	function () {
 		// Tiny file whose header declares 10000x10000 (100 MP): hand-built PNG header + IDAT-less stream.
@@ -93,12 +93,12 @@ bugspot_test(
 		$tmp = shot_tmp( "\x89PNG\r\n\x1a\n" . $chunk( 'IHDR', $ihdr ) . $chunk( 'IEND', '' ) );
 		$res = Screenshot_Store::store( $tmp );
 		unlink( $tmp );
-		assert_wp_error( $res, 'bugspot_bad_type' );
+		assert_wp_error( $res, 'fixthisplz_bad_type' );
 		assert_same( 422, $res->get_error_data()['status'] );
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'screenshot: path_rejects_traversal_and_bad_names',
 	function () {
 		assert_same( null, Screenshot_Store::path( '../../wp-config.php' ) );
@@ -109,7 +109,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'screenshot: delete_ignores_invalid_and_missing_names',
 	function () {
 		Screenshot_Store::delete( '../../wp-config.php' );
@@ -118,7 +118,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'screenshot: repository_delete_removes_stored_file',
 	function () {
 		$tmp  = shot_tmp( shot_png() );
@@ -140,9 +140,9 @@ function shot_jpeg_with_metadata(): string {
 	ob_start();
 	imagejpeg( $im );
 	$jpeg = (string) ob_get_clean();
-	$exif = "Exif\0\0" . 'BUGSPOT-SECRET-EXIF';
+	$exif = "Exif\0\0" . 'FIXTHISPLZ-SECRET-EXIF';
 	$app1 = "\xFF\xE1" . pack( 'n', strlen( $exif ) + 2 ) . $exif;
-	$com  = 'BUGSPOT-SECRET-EXIF';
+	$com  = 'FIXTHISPLZ-SECRET-EXIF';
 	$comm = "\xFF\xFE" . pack( 'n', strlen( $com ) + 2 ) . $com;
 	return substr( $jpeg, 0, 2 ) . $app1 . $comm . substr( $jpeg, 2 );
 }
@@ -154,13 +154,13 @@ function shot_assert_stripped( string $editor_class = '' ): void {
 	}
 	try {
 		$tmp = shot_tmp( shot_jpeg_with_metadata() );
-		assert_true( false !== strpos( (string) file_get_contents( $tmp ), 'BUGSPOT-SECRET-EXIF' ), 'fixture lacks marker' );
+		assert_true( false !== strpos( (string) file_get_contents( $tmp ), 'FIXTHISPLZ-SECRET-EXIF' ), 'fixture lacks marker' );
 		$name = Screenshot_Store::store( $tmp );
 		unlink( $tmp );
 		assert_true( is_string( $name ), 'store failed' );
 		$bytes = (string) file_get_contents( Screenshot_Store::path( $name ) );
 		Screenshot_Store::delete( $name );
-		assert_true( false === strpos( $bytes, 'BUGSPOT-SECRET-EXIF' ), 'marker survived' );
+		assert_true( false === strpos( $bytes, 'FIXTHISPLZ-SECRET-EXIF' ), 'marker survived' );
 		assert_true( false === strpos( $bytes, "Exif\0\0" ), 'EXIF header survived' );
 	} finally {
 		if ( $filter ) {
@@ -169,14 +169,14 @@ function shot_assert_stripped( string $editor_class = '' ): void {
 	}
 }
 
-bugspot_test(
+fixthisplz_test(
 	'screenshot: store_strips_exif_and_comment_default_editor',
 	function () {
 		shot_assert_stripped();
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'screenshot: store_strips_exif_and_comment_gd_editor',
 	function () {
 		shot_assert_stripped( 'WP_Image_Editor_GD' );

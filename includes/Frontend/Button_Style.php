@@ -1,8 +1,8 @@
 <?php
 
-namespace Bug_Spotter\Frontend;
+namespace FixThisPlz\Frontend;
 
-use Bug_Spotter\Button_Sanitizer;
+use FixThisPlz\Button_Sanitizer;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,7 +15,7 @@ final class Button_Style {
 	/** Below this width the mobile position and "hide on mobile" apply (also sent to the loader). */
 	public const MOBILE_QUERY = '(max-width: 782px)';
 
-	private const SELECTOR = '#bugspot-button';
+	private const SELECTOR = '#fixthisplz-button';
 	/** Height in px of each size (also shown in the settings help). */
 	public const SIZES     = array(
 		's' => 40,

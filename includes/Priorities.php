@@ -1,6 +1,6 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -18,10 +18,10 @@ final class Priorities extends Choice_List {
 
 	protected static function default_labels(): array {
 		return array(
-			'low'      => __( 'Low', 'bug-spotter' ),
-			'normal'   => __( 'Normal', 'bug-spotter' ),
-			'high'     => __( 'High', 'bug-spotter' ),
-			'critical' => __( 'Critical', 'bug-spotter' ),
+			'low'      => __( 'Low', 'fixthisplz' ),
+			'normal'   => __( 'Normal', 'fixthisplz' ),
+			'high'     => __( 'High', 'fixthisplz' ),
+			'critical' => __( 'Critical', 'fixthisplz' ),
 		);
 	}
 }

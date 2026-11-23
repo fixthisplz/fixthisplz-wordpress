@@ -1,19 +1,19 @@
 <?php
 
-namespace Bug_Spotter\Admin;
+namespace FixThisPlz\Admin;
 
-use Bug_Spotter\Priorities;
-use Bug_Spotter\Report_Format;
-use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Statuses;
-use Bug_Spotter\Team;
+use FixThisPlz\Priorities;
+use FixThisPlz\Report_Format;
+use FixThisPlz\Reports_Repository;
+use FixThisPlz\Statuses;
+use FixThisPlz\Team;
 
 defined( 'ABSPATH' ) || exit;
 
 /** CSV export of the filtered list. Deliberately omits ip_hash and reporter_email_hash. */
 final class Csv_Export {
 
-	public const ACTION = 'bugspot_export';
+	public const ACTION = 'fixthisplz_export';
 
 	public static function register_hooks(): void {
 		add_action( 'admin_post_' . self::ACTION, array( self::class, 'handle' ) );
@@ -38,7 +38,7 @@ final class Csv_Export {
 
 		// Another plugin's notice or a stray buffer would corrupt the BOM / first row.
 		if ( headers_sent() ) {
-			wp_die( esc_html__( 'The export could not start because output was already sent.', 'bug-spotter' ) );
+			wp_die( esc_html__( 'The export could not start because output was already sent.', 'fixthisplz' ) );
 		}
 		while ( ob_get_level() > 0 ) {
 			ob_end_clean();
@@ -65,14 +65,14 @@ final class Csv_Export {
 		self::put_row(
 			$stream,
 			array(
-				__( 'No.', 'bug-spotter' ),
-				__( 'Date', 'bug-spotter' ),
-				__( 'Status', 'bug-spotter' ),
-				__( 'Priority', 'bug-spotter' ),
-				__( 'Assigned to', 'bug-spotter' ),
-				__( 'Page', 'bug-spotter' ),
-				__( 'Reporter', 'bug-spotter' ),
-				__( 'Description', 'bug-spotter' ),
+				__( 'No.', 'fixthisplz' ),
+				__( 'Date', 'fixthisplz' ),
+				__( 'Status', 'fixthisplz' ),
+				__( 'Priority', 'fixthisplz' ),
+				__( 'Assigned to', 'fixthisplz' ),
+				__( 'Page', 'fixthisplz' ),
+				__( 'Reporter', 'fixthisplz' ),
+				__( 'Description', 'fixthisplz' ),
 			)
 		);
 

@@ -1,11 +1,11 @@
-/* Bug Spotter settings screen: conditional fields, icon picker, SVG picker, live button preview and the alert
- * about unsaved changes (the anti-bot "Test" button: admin-captcha-test.js). No build step. Every user-visible string comes from bugspotSettings.i18n. */
+/* FixThisPlz settings screen: conditional fields, icon picker, SVG picker, live button preview and the alert
+ * about unsaved changes (the anti-bot "Test" button: admin-captcha-test.js). No build step. Every user-visible string comes from fixThisPlzSettings.i18n. */
 ( function ( $, apiFetch ) {
 	'use strict';
 
-	var config = window.bugspotSettings || {};
+	var config = window.fixThisPlzSettings || {};
 	var i18n = config.i18n || {};
-	var $form = $( '.bugspot-settings-form' );
+	var $form = $( '.fixthisplz-settings-form' );
 	if ( ! $form.length ) {
 		return;
 	}
@@ -29,25 +29,25 @@
 	}
 
 	function applyConditions() {
-		$form.find( '[data-bugspot-show-if]' ).each( function () {
+		$form.find( '[data-fixthisplz-show-if]' ).each( function () {
 			var $el = $( this );
-			var value = fieldValue( $el.attr( 'data-bugspot-show-if' ) );
-			var expected = String( $el.attr( 'data-bugspot-value' ) );
-			var visible = '!=' === $el.attr( 'data-bugspot-op' ) ? value !== expected : value === expected;
+			var value = fieldValue( $el.attr( 'data-fixthisplz-show-if' ) );
+			var expected = String( $el.attr( 'data-fixthisplz-value' ) );
+			var visible = '!=' === $el.attr( 'data-fixthisplz-op' ) ? value !== expected : value === expected;
 			$el.prop( 'hidden', ! visible );
 		} );
 	}
 
 	/* ---------------------------------------------------------------- live preview */
 
-	var $preview = $form.find( '.bugspot-preview' );
-	var frame = $preview.find( '.bugspot-preview-frame' ).get( 0 );
+	var $preview = $form.find( '.fixthisplz-preview' );
+	var frame = $preview.find( '.fixthisplz-preview-frame' ).get( 0 );
 	var previewTimer = null;
 	var previewSeq = 0;
 
-	/** Nested object of the posted bugspot_settings[button][...] fields, parsed like PHP parses $_POST. */
+	/** Nested object of the posted fixthisplz_settings[button][...] fields, parsed like PHP parses $_POST. */
 	function buttonFields() {
-		var prefix = ( config.option || 'bugspot_settings' ) + '[button]';
+		var prefix = ( config.option || 'fixthisplz_settings' ) + '[button]';
 		var out = {};
 		$form.serializeArray().forEach( function ( field ) {
 			if ( 0 !== field.name.indexOf( prefix ) ) {
@@ -86,9 +86,9 @@
 				'<style>html,body{margin:0;height:100%;background:#fff;font:14px/1.5 system-ui,sans-serif;color:#50575e}' +
 				'.fake{padding:24px;max-width:560px}.fake i{display:block;height:10px;margin:0 0 12px;background:#e0e0e0;border-radius:5px}' +
 				'.fake i:first-child{height:18px;width:50%;background:#c3c4c7}</style>' +
-				'<style id="bugspot-preview-css"></style></head><body>' +
+				'<style id="fixthisplz-preview-css"></style></head><body>' +
 				'<div class="fake" aria-hidden="true"><i></i><i></i><i style="width:90%"></i><i style="width:75%"></i><i></i><i style="width:60%"></i></div>' +
-				'<button id="bugspot-button" type="button" tabindex="-1"></button></body></html>'
+				'<button id="fixthisplz-button" type="button" tabindex="-1"></button></body></html>'
 		);
 		doc.close();
 	}
@@ -96,7 +96,7 @@
 	/** Same markup as the front-end loader (assets/js/loader.js createButton). */
 	function renderButton( b ) {
 		var doc = frameDocument();
-		var el = doc && doc.getElementById( 'bugspot-button' );
+		var el = doc && doc.getElementById( 'fixthisplz-button' );
 		if ( ! el ) {
 			return;
 		}
@@ -104,7 +104,7 @@
 		el.textContent = '';
 		el.setAttribute( 'aria-label', label );
 		el.title = b.tooltip || i18n.defaultLabel || '';
-		var svgUrl = $form.find( '.bugspot-svg-thumb' ).attr( 'src' );
+		var svgUrl = $form.find( '.fixthisplz-svg-thumb' ).attr( 'src' );
 		if ( 'svg' === b.icon_type && svgUrl && '0' !== String( b.svg_attachment_id || '0' ) ) {
 			var img = doc.createElement( 'img' );
 			img.alt = '';
@@ -118,7 +118,7 @@
 		}
 		if ( 'pill' === b.shape ) {
 			var text = doc.createElement( 'span' );
-			text.className = 'bugspot-label';
+			text.className = 'fixthisplz-label';
 			text.textContent = label;
 			el.appendChild( text );
 		}
@@ -128,7 +128,7 @@
 	function updatePreview() {
 		var button = buttonFields();
 		var seq = ++previewSeq;
-		var $error = $preview.find( '.bugspot-preview-error' );
+		var $error = $preview.find( '.fixthisplz-preview-error' );
 		renderButton( button );
 		apiFetch( { path: config.previewPath, method: 'POST', data: { button: button } } )
 			.then( function ( response ) {
@@ -136,7 +136,7 @@
 					return; // A newer request is on its way.
 				}
 				var doc = frameDocument();
-				var style = doc && doc.getElementById( 'bugspot-preview-css' );
+				var style = doc && doc.getElementById( 'fixthisplz-preview-css' );
 				if ( style ) {
 					style.textContent = String( ( response && response.css ) || '' );
 				}
@@ -165,17 +165,17 @@
 			var device = $( this ).attr( 'data-device' );
 			$preview.find( '[data-device]' ).attr( 'aria-pressed', 'false' );
 			$( this ).attr( 'aria-pressed', 'true' );
-			$preview.find( '.bugspot-preview-stage' ).toggleClass( 'is-mobile', 'mobile' === device );
+			$preview.find( '.fixthisplz-preview-stage' ).toggleClass( 'is-mobile', 'mobile' === device );
 		} );
 	}
 
 	/* ---------------------------------------------------------------- icon grid */
 
-	$form.find( '.bugspot-icon-grid' ).each( function () {
+	$form.find( '.fixthisplz-icon-grid' ).each( function () {
 		var $grid = $( this ).prop( 'hidden', false );
 		var $target = $( '#' + $grid.attr( 'data-target' ) );
-		$grid.on( 'click', '.bugspot-icon-choice', function () {
-			$grid.find( '.bugspot-icon-choice' ).attr( 'aria-pressed', 'false' );
+		$grid.on( 'click', '.fixthisplz-icon-choice', function () {
+			$grid.find( '.fixthisplz-icon-choice' ).attr( 'aria-pressed', 'false' );
 			$( this ).attr( 'aria-pressed', 'true' );
 			$target.val( $( this ).attr( 'data-icon' ) ).trigger( 'change' );
 		} );
@@ -184,12 +184,12 @@
 	/* ---------------------------------------------------------------- SVG from the media library */
 
 	var mediaFrame = null;
-	var $svg = $form.find( '.bugspot-svg-picker' );
+	var $svg = $form.find( '.fixthisplz-svg-picker' );
 	var $svgId = $svg.find( 'input[type="hidden"]' );
-	var $svgThumb = $svg.find( '.bugspot-svg-thumb' );
-	var $svgRemove = $svg.find( '.bugspot-svg-remove' );
+	var $svgThumb = $svg.find( '.fixthisplz-svg-thumb' );
+	var $svgRemove = $svg.find( '.fixthisplz-svg-remove' );
 
-	$svg.on( 'click', '.bugspot-svg-choose', function () {
+	$svg.on( 'click', '.fixthisplz-svg-choose', function () {
 		if ( ! window.wp || ! window.wp.media ) {
 			return;
 		}
@@ -215,7 +215,7 @@
 		mediaFrame.open();
 	} );
 
-	$svg.on( 'click', '.bugspot-svg-remove', function () {
+	$svg.on( 'click', '.fixthisplz-svg-remove', function () {
 		$svgThumb.attr( 'src', '' ).prop( 'hidden', true );
 		$svgRemove.prop( 'hidden', true );
 		$svgId.val( '0' ).trigger( 'change' );
@@ -224,7 +224,7 @@
 	/* ---------------------------------------------------------------- colors */
 
 	if ( $.fn.wpColorPicker ) {
-		$form.find( '.bugspot-color-field' ).wpColorPicker( {
+		$form.find( '.fixthisplz-color-field' ).wpColorPicker( {
 			change: schedulePreview,
 			clear: schedulePreview,
 		} );

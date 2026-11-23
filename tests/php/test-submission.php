@@ -1,9 +1,9 @@
 <?php
 
-use Bug_Spotter\Installer;
-use Bug_Spotter\Report_Submission;
-use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Settings;
+use FixThisPlz\Installer;
+use FixThisPlz\Report_Submission;
+use FixThisPlz\Reports_Repository;
+use FixThisPlz\Settings;
 
 /**
  * Runs $fn( $settings, $ip, &$sent ) with the plugin enabled for guests and subscribers, a fresh client IP
@@ -56,7 +56,7 @@ function submission_count(): int {
 	return (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . Installer::table() );
 }
 
-bugspot_test(
+fixthisplz_test(
 	'submission: guest_report_is_stored_cleaned_and_mailed',
 	function () {
 		submission_env(
@@ -75,7 +75,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'submission: logged_in_sender_is_stored_by_account_and_email_ignored',
 	function () {
 		submission_env(
@@ -91,14 +91,14 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'submission: refuses_guests_when_visibility_excludes_them',
 	function () {
 		submission_env(
 			function ( array $settings, string $ip ) {
 				$before = submission_count();
-				assert_wp_error( Report_Submission::submit( $settings, submission_input(), null, $ip ), 'bugspot_not_allowed' );
-				assert_wp_error( Report_Submission::submit( $settings, submission_input(), new WP_User( 0 ), $ip ), 'bugspot_not_allowed' );
+				assert_wp_error( Report_Submission::submit( $settings, submission_input(), null, $ip ), 'fixthisplz_not_allowed' );
+				assert_wp_error( Report_Submission::submit( $settings, submission_input(), new WP_User( 0 ), $ip ), 'fixthisplz_not_allowed' );
 				assert_same( $before, submission_count() );
 			},
 			array( 'visibility' => array( 'guests' => false ) )
@@ -106,7 +106,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'submission: validation_errors_return_422_and_store_nothing',
 	function () {
 		submission_env(
@@ -121,7 +121,7 @@ bugspot_test(
 				);
 				foreach ( $cases as $label => $over ) {
 					$result = Report_Submission::submit( $settings, submission_input( $over ), null, $ip );
-					assert_wp_error( $result, 'bugspot_invalid' );
+					assert_wp_error( $result, 'fixthisplz_invalid' );
 					assert_same( 422, $result->get_error_data()['status'], $label );
 				}
 				assert_same( $before, submission_count() );
@@ -131,14 +131,14 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'submission: send_limit_counts_every_attempt_of_the_same_ip',
 	function () {
 		submission_env(
 			function ( array $settings, string $ip ) {
 				assert_true( is_int( Report_Submission::submit( $settings, submission_input(), null, $ip ) ) );
 				$second = Report_Submission::submit( $settings, submission_input(), null, $ip );
-				assert_wp_error( $second, 'bugspot_rate_limited' );
+				assert_wp_error( $second, 'fixthisplz_rate_limited' );
 				assert_same( 429, $second->get_error_data()['status'] );
 				assert_true( is_int( Report_Submission::submit( $settings, submission_input(), null, $ip . '-other' ) ), 'another IP has its own bucket' );
 			},
@@ -147,15 +147,15 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'submission: screenshot_errors_and_disabled_screenshots',
 	function () {
 		submission_env(
 			function ( array $settings, string $ip ) {
 				$too_big = array( 'error' => UPLOAD_ERR_INI_SIZE, 'tmp_name' => '' );
-				assert_wp_error( Report_Submission::submit( $settings, submission_input( array( 'screenshot' => $too_big ) ), null, $ip ), 'bugspot_too_large' );
+				assert_wp_error( Report_Submission::submit( $settings, submission_input( array( 'screenshot' => $too_big ) ), null, $ip ), 'fixthisplz_too_large' );
 				$partial = array( 'error' => UPLOAD_ERR_PARTIAL, 'tmp_name' => '' );
-				assert_wp_error( Report_Submission::submit( $settings, submission_input( array( 'screenshot' => $partial ) ), null, $ip ), 'bugspot_upload_failed' );
+				assert_wp_error( Report_Submission::submit( $settings, submission_input( array( 'screenshot' => $partial ) ), null, $ip ), 'fixthisplz_upload_failed' );
 
 				// Screenshots turned off: an upload is ignored, the report is still saved without one.
 				$settings['dialog']['allow_screenshot'] = false;

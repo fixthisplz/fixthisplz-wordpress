@@ -164,7 +164,7 @@ function withFakeBrowser(fn, { hidden = false, video = {} } = {}) {
 		},
 	});
 	return Promise.resolve()
-		.then(() => fn({ calls, focus, settle: () => settle, painted, delivered, uiHidden: () => classes.has('bugspot-capture-hide') }))
+		.then(() => fn({ calls, focus, settle: () => settle, painted, delivered, uiHidden: () => classes.has('fixthisplz-capture-hide') }))
 		.finally(() => {
 			for (const name of ['document', 'window', 'requestAnimationFrame', 'ImageCapture', 'MediaStream', 'CaptureController']) delete globalThis[name];
 			if (saved) Object.defineProperty(globalThis, 'navigator', saved);

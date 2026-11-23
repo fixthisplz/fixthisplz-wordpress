@@ -1,22 +1,22 @@
 <?php
 
-namespace Bug_Spotter\Admin;
+namespace FixThisPlz\Admin;
 
-use Bug_Spotter\Installer;
-use Bug_Spotter\Mailer;
-use Bug_Spotter\Priorities;
-use Bug_Spotter\Report_Format;
-use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Settings;
-use Bug_Spotter\Team;
-use Bug_Spotter\Webhook_Sender;
+use FixThisPlz\Installer;
+use FixThisPlz\Mailer;
+use FixThisPlz\Priorities;
+use FixThisPlz\Report_Format;
+use FixThisPlz\Reports_Repository;
+use FixThisPlz\Settings;
+use FixThisPlz\Team;
+use FixThisPlz\Webhook_Sender;
 
 defined( 'ABSPATH' ) || exit;
 
 /** Controller of the "All bugs" screen: filters, actions, tabs, and dispatch to list / kanban / detail. */
 final class Bugs_Page {
 
-	public const PER_PAGE_OPTION = 'bugspot_per_page';
+	public const PER_PAGE_OPTION = 'fixthisplz_per_page';
 	public const DEFAULT_PER_PAGE = 20;
 	private const NOTICES        = array( 'updated', 'deleted' );
 
@@ -27,7 +27,7 @@ final class Bugs_Page {
 		}
 		$screen = get_current_screen();
 		if ( $screen && ! isset( $_GET['report'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			add_screen_option( 'per_page', array( 'label' => __( 'Bugs per page', 'bug-spotter' ), 'default' => self::DEFAULT_PER_PAGE, 'option' => self::PER_PAGE_OPTION ) );
+			add_screen_option( 'per_page', array( 'label' => __( 'Bugs per page', 'fixthisplz' ), 'default' => self::DEFAULT_PER_PAGE, 'option' => self::PER_PAGE_OPTION ) );
 			add_filter( "manage_{$screen->id}_columns", array( List_Table::class, 'columns' ) );
 		}
 		// A detail page carries its own _wpnonce / action parameters: never treat them as list actions.
@@ -85,9 +85,9 @@ final class Bugs_Page {
 		$back    = self::redirect_args( $request );
 
 		// Row action "Delete".
-		if ( isset( $request['bugspot_action'], $request['bug'] ) && 'delete' === $request['bugspot_action'] && is_scalar( $request['bug'] ) ) {
+		if ( isset( $request['fixthisplz_action'], $request['bug'] ) && 'delete' === $request['fixthisplz_action'] && is_scalar( $request['bug'] ) ) {
 			$id = absint( $request['bug'] );
-			check_admin_referer( 'bugspot_delete_' . $id );
+			check_admin_referer( 'fixthisplz_delete_' . $id );
 			Request::require_manager();
 			list( $type, $count ) = self::apply_bulk( 'delete', array( $id ) );
 			self::redirect( array_merge( $back, self::notice_args( $type, $count ) ) );
@@ -137,7 +137,7 @@ final class Bugs_Page {
 	}
 
 	public static function notice_args( string $type, int $count ): array {
-		return '' === $type ? array() : array( 'bugspot_notice' => $type, 'bugspot_count' => $count );
+		return '' === $type ? array() : array( 'fixthisplz_notice' => $type, 'fixthisplz_count' => $count );
 	}
 
 	private static function redirect( array $args ): void {
@@ -147,7 +147,7 @@ final class Bugs_Page {
 
 	public static function render(): void {
 		if ( ! current_user_can( Installer::CAPABILITY ) ) {
-			wp_die( esc_html__( 'Sorry, you are not allowed to access this page.', 'bug-spotter' ), 403 );
+			wp_die( esc_html__( 'Sorry, you are not allowed to access this page.', 'fixthisplz' ), 403 );
 		}
 
 		$query = wp_unslash( $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only filters.
@@ -160,13 +160,13 @@ final class Bugs_Page {
 		$filters = Report_Query_Args::read_filters( $query );
 		$kanban  = isset( $query['view'] ) && 'kanban' === $query['view'];
 
-		echo '<div class="wrap bugspot-admin"><h1 class="wp-heading-inline">' . esc_html( Settings::text( 'management.menu_label' ) ) . '</h1>';
+		echo '<div class="wrap fixthisplz-admin"><h1 class="wp-heading-inline">' . esc_html( Settings::text( 'management.menu_label' ) ) . '</h1>';
 		echo '<hr class="wp-header-end">';
 		self::render_notice( $query );
 		self::render_tabs( $filters, $kanban );
 
 		if ( $kanban ) {
-			echo '<form method="get" class="bugspot-filters">';
+			echo '<form method="get" class="fixthisplz-filters">';
 			self::render_filter_form( $filters, $query, true );
 			echo '</form>';
 			Kanban::render( $filters );
@@ -177,7 +177,7 @@ final class Bugs_Page {
 		$table = new List_Table();
 		$table->prepare_items();
 
-		echo '<form method="get" class="bugspot-filters">';
+		echo '<form method="get" class="fixthisplz-filters">';
 		self::render_filter_form( $filters, $query, false );
 		$table->views();
 		$table->display();
@@ -185,16 +185,16 @@ final class Bugs_Page {
 	}
 
 	private static function render_notice( array $query ): void {
-		$type = isset( $query['bugspot_notice'] ) && is_string( $query['bugspot_notice'] ) ? $query['bugspot_notice'] : '';
+		$type = isset( $query['fixthisplz_notice'] ) && is_string( $query['fixthisplz_notice'] ) ? $query['fixthisplz_notice'] : '';
 		if ( ! in_array( $type, self::NOTICES, true ) ) {
 			return;
 		}
-		$count   = isset( $query['bugspot_count'] ) ? absint( $query['bugspot_count'] ) : 0;
+		$count   = isset( $query['fixthisplz_count'] ) ? absint( $query['fixthisplz_count'] ) : 0;
 		$message = 'deleted' === $type
 			/* translators: %d: number of reports. */
-			? _n( '%d report deleted.', '%d reports deleted.', $count, 'bug-spotter' )
+			? _n( '%d report deleted.', '%d reports deleted.', $count, 'fixthisplz' )
 			/* translators: %d: number of reports. */
-			: _n( '%d report updated.', '%d reports updated.', $count, 'bug-spotter' );
+			: _n( '%d report updated.', '%d reports updated.', $count, 'fixthisplz' );
 		echo '<div class="notice notice-success is-dismissible"><p>' . esc_html( sprintf( $message, $count ) ) . '</p></div>';
 	}
 
@@ -205,13 +205,13 @@ final class Bugs_Page {
 			'<a href="%s" class="nav-tab%s">%s</a>',
 			esc_url( Report_Format::list_link( $args ) ),
 			$kanban ? '' : ' nav-tab-active',
-			esc_html__( 'List', 'bug-spotter' )
+			esc_html__( 'List', 'fixthisplz' )
 		);
 		printf(
 			'<a href="%s" class="nav-tab%s">%s</a>',
 			esc_url( Report_Format::list_link( array_merge( $args, array( 'view' => 'kanban' ) ) ) ),
 			$kanban ? ' nav-tab-active' : '',
-			esc_html__( 'Kanban', 'bug-spotter' )
+			esc_html__( 'Kanban', 'fixthisplz' )
 		);
 		echo '</nav>';
 	}
@@ -231,28 +231,28 @@ final class Bugs_Page {
 			echo '<input type="hidden" name="order" value="' . esc_attr( strtolower( $order ) ) . '">';
 		}
 
-		echo '<div class="bugspot-filter-bar">';
-		echo '<label>' . esc_html__( 'From', 'bug-spotter' ) . ' <input type="date" name="from" value="' . esc_attr( $filters['from'] ) . '"></label> ';
-		echo '<label>' . esc_html__( 'To', 'bug-spotter' ) . ' <input type="date" name="to" value="' . esc_attr( $filters['to'] ) . '"></label> ';
-		echo '<label class="screen-reader-text" for="bugspot-priority">' . esc_html__( 'Priority', 'bug-spotter' ) . '</label>';
-		echo '<select name="priority" id="bugspot-priority"><option value="">' . esc_html__( 'All priorities', 'bug-spotter' ) . '</option>';
+		echo '<div class="fixthisplz-filter-bar">';
+		echo '<label>' . esc_html__( 'From', 'fixthisplz' ) . ' <input type="date" name="from" value="' . esc_attr( $filters['from'] ) . '"></label> ';
+		echo '<label>' . esc_html__( 'To', 'fixthisplz' ) . ' <input type="date" name="to" value="' . esc_attr( $filters['to'] ) . '"></label> ';
+		echo '<label class="screen-reader-text" for="fixthisplz-priority">' . esc_html__( 'Priority', 'fixthisplz' ) . '</label>';
+		echo '<select name="priority" id="fixthisplz-priority"><option value="">' . esc_html__( 'All priorities', 'fixthisplz' ) . '</option>';
 		foreach ( Priorities::all() as $key => $label ) {
 			printf( '<option value="%s"%s>%s</option>', esc_attr( $key ), selected( $filters['priority'], $key, false ), esc_html( $label ) );
 		}
 		echo '</select> ';
 		self::render_assignee_filter( $filters, $kanban );
-		echo '<label class="screen-reader-text" for="bugspot-search">' . esc_html__( 'Search reports', 'bug-spotter' ) . '</label>';
-		echo '<input type="search" id="bugspot-search" name="s" value="' . esc_attr( $filters['search'] ) . '" placeholder="' . esc_attr__( 'Search description or URL', 'bug-spotter' ) . '"> ';
-		echo '<button type="submit" class="button">' . esc_html__( 'Filter', 'bug-spotter' ) . '</button> ';
-		echo '<a class="button" href="' . esc_url( Csv_Export::url( $filters, ...Report_Query_Args::read_sort( $query ) ) ) . '">' . esc_html__( 'Export CSV', 'bug-spotter' ) . '</a>';
+		echo '<label class="screen-reader-text" for="fixthisplz-search">' . esc_html__( 'Search reports', 'fixthisplz' ) . '</label>';
+		echo '<input type="search" id="fixthisplz-search" name="s" value="' . esc_attr( $filters['search'] ) . '" placeholder="' . esc_attr__( 'Search description or URL', 'fixthisplz' ) . '"> ';
+		echo '<button type="submit" class="button">' . esc_html__( 'Filter', 'fixthisplz' ) . '</button> ';
+		echo '<a class="button" href="' . esc_url( Csv_Export::url( $filters, ...Report_Query_Args::read_sort( $query ) ) ) . '">' . esc_html__( 'Export CSV', 'fixthisplz' ) . '</a>';
 		echo '</div>';
 	}
 
 	/** "Assigned to" selector, and the "My reports" quick view (the current user's reports, other filters kept). */
 	private static function render_assignee_filter( array $filters, bool $kanban ): void {
-		echo '<label class="screen-reader-text" for="bugspot-assigned-filter">' . esc_html__( 'Assigned to', 'bug-spotter' ) . '</label>';
-		echo '<select name="assigned" id="bugspot-assigned-filter"><option value="">' . esc_html__( 'Everyone', 'bug-spotter' ) . '</option>';
-		printf( '<option value="none"%s>%s</option>', selected( $filters['assigned'], 'none', false ), esc_html__( 'Unassigned', 'bug-spotter' ) );
+		echo '<label class="screen-reader-text" for="fixthisplz-assigned-filter">' . esc_html__( 'Assigned to', 'fixthisplz' ) . '</label>';
+		echo '<select name="assigned" id="fixthisplz-assigned-filter"><option value="">' . esc_html__( 'Everyone', 'fixthisplz' ) . '</option>';
+		printf( '<option value="none"%s>%s</option>', selected( $filters['assigned'], 'none', false ), esc_html__( 'Unassigned', 'fixthisplz' ) );
 		foreach ( Team::members() as $id => $name ) {
 			printf( '<option value="%d"%s>%s</option>', (int) $id, selected( $filters['assigned'], (string) $id, false ), esc_html( $name ) );
 		}
@@ -266,10 +266,10 @@ final class Bugs_Page {
 		}
 		printf(
 			'<a class="button%s" href="%s"%s>%s</a> ',
-			$active ? ' bugspot-active' : '',
+			$active ? ' fixthisplz-active' : '',
 			esc_url( Report_Format::list_link( $args ) ),
 			$active ? ' aria-current="true"' : '',
-			esc_html__( 'My reports', 'bug-spotter' )
+			esc_html__( 'My reports', 'fixthisplz' )
 		);
 	}
 }

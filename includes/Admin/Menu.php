@@ -1,18 +1,18 @@
 <?php
 
-namespace Bug_Spotter\Admin;
+namespace FixThisPlz\Admin;
 
-use Bug_Spotter\Installer;
-use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Settings;
+use FixThisPlz\Installer;
+use FixThisPlz\Reports_Repository;
+use FixThisPlz\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
 /** Registers the plugin's top-level menu (name and position from the settings) and its sub-menus. */
 final class Menu {
 
-	public const SLUG          = 'bug-spotter';
-	public const SETTINGS_SLUG = 'bug-spotter-settings';
+	public const SLUG          = 'fixthisplz';
+	public const SETTINGS_SLUG = 'fixthisplz-settings';
 
 	public static function register_hooks(): void {
 		add_action( 'admin_menu', array( self::class, 'register' ) );
@@ -47,8 +47,8 @@ final class Menu {
 		// Settings can change who may manage bugs, so they stay behind a core capability.
 		add_submenu_page(
 			self::SLUG,
-			__( 'Bug Spotter settings', 'bug-spotter' ),
-			__( 'Settings', 'bug-spotter' ),
+			__( 'FixThisPlz settings', 'fixthisplz' ),
+			__( 'Settings', 'fixthisplz' ),
 			'manage_options',
 			self::SETTINGS_SLUG,
 			array( self::class, 'render_settings' )
@@ -85,7 +85,7 @@ final class Menu {
 		if ( self::SLUG !== $page && self::SETTINGS_SLUG !== $page ) {
 			return;
 		}
-		wp_enqueue_style( 'bug-spotter-admin', BUGSPOT_URL . 'assets/css/admin.css', array(), BUGSPOT_VERSION );
+		wp_enqueue_style( 'fixthisplz-admin', FIXTHISPLZ_URL . 'assets/css/admin.css', array(), FIXTHISPLZ_VERSION );
 
 		// The board script is only needed on the Kanban view of the list (not on a detail page).
 		$kanban = isset( $_GET['view'] ) && 'kanban' === $_GET['view'] && ! isset( $_GET['report'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen check.

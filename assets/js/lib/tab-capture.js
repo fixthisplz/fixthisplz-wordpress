@@ -15,7 +15,7 @@ import { listMaskTargets, measureTarget, scaleRects } from './mask-targets.js';
 import { MASK_FILL } from './sensitive.js';
 import { withTimeout } from './async.js';
 
-const HIDE_CLASS = 'bugspot-capture-hide';
+const HIDE_CLASS = 'fixthisplz-capture-hide';
 const STEP_TIMEOUT_MS = 5000;
 const DEADLINE_MS = 10000; // whole shoot, once the permission is granted
 // Hints only: browsers that do not know an option ignore it, and the visitor may still pick anything.

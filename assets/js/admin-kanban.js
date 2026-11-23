@@ -1,23 +1,23 @@
-/* Bug Spotter: drag cards between status columns; each drop PATCHes the report. No build step. */
+/* FixThisPlz: drag cards between status columns; each drop PATCHes the report. No build step. */
 ( function ( $, apiFetch ) {
 	'use strict';
 
-	var config = window.bugspotKanban || {};
-	var $wrap = $( '.bugspot-board-wrap' );
-	var $board = $( '.bugspot-board' );
-	var $lists = $board.find( '.bugspot-cards' );
+	var config = window.fixThisPlzKanban || {};
+	var $wrap = $( '.fixthisplz-board-wrap' );
+	var $board = $( '.fixthisplz-board' );
+	var $lists = $board.find( '.fixthisplz-cards' );
 	if ( ! $lists.length ) {
 		return;
 	}
 
 	function bump( status, delta ) {
-		var $count = $board.find( '.bugspot-count[data-status="' + status + '"]' );
+		var $count = $board.find( '.fixthisplz-count[data-status="' + status + '"]' );
 		$count.text( Math.max( 0, ( parseInt( $count.text(), 10 ) || 0 ) + delta ) );
 	}
 
 	function showError( message ) {
-		$wrap.children( '.bugspot-error' ).remove();
-		var $notice = $( '<div class="notice notice-error is-dismissible bugspot-error" role="alert"></div>' );
+		$wrap.children( '.fixthisplz-error' ).remove();
+		var $notice = $( '<div class="notice notice-error is-dismissible fixthisplz-error" role="alert"></div>' );
 		$notice.append( $( '<p></p>' ).text( message ) );
 		var $button = $( '<button type="button" class="notice-dismiss"></button>' );
 		$button.append( $( '<span class="screen-reader-text"></span>' ).text( config.dismiss || 'Dismiss this notice.' ) );
@@ -31,7 +31,7 @@
 	/* The drag has already ended when the request fails, so sortable('cancel') no longer applies:
 	   put the card back where it was picked up. */
 	function revert( $item, origin ) {
-		var $siblings = origin.$list.children( '.bugspot-card' ).not( $item );
+		var $siblings = origin.$list.children( '.fixthisplz-card' ).not( $item );
 		if ( origin.index < $siblings.length ) {
 			$item.insertBefore( $siblings.eq( origin.index ) );
 		} else {
@@ -40,23 +40,23 @@
 	}
 
 	$lists.sortable( {
-		connectWith: '.bugspot-cards',
-		items: '> .bugspot-card',
-		placeholder: 'bugspot-card bugspot-placeholder',
+		connectWith: '.fixthisplz-cards',
+		items: '> .fixthisplz-card',
+		placeholder: 'fixthisplz-card fixthisplz-placeholder',
 		forcePlaceholderSize: true,
 		tolerance: 'pointer',
 		start: function ( event, ui ) {
 			var $list = ui.item.parent();
-			ui.item.data( 'bugspotOrigin', {
+			ui.item.data( 'fixThisPlzOrigin', {
 				$list: $list,
-				index: $list.children( '.bugspot-card' ).not( ui.placeholder ).index( ui.item )
+				index: $list.children( '.fixthisplz-card' ).not( ui.placeholder ).index( ui.item )
 			} );
 		},
 		stop: function ( event, ui ) {
 			var $item = ui.item;
-			var origin = $item.data( 'bugspotOrigin' );
+			var origin = $item.data( 'fixThisPlzOrigin' );
 			var from = $item.attr( 'data-status' );
-			var to = $item.closest( '.bugspot-cards' ).attr( 'data-status' );
+			var to = $item.closest( '.fixthisplz-cards' ).attr( 'data-status' );
 			if ( ! origin || ! to ) {
 				return;
 			}
@@ -68,7 +68,7 @@
 
 			$board.addClass( 'is-busy' );
 			$lists.sortable( 'disable' );
-			$wrap.children( '.bugspot-error' ).remove();
+			$wrap.children( '.fixthisplz-error' ).remove();
 
 			apiFetch( {
 				path: config.path + $item.attr( 'data-id' ),

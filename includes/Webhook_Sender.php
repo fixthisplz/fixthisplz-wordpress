@@ -1,6 +1,6 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,8 +20,8 @@ final class Webhook_Sender {
 	private static ?array $batch = null;
 
 	public static function register_hooks(): void {
-		add_action( 'bugspot_report_created', array( self::class, 'on_created' ) );
-		add_action( 'bugspot_report_changed', array( self::class, 'on_changed' ), 10, 2 );
+		add_action( 'fixthisplz_report_created', array( self::class, 'on_created' ) );
+		add_action( 'fixthisplz_report_changed', array( self::class, 'on_changed' ), 10, 2 );
 	}
 
 	public static function on_created( int $report_id ): void {
@@ -106,8 +106,8 @@ final class Webhook_Sender {
 	}
 
 	/**
-	 * Posts $data to $webhook in its format. The generic JSON carries X-Bug-Spotter-Event and
-	 * X-Bug-Spotter-Signature: "sha256=" + HMAC-SHA256 (hex) of the raw body with the webhook's secret.
+	 * Posts $data to $webhook in its format. The generic JSON carries X-FixThisPlz-Event and
+	 * X-FixThisPlz-Signature: "sha256=" + HMAC-SHA256 (hex) of the raw body with the webhook's secret.
 	 * Never throws: a failing webhook must not break the admin request nor the other webhooks.
 	 *
 	 * @param array<string,mixed> $webhook A row of Webhooks::all().
@@ -121,10 +121,10 @@ final class Webhook_Sender {
 			$body    = Webhook_Payload::body( $format, $data );
 			$headers = array( 'Content-Type' => 'application/json; charset=utf-8' );
 			if ( 'generic' === $format ) {
-				$headers['X-Bug-Spotter-Event'] = $data['event'];
-				$secret                         = Webhooks::secret( $webhook );
+				$headers['X-FixThisPlz-Event'] = $data['event'];
+				$secret                        = Webhooks::secret( $webhook );
 				if ( null !== $secret ) {
-					$headers['X-Bug-Spotter-Signature'] = 'sha256=' . hash_hmac( 'sha256', $body, $secret );
+					$headers['X-FixThisPlz-Signature'] = 'sha256=' . hash_hmac( 'sha256', $body, $secret );
 				}
 			}
 			$url = (string) $webhook['url'];
@@ -141,8 +141,8 @@ final class Webhook_Sender {
 				)
 			);
 		} catch ( \Throwable $e ) {
-			error_log( 'Bug Spotter: webhook failed: ' . $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
-			return new \WP_Error( 'bugspot_webhook_failed', $e->getMessage() );
+			error_log( 'FixThisPlz: webhook failed: ' . $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
+			return new \WP_Error( 'fixthisplz_webhook_failed', $e->getMessage() );
 		}
 	}
 }

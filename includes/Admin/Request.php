@@ -1,8 +1,8 @@
 <?php
 
-namespace Bug_Spotter\Admin;
+namespace FixThisPlz\Admin;
 
-use Bug_Spotter\Installer;
+use FixThisPlz\Installer;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -17,7 +17,7 @@ final class Request {
 	}
 
 	public static function deny(): void {
-		wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'bug-spotter' ), 403 );
+		wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'fixthisplz' ), 403 );
 	}
 
 	/** A posted ID (0 when missing); the caller verifies the nonce for that ID right after. */

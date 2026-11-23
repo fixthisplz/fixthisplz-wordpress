@@ -4,8 +4,8 @@
 
 import { addFamilies } from './capture-fonts.js';
 
-const PSEUDO_ATTR = 'data-bugspot-pseudo';
-const MASKED_ATTR = 'data-bugspot-masked';
+const PSEUDO_ATTR = 'data-fixthisplz-pseudo';
+const MASKED_ATTR = 'data-fixthisplz-masked';
 const PSEUDO_ELEMENTS = ['::before', '::after'];
 // What the library copies right: a plain string. It writes any value as `content: '<value minus every quote>'`,
 // so url("data:…"), alt text ("x" / ""), counter() or attr() would be drawn as literal text.

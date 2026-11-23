@@ -1,16 +1,16 @@
-/* Bug Spotter settings, "Statuses" and "Priorities" tabs: reorder rows by drag and drop, add a row from the <template>, delete a row
+/* FixThisPlz settings, "Statuses" and "Priorities" tabs: reorder rows by drag and drop, add a row from the <template>, delete a row
  * (asking where its reports go when it is used). The form posts the rows in document order. No build step. */
 ( function ( $ ) {
 	'use strict';
 
-	var $table = $( '.bugspot-list-table' );
+	var $table = $( '.fixthisplz-list-table' );
 	var $body = $table.children( 'tbody' );
-	var $moves = $( '.bugspot-list-moves' );
-	var template = $( '.bugspot-list-template' ).get( 0 );
+	var $moves = $( '.fixthisplz-list-moves' );
+	var template = $( '.fixthisplz-list-template' ).get( 0 );
 	if ( ! $body.length || ! template ) {
 		return;
 	}
-	var $add = $( '.bugspot-list-add' );
+	var $add = $( '.fixthisplz-list-add' );
 	var max = parseInt( $add.data( 'max' ), 10 ) || 20;
 	var movesName = String( $table.data( 'moves' ) );
 	var fallback = String( $table.data( 'fallback' ) );
@@ -18,23 +18,23 @@
 
 	/* No row beyond the cap: the server would refuse it. */
 	function updateAdd() {
-		$add.prop( 'disabled', $body.children( '.bugspot-list-row' ).length >= max );
+		$add.prop( 'disabled', $body.children( '.fixthisplz-list-row' ).length >= max );
 	}
 
 	function initColor( $scope ) {
 		if ( $.fn.wpColorPicker ) {
-			$scope.find( '.bugspot-list-color' ).wpColorPicker();
+			$scope.find( '.fixthisplz-list-color' ).wpColorPicker();
 		}
 	}
 
 	function rowName( $row ) {
-		var $label = $row.find( '.bugspot-list-label' );
+		var $label = $row.find( '.fixthisplz-list-label' );
 		return $.trim( $label.val() ) || $label.attr( 'placeholder' ) || '';
 	}
 
 	/* Saved choices still in the table: the only valid targets (a new one has no key until saved). */
 	function targets() {
-		return $body.children( '.bugspot-list-row' ).filter( function () {
+		return $body.children( '.fixthisplz-list-row' ).filter( function () {
 			return '' !== String( $( this ).data( 'key' ) || '' );
 		} );
 	}
@@ -58,12 +58,12 @@
 
 	function deleteRow( $row ) {
 		var key = String( $row.data( 'key' ) || '' );
-		var count = parseInt( $row.find( '.bugspot-list-count' ).data( 'count' ), 10 ) || 0;
+		var count = parseInt( $row.find( '.fixthisplz-list-count' ).data( 'count' ), 10 ) || 0;
 		var name = rowName( $row );
 		var moveLabel = $row.data( 'move-label' );
 		$row.remove();
 		if ( '' !== key && count > 0 ) {
-			var id = 'bugspot-list-move-' + key;
+			var id = 'fixthisplz-list-move-' + key;
 			var $select = $( '<select></select>' ).attr( { id: id, name: movesName + '[' + key + ']' } );
 			var $label = $( '<label></label>' ).attr( 'for', id ).text( name + ' — ' + moveLabel + ' ' );
 			$moves.append( $( '<p></p>' ).append( $label, $select ) );
@@ -73,10 +73,10 @@
 	}
 
 	$body.sortable( {
-		items: '> .bugspot-list-row',
-		handle: '.bugspot-list-handle',
+		items: '> .fixthisplz-list-row',
+		handle: '.fixthisplz-list-handle',
 		axis: 'y',
-		placeholder: 'bugspot-list-placeholder',
+		placeholder: 'fixthisplz-list-placeholder',
 		forcePlaceholderSize: true
 	} );
 
@@ -91,13 +91,13 @@
 		$body.append( $row );
 		initColor( $row );
 		updateAdd();
-		$row.find( '.bugspot-list-label' ).trigger( 'focus' );
+		$row.find( '.fixthisplz-list-label' ).trigger( 'focus' );
 	} );
 
-	$body.on( 'click', '.bugspot-list-delete', function () {
-		deleteRow( $( this ).closest( '.bugspot-list-row' ) );
+	$body.on( 'click', '.fixthisplz-list-delete', function () {
+		deleteRow( $( this ).closest( '.fixthisplz-list-row' ) );
 	} );
 
 	/* A renamed choice shows its new name in the "move to" lists. */
-	$body.on( 'input', '.bugspot-list-label', refreshMoves );
+	$body.on( 'input', '.fixthisplz-list-label', refreshMoves );
 }( jQuery ) );

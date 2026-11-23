@@ -1,13 +1,13 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
 defined( 'ABSPATH' ) || exit;
 
-/** The bugspot_settings option: defaults, merged read access and labels. Validation lives in Settings_Sanitizer. */
+/** The fixthisplz_settings option: defaults, merged read access and labels. Validation lives in Settings_Sanitizer. */
 final class Settings {
 
-	public const OPTION = 'bugspot_settings';
+	public const OPTION = 'fixthisplz_settings';
 
 	public const MENU_LABEL_MAX = 40;
 	public const MENU_POSITION  = 26;
@@ -15,7 +15,7 @@ final class Settings {
 	/** Last get() result and the raw option value it was built from. @var array{saved:mixed,merged:array}|null */
 	private static ?array $memo = null;
 
-	/** Keeps the bugspot_manage capability in line with the "management" roles whenever the option is written. */
+	/** Keeps the fixthisplz_manage capability in line with the "management" roles whenever the option is written. */
 	public static function register_hooks(): void {
 		add_action( 'add_option_' . self::OPTION, array( self::class, 'sync_capabilities' ) );
 		add_action( 'update_option_' . self::OPTION, array( self::class, 'sync_capabilities' ) );
@@ -161,16 +161,16 @@ final class Settings {
 	/** @return array<int,string> The named admin-menu positions offered in Settings › Tracking › Team and menu: position => label. */
 	public static function menu_positions(): array {
 		return array(
-			3  => __( 'After Dashboard', 'bug-spotter' ),
-			6  => __( 'After Posts', 'bug-spotter' ),
-			11 => __( 'After Media', 'bug-spotter' ),
-			21 => __( 'After Pages', 'bug-spotter' ),
-			26 => __( 'After Comments', 'bug-spotter' ),
-			61 => __( 'After Appearance', 'bug-spotter' ),
-			66 => __( 'After Plugins', 'bug-spotter' ),
-			71 => __( 'After Users', 'bug-spotter' ),
-			76 => __( 'After Tools', 'bug-spotter' ),
-			81 => __( 'After Settings', 'bug-spotter' ),
+			3  => __( 'After Dashboard', 'fixthisplz' ),
+			6  => __( 'After Posts', 'fixthisplz' ),
+			11 => __( 'After Media', 'fixthisplz' ),
+			21 => __( 'After Pages', 'fixthisplz' ),
+			26 => __( 'After Comments', 'fixthisplz' ),
+			61 => __( 'After Appearance', 'fixthisplz' ),
+			66 => __( 'After Plugins', 'fixthisplz' ),
+			71 => __( 'After Users', 'fixthisplz' ),
+			76 => __( 'After Tools', 'fixthisplz' ),
+			81 => __( 'After Settings', 'fixthisplz' ),
 		);
 	}
 
@@ -192,20 +192,20 @@ final class Settings {
 
 		switch ( $key ) {
 			case 'dialog.title':
-				return __( 'Report a bug', 'bug-spotter' );
+				return __( 'Report a bug', 'fixthisplz' );
 			case 'dialog.instructions':
-				return __( 'Describe what went wrong and what you expected to happen.', 'bug-spotter' );
+				return __( 'Describe what went wrong and what you expected to happen.', 'fixthisplz' );
 			case 'dialog.privacy_text':
-				return __( 'Your report includes technical details about this page and your browser.', 'bug-spotter' );
+				return __( 'Your report includes technical details about this page and your browser.', 'fixthisplz' );
 			case 'management.menu_label':
-				return __( 'Bugs', 'bug-spotter' );
+				return __( 'Bugs', 'fixthisplz' );
 			case 'management.list_label':
-				return __( 'All bugs', 'bug-spotter' );
+				return __( 'All bugs', 'fixthisplz' );
 			case 'management.item_label':
-				return __( 'Bug', 'bug-spotter' );
+				return __( 'Bug', 'fixthisplz' );
 			case 'button.label':
 			case 'button.tooltip':
-				return __( 'Report a bug', 'bug-spotter' );
+				return __( 'Report a bug', 'fixthisplz' );
 		}
 		return '';
 	}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -67,9 +67,9 @@ final class Webhook_Payload {
 	public static function summary( string $event, int $count, string $value ): array {
 		$text = 'assigned' === $event
 			/* translators: 1: number of reports, 2: name of the person they are assigned to. */
-			? sprintf( _n( '%1$d report assigned to %2$s', '%1$d reports assigned to %2$s', $count, 'bug-spotter' ), $count, $value )
+			? sprintf( _n( '%1$d report assigned to %2$s', '%1$d reports assigned to %2$s', $count, 'fixthisplz' ), $count, $value )
 			/* translators: 1: number of reports, 2: their new status. */
-			: sprintf( _n( '%1$d report: status → %2$s', '%1$d reports: status → %2$s', $count, 'bug-spotter' ), $count, $value );
+			: sprintf( _n( '%1$d report: status → %2$s', '%1$d reports: status → %2$s', $count, 'fixthisplz' ), $count, $value );
 
 		$data            = self::data( $event, null );
 		$data['summary'] = array(
@@ -99,13 +99,13 @@ final class Webhook_Payload {
 		$title = (string) ( $data['report']['title'] ?? '' );
 		return match ( $data['event'] ) {
 			/* translators: %s: report title, such as "Bug #12". */
-			'report.created'        => sprintf( __( 'New report: %s', 'bug-spotter' ), $title ),
+			'report.created'        => sprintf( __( 'New report: %s', 'fixthisplz' ), $title ),
 			/* translators: %s: report title, such as "Bug #12". */
-			'report.status_changed' => sprintf( __( 'Status changed: %s', 'bug-spotter' ), $title ),
+			'report.status_changed' => sprintf( __( 'Status changed: %s', 'fixthisplz' ), $title ),
 			/* translators: %s: report title, such as "Bug #12". */
-			'report.assigned'       => sprintf( __( 'Report assigned: %s', 'bug-spotter' ), $title ),
+			'report.assigned'       => sprintf( __( 'Report assigned: %s', 'fixthisplz' ), $title ),
 			/* translators: %s: site name. */
-			default                 => sprintf( __( 'Test message from Bug Spotter on %s. The webhook works.', 'bug-spotter' ), $data['site']['name'] ),
+			default                 => sprintf( __( 'Test message from FixThisPlz on %s. The webhook works.', 'fixthisplz' ), $data['site']['name'] ),
 		};
 	}
 
@@ -116,14 +116,14 @@ final class Webhook_Payload {
 			return array();
 		}
 		$facts = array(
-			__( 'Description', 'bug-spotter' ) => $r['description'],
-			__( 'Page', 'bug-spotter' )        => '' !== $r['page_url'] ? $r['page_url'] : '—',
-			__( 'Status', 'bug-spotter' )      => $r['status']['label'],
-			__( 'Priority', 'bug-spotter' )    => $r['priority']['label'],
-			__( 'Assigned to', 'bug-spotter' ) => $r['assignee'] ?? __( 'Unassigned', 'bug-spotter' ),
+			__( 'Description', 'fixthisplz' ) => $r['description'],
+			__( 'Page', 'fixthisplz' )        => '' !== $r['page_url'] ? $r['page_url'] : '—',
+			__( 'Status', 'fixthisplz' )      => $r['status']['label'],
+			__( 'Priority', 'fixthisplz' )    => $r['priority']['label'],
+			__( 'Assigned to', 'fixthisplz' ) => $r['assignee'] ?? __( 'Unassigned', 'fixthisplz' ),
 		);
 		if ( null !== $data['change'] ) {
-			$facts[ __( 'Change', 'bug-spotter' ) ] = $data['change'];
+			$facts[ __( 'Change', 'fixthisplz' ) ] = $data['change'];
 		}
 		return $facts;
 	}
@@ -134,14 +134,14 @@ final class Webhook_Payload {
 			return array(
 				'title' => $data['report']['title'],
 				'url'   => $data['report']['admin_url'],
-				'label' => __( 'Open the report', 'bug-spotter' ),
+				'label' => __( 'Open the report', 'fixthisplz' ),
 			);
 		}
 		if ( isset( $data['summary'] ) ) {
 			return array(
 				'title' => $data['summary']['text'],
 				'url'   => $data['summary']['url'],
-				'label' => __( 'Open the list', 'bug-spotter' ),
+				'label' => __( 'Open the list', 'fixthisplz' ),
 			);
 		}
 		return null;

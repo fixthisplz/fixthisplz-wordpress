@@ -1,6 +1,6 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -13,8 +13,8 @@ final class Mailer {
 	private static ?array $batch = null;
 
 	public static function register_hooks(): void {
-		add_action( 'bugspot_report_created', array( self::class, 'notify' ) );
-		add_action( 'bugspot_report_assigned', array( self::class, 'on_assigned' ), 10, 3 );
+		add_action( 'fixthisplz_report_created', array( self::class, 'notify' ) );
+		add_action( 'fixthisplz_report_assigned', array( self::class, 'on_assigned' ), 10, 3 );
 	}
 
 	public static function notify( int $report_id ): bool {
@@ -30,7 +30,7 @@ final class Mailer {
 		$recipients = self::recipients( $notifications );
 
 		/* translators: 1: site name, 2: report title, such as "Bug #12". */
-		$subject = sprintf( __( '[%1$s] New report: %2$s', 'bug-spotter' ), Report_Format::site_name(), Report_Format::title( $report_id ) );
+		$subject = sprintf( __( '[%1$s] New report: %2$s', 'fixthisplz' ), Report_Format::site_name(), Report_Format::title( $report_id ) );
 
 		$attachments = array();
 		if ( ! empty( $notifications['attach_screenshot'] ) && is_string( $report['screenshot'] ?? null ) ) {
@@ -64,7 +64,7 @@ final class Mailer {
 		return array_values( array_filter( array_map( 'trim', explode( ',', (string) ( $notifications['recipients'] ?? '' ) ) ), 'is_email' ) );
 	}
 
-	/** `bugspot_report_assigned` (Reports_Repository::update()): tells the new assignee, never the person who did it. */
+	/** `fixthisplz_report_assigned` (Reports_Repository::update()): tells the new assignee, never the person who did it. */
 	public static function on_assigned( int $report_id, int $assignee, int $by ): void {
 		if ( $assignee === $by ) {
 			return;
@@ -114,15 +114,15 @@ final class Mailer {
 				return false;
 			}
 			/* translators: 1: site name, 2: report title, such as "Bug #12". */
-			$subject = sprintf( __( '[%1$s] Assigned to you: %2$s', 'bug-spotter' ), Report_Format::site_name(), Report_Format::title( $report_ids[0] ) );
+			$subject = sprintf( __( '[%1$s] Assigned to you: %2$s', 'fixthisplz' ), Report_Format::site_name(), Report_Format::title( $report_ids[0] ) );
 			$values  = self::values( $report_ids[0], $report );
 			return self::send( array( $email ), $subject, self::build_html( $values ), self::build_text( $values ), array() );
 		}
 
 		$count = count( $report_ids );
 		/* translators: 1: site name, 2: number of reports. */
-		$subject = sprintf( _n( '[%1$s] %2$d report assigned to you', '[%1$s] %2$d reports assigned to you', $count, 'bug-spotter' ), Report_Format::site_name(), $count );
-		$intro   = __( 'These reports are now assigned to you:', 'bug-spotter' );
+		$subject = sprintf( _n( '[%1$s] %2$d report assigned to you', '[%1$s] %2$d reports assigned to you', $count, 'fixthisplz' ), Report_Format::site_name(), $count );
+		$intro   = __( 'These reports are now assigned to you:', 'fixthisplz' );
 		$html    = '<p>' . esc_html( $intro ) . '</p><ul>';
 		$text    = $intro . "\n";
 		foreach ( $report_ids as $id ) {
@@ -170,12 +170,12 @@ final class Mailer {
 	/** @return array<string,string> */
 	private static function labels(): array {
 		return array(
-			'number'      => __( 'Report', 'bug-spotter' ),
-			'description' => __( 'Description', 'bug-spotter' ),
-			'page'        => __( 'Page', 'bug-spotter' ),
-			'reporter'    => __( 'Reported by', 'bug-spotter' ),
-			'screenshot'  => __( 'Screenshot', 'bug-spotter' ),
-			'link'        => __( 'Open the report', 'bug-spotter' ),
+			'number'      => __( 'Report', 'fixthisplz' ),
+			'description' => __( 'Description', 'fixthisplz' ),
+			'page'        => __( 'Page', 'fixthisplz' ),
+			'reporter'    => __( 'Reported by', 'fixthisplz' ),
+			'screenshot'  => __( 'Screenshot', 'fixthisplz' ),
+			'link'        => __( 'Open the report', 'fixthisplz' ),
 		);
 	}
 

@@ -1,6 +1,6 @@
 /* Tiny element factory shared by the inspector and the dialog. Text is always set with textContent. */
 
-export const UI_ATTR = 'data-bugspot-ui';
+export const UI_ATTR = 'data-fixthisplz-ui';
 
 export function make(tag, props = {}, children = []) {
 	const node = document.createElement(tag);

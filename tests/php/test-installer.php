@@ -1,8 +1,8 @@
 <?php
 
-use Bug_Spotter\Installer;
+use FixThisPlz\Installer;
 
-bugspot_test(
+fixthisplz_test(
 	'installer: activate_creates_table_with_expected_columns',
 	function () {
 		global $wpdb;
@@ -16,36 +16,36 @@ bugspot_test(
 		assert_same( $expected, $columns );
 		assert_same(
 			array( 'id', 'report_id', 'user_id', 'type', 'field', 'old_value', 'new_value', 'content', 'created_at' ),
-			$wpdb->get_col( 'DESCRIBE ' . Bug_Spotter\Activity::table(), 0 )
+			$wpdb->get_col( 'DESCRIBE ' . FixThisPlz\Activity::table(), 0 )
 		);
-		assert_same( '3', get_option( 'bugspot_db_version' ) );
-		assert_true( false !== wp_next_scheduled( 'bugspot_daily_purge' ), 'daily purge must be scheduled' );
+		assert_same( '3', get_option( 'fixthisplz_db_version' ) );
+		assert_true( false !== wp_next_scheduled( 'fixthisplz_daily_purge' ), 'daily purge must be scheduled' );
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'installer: activate_protects_private_dir',
 	function () {
 		$dir = Installer::ensure_private_dir();
-		assert_same( wp_upload_dir( null, false )['basedir'] . '/bug-spotter', $dir );
+		assert_same( wp_upload_dir( null, false )['basedir'] . '/fixthisplz', $dir );
 		assert_same( $dir, Installer::private_dir() );
 		assert_true( is_file( $dir . '/index.php' ), 'index.php missing' );
 		assert_true( str_contains( (string) file_get_contents( $dir . '/.htaccess' ), 'Require all denied' ), '.htaccess must deny access' );
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'installer: private_dir_and_screenshot_path_create_nothing',
 	function () {
-		$base   = get_temp_dir() . 'bugspot-noside-' . wp_generate_password( 8, false );
+		$base   = get_temp_dir() . 'fixthisplz-noside-' . wp_generate_password( 8, false );
 		$filter = static function ( array $uploads ) use ( $base ): array {
 			$uploads['basedir'] = $base;
 			return $uploads;
 		};
 		add_filter( 'upload_dir', $filter );
 		try {
-			assert_same( $base . '/bug-spotter', Installer::private_dir() );
-			assert_same( $base . '/bug-spotter/' . str_repeat( 'a', 32 ) . '.jpg', Bug_Spotter\Screenshot_Store::path( str_repeat( 'a', 32 ) . '.jpg' ) );
+			assert_same( $base . '/fixthisplz', Installer::private_dir() );
+			assert_same( $base . '/fixthisplz/' . str_repeat( 'a', 32 ) . '.jpg', FixThisPlz\Screenshot_Store::path( str_repeat( 'a', 32 ) . '.jpg' ) );
 			assert_true( ! file_exists( $base ), 'a getter must not create the directory' );
 		} finally {
 			remove_filter( 'upload_dir', $filter );
@@ -53,24 +53,24 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'installer: sync_capabilities_grants_and_revokes',
 	function () {
 		$editor   = get_role( 'editor' );
-		$original = $editor->has_cap( 'bugspot_manage' );
+		$original = $editor->has_cap( 'fixthisplz_manage' );
 		try {
 			Installer::sync_capabilities( array( 'administrator', 'editor' ) );
-			assert_true( get_role( 'editor' )->has_cap( 'bugspot_manage' ), 'editor should be granted' );
-			assert_true( get_role( 'administrator' )->has_cap( 'bugspot_manage' ), 'administrator should be granted' );
+			assert_true( get_role( 'editor' )->has_cap( 'fixthisplz_manage' ), 'editor should be granted' );
+			assert_true( get_role( 'administrator' )->has_cap( 'fixthisplz_manage' ), 'administrator should be granted' );
 			Installer::sync_capabilities( array( 'administrator' ) );
-			assert_true( ! get_role( 'editor' )->has_cap( 'bugspot_manage' ), 'editor should be revoked' );
-			assert_true( get_role( 'administrator' )->has_cap( 'bugspot_manage' ), 'administrator should keep it' );
+			assert_true( ! get_role( 'editor' )->has_cap( 'fixthisplz_manage' ), 'editor should be revoked' );
+			assert_true( get_role( 'administrator' )->has_cap( 'fixthisplz_manage' ), 'administrator should keep it' );
 		} finally {
 			$role = get_role( 'editor' );
 			if ( $original ) {
-				$role->add_cap( 'bugspot_manage' );
+				$role->add_cap( 'fixthisplz_manage' );
 			} else {
-				$role->remove_cap( 'bugspot_manage' );
+				$role->remove_cap( 'fixthisplz_manage' );
 			}
 		}
 	}
@@ -88,7 +88,7 @@ function installer_on_old_schema( array $downgrade, string $version, callable $f
 	$real    = Installer::table();
 	$wpdb->prefix = $prefix . 'bstest_'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride
 	$table    = Installer::table();
-	$activity = Bug_Spotter\Activity::table();
+	$activity = FixThisPlz\Activity::table();
 	try {
 		$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i, %i', $table, $activity ) );
 		$wpdb->query( $wpdb->prepare( 'CREATE TABLE %i LIKE %i', $table, $real ) );
@@ -104,7 +104,7 @@ function installer_on_old_schema( array $downgrade, string $version, callable $f
 	}
 }
 
-bugspot_test(
+fixthisplz_test(
 	'installer: upgrade_from_version_1_widens_priority_and_keeps_the_rows',
 	function () {
 		global $wpdb;
@@ -150,7 +150,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'installer: upgrade_from_version_2_adds_assignment_and_activity_and_keeps_the_rows',
 	function () {
 		installer_on_old_schema(

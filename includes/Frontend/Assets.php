@@ -1,11 +1,11 @@
 <?php
 
-namespace Bug_Spotter\Frontend;
+namespace FixThisPlz\Frontend;
 
-use Bug_Spotter\Captcha\Factory;
-use Bug_Spotter\Rest\Reports_Controller;
-use Bug_Spotter\Screenshot_Store;
-use Bug_Spotter\Settings;
+use FixThisPlz\Captcha\Factory;
+use FixThisPlz\Rest\Reports_Controller;
+use FixThisPlz\Screenshot_Store;
+use FixThisPlz\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -37,25 +37,25 @@ final class Assets {
 		$button = $settings['button'];
 		$config = self::config( $settings, $user instanceof \WP_User && $user->exists() );
 
-		wp_enqueue_style( 'bugspot-front', BUGSPOT_URL . 'assets/css/front.css', array(), BUGSPOT_VERSION );
-		wp_add_inline_style( 'bugspot-front', Button_Style::css( $button, ! empty( $settings['visibility']['hide_on_mobile'] ) ) );
+		wp_enqueue_style( 'fixthisplz-front', FIXTHISPLZ_URL . 'assets/css/front.css', array(), FIXTHISPLZ_VERSION );
+		wp_add_inline_style( 'fixthisplz-front', Button_Style::css( $button, ! empty( $settings['visibility']['hide_on_mobile'] ) ) );
 
 		if ( 'dashicon' === $button['icon_type'] ) {
 			wp_enqueue_style( 'dashicons' );
 		}
 
 		wp_enqueue_script(
-			'bugspot-loader',
-			BUGSPOT_URL . 'assets/js/loader.js',
+			'fixthisplz-loader',
+			FIXTHISPLZ_URL . 'assets/js/loader.js',
 			array(),
-			BUGSPOT_VERSION,
+			FIXTHISPLZ_VERSION,
 			array(
 				'in_footer'           => true,
 				'strategy'            => 'defer',
 				'module_dependencies' => self::lib_module_ids(),
 			)
 		);
-		wp_add_inline_script( 'bugspot-loader', 'window.bugSpotterConfig = ' . wp_json_encode( $config ) . ';', 'before' );
+		wp_add_inline_script( 'fixthisplz-loader', 'window.fixThisPlzConfig = ' . wp_json_encode( $config ) . ';', 'before' );
 	}
 
 	/**
@@ -71,9 +71,9 @@ final class Assets {
 	 */
 	public static function lib_module_ids(): array {
 		$ids = array();
-		foreach ( glob( BUGSPOT_DIR . 'assets/js/lib/*.js' ) ?: array() as $file ) {
-			$url = BUGSPOT_URL . 'assets/js/lib/' . basename( $file );
-			wp_register_script_module( $url, $url, array(), BUGSPOT_VERSION );
+		foreach ( glob( FIXTHISPLZ_DIR . 'assets/js/lib/*.js' ) ?: array() as $file ) {
+			$url = FIXTHISPLZ_URL . 'assets/js/lib/' . basename( $file );
+			wp_register_script_module( $url, $url, array(), FIXTHISPLZ_VERSION );
 			$ids[] = $url;
 		}
 		return $ids;
@@ -102,9 +102,9 @@ final class Assets {
 		return array(
 			'restUrl'            => rest_url( Reports_Controller::NAMESPACE . '/' ),
 			'nonce'              => $logged_in ? wp_create_nonce( 'wp_rest' ) : '',
-			'moduleUrl'          => BUGSPOT_URL . 'assets/js/reporter.js?ver=' . rawurlencode( BUGSPOT_VERSION ),
-			'vendorUrl'          => BUGSPOT_URL . 'assets/vendor/modern-screenshot.mjs?ver=' . rawurlencode( BUGSPOT_VERSION ),
-			'version'            => BUGSPOT_VERSION,
+			'moduleUrl'          => FIXTHISPLZ_URL . 'assets/js/reporter.js?ver=' . rawurlencode( FIXTHISPLZ_VERSION ),
+			'vendorUrl'          => FIXTHISPLZ_URL . 'assets/vendor/modern-screenshot.mjs?ver=' . rawurlencode( FIXTHISPLZ_VERSION ),
+			'version'            => FIXTHISPLZ_VERSION,
 			'hideOnMobile'       => (bool) $settings['visibility']['hide_on_mobile'],
 			'mobileQuery'        => Button_Style::MOBILE_QUERY,
 			'collect'            => array(
@@ -165,86 +165,86 @@ final class Assets {
 	/** @return array<string,string> Every label the loader and the reporter UI show. */
 	private static function i18n(): array {
 		return array(
-			'loading'            => __( 'Loading…', 'bug-spotter' ),
-			'close'              => __( 'Close', 'bug-spotter' ),
-			'cancel'             => __( 'Cancel', 'bug-spotter' ),
-			'submit'             => __( 'Submit', 'bug-spotter' ),
-			'sending'            => __( 'Sending…', 'bug-spotter' ),
-			'wholePage'          => __( 'Whole page', 'bug-spotter' ),
-			'select'             => __( 'Select', 'bug-spotter' ),
-			'inspectHint'        => __( 'Click the element that has a problem, or choose "Whole page". Press Escape to cancel.', 'bug-spotter' ),
-			'changeElement'      => __( 'Change element', 'bug-spotter' ),
-			'selectedElement'    => __( 'Selected element', 'bug-spotter' ),
-			'description'        => __( 'Description', 'bug-spotter' ),
-			'descriptionHint'    => __( 'What went wrong?', 'bug-spotter' ),
-			'descriptionError'   => __( 'Please describe the problem.', 'bug-spotter' ),
-			'email'              => __( 'Your e-mail (optional)', 'bug-spotter' ),
-			'attachScreenshot'   => __( 'Attach a screenshot', 'bug-spotter' ),
-			'screenshotPreview'  => __( 'Screenshot preview', 'bug-spotter' ),
-			'removeScreenshot'   => __( 'Remove', 'bug-spotter' ),
-			'retakeScreenshot'   => __( 'Retake', 'bug-spotter' ),
-			'annotate'           => __( 'Annotate', 'bug-spotter' ),
-			'toolRectangle'      => __( 'Rectangle', 'bug-spotter' ),
-			'toolArrow'          => __( 'Arrow', 'bug-spotter' ),
-			'toolPen'            => __( 'Pen', 'bug-spotter' ),
-			'toolText'           => __( 'Text', 'bug-spotter' ),
-			'toolHide'           => __( 'Hide', 'bug-spotter' ),
-			'toolSelect'         => __( 'Select', 'bug-spotter' ),
-			'annotationColor'    => __( 'Color', 'bug-spotter' ),
-			'colorRed'           => __( 'Red', 'bug-spotter' ),
-			'colorOrange'        => __( 'Orange', 'bug-spotter' ),
-			'colorYellow'        => __( 'Yellow', 'bug-spotter' ),
-			'colorGreen'         => __( 'Green', 'bug-spotter' ),
-			'colorBlue'          => __( 'Blue', 'bug-spotter' ),
-			'colorBlack'         => __( 'Black', 'bug-spotter' ),
-			'annotationSize'     => __( 'Size', 'bug-spotter' ),
-			'sizeSmall'          => __( 'Small size', 'bug-spotter' ),
-			'sizeMedium'         => __( 'Medium size', 'bug-spotter' ),
-			'sizeLarge'          => __( 'Large size', 'bug-spotter' ),
-			'deleteShape'        => __( 'Delete', 'bug-spotter' ),
-			'undoShape'          => __( 'Undo last', 'bug-spotter' ),
-			'clearShapes'        => __( 'Clear all', 'bug-spotter' ),
-			'applyAnnotations'   => __( 'Apply', 'bug-spotter' ),
-			'errorAnnotate'      => __( 'The annotations could not be applied.', 'bug-spotter' ),
-			'technicalContext'   => __( 'Technical details sent with your report', 'bug-spotter' ),
-			'privacyLink'        => __( 'Privacy policy', 'bug-spotter' ),
-			'sentTitle'          => __( 'Report sent', 'bug-spotter' ),
+			'loading'            => __( 'Loading…', 'fixthisplz' ),
+			'close'              => __( 'Close', 'fixthisplz' ),
+			'cancel'             => __( 'Cancel', 'fixthisplz' ),
+			'submit'             => __( 'Submit', 'fixthisplz' ),
+			'sending'            => __( 'Sending…', 'fixthisplz' ),
+			'wholePage'          => __( 'Whole page', 'fixthisplz' ),
+			'select'             => __( 'Select', 'fixthisplz' ),
+			'inspectHint'        => __( 'Click the element that has a problem, or choose "Whole page". Press Escape to cancel.', 'fixthisplz' ),
+			'changeElement'      => __( 'Change element', 'fixthisplz' ),
+			'selectedElement'    => __( 'Selected element', 'fixthisplz' ),
+			'description'        => __( 'Description', 'fixthisplz' ),
+			'descriptionHint'    => __( 'What went wrong?', 'fixthisplz' ),
+			'descriptionError'   => __( 'Please describe the problem.', 'fixthisplz' ),
+			'email'              => __( 'Your e-mail (optional)', 'fixthisplz' ),
+			'attachScreenshot'   => __( 'Attach a screenshot', 'fixthisplz' ),
+			'screenshotPreview'  => __( 'Screenshot preview', 'fixthisplz' ),
+			'removeScreenshot'   => __( 'Remove', 'fixthisplz' ),
+			'retakeScreenshot'   => __( 'Retake', 'fixthisplz' ),
+			'annotate'           => __( 'Annotate', 'fixthisplz' ),
+			'toolRectangle'      => __( 'Rectangle', 'fixthisplz' ),
+			'toolArrow'          => __( 'Arrow', 'fixthisplz' ),
+			'toolPen'            => __( 'Pen', 'fixthisplz' ),
+			'toolText'           => __( 'Text', 'fixthisplz' ),
+			'toolHide'           => __( 'Hide', 'fixthisplz' ),
+			'toolSelect'         => __( 'Select', 'fixthisplz' ),
+			'annotationColor'    => __( 'Color', 'fixthisplz' ),
+			'colorRed'           => __( 'Red', 'fixthisplz' ),
+			'colorOrange'        => __( 'Orange', 'fixthisplz' ),
+			'colorYellow'        => __( 'Yellow', 'fixthisplz' ),
+			'colorGreen'         => __( 'Green', 'fixthisplz' ),
+			'colorBlue'          => __( 'Blue', 'fixthisplz' ),
+			'colorBlack'         => __( 'Black', 'fixthisplz' ),
+			'annotationSize'     => __( 'Size', 'fixthisplz' ),
+			'sizeSmall'          => __( 'Small size', 'fixthisplz' ),
+			'sizeMedium'         => __( 'Medium size', 'fixthisplz' ),
+			'sizeLarge'          => __( 'Large size', 'fixthisplz' ),
+			'deleteShape'        => __( 'Delete', 'fixthisplz' ),
+			'undoShape'          => __( 'Undo last', 'fixthisplz' ),
+			'clearShapes'        => __( 'Clear all', 'fixthisplz' ),
+			'applyAnnotations'   => __( 'Apply', 'fixthisplz' ),
+			'errorAnnotate'      => __( 'The annotations could not be applied.', 'fixthisplz' ),
+			'technicalContext'   => __( 'Technical details sent with your report', 'fixthisplz' ),
+			'privacyLink'        => __( 'Privacy policy', 'fixthisplz' ),
+			'sentTitle'          => __( 'Report sent', 'fixthisplz' ),
 			/* translators: %s: report number, for example #42. */
-			'sentNumber'         => __( 'Report %s sent.', 'bug-spotter' ),
-			'download'           => __( 'Download', 'bug-spotter' ),
-			'downloadScreenshot' => __( 'Download the screenshot', 'bug-spotter' ),
-			'done'               => __( 'Done', 'bug-spotter' ),
-			'errorGeneric'       => __( 'The report could not be sent. Your text was kept; you can try again or download it.', 'bug-spotter' ),
-			'errorRateLimit'     => __( 'Too many reports in a short time. Please try again later.', 'bug-spotter' ),
-			'errorNotAllowed'    => __( 'You are not allowed to send bug reports.', 'bug-spotter' ),
-			'errorCaptcha'       => __( 'The anti-spam check failed. Please try again.', 'bug-spotter' ),
-			'errorLoad'          => __( 'The bug reporter could not be loaded.', 'bug-spotter' ),
+			'sentNumber'         => __( 'Report %s sent.', 'fixthisplz' ),
+			'download'           => __( 'Download', 'fixthisplz' ),
+			'downloadScreenshot' => __( 'Download the screenshot', 'fixthisplz' ),
+			'done'               => __( 'Done', 'fixthisplz' ),
+			'errorGeneric'       => __( 'The report could not be sent. Your text was kept; you can try again or download it.', 'fixthisplz' ),
+			'errorRateLimit'     => __( 'Too many reports in a short time. Please try again later.', 'fixthisplz' ),
+			'errorNotAllowed'    => __( 'You are not allowed to send bug reports.', 'fixthisplz' ),
+			'errorCaptcha'       => __( 'The anti-spam check failed. Please try again.', 'fixthisplz' ),
+			'errorLoad'          => __( 'The bug reporter could not be loaded.', 'fixthisplz' ),
 			/* translators: %s: short description of the highlighted element, for example "button – Send". */
-			'inspectHighlighted' => __( 'Highlighted: %s. Press Enter to select it, or the Up arrow for its parent.', 'bug-spotter' ),
-			'reportTitle'        => __( 'Bug report', 'bug-spotter' ),
-			'contactEmail'       => __( 'Contact e-mail', 'bug-spotter' ),
-			'console'            => __( 'Console', 'bug-spotter' ),
-			'network'            => __( 'Failed requests', 'bug-spotter' ),
-			'generatedAt'        => __( 'Generated at', 'bug-spotter' ),
-			'capturing'          => __( 'Taking the screenshot…', 'bug-spotter' ),
-			'emailError'         => __( 'Please enter a valid e-mail address, or leave the field empty.', 'bug-spotter' ),
-			'captureTab'         => __( 'Real capture', 'bug-spotter' ),
-			'captureDom'         => __( 'Page reconstruction', 'bug-spotter' ),
-			'captureMasked'      => __( 'masked', 'bug-spotter' ),
-			'screenshot'         => __( 'Screenshot', 'bug-spotter' ),
-			'errorCapture'       => __( 'The screenshot could not be taken. You can send the report without it.', 'bug-spotter' ),
-			'errorCaptureDenied' => __( 'Screenshot cancelled: you can send the report without a screenshot.', 'bug-spotter' ),
+			'inspectHighlighted' => __( 'Highlighted: %s. Press Enter to select it, or the Up arrow for its parent.', 'fixthisplz' ),
+			'reportTitle'        => __( 'Bug report', 'fixthisplz' ),
+			'contactEmail'       => __( 'Contact e-mail', 'fixthisplz' ),
+			'console'            => __( 'Console', 'fixthisplz' ),
+			'network'            => __( 'Failed requests', 'fixthisplz' ),
+			'generatedAt'        => __( 'Generated at', 'fixthisplz' ),
+			'capturing'          => __( 'Taking the screenshot…', 'fixthisplz' ),
+			'emailError'         => __( 'Please enter a valid e-mail address, or leave the field empty.', 'fixthisplz' ),
+			'captureTab'         => __( 'Real capture', 'fixthisplz' ),
+			'captureDom'         => __( 'Page reconstruction', 'fixthisplz' ),
+			'captureMasked'      => __( 'masked', 'fixthisplz' ),
+			'screenshot'         => __( 'Screenshot', 'fixthisplz' ),
+			'errorCapture'       => __( 'The screenshot could not be taken. You can send the report without it.', 'fixthisplz' ),
+			'errorCaptureDenied' => __( 'Screenshot cancelled: you can send the report without a screenshot.', 'fixthisplz' ),
 			'errorCaptureTooLarge' => sprintf(
 				/* translators: %s: maximum screenshot size in megabytes, for example "5". */
-				__( 'The screenshot is too large (%s MB maximum). You can send the report without it.', 'bug-spotter' ),
+				__( 'The screenshot is too large (%s MB maximum). You can send the report without it.', 'fixthisplz' ),
 				number_format_i18n( Screenshot_Store::MAX_BYTES / MB_IN_BYTES )
 			),
-			'errorTooLarge'      => __( 'The screenshot is too large to be sent. Remove it or retake it, then try again.', 'bug-spotter' ),
-			'errorInvalid'       => __( 'The report was refused. Please check the form and try again.', 'bug-spotter' ),
-			'errorDisabled'      => __( 'Bug reporting is currently disabled on this site.', 'bug-spotter' ),
-			'errorCaptchaUnavailable' => __( 'The anti-spam check is unavailable right now. Please try again later.', 'bug-spotter' ),
-			'errorCaptchaRequired' => __( 'Please complete the anti-spam check.', 'bug-spotter' ),
-			'errorPageUrl'       => __( 'This page cannot be reported: its address is not a web address.', 'bug-spotter' ),
+			'errorTooLarge'      => __( 'The screenshot is too large to be sent. Remove it or retake it, then try again.', 'fixthisplz' ),
+			'errorInvalid'       => __( 'The report was refused. Please check the form and try again.', 'fixthisplz' ),
+			'errorDisabled'      => __( 'Bug reporting is currently disabled on this site.', 'fixthisplz' ),
+			'errorCaptchaUnavailable' => __( 'The anti-spam check is unavailable right now. Please try again later.', 'fixthisplz' ),
+			'errorCaptchaRequired' => __( 'Please complete the anti-spam check.', 'fixthisplz' ),
+			'errorPageUrl'       => __( 'This page cannot be reported: its address is not a web address.', 'fixthisplz' ),
 		);
 	}
 }

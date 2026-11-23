@@ -1,26 +1,26 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Bug Spotter 1.2.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/bug-spotter\n"
+"Project-Id-Version: FixThisPlz 1.2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/fixthisplz\n"
 "Last-Translator: \n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-19T23:31:09+00:00\n"
-"PO-Revision-Date: 2026-11-20 10:00+0000\n"
+"POT-Creation-Date: 2026-11-23T16:55:07+00:00\n"
+"PO-Revision-Date: 2026-11-23 16:55+0000\n"
 "Language: fr_FR\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Domain: bug-spotter\n"
+"X-Domain: fixthisplz\n"
 
 #. Plugin Name of the plugin
-#: bug-spotter.php
-msgid "Bug Spotter"
-msgstr "Bug Spotter"
+#: fixthisplz.php
+msgid "FixThisPlz"
+msgstr "FixThisPlz"
 
 #. Description of the plugin
-#: bug-spotter.php
+#: fixthisplz.php
 msgid "Lets visitors and editors report bugs from any page of a WordPress site."
 msgstr "Permet aux visiteurs et aux éditeurs de signaler des bugs depuis n’importe quelle page d’un site WordPress."
 
@@ -403,8 +403,8 @@ msgstr "Tous les bugs"
 
 #: includes/Admin/Menu.php:50
 #: includes/Admin/Settings_Page.php:132
-msgid "Bug Spotter settings"
-msgstr "Réglages de Bug Spotter"
+msgid "FixThisPlz settings"
+msgstr "Réglages de FixThisPlz"
 
 #: includes/Admin/Menu.php:51
 msgid "Settings"
@@ -504,8 +504,8 @@ msgid "Remove"
 msgstr "Retirer"
 
 #: includes/Admin/Settings_Button_Tab.php:125
-msgid "Only SVG files already in the media library are listed. WordPress blocks SVG uploads by default; Bug Spotter does not change that. Without an SVG, the Dashicon is used."
-msgstr "Seuls les fichiers SVG déjà présents dans la médiathèque sont proposés. WordPress bloque l’envoi de SVG par défaut ; Bug Spotter ne change pas ce comportement. Sans SVG, l’icône WordPress est utilisée."
+msgid "Only SVG files already in the media library are listed. WordPress blocks SVG uploads by default; FixThisPlz does not change that. Without an SVG, the Dashicon is used."
+msgstr "Seuls les fichiers SVG déjà présents dans la médiathèque sont proposés. WordPress bloque l’envoi de SVG par défaut ; FixThisPlz ne change pas ce comportement. Sans SVG, l’icône WordPress est utilisée."
 
 #: includes/Admin/Settings_Button_Tab.php:34
 msgid "Shape"
@@ -1131,8 +1131,8 @@ msgstr "Ouvrir le signalement"
 
 #: includes/Privacy.php:22
 #: includes/Privacy.php:34
-msgid "Bug Spotter reports"
-msgstr "Signalements Bug Spotter"
+msgid "FixThisPlz reports"
+msgstr "Signalements FixThisPlz"
 
 #: includes/Privacy.php:53
 #: includes/Privacy.php:127
@@ -1689,8 +1689,8 @@ msgstr "Ces signalements vous sont maintenant attribués :"
 
 #: includes/Privacy.php:26
 #: includes/Privacy.php:38
-msgid "Bug Spotter notes and history"
-msgstr "Notes et historique de Bug Spotter"
+msgid "FixThisPlz notes and history"
+msgstr "Notes et historique de FixThisPlz"
 
 #: includes/Privacy.php:123
 msgid "Bug report notes and history"
@@ -1768,12 +1768,12 @@ msgid "Make a new secret when saving"
 msgstr "Générer un nouveau secret à l’enregistrement"
 
 #: includes/Admin/Settings_Webhook_Fields.php:148
-msgid "Each request carries the header X-Bug-Spotter-Signature: sha256= followed by the HMAC-SHA256 of the raw body with this secret. Your service computes the same value to check that the request comes from this site."
-msgstr "Chaque requête porte l’en-tête X-Bug-Spotter-Signature : sha256= suivi du HMAC-SHA256 du corps brut avec ce secret. Votre service calcule la même valeur pour vérifier que la requête vient bien de ce site."
+msgid "Each request carries the header X-FixThisPlz-Signature: sha256= followed by the HMAC-SHA256 of the raw body with this secret. Your service computes the same value to check that the request comes from this site."
+msgstr "Chaque requête porte l’en-tête X-FixThisPlz-Signature : sha256= suivi du HMAC-SHA256 du corps brut avec ce secret. Votre service calcule la même valeur pour vérifier que la requête vient bien de ce site."
 
 #: includes/Admin/Settings_Webhook_Fields.php:149
-msgid "The secret can no longer be read (the BUGSPOT_SECRET key changed): a new one is made when saving."
-msgstr "Le secret ne peut plus être lu (la clé BUGSPOT_SECRET a changé) : un nouveau sera créé à l’enregistrement."
+msgid "The secret can no longer be read (the FIXTHISPLZ_SECRET key changed): a new one is made when saving."
+msgstr "Le secret ne peut plus être lu (la clé FIXTHISPLZ_SECRET a changé) : un nouveau sera créé à l’enregistrement."
 
 #: includes/Rest/Settings_Controller.php:129
 msgid "Save the webhook before testing it."
@@ -1836,8 +1836,8 @@ msgstr "Signalement attribué : %s"
 #. translators: %s: site name.
 #: includes/Webhook_Payload.php:108
 #, php-format
-msgid "Test message from Bug Spotter on %s. The webhook works."
-msgstr "Message de test de Bug Spotter sur %s. Le webhook fonctionne."
+msgid "Test message from FixThisPlz on %s. The webhook works."
+msgstr "Message de test de FixThisPlz sur %s. Le webhook fonctionne."
 
 #: includes/Privacy.php:183
 msgid "Webhooks: if the site administrators connect a chat or project service, it receives an excerpt of the description, the page address, the status, the priority and the name of the team member in charge, never your e-mail address, IP address or screenshot."

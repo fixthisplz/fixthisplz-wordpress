@@ -1,6 +1,6 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,7 +21,7 @@ final class Activity {
 
 	public static function table(): string {
 		global $wpdb;
-		return $wpdb->prefix . 'bugspot_activity';
+		return $wpdb->prefix . 'fixthisplz_activity';
 	}
 
 	/**

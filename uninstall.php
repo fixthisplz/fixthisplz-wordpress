@@ -6,9 +6,9 @@
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
-if ( ! defined( 'BUGSPOT_DIR' ) ) {
-	define( 'BUGSPOT_DIR', plugin_dir_path( __FILE__ ) );
+if ( ! defined( 'FIXTHISPLZ_DIR' ) ) {
+	define( 'FIXTHISPLZ_DIR', plugin_dir_path( __FILE__ ) );
 }
-require_once BUGSPOT_DIR . 'includes/autoload.php';
+require_once FIXTHISPLZ_DIR . 'includes/autoload.php';
 
-Bug_Spotter\Uninstaller::run();
+FixThisPlz\Uninstaller::run();

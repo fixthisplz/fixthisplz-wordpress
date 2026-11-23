@@ -1,19 +1,19 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
 defined( 'ABSPATH' ) || exit;
 
 final class Installer {
 
 	public const DB_VERSION        = '3';
-	public const DB_VERSION_OPTION = 'bugspot_db_version';
-	public const CAPABILITY        = 'bugspot_manage';
-	public const CRON_HOOK         = 'bugspot_daily_purge';
+	public const DB_VERSION_OPTION = 'fixthisplz_db_version';
+	public const CAPABILITY        = 'fixthisplz_manage';
+	public const CRON_HOOK         = 'fixthisplz_daily_purge';
 
 	public static function table(): string {
 		global $wpdb;
-		return $wpdb->prefix . 'bugspot_reports';
+		return $wpdb->prefix . 'fixthisplz_reports';
 	}
 
 	public static function activate(): void {
@@ -53,7 +53,7 @@ final class Installer {
 
 	/** Upload sub-directory for screenshots (path only, nothing is created). */
 	public static function private_dir(): string {
-		return wp_upload_dir( null, false )['basedir'] . '/bug-spotter';
+		return wp_upload_dir( null, false )['basedir'] . '/fixthisplz';
 	}
 
 	/** Creates the private directory, closed to direct web access, when missing; returns its path. */

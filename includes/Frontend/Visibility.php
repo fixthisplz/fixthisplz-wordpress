@@ -1,6 +1,6 @@
 <?php
 
-namespace Bug_Spotter\Frontend;
+namespace FixThisPlz\Frontend;
 
 defined( 'ABSPATH' ) || exit;
 

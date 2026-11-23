@@ -1,10 +1,10 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
 defined( 'ABSPATH' ) || exit;
 
-/** The people who manage bugs (capability bugspot_manage): who a report can be assigned to, and how a user is named. */
+/** The people who manage bugs (capability fixthisplz_manage): who a report can be assigned to, and how a user is named. */
 final class Team {
 
 	public static function register_hooks(): void {
@@ -36,7 +36,7 @@ final class Team {
 	/** Display name of a user, "Deleted user" when the account no longer exists. */
 	public static function name( int $user_id ): string {
 		$user = $user_id > 0 ? get_userdata( $user_id ) : false;
-		return $user ? (string) $user->display_name : __( 'Deleted user', 'bug-spotter' );
+		return $user ? (string) $user->display_name : __( 'Deleted user', 'fixthisplz' );
 	}
 
 	/** Up to two initials of a name ("Ada Lovelace" => "AL"). */

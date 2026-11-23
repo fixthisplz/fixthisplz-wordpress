@@ -1,9 +1,9 @@
 <?php
 
-use Bug_Spotter\List_Editor;
-use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Settings;
-use Bug_Spotter\Statuses;
+use FixThisPlz\List_Editor;
+use FixThisPlz\Reports_Repository;
+use FixThisPlz\Settings;
+use FixThisPlz\Statuses;
 
 // settings_page_test(), settings_page_form_post(), settings_page_tab_html() and repo_make(), also when run alone.
 require_once __DIR__ . '/test-settings-page.php';

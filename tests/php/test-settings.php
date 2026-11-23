@@ -1,13 +1,13 @@
 <?php
 
-use Bug_Spotter\Priorities;
-use Bug_Spotter\Settings;
-use Bug_Spotter\Settings_Sanitizer;
-use Bug_Spotter\Statuses;
+use FixThisPlz\Priorities;
+use FixThisPlz\Settings;
+use FixThisPlz\Settings_Sanitizer;
+use FixThisPlz\Statuses;
 
-/** Registers a test whose body runs with the real bugspot_settings option saved and restored. */
+/** Registers a test whose body runs with the real fixthisplz_settings option saved and restored. */
 function settings_test( string $name, callable $fn ): void {
-	bugspot_test( $name, static function () use ( $fn ) {
+	fixthisplz_test( $name, static function () use ( $fn ) {
 		with_settings_option( $fn );
 	} );
 }

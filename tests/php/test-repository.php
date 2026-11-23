@@ -1,8 +1,8 @@
 <?php
 
-use Bug_Spotter\Installer;
-use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Statuses;
+use FixThisPlz\Installer;
+use FixThisPlz\Reports_Repository;
+use FixThisPlz\Statuses;
 
 /** Inserts a report with a unique marker in its description; $overrides may carry raw column values. */
 function repo_make( Reports_Repository $repo, string $marker, array $row = array(), array $overrides = array() ): int {
@@ -14,7 +14,7 @@ function repo_make( Reports_Repository $repo, string $marker, array $row = array
 	return $id;
 }
 
-bugspot_test(
+fixthisplz_test(
 	'repository: insert_sets_defaults_and_encrypts_email',
 	function () {
 		global $wpdb;
@@ -45,7 +45,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'repository: insert_without_email_leaves_both_columns_null',
 	function () {
 		$repo  = new Reports_Repository();
@@ -56,7 +56,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'repository: update_sets_status_changed_at_and_seen_at',
 	function () {
 		global $wpdb;
@@ -78,7 +78,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'repository: mark_seen_only_from_new',
 	function () {
 		$repo = new Reports_Repository();
@@ -94,7 +94,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'repository: update_rejects_unknown_status',
 	function () {
 		$repo = new Reports_Repository();
@@ -109,7 +109,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'repository: delete_removes_row',
 	function () {
 		$repo = new Reports_Repository();
@@ -120,7 +120,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'repository: query_filters_status_dates_search',
 	function () {
 		$repo = new Reports_Repository();
@@ -160,7 +160,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'repository: query_orders_oldest_first_when_asc',
 	function () {
 		$repo = new Reports_Repository();
@@ -176,7 +176,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'repository: query_orders_by_priority',
 	function () {
 		$repo = new Reports_Repository();
@@ -196,7 +196,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'repository: count_by_status_has_all_keys',
 	function () {
 		$repo = new Reports_Repository();
@@ -213,7 +213,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'repository: ids_by_email_is_case_insensitive',
 	function () {
 		$repo = new Reports_Repository();
@@ -226,7 +226,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'repository: purge_only_closed_and_old',
 	function () {
 		global $wpdb;
@@ -236,9 +236,9 @@ bugspot_test(
 		$a    = repo_make( $repo, 'PRG', array(), array( 'status' => 'fixed', 'status_changed_at' => $old, 'created_at' => $new ) );
 		$b    = repo_make( $repo, 'PRG', array(), array( 'status' => 'in_progress', 'status_changed_at' => $old ) );
 		$c    = repo_make( $repo, 'PRG', array(), array( 'status' => 'fixed', 'status_changed_at' => $new, 'created_at' => $old ) );
-		assert_same( 0, Bug_Spotter\Retention::purge_closed_older_than( 0 ), '0 months does nothing' );
+		assert_same( 0, FixThisPlz\Retention::purge_closed_older_than( 0 ), '0 months does nothing' );
 		assert_true( null !== $repo->find( $a ) );
-		$deleted = Bug_Spotter\Retention::purge_closed_older_than( 12 );
+		$deleted = FixThisPlz\Retention::purge_closed_older_than( 12 );
 		assert_true( $deleted >= 1, 'at least the old closed row is purged' );
 		assert_same( null, $repo->find( $a ) );
 		assert_true( null !== $repo->find( $b ), 'in_progress kept' );
@@ -246,7 +246,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'repository: query_returns_light_rows_and_skips_email_on_request',
 	function () {
 		$repo = new Reports_Repository();
@@ -266,7 +266,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'repository: find_many_reads_given_ids_in_one_query',
 	function () {
 		global $wpdb;

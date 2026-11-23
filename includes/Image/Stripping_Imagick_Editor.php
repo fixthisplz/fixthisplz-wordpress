@@ -1,6 +1,6 @@
 <?php
 
-namespace Bug_Spotter\Image;
+namespace FixThisPlz\Image;
 
 defined( 'ABSPATH' ) || exit;
 

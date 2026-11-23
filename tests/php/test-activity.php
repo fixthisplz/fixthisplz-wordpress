@@ -1,29 +1,29 @@
 <?php
 
-use Bug_Spotter\Activity;
-use Bug_Spotter\Admin\Activity_Box;
-use Bug_Spotter\Admin\Bugs_Page;
-use Bug_Spotter\Admin\Detail_Page;
-use Bug_Spotter\Admin\Kanban;
-use Bug_Spotter\Admin\List_Table;
-use Bug_Spotter\Priorities;
-use Bug_Spotter\Privacy;
-use Bug_Spotter\Report_Format;
-use Bug_Spotter\Report_Changes;
-use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Statuses;
-use Bug_Spotter\Team;
+use FixThisPlz\Activity;
+use FixThisPlz\Admin\Activity_Box;
+use FixThisPlz\Admin\Bugs_Page;
+use FixThisPlz\Admin\Detail_Page;
+use FixThisPlz\Admin\Kanban;
+use FixThisPlz\Admin\List_Table;
+use FixThisPlz\Priorities;
+use FixThisPlz\Privacy;
+use FixThisPlz\Report_Format;
+use FixThisPlz\Report_Changes;
+use FixThisPlz\Reports_Repository;
+use FixThisPlz\Statuses;
+use FixThisPlz\Team;
 
 require_once __DIR__ . '/test-admin-detail.php';
 require_once ABSPATH . 'wp-admin/includes/user.php';
 
-/** A user of $role, given bugspot_manage unless $manager is false. */
+/** A user of $role, given fixthisplz_manage unless $manager is false. */
 function activity_user( string $role = 'editor', bool $manager = true, string $name = '' ): int {
-	$login = 'bugspot_act_' . strtolower( wp_generate_password( 8, false ) );
+	$login = 'fixthisplz_act_' . strtolower( wp_generate_password( 8, false ) );
 	$id    = wp_insert_user( array( 'user_login' => $login, 'user_pass' => wp_generate_password(), 'user_email' => $login . '@example.test', 'role' => $role, 'locale' => 'en_US', 'display_name' => '' !== $name ? $name : $login ) );
 	assert_true( is_int( $id ), 'user fixture failed' );
 	if ( $manager ) {
-		( new WP_User( $id ) )->add_cap( 'bugspot_manage' );
+		( new WP_User( $id ) )->add_cap( 'fixthisplz_manage' );
 	}
 	return $id;
 }
@@ -85,7 +85,7 @@ function activity_changes( int $report_id ): array {
 	return $out;
 }
 
-bugspot_test(
+fixthisplz_test(
 	'activity: only_bug_managers_are_assignable',
 	function () {
 		$manager = activity_user( 'editor', true, 'Ada Lovelace' );
@@ -98,7 +98,7 @@ bugspot_test(
 		assert_same( 'Deleted user', Team::name( 999999999 ) );
 
 		$repo = new Reports_Repository();
-		$id   = bugspot_admin_insert( 'assignable' );
+		$id   = fixthisplz_admin_insert( 'assignable' );
 		assert_true( ! $repo->update( $id, array( 'assigned_to' => $other ) ), 'a non-manager cannot be assigned' );
 		assert_true( ! $repo->update( $id, array( 'assigned_to' => 999999999 ) ), 'nor a missing user' );
 		assert_same( null, $repo->find( $id )['assigned_to'] );
@@ -106,13 +106,13 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'activity: every_path_records_one_history_entry_and_mails_the_new_assignee',
 	function () {
 		$me   = activity_user( 'editor', true, 'Me Myself' );
 		$bob  = activity_user( 'editor', true, 'Bob Builder' );
 		$repo = new Reports_Repository();
-		$id   = bugspot_admin_insert( 'assign-paths' );
+		$id   = fixthisplz_admin_insert( 'assign-paths' );
 
 		// Detail page: status and priority posted unchanged, only the assignment changes.
 		$post = array( 'report' => $id, 'status' => 'new', 'priority' => 'normal', 'assigned_to' => $bob );
@@ -124,7 +124,7 @@ bugspot_test(
 		assert_same( 1, count( $mails ), 'one e-mail to the new assignee' );
 		assert_same( array( get_userdata( $bob )->user_email ), $mails[0]['to'] );
 		assert_true( str_ends_with( $mails[0]['subject'], '] Assigned to you: ' . Report_Format::title( $id ) ), 'subject: ' . $mails[0]['subject'] );
-		assert_true( str_contains( $mails[0]['message'], 'page=bug-spotter&#038;report=' . $id . '"' ), 'link to the detail page' );
+		assert_true( str_contains( $mails[0]['message'], 'page=fixthisplz&#038;report=' . $id . '"' ), 'link to the detail page' );
 		assert_true( ! str_contains( $mails[0]['message'], '<script' ), 'escaped' );
 
 		// Bulk action, assigning oneself: recorded, no e-mail.
@@ -136,7 +136,7 @@ bugspot_test(
 
 		// Kanban drag (REST PATCH of the status).
 		rest_get_server();
-		$req = new WP_REST_Request( 'PATCH', '/bug-spotter/v1/reports/' . $id );
+		$req = new WP_REST_Request( 'PATCH', '/fixthisplz/v1/reports/' . $id );
 		$req->set_body_params( array( 'status' => 'confirmed' ) );
 		assert_same( 200, rest_do_request( $req )->get_status() );
 		assert_same( array( 'status', 'new', 'confirmed', $me ), activity_changes( $id )[0] );
@@ -150,7 +150,7 @@ bugspot_test(
 
 		// An update that changes nothing writes and records nothing, and says so.
 		global $wpdb;
-		$wpdb->update( Bug_Spotter\Installer::table(), array( 'updated_at' => '2000-01-01 00:00:00' ), array( 'id' => $id ) );
+		$wpdb->update( FixThisPlz\Installer::table(), array( 'updated_at' => '2000-01-01 00:00:00' ), array( 'id' => $id ) );
 		assert_same( array(), $repo->update( $id, array( 'status' => 'seen', 'assigned_to' => 0 ) ) );
 		assert_same( '2000-01-01 00:00:00', $repo->find( $id )['updated_at'], 'updated_at untouched' );
 		assert_same( 5, count( activity_changes( $id ) ) );
@@ -159,12 +159,12 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'activity: note_post_checks_nonce_and_capability',
 	function () {
 		$author = activity_user();
 		$guest  = activity_user( 'subscriber', false );
-		$id     = bugspot_admin_insert( 'note-post' );
+		$id     = fixthisplz_admin_insert( 'note-post' );
 		$call   = static fn( array $post, int $user ) => activity_call( array( Activity_Box::class, 'handle_add' ), $post + array( 'report' => $id, 'note' => 'Checked on staging' ), $user );
 
 		assert_true( str_starts_with( $call( array( '_wpnonce' => 'bad' ), $author ), 'die:' ), 'bad nonce' );
@@ -174,8 +174,8 @@ bugspot_test(
 
 		wp_set_current_user( $author );
 		$nonce = wp_create_nonce( Activity_Box::ADD_ACTION . '_' . $id );
-		assert_true( str_contains( $call( array( '_wpnonce' => $nonce ), $author ), 'bugspot_notice=note_added' ) );
-		assert_true( str_contains( $call( array( '_wpnonce' => $nonce, 'note' => " \n " ), $author ), 'bugspot_notice=note_failed' ), 'empty note refused' );
+		assert_true( str_contains( $call( array( '_wpnonce' => $nonce ), $author ), 'fixthisplz_notice=note_added' ) );
+		assert_true( str_contains( $call( array( '_wpnonce' => $nonce, 'note' => " \n " ), $author ), 'fixthisplz_notice=note_failed' ), 'empty note refused' );
 		$notes = Activity::for_report( $id );
 		assert_same( 1, count( $notes ) );
 		assert_same( array( Activity::NOTE, $author, 'Checked on staging' ), array( $notes[0]['type'], $notes[0]['user_id'], $notes[0]['content'] ) );
@@ -183,13 +183,13 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'activity: notes_are_deleted_by_their_author_or_an_administrator_only',
 	function () {
 		$author = activity_user();
 		$other  = activity_user();
 		$admin  = activity_user( 'administrator' );
-		$id     = bugspot_admin_insert( 'note-delete' );
+		$id     = fixthisplz_admin_insert( 'note-delete' );
 		$first  = Activity::add_note( $id, $author, 'first' );
 		$second = Activity::add_note( $id, $author, 'second' );
 		$delete = static function ( int $note, int $user ): string {
@@ -201,7 +201,7 @@ bugspot_test(
 		assert_true( ! Activity::can_delete( Activity::find( $first ), $other ) );
 		assert_true( str_starts_with( $delete( $first, $other ), 'die:' ), 'another manager is refused' );
 		assert_true( null !== Activity::find( $first ) );
-		assert_true( str_contains( $delete( $first, $author ), 'bugspot_notice=note_deleted' ), 'the author may' );
+		assert_true( str_contains( $delete( $first, $author ), 'fixthisplz_notice=note_deleted' ), 'the author may' );
 		assert_same( null, Activity::find( $first ) );
 		assert_true( str_contains( $delete( $second, $admin ), 'report=' . $id ), 'an administrator may' );
 		assert_same( null, Activity::find( $second ) );
@@ -214,12 +214,12 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'activity: timeline_merges_notes_and_changes_newest_first_and_escapes_notes',
 	function () {
 		global $wpdb;
 		$author = activity_user( 'editor', true, 'Nora Note' );
-		$id     = bugspot_admin_insert( 'timeline' );
+		$id     = fixthisplz_admin_insert( 'timeline' );
 		$note   = Activity::add_note( $id, $author, "  <b>bold</b> & co\nsecond line\n" );
 		$repo   = new Reports_Repository();
 		$repo->update( $id, array( 'priority' => 'high' ) );
@@ -233,7 +233,7 @@ bugspot_test(
 		$types = array_column( Activity::for_report( $id ), 'type' );
 		assert_same( array( 'note', 'change', 'note', 'change', 'change' ), $types, 'newest first, notes and changes merged' );
 
-		$html = bugspot_capture( fn() => Activity_Box::render( $id ) );
+		$html = fixthisplz_capture( fn() => Activity_Box::render( $id ) );
 		assert_true( str_contains( $html, '&lt;script&gt;alert(1)&lt;/script&gt;' ) && ! str_contains( $html, '<script>' ), 'note escaped' );
 		assert_true( str_contains( $html, '&lt;b&gt;bold&lt;/b&gt; &amp; co<br />' ), 'typed tags shown as text, line breaks kept' );
 		assert_true( str_contains( $html, esc_html( 'Priority: ' . Priorities::label( 'normal' ) . ' → ' . Priorities::label( 'high' ) ) ), 'labels of the settings' );
@@ -244,16 +244,16 @@ bugspot_test(
 		$sorted    = $positions;
 		sort( $sorted );
 		assert_same( $sorted, $positions, 'rendered in the same order' );
-		assert_true( str_contains( bugspot_capture( fn() => Detail_Page::render( $id ) ), 'Notes and history' ), 'box on the detail page' );
+		assert_true( str_contains( fixthisplz_capture( fn() => Detail_Page::render( $id ) ), 'Notes and history' ), 'box on the detail page' );
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'activity: deleting_a_report_deletes_its_activity',
 	function () {
 		$repo = new Reports_Repository();
-		$id   = bugspot_admin_insert( 'cascade' );
-		$keep = bugspot_admin_insert( 'cascade-keep' );
+		$id   = fixthisplz_admin_insert( 'cascade' );
+		$keep = fixthisplz_admin_insert( 'cascade-keep' );
 		Activity::add_note( $id, 1, 'gone' );
 		$repo->update( $id, array( 'status' => 'fixed' ) );
 		Activity::add_note( $keep, 1, 'kept' );
@@ -263,29 +263,29 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'activity: deleting_a_user_unassigns_their_reports_and_keeps_their_notes',
 	function () {
 		$gone = activity_user( 'editor', true, 'Gone Soon' );
 		$repo = new Reports_Repository();
-		$id   = bugspot_admin_insert( 'user-delete' );
+		$id   = fixthisplz_admin_insert( 'user-delete' );
 		activity_mails( fn() => assert_true( null !== $repo->update( $id, array( 'assigned_to' => $gone ) ) ) );
 		$note = Activity::add_note( $id, $gone, 'my note' );
 		assert_true( wp_delete_user( $gone ) );
 		assert_same( null, $repo->find( $id )['assigned_to'], 'unassigned' );
 		assert_same( array( 'assigned_to', (string) $gone, null, 0 ), activity_changes( $id )[0], 'recorded as a System change' );
 		assert_same( 'my note', Activity::find( $note )['content'], 'note kept' );
-		assert_true( str_contains( bugspot_capture( fn() => Activity_Box::render( $id ) ), '<strong>Deleted user</strong>' ) );
+		assert_true( str_contains( fixthisplz_capture( fn() => Activity_Box::render( $id ) ), '<strong>Deleted user</strong>' ) );
 		assert_true( false !== has_action( 'remove_user_from_blog', array( Team::class, 'on_user_deleted' ) ), 'multisite removal unassigns too' );
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'activity: privacy_exports_and_anonymises_the_notes_and_changes_of_a_user',
 	function () {
 		$author = activity_user();
 		$other  = activity_user();
-		$id     = bugspot_admin_insert( 'privacy-notes' );
+		$id     = fixthisplz_admin_insert( 'privacy-notes' );
 		$mine   = Activity::add_note( $id, $author, 'my private note' );
 		Activity::add_note( $id, $other, 'not mine' );
 		wp_set_current_user( $author );
@@ -294,8 +294,8 @@ bugspot_test(
 		$change = Activity::for_report( $id )[0];
 		$email  = get_userdata( $author )->user_email;
 
-		assert_true( is_callable( Privacy::register_exporter( array() )['bug-spotter-notes']['callback'] ) );
-		assert_true( is_callable( Privacy::register_eraser( array() )['bug-spotter-notes']['callback'] ) );
+		assert_true( is_callable( Privacy::register_exporter( array() )['fixthisplz-notes']['callback'] ) );
+		assert_true( is_callable( Privacy::register_eraser( array() )['fixthisplz-notes']['callback'] ) );
 		$export = Privacy::export_notes( $email, 1 );
 		assert_true( $export['done'] );
 		assert_same( array( 'bug-activity-' . $mine, 'bug-activity-' . $change['id'] ), array_column( $export['data'], 'item_id' ), 'their note and their change' );
@@ -321,12 +321,12 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'activity: bulk_assignment_sends_one_summary_per_assignee_and_never_to_the_actor',
 	function () {
 		$me   = activity_user( 'editor', true, 'Bulk Boss' );
 		$bob  = activity_user( 'editor', true, 'Bob Bulk' );
-		$ids  = array( bugspot_admin_insert( 'batch 1' ), bugspot_admin_insert( 'batch 2' ), bugspot_admin_insert( 'batch 3' ) );
+		$ids  = array( fixthisplz_admin_insert( 'batch 1' ), fixthisplz_admin_insert( 'batch 2' ), fixthisplz_admin_insert( 'batch 3' ) );
 		$repo = new Reports_Repository();
 		wp_set_current_user( $me );
 		activity_mails( fn() => $repo->update( $ids[2], array( 'assigned_to' => $bob ) ) );
@@ -349,20 +349,20 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'activity: opening_a_new_report_records_new_to_seen',
 	function () {
 		$me = activity_user();
-		$id = bugspot_admin_insert( 'seen-history' );
+		$id = fixthisplz_admin_insert( 'seen-history' );
 		wp_set_current_user( $me );
-		bugspot_capture( fn() => Detail_Page::render( $id ) );
-		bugspot_capture( fn() => Detail_Page::render( $id ) );
+		fixthisplz_capture( fn() => Detail_Page::render( $id ) );
+		fixthisplz_capture( fn() => Detail_Page::render( $id ) );
 		wp_set_current_user( 0 );
 		assert_same( array( array( 'status', 'new', 'seen', $me ) ), activity_changes( $id ), 'recorded once, for the person who opened it' );
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'activity: report_changes_keeps_only_real_valid_changes',
 	function () {
 		$member  = activity_user();
@@ -380,26 +380,26 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'activity: assignee_filters_list_column_kanban_initials_and_bulk_actions',
 	function () {
 		$me   = activity_user( 'editor', true, 'Kim Kanban' );
 		$repo = new Reports_Repository();
 		$mark = 'assignee' . wp_generate_password( 6, false );
-		$mine = bugspot_admin_insert( $mark . ' mine' );
-		$free = bugspot_admin_insert( $mark . ' free' );
+		$mine = fixthisplz_admin_insert( $mark . ' mine' );
+		$free = fixthisplz_admin_insert( $mark . ' free' );
 		activity_mails( fn() => $repo->update( $mine, array( 'assigned_to' => $me ) ) );
 		$ids = static fn( array $args ) => array_column( $repo->query( $args + array( 'search' => $mark ) )['items'], 'id' );
 		assert_same( array( $mine ), $ids( array( 'assigned' => (string) $me ) ) );
 		assert_same( array( $free ), $ids( array( 'assigned' => 'none' ) ) );
 		assert_same( array( $free, $mine ), $ids( array() ) );
 
-		assert_same( 'none', Bug_Spotter\Admin\Report_Query_Args::read_filters( array( 'assigned' => 'none' ) )['assigned'] );
-		assert_same( '12', Bug_Spotter\Admin\Report_Query_Args::read_filters( array( 'assigned' => '12' ) )['assigned'] );
-		assert_same( '', Bug_Spotter\Admin\Report_Query_Args::read_filters( array( 'assigned' => 'x' ) )['assigned'] );
+		assert_same( 'none', FixThisPlz\Admin\Report_Query_Args::read_filters( array( 'assigned' => 'none' ) )['assigned'] );
+		assert_same( '12', FixThisPlz\Admin\Report_Query_Args::read_filters( array( 'assigned' => '12' ) )['assigned'] );
+		assert_same( '', FixThisPlz\Admin\Report_Query_Args::read_filters( array( 'assigned' => 'x' ) )['assigned'] );
 
 		$filters = array( 'status' => '', 'priority' => '', 'assigned' => '', 'from' => '', 'to' => '', 'search' => $mark );
-		$board   = bugspot_capture( fn() => Kanban::render( $filters ) );
+		$board   = fixthisplz_capture( fn() => Kanban::render( $filters ) );
 		assert_true( str_contains( $board, 'aria-label="Assigned to Kim Kanban">KK</span>' ), 'initials on the card' );
 
 		wp_set_current_user( $me );
@@ -413,13 +413,13 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'activity: the_assignment_email_is_written_in_the_language_of_the_assignee',
 	function () {
 		$me  = activity_user( 'editor', true, 'Locale Boss' );
 		$ana = activity_user( 'editor', true, 'Ana Locale' );
 		update_user_meta( $ana, 'locale', 'fr_FR' );
-		$ids  = array( bugspot_admin_insert( 'locale 1' ), bugspot_admin_insert( 'locale 2' ) );
+		$ids  = array( fixthisplz_admin_insert( 'locale 1' ), fixthisplz_admin_insert( 'locale 2' ) );
 		$repo = new Reports_Repository();
 		wp_set_current_user( $me );
 
@@ -428,7 +428,7 @@ bugspot_test(
 		$repo->update( $ids[0], array( 'assigned_to' => 0 ) );
 		$mails = activity_mails( fn() => Bugs_Page::apply_bulk( 'assign_' . $ana, $ids ) );
 		assert_true( str_ends_with( $mails[0]['subject'], '] 2 signalements vous sont attribués' ), 'batch: ' . $mails[0]['subject'] );
-		assert_same( 'Status', __( 'Status', 'bug-spotter' ), 'the request language comes back afterwards' );
+		assert_same( 'Status', __( 'Status', 'fixthisplz' ), 'the request language comes back afterwards' );
 		wp_set_current_user( 0 );
 	}
 );

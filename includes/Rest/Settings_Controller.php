@@ -1,20 +1,20 @@
 <?php
 
-namespace Bug_Spotter\Rest;
+namespace FixThisPlz\Rest;
 
-use Bug_Spotter\Captcha\Factory;
-use Bug_Spotter\Client_Ip;
-use Bug_Spotter\Frontend\Button_Style;
-use Bug_Spotter\Report_Submission;
-use Bug_Spotter\Settings;
-use Bug_Spotter\Settings_Sanitizer;
-use Bug_Spotter\Webhook_Payload;
-use Bug_Spotter\Webhook_Sender;
-use Bug_Spotter\Webhooks;
+use FixThisPlz\Captcha\Factory;
+use FixThisPlz\Client_Ip;
+use FixThisPlz\Frontend\Button_Style;
+use FixThisPlz\Report_Submission;
+use FixThisPlz\Settings;
+use FixThisPlz\Settings_Sanitizer;
+use FixThisPlz\Webhook_Payload;
+use FixThisPlz\Webhook_Sender;
+use FixThisPlz\Webhooks;
 
 defined( 'ABSPATH' ) || exit;
 
-/** REST helpers of the settings screen (bug-spotter/v1): anti-bot key test, button preview and webhook test. Nothing is saved. */
+/** REST helpers of the settings screen (fixthisplz/v1): anti-bot key test, button preview and webhook test. Nothing is saved. */
 final class Settings_Controller {
 
 	public static function register_hooks(): void {
@@ -66,7 +66,7 @@ final class Settings_Controller {
 		$settings = Settings::get();
 		$provider = self::string_param( $request, 'provider' );
 		if ( ! in_array( $provider, Factory::PROVIDERS, true ) ) {
-			return Report_Submission::invalid( __( 'Choose an anti-bot provider to test.', 'bug-spotter' ) );
+			return Report_Submission::invalid( __( 'Choose an anti-bot provider to test.', 'fixthisplz' ) );
 		}
 		$site_key = trim( self::string_param( $request, 'site_key' ) );
 		$secret   = trim( self::string_param( $request, 'secret_key' ) );
@@ -75,10 +75,10 @@ final class Settings_Controller {
 			$secret = (string) $settings['captcha']['secret_key'];
 		}
 		if ( '' === $secret ) {
-			return Report_Submission::invalid( __( 'The secret key is required.', 'bug-spotter' ) );
+			return Report_Submission::invalid( __( 'The secret key is required.', 'fixthisplz' ) );
 		}
 		if ( '' === $site_key ) {
-			return Report_Submission::invalid( __( 'Enter the site key first.', 'bug-spotter' ) );
+			return Report_Submission::invalid( __( 'Enter the site key first.', 'fixthisplz' ) );
 		}
 		$threshold = $request->get_param( 'v3_threshold' );
 
@@ -95,12 +95,12 @@ final class Settings_Controller {
 			return $result;
 		}
 		if ( true !== $result ) {
-			return new \WP_Error( 'bugspot_captcha_failed', __( 'The anti-bot check failed.', 'bug-spotter' ), array( 'status' => 403 ) );
+			return new \WP_Error( 'fixthisplz_captcha_failed', __( 'The anti-bot check failed.', 'fixthisplz' ), array( 'status' => 403 ) );
 		}
 		return new \WP_REST_Response(
 			array(
 				'valid'   => true,
-				'message' => __( 'Keys are valid.', 'bug-spotter' ),
+				'message' => __( 'Keys are valid.', 'fixthisplz' ),
 			),
 			200
 		);
@@ -126,11 +126,11 @@ final class Settings_Controller {
 		$index   = $request->get_param( 'index' );
 		$webhook = is_numeric( $index ) ? ( Webhooks::all()[ (int) $index ] ?? null ) : null;
 		if ( null === $webhook ) {
-			return Report_Submission::invalid( __( 'Save the webhook before testing it.', 'bug-spotter' ) );
+			return Report_Submission::invalid( __( 'Save the webhook before testing it.', 'fixthisplz' ) );
 		}
 		$response = Webhook_Sender::send( $webhook, Webhook_Payload::data( 'test', null ), true );
 		if ( is_wp_error( $response ) ) {
-			return new \WP_Error( 'bugspot_webhook_failed', $response->get_error_message(), array( 'status' => 502 ) );
+			return new \WP_Error( 'fixthisplz_webhook_failed', $response->get_error_message(), array( 'status' => 502 ) );
 		}
 		$code = (int) wp_remote_retrieve_response_code( $response );
 		return new \WP_REST_Response(
@@ -138,7 +138,7 @@ final class Settings_Controller {
 				'ok'      => $code >= 200 && $code < 300,
 				'code'    => $code,
 				/* translators: 1: HTTP status code, such as 200, 2: its reason, such as "OK". */
-				'message' => sprintf( __( 'The receiver answered: HTTP %1$d %2$s', 'bug-spotter' ), $code, wp_remote_retrieve_response_message( $response ) ),
+				'message' => sprintf( __( 'The receiver answered: HTTP %1$d %2$s', 'fixthisplz' ), $code, wp_remote_retrieve_response_message( $response ) ),
 			),
 			200
 		);

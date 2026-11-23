@@ -1,13 +1,13 @@
 <?php
 
-namespace Bug_Spotter\Admin;
+namespace FixThisPlz\Admin;
 
-use Bug_Spotter\Admin\Settings_Fields as F;
-use Bug_Spotter\Captcha\Factory;
-use Bug_Spotter\Captcha\Siteverify_Provider;
-use Bug_Spotter\Mailer;
-use Bug_Spotter\Statuses;
-use Bug_Spotter\Webhooks;
+use FixThisPlz\Admin\Settings_Fields as F;
+use FixThisPlz\Captcha\Factory;
+use FixThisPlz\Captcha\Siteverify_Provider;
+use FixThisPlz\Mailer;
+use FixThisPlz\Statuses;
+use FixThisPlz\Webhooks;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -18,17 +18,17 @@ defined( 'ABSPATH' ) || exit;
 final class Settings_Summary {
 
 	/** Ids of the section headings the summary links to. */
-	public const ACTIVATION = 'bugspot-section-activation';
-	public const WHO        = 'bugspot-section-who';
-	public const SPAM       = 'bugspot-section-spam-check';
-	public const EMAIL      = 'bugspot-section-email';
-	public const WEBHOOKS   = 'bugspot-section-webhooks';
-	public const RETENTION  = 'bugspot-section-retention';
+	public const ACTIVATION = 'fixthisplz-section-activation';
+	public const WHO        = 'fixthisplz-section-who';
+	public const SPAM       = 'fixthisplz-section-spam-check';
+	public const EMAIL      = 'fixthisplz-section-email';
+	public const WEBHOOKS   = 'fixthisplz-section-webhooks';
+	public const RETENTION  = 'fixthisplz-section-retention';
 
 	/** @param array<string,mixed> $s Saved settings. */
 	public static function render( array $s ): void {
-		F::heading( __( 'Summary', 'bug-spotter' ), __( 'What the saved settings do now. Each line leads to its setting.', 'bug-spotter' ) );
-		echo '<dl class="bugspot-summary">';
+		F::heading( __( 'Summary', 'fixthisplz' ), __( 'What the saved settings do now. Each line leads to its setting.', 'fixthisplz' ) );
+		echo '<dl class="fixthisplz-summary">';
 		foreach ( self::rows( $s ) as $row ) {
 			printf(
 				'<dt><a href="%1$s">%2$s</a></dt><dd%3$s>%4$s</dd>',
@@ -44,17 +44,17 @@ final class Settings_Summary {
 
 	/**
 	 * @param array<string,mixed> $s
-	 * @return list<array{label:string,tab:string,anchor:string,value:string,class:string}> class: "" or "bugspot-summary-warning".
+	 * @return list<array{label:string,tab:string,anchor:string,value:string,class:string}> class: "" or "fixthisplz-summary-warning".
 	 */
 	public static function rows( array $s ): array {
 		$enabled = ! empty( $s['enabled'] );
 		return array(
-			self::row( __( 'Report button', 'bug-spotter' ), 'general', self::ACTIVATION, $enabled ? array( _x( 'On', 'report button state', 'bug-spotter' ), false ) : array( __( 'Off: nobody sees the button.', 'bug-spotter' ), true ) ),
-			self::row( __( 'Who can report', 'bug-spotter' ), 'general', self::WHO, array( self::reporters( $s['visibility'] ), false ) ),
-			self::row( __( 'Spam protection', 'bug-spotter' ), 'spam', self::SPAM, self::spam( $s ) ),
-			self::row( __( 'E-mail', 'bug-spotter' ), 'alerts', self::EMAIL, array( self::email( $s['notifications'] ), false ) ),
-			self::row( __( 'Webhooks', 'bug-spotter' ), 'alerts', self::WEBHOOKS, array( self::webhooks(), false ) ),
-			self::row( __( 'Retention', 'bug-spotter' ), 'privacy', self::RETENTION, self::retention( (int) $s['data']['retention_months'] ) ),
+			self::row( __( 'Report button', 'fixthisplz' ), 'general', self::ACTIVATION, $enabled ? array( _x( 'On', 'report button state', 'fixthisplz' ), false ) : array( __( 'Off: nobody sees the button.', 'fixthisplz' ), true ) ),
+			self::row( __( 'Who can report', 'fixthisplz' ), 'general', self::WHO, array( self::reporters( $s['visibility'] ), false ) ),
+			self::row( __( 'Spam protection', 'fixthisplz' ), 'spam', self::SPAM, self::spam( $s ) ),
+			self::row( __( 'E-mail', 'fixthisplz' ), 'alerts', self::EMAIL, array( self::email( $s['notifications'] ), false ) ),
+			self::row( __( 'Webhooks', 'fixthisplz' ), 'alerts', self::WEBHOOKS, array( self::webhooks(), false ) ),
+			self::row( __( 'Retention', 'fixthisplz' ), 'privacy', self::RETENTION, self::retention( (int) $s['data']['retention_months'] ) ),
 		);
 	}
 
@@ -68,7 +68,7 @@ final class Settings_Summary {
 			'tab'    => $tab,
 			'anchor' => $anchor,
 			'value'  => $value[0],
-			'class'  => $value[1] ? 'bugspot-summary-warning' : '',
+			'class'  => $value[1] ? 'fixthisplz-summary-warning' : '',
 		);
 	}
 
@@ -76,9 +76,9 @@ final class Settings_Summary {
 	private static function reporters( array $v ): string {
 		$names = array_values( array_intersect_key( F::role_names(), array_flip( (array) $v['roles'] ) ) );
 		if ( ! empty( $v['guests'] ) ) {
-			$names[] = __( 'Guests (not logged in)', 'bug-spotter' );
+			$names[] = __( 'Guests (not logged in)', 'fixthisplz' );
 		}
-		return $names ? implode( wp_get_list_item_separator(), $names ) : __( 'Nobody', 'bug-spotter' );
+		return $names ? implode( wp_get_list_item_separator(), $names ) : __( 'Nobody', 'fixthisplz' );
 	}
 
 	/** @param array<string,mixed> $s @return array{0:string,1:bool} */
@@ -88,11 +88,11 @@ final class Settings_Summary {
 		$provider = Factory::from_settings( $s['captcha'] );
 		if ( $provider instanceof Siteverify_Provider && ! $provider->has_secret() ) {
 			/* translators: %s: the spam check service, such as "Cloudflare Turnstile". */
-			return array( sprintf( __( '%s: secret key missing, every report will fail.', 'bug-spotter' ), $label ), true );
+			return array( sprintf( __( '%s: secret key missing, every report will fail.', 'fixthisplz' ), $label ), true );
 		}
 		if ( Settings_Page::guests_unprotected( $s ) ) {
 			/* translators: %s: "None", the spam check service. */
-			return array( sprintf( __( '%s: guests can send reports without any check.', 'bug-spotter' ), $label ), true );
+			return array( sprintf( __( '%s: guests can send reports without any check.', 'fixthisplz' ), $label ), true );
 		}
 		return array( $label, false );
 	}
@@ -100,22 +100,22 @@ final class Settings_Summary {
 	/** @param array<string,mixed> $n */
 	private static function email( array $n ): string {
 		if ( empty( $n['enabled'] ) ) {
-			return _x( 'Off', 'e-mail notification state', 'bug-spotter' );
+			return _x( 'Off', 'e-mail notification state', 'fixthisplz' );
 		}
 		$recipients = Mailer::recipients( $n );
 		if ( Mailer::uses_admin_email( $n ) ) {
 			/* translators: %s: the site administration e-mail address. */
-			return sprintf( __( 'Site administration address (%s)', 'bug-spotter' ), $recipients[0] );
+			return sprintf( __( 'Site administration address (%s)', 'fixthisplz' ), $recipients[0] );
 		}
 		$count = count( $recipients );
 		/* translators: %d: number of e-mail addresses. */
-		return sprintf( _n( '%d recipient', '%d recipients', $count, 'bug-spotter' ), $count );
+		return sprintf( _n( '%d recipient', '%d recipients', $count, 'fixthisplz' ), $count );
 	}
 
 	private static function webhooks(): string {
 		$count = count( Webhooks::active() );
 		/* translators: %d: number of webhooks switched on. */
-		return sprintf( _n( '%d active', '%d active', $count, 'bug-spotter' ), $count );
+		return sprintf( _n( '%d active', '%d active', $count, 'fixthisplz' ), $count );
 	}
 
 	/**
@@ -125,14 +125,14 @@ final class Settings_Summary {
 	 */
 	private static function retention( int $months ): array {
 		if ( $months <= 0 ) {
-			return array( __( 'Without limit', 'bug-spotter' ), false );
+			return array( __( 'Without limit', 'fixthisplz' ), false );
 		}
 		/* translators: %d: number of months. */
-		$value = sprintf( _n( '%d month', '%d months', $months, 'bug-spotter' ), $months );
+		$value = sprintf( _n( '%d month', '%d months', $months, 'fixthisplz' ), $months );
 		if ( Statuses::closed() ) {
 			return array( $value, false );
 		}
 		/* translators: %s: a duration, such as "6 months". */
-		return array( sprintf( __( '%s, but no status is marked Done: nothing is deleted.', 'bug-spotter' ), $value ), true );
+		return array( sprintf( __( '%s, but no status is marked Done: nothing is deleted.', 'fixthisplz' ), $value ), true );
 	}
 }

@@ -201,7 +201,7 @@ export async function captureVisible({ vendorUrl, mask = false, sensitiveSelecto
 		// Inner scroll containers keep their position (the document's own scroll is handled below).
 		features: { restoreScrollPosition: true },
 		// Tagged so the loader's network hook does not log the library's own asset fetches as page failures.
-		fetch: { requestInit: { cache: 'force-cache', bugspotInternal: true } },
+		fetch: { requestInit: { cache: 'force-cache', fixThisPlzInternal: true } },
 		filter: (node) => {
 			const keep = cut.filter(node);
 			if (keep) {

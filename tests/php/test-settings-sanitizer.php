@@ -1,9 +1,9 @@
 <?php
 
-use Bug_Spotter\Settings;
-use Bug_Spotter\Settings_Sanitizer;
+use FixThisPlz\Settings;
+use FixThisPlz\Settings_Sanitizer;
 
-bugspot_test(
+fixthisplz_test(
 	'settings-sanitizer: merge_keeps_the_base_shape_and_replaces_lists',
 	function () {
 		$base = array(
@@ -26,7 +26,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'settings-sanitizer: with_administrator_adds_the_role_once',
 	function () {
 		assert_same( array( 'editor', 'administrator' ), Settings_Sanitizer::with_administrator( array( 'editor' ) ) );
@@ -34,7 +34,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'settings-sanitizer: every_section_survives_wrong_types_with_the_defaults_shape',
 	function () {
 		with_settings_option(
@@ -58,7 +58,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'settings-sanitizer: section_values_are_validated_field_by_field',
 	function () {
 		with_settings_option(

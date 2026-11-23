@@ -1,17 +1,17 @@
 <?php
 
-use Bug_Spotter\Admin\Dashboard_Widget;
-use Bug_Spotter\Admin\Detail_Page;
-use Bug_Spotter\Mailer;
-use Bug_Spotter\Report_Format;
-use Bug_Spotter\Settings;
-use Bug_Spotter\Settings_Sanitizer;
+use FixThisPlz\Admin\Dashboard_Widget;
+use FixThisPlz\Admin\Detail_Page;
+use FixThisPlz\Mailer;
+use FixThisPlz\Report_Format;
+use FixThisPlz\Settings;
+use FixThisPlz\Settings_Sanitizer;
 
-// bugspot_admin_insert(), bugspot_capture(), also when run alone.
+// fixthisplz_admin_insert(), fixthisplz_capture(), also when run alone.
 require_once __DIR__ . '/test-admin-list.php';
 require_once __DIR__ . '/test-admin-detail.php';
 
-bugspot_test(
+fixthisplz_test(
 	'item-label: the_singular_name_titles_the_detail_page_and_the_email_escaped',
 	function () {
 		with_settings_option(
@@ -21,10 +21,10 @@ bugspot_test(
 				$saved = Settings_Sanitizer::sanitize( array( 'management' => array( 'item_label' => ' <b>Ticket</b> & "co" ' . str_repeat( 'x', 50 ) ) ) );
 				assert_same( 40, mb_strlen( $saved['management']['item_label'] ), 'at most 40 characters' );
 				update_option( Settings::OPTION, array( 'management' => array( 'item_label' => 'Ticket & "co"' ) ) );
-				$id = bugspot_admin_insert( 'item-label' );
+				$id = fixthisplz_admin_insert( 'item-label' );
 				assert_same( 'Ticket & "co" #' . $id, Report_Format::title( $id ) );
 
-				$html = bugspot_capture( fn() => Detail_Page::render( $id ) );
+				$html = fixthisplz_capture( fn() => Detail_Page::render( $id ) );
 				assert_true( str_contains( $html, '<h1 class="wp-heading-inline">Ticket &amp; &quot;co&quot; #' . $id . '</h1>' ), 'escaped detail title' );
 
 				$sent = array();
@@ -45,7 +45,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'dashboard-widget: only_bug_managers_get_it',
 	function () {
 		global $wp_meta_boxes;
@@ -54,10 +54,10 @@ bugspot_test(
 		$saved = $wp_meta_boxes;
 		set_current_screen( 'dashboard' );
 		try {
-			$subscriber = wp_insert_user( array( 'user_login' => 'bugspot_widget_' . wp_generate_password( 6, false ), 'user_pass' => wp_generate_password(), 'role' => 'subscriber' ) );
+			$subscriber = wp_insert_user( array( 'user_login' => 'fixthisplz_widget_' . wp_generate_password( 6, false ), 'user_pass' => wp_generate_password(), 'role' => 'subscriber' ) );
 			wp_set_current_user( $subscriber );
 			Dashboard_Widget::register();
-			assert_true( ! isset( $wp_meta_boxes['dashboard']['normal']['core'][ Dashboard_Widget::ID ] ), 'no widget without bugspot_manage' );
+			assert_true( ! isset( $wp_meta_boxes['dashboard']['normal']['core'][ Dashboard_Widget::ID ] ), 'no widget without fixthisplz_manage' );
 
 			$admins = get_users( array( 'role' => 'administrator', 'number' => 1, 'fields' => 'ID' ) );
 			wp_set_current_user( (int) $admins[0] );
@@ -71,24 +71,24 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'dashboard-widget: counts_the_open_statuses_and_links_the_5_latest_reports',
 	function () {
 		with_settings_option(
 			function () {
 				update_option( Settings::OPTION, array( 'management' => array( 'item_label' => 'Ticket', 'list_label' => 'Every <ticket>' ) ) );
-				$before = ( new Bug_Spotter\Reports_Repository() )->count_by_status( array() );
+				$before = ( new FixThisPlz\Reports_Repository() )->count_by_status( array() );
 				$ids    = array();
 				for ( $i = 1; $i <= 6; $i++ ) {
-					$ids[] = bugspot_admin_insert( 'widget report ' . $i . ' <script>' );
+					$ids[] = fixthisplz_admin_insert( 'widget report ' . $i . ' <script>' );
 				}
-				$html = bugspot_capture( array( Dashboard_Widget::class, 'render' ) );
+				$html = fixthisplz_capture( array( Dashboard_Widget::class, 'render' ) );
 
 				assert_true( str_contains( $html, 'status=new' ) && str_contains( $html, 'status=seen' ), 'open statuses listed' );
 				assert_true( ! str_contains( $html, 'status=fixed' ) && ! str_contains( $html, 'status=wont_fix' ), 'closed statuses left out' );
-				assert_true( str_contains( $html, '<span class="bugspot-count">' . number_format_i18n( $before['new'] + 6 ) . '</span>' ), 'count of new' );
+				assert_true( str_contains( $html, '<span class="fixthisplz-count">' . number_format_i18n( $before['new'] + 6 ) . '</span>' ), 'count of new' );
 				foreach ( array_slice( array_reverse( $ids ), 0, 5 ) as $id ) {
-					assert_true( str_contains( $html, esc_url( Bug_Spotter\Report_Format::link( $id ) ) . '">Ticket #' . $id . '</a>' ), 'latest #' . $id );
+					assert_true( str_contains( $html, esc_url( FixThisPlz\Report_Format::link( $id ) ) . '">Ticket #' . $id . '</a>' ), 'latest #' . $id );
 				}
 				assert_true( ! str_contains( $html, 'Ticket #' . $ids[0] . '<' ), 'only 5 reports' );
 				assert_true( ! str_contains( $html, '<script>' ) && str_contains( $html, '&lt;script&gt;' ), 'excerpt escaped' );

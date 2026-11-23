@@ -1,10 +1,10 @@
 <?php
 
-namespace Bug_Spotter\Admin;
+namespace FixThisPlz\Admin;
 
-use Bug_Spotter\Report_Format;
-use Bug_Spotter\Rest\Reports_Controller;
-use Bug_Spotter\Screenshot_Store;
+use FixThisPlz\Report_Format;
+use FixThisPlz\Rest\Reports_Controller;
+use FixThisPlz\Screenshot_Store;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 final class Report_Context_View {
 
 	private static function none(): void {
-		echo '<p class="bugspot-muted">' . esc_html__( 'None', 'bug-spotter' ) . '</p>';
+		echo '<p class="fixthisplz-muted">' . esc_html__( 'None', 'fixthisplz' ) . '</p>';
 	}
 
 	/** A key / value table whose empty values are skipped. */
@@ -25,7 +25,7 @@ final class Report_Context_View {
 			self::none();
 			return;
 		}
-		echo '<table class="bugspot-pairs"><tbody>';
+		echo '<table class="fixthisplz-pairs"><tbody>';
 		foreach ( $pairs as $label => $value ) {
 			echo '<tr><th scope="row">' . esc_html( $label ) . '</th><td>' . esc_html( $value ) . '</td></tr>';
 		}
@@ -40,7 +40,7 @@ final class Report_Context_View {
 			echo '<p>' . esc_html( $who['name'] ) . '</p>';
 		}
 		if ( '' !== $who['email'] ) {
-			echo '<p>' . esc_html__( 'Contact e-mail:', 'bug-spotter' ) . ' ' . esc_html( $who['email'] ) . '</p>';
+			echo '<p>' . esc_html__( 'Contact e-mail:', 'fixthisplz' ) . ' ' . esc_html( $who['email'] ) . '</p>';
 		}
 	}
 
@@ -52,8 +52,8 @@ final class Report_Context_View {
 		$title = isset( $context['title'] ) && is_string( $context['title'] ) ? $context['title'] : '';
 		self::render_pairs(
 			array(
-				__( 'Title', 'bug-spotter' )       => $title,
-				__( 'WordPress page', 'bug-spotter' ) => isset( $context['wp_page'] ) && is_string( $context['wp_page'] ) ? $context['wp_page'] : '',
+				__( 'Title', 'fixthisplz' )       => $title,
+				__( 'WordPress page', 'fixthisplz' ) => isset( $context['wp_page'] ) && is_string( $context['wp_page'] ) ? $context['wp_page'] : '',
 			)
 		);
 	}
@@ -79,12 +79,12 @@ final class Report_Context_View {
 		$get = static fn( string $key ): string => isset( $element[ $key ] ) && is_string( $element[ $key ] ) ? $element[ $key ] : '';
 		self::render_pairs(
 			array(
-				__( 'Selector', 'bug-spotter' ) => $get( 'selector' ),
-				__( 'Tag', 'bug-spotter' )      => $get( 'tag' ),
-				__( 'Role', 'bug-spotter' )     => $get( 'role' ),
-				__( 'Name', 'bug-spotter' )     => $get( 'name' ),
-				__( 'Text', 'bug-spotter' )     => $get( 'text' ),
-				__( 'Position', 'bug-spotter' ) => $position,
+				__( 'Selector', 'fixthisplz' ) => $get( 'selector' ),
+				__( 'Tag', 'fixthisplz' )      => $get( 'tag' ),
+				__( 'Role', 'fixthisplz' )     => $get( 'role' ),
+				__( 'Name', 'fixthisplz' )     => $get( 'name' ),
+				__( 'Text', 'fixthisplz' )     => $get( 'text' ),
+				__( 'Position', 'fixthisplz' ) => $position,
 			)
 		);
 	}
@@ -93,11 +93,11 @@ final class Report_Context_View {
 		$get = static fn( string $key ): string => isset( $context[ $key ] ) && is_string( $context[ $key ] ) ? $context[ $key ] : '';
 		self::render_pairs(
 			array(
-				__( 'Language', 'bug-spotter' )       => $get( 'locale' ),
-				__( 'Time zone', 'bug-spotter' )      => $get( 'timezone' ),
-				__( 'User agent', 'bug-spotter' )     => $get( 'user_agent' ),
-				__( 'Viewport', 'bug-spotter' )       => $get( 'viewport' ),
-				__( 'Plugin version', 'bug-spotter' ) => $get( 'plugin_version' ),
+				__( 'Language', 'fixthisplz' )       => $get( 'locale' ),
+				__( 'Time zone', 'fixthisplz' )      => $get( 'timezone' ),
+				__( 'User agent', 'fixthisplz' )     => $get( 'user_agent' ),
+				__( 'Viewport', 'fixthisplz' )       => $get( 'viewport' ),
+				__( 'Plugin version', 'fixthisplz' ) => $get( 'plugin_version' ),
 			)
 		);
 	}
@@ -107,12 +107,12 @@ final class Report_Context_View {
 			self::none();
 			return;
 		}
-		echo '<table class="widefat striped"><thead><tr><th>' . esc_html__( 'Level', 'bug-spotter' ) . '</th><th>' . esc_html__( 'Message', 'bug-spotter' ) . '</th><th>' . esc_html__( 'Time', 'bug-spotter' ) . '</th></tr></thead><tbody>';
+		echo '<table class="widefat striped"><thead><tr><th>' . esc_html__( 'Level', 'fixthisplz' ) . '</th><th>' . esc_html__( 'Message', 'fixthisplz' ) . '</th><th>' . esc_html__( 'Time', 'fixthisplz' ) . '</th></tr></thead><tbody>';
 		foreach ( $entries as $entry ) {
 			if ( ! is_array( $entry ) ) {
 				continue;
 			}
-			echo '<tr><td>' . esc_html( self::str( $entry, 'level' ) ) . '</td><td class="bugspot-wrap">' . esc_html( self::str( $entry, 'message' ) ) . '</td><td>' . esc_html( self::str( $entry, 'at' ) ) . '</td></tr>';
+			echo '<tr><td>' . esc_html( self::str( $entry, 'level' ) ) . '</td><td class="fixthisplz-wrap">' . esc_html( self::str( $entry, 'message' ) ) . '</td><td>' . esc_html( self::str( $entry, 'at' ) ) . '</td></tr>';
 		}
 		echo '</tbody></table>';
 	}
@@ -122,12 +122,12 @@ final class Report_Context_View {
 			self::none();
 			return;
 		}
-		echo '<table class="widefat striped"><thead><tr><th>' . esc_html__( 'Method', 'bug-spotter' ) . '</th><th>' . esc_html__( 'URL', 'bug-spotter' ) . '</th><th>' . esc_html__( 'Status', 'bug-spotter' ) . '</th><th>' . esc_html__( 'Time', 'bug-spotter' ) . '</th></tr></thead><tbody>';
+		echo '<table class="widefat striped"><thead><tr><th>' . esc_html__( 'Method', 'fixthisplz' ) . '</th><th>' . esc_html__( 'URL', 'fixthisplz' ) . '</th><th>' . esc_html__( 'Status', 'fixthisplz' ) . '</th><th>' . esc_html__( 'Time', 'fixthisplz' ) . '</th></tr></thead><tbody>';
 		foreach ( $entries as $entry ) {
 			if ( ! is_array( $entry ) ) {
 				continue;
 			}
-			echo '<tr><td>' . esc_html( self::str( $entry, 'method' ) ) . '</td><td class="bugspot-wrap">' . esc_html( self::str( $entry, 'url' ) ) . '</td><td>' . esc_html( self::str( $entry, 'status' ) ) . '</td><td>' . esc_html( self::str( $entry, 'at' ) ) . '</td></tr>';
+			echo '<tr><td>' . esc_html( self::str( $entry, 'method' ) ) . '</td><td class="fixthisplz-wrap">' . esc_html( self::str( $entry, 'url' ) ) . '</td><td>' . esc_html( self::str( $entry, 'status' ) ) . '</td><td>' . esc_html( self::str( $entry, 'at' ) ) . '</td></tr>';
 		}
 		echo '</tbody></table>';
 	}
@@ -139,25 +139,25 @@ final class Report_Context_View {
 
 	public static function render_screenshot( array $report ): void {
 		if ( ! is_string( $report['screenshot'] ?? null ) || '' === $report['screenshot'] ) {
-			echo '<p class="bugspot-muted">' . esc_html__( 'No screenshot was attached.', 'bug-spotter' ) . '</p>';
+			echo '<p class="fixthisplz-muted">' . esc_html__( 'No screenshot was attached.', 'fixthisplz' ) . '</p>';
 			return;
 		}
 		$method = Screenshot_Store::capture_label( $report['context'] );
 		if ( '' !== $method ) {
-			echo '<p class="bugspot-muted">' . esc_html( $method ) . '</p>';
+			echo '<p class="fixthisplz-muted">' . esc_html( $method ) . '</p>';
 		}
 		// An <img> cannot send X-WP-Nonce: cookie authentication accepts it as a query argument instead.
 		$src = add_query_arg( '_wpnonce', wp_create_nonce( 'wp_rest' ), rest_url( Reports_Controller::NAMESPACE . '/reports/' . (int) $report['id'] . '/screenshot' ) );
 		printf(
-			'<a href="%1$s" target="_blank" rel="noopener noreferrer"><img class="bugspot-screenshot" src="%1$s" alt="%2$s" loading="lazy"></a>',
+			'<a href="%1$s" target="_blank" rel="noopener noreferrer"><img class="fixthisplz-screenshot" src="%1$s" alt="%2$s" loading="lazy"></a>',
 			esc_url( $src ),
-			esc_attr__( 'Screenshot of the page (click for full size)', 'bug-spotter' )
+			esc_attr__( 'Screenshot of the page (click for full size)', 'fixthisplz' )
 		);
 	}
 
 	public static function render_raw( array $context ): void {
 		$json = wp_json_encode( $context, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
-		echo '<details><summary>' . esc_html__( 'Show the raw JSON', 'bug-spotter' ) . '</summary>';
-		echo '<pre class="bugspot-json">' . esc_html( is_string( $json ) ? $json : '' ) . '</pre></details>';
+		echo '<details><summary>' . esc_html__( 'Show the raw JSON', 'fixthisplz' ) . '</summary>';
+		echo '<pre class="fixthisplz-json">' . esc_html( is_string( $json ) ? $json : '' ) . '</pre></details>';
 	}
 }

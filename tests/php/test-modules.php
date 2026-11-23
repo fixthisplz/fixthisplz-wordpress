@@ -1,8 +1,8 @@
 <?php
 
-use Bug_Spotter\Admin\Settings_Assets;
-use Bug_Spotter\Frontend\Assets;
-use Bug_Spotter\Settings;
+use FixThisPlz\Admin\Settings_Assets;
+use FixThisPlz\Frontend\Assets;
+use FixThisPlz\Settings;
 
 /**
  * Runs $enqueue with fresh script and module registries, then returns what WordPress prints for script modules:
@@ -35,18 +35,18 @@ function mod_printed( callable $enqueue ): array {
 
 /** Every lib module must be remapped to its ?ver= URL, and nothing of ours preloaded. */
 function mod_assert_versioned_map( array $imports, string $others ): void {
-	$files = glob( BUGSPOT_DIR . 'assets/js/lib/*.js' );
+	$files = glob( FIXTHISPLZ_DIR . 'assets/js/lib/*.js' );
 	assert_true( count( $files ) > 0, 'lib modules exist' );
 	foreach ( $files as $file ) {
-		$url = BUGSPOT_URL . 'assets/js/lib/' . basename( $file );
-		assert_same( $url . '?ver=' . BUGSPOT_VERSION, $imports[ $url ] ?? null, basename( $file ) );
+		$url = FIXTHISPLZ_URL . 'assets/js/lib/' . basename( $file );
+		assert_same( $url . '?ver=' . FIXTHISPLZ_VERSION, $imports[ $url ] ?? null, basename( $file ) );
 	}
-	assert_true( false === strpos( $others, 'bug-spotter' ), 'no preload or module tag of ours: ' . $others );
+	assert_true( false === strpos( $others, 'fixthisplz' ), 'no preload or module tag of ours: ' . $others );
 }
 
 $mod_wp_7 = version_compare( get_bloginfo( 'version' ), '7.0', '>=' );
 
-bugspot_test(
+fixthisplz_test(
 	'front_import_map_versions_every_lib_module',
 	function () use ( $mod_wp_7 ) {
 		if ( ! $mod_wp_7 ) {
@@ -61,7 +61,7 @@ bugspot_test(
 				list( $imports, $others ) = mod_printed(
 					function () use ( &$loaded ) {
 						Assets::enqueue();
-						$loaded = wp_script_is( 'bugspot-loader', 'enqueued' );
+						$loaded = wp_script_is( 'fixthisplz-loader', 'enqueued' );
 					}
 				);
 				wp_set_current_user( $prev->ID );
@@ -72,7 +72,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'settings_import_map_versions_every_lib_module',
 	function () use ( $mod_wp_7 ) {
 		if ( ! $mod_wp_7 ) {
@@ -80,7 +80,7 @@ bugspot_test(
 		}
 		// Declared by the anti-bot test script, loaded on the Spam protection tab only.
 		$saved_get = $_GET;
-		$_GET      = array( 'page' => 'bug-spotter-settings', 'tab' => 'spam' );
+		$_GET      = array( 'page' => 'fixthisplz-settings', 'tab' => 'spam' );
 		try {
 			list( $imports, $others ) = mod_printed( array( Settings_Assets::class, 'enqueue' ) );
 		} finally {

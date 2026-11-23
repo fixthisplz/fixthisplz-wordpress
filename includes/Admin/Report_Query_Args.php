@@ -1,9 +1,9 @@
 <?php
 
-namespace Bug_Spotter\Admin;
+namespace FixThisPlz\Admin;
 
-use Bug_Spotter\Priorities;
-use Bug_Spotter\Statuses;
+use FixThisPlz\Priorities;
+use FixThisPlz\Statuses;
 
 defined( 'ABSPATH' ) || exit;
 

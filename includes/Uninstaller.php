@@ -1,6 +1,6 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -23,7 +23,7 @@ final class Uninstaller {
 		delete_option( Installer::DB_VERSION_OPTION );
 		delete_option( Secret::OPTION );
 		self::delete_rate_limit_transients();
-		delete_metadata( 'user', 0, 'bugspot_per_page', '', true ); // Screen option of the list (Admin\Bugs_Page::PER_PAGE_OPTION; the admin is not loaded here).
+		delete_metadata( 'user', 0, 'fixthisplz_per_page', '', true ); // Screen option of the list (Admin\Bugs_Page::PER_PAGE_OPTION; the admin is not loaded here).
 
 		foreach ( wp_roles()->role_objects as $role ) {
 			if ( $role->has_cap( Installer::CAPABILITY ) ) {
@@ -38,13 +38,13 @@ final class Uninstaller {
 	/** Goes through delete_transient() so an external object cache is cleared too; short-lived anyway. */
 	private static function delete_rate_limit_transients(): void {
 		global $wpdb;
-		$names = $wpdb->get_col( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like( '_transient_bugspot_rl_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- removes the rate-limit transients by prefix, no API for that.
+		$names = $wpdb->get_col( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like( '_transient_fixthisplz_rl_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- removes the rate-limit transients by prefix, no API for that.
 		foreach ( $names as $name ) {
 			delete_transient( substr( $name, strlen( '_transient_' ) ) );
 		}
 	}
 
-	/** Deletes uploads/bug-spotter recursively; refuses anything that does not resolve to exactly that directory. */
+	/** Deletes uploads/fixthisplz recursively; refuses anything that does not resolve to exactly that directory. */
 	private static function delete_private_dir(): void {
 		$base = realpath( wp_upload_dir( null, false )['basedir'] );
 		$dir  = Installer::private_dir();
@@ -52,7 +52,7 @@ final class Uninstaller {
 			return;
 		}
 		$real = realpath( $dir );
-		if ( false === $real || $real !== $base . DIRECTORY_SEPARATOR . 'bug-spotter' ) {
+		if ( false === $real || $real !== $base . DIRECTORY_SEPARATOR . 'fixthisplz' ) {
 			return;
 		}
 

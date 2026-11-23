@@ -1,18 +1,18 @@
 <?php
 
-use Bug_Spotter\Activity;
-use Bug_Spotter\Installer;
-use Bug_Spotter\Privacy;
-use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Retention;
-use Bug_Spotter\Screenshot_Store;
+use FixThisPlz\Activity;
+use FixThisPlz\Installer;
+use FixThisPlz\Privacy;
+use FixThisPlz\Reports_Repository;
+use FixThisPlz\Retention;
+use FixThisPlz\Screenshot_Store;
 
 /** Stores a tiny real screenshot and returns its private file name. */
 function privacy_screenshot(): string {
 	$im = imagecreatetruecolor( 20, 20 );
 	ob_start();
 	imagepng( $im );
-	$tmp = wp_tempnam( 'bugspot-privacy' );
+	$tmp = wp_tempnam( 'fixthisplz-privacy' );
 	file_put_contents( $tmp, ob_get_clean() );
 	$name = Screenshot_Store::store( $tmp );
 	unlink( $tmp );
@@ -22,11 +22,11 @@ function privacy_screenshot(): string {
 	return $name;
 }
 
-bugspot_test(
+fixthisplz_test(
 	'privacy: exporter_finds_reports_by_contact_email_and_by_user',
 	function () {
 		$repo  = new Reports_Repository();
-		$uid   = wp_insert_user( array( 'user_login' => 'bugspot_priv_' . wp_rand(), 'user_pass' => wp_generate_password(), 'user_email' => 'priv-user@example.test' ) );
+		$uid   = wp_insert_user( array( 'user_login' => 'fixthisplz_priv_' . wp_rand(), 'user_pass' => wp_generate_password(), 'user_email' => 'priv-user@example.test' ) );
 		$by_em = $repo->insert( array( 'description' => 'by email', 'page_url' => 'https://example.test/a', 'reporter_email' => 'Priv-User@Example.test', 'ip_hash' => str_repeat( 'b', 64 ), 'context' => array( 'secret' => 'x' ) ) );
 		$by_us = $repo->insert( array( 'description' => 'by user', 'page_url' => 'https://example.test/b', 'user_id' => $uid ) );
 		$both  = $repo->insert( array( 'description' => 'both', 'page_url' => 'https://example.test/c', 'user_id' => $uid, 'reporter_email' => 'priv-user@example.test' ) );
@@ -37,7 +37,7 @@ bugspot_test(
 		$ids = array_map( fn( $i ) => $i['item_id'], $res['data'] );
 		assert_same( array( 'bug-report-' . $by_em, 'bug-report-' . $by_us, 'bug-report-' . $both ), $ids );
 		assert_true( ! in_array( 'bug-report-' . $other, $ids, true ), 'other reporter excluded' );
-		assert_same( 'bug-spotter', $res['data'][0]['group_id'] );
+		assert_same( 'fixthisplz', $res['data'][0]['group_id'] );
 		$names = array_column( $res['data'][0]['data'], 'name' );
 		assert_same( 7, count( $names ), 'five fields, contact e-mail, screenshot flag' );
 		assert_true( in_array( 'Contact e-mail', $names, true ) && in_array( 'Screenshot attached', $names, true ) );
@@ -50,12 +50,12 @@ bugspot_test(
 		assert_same( 'by email', $res['data'][0]['data'][3]['value'] );
 
 		$reg = Privacy::register_exporter( array() );
-		assert_true( is_callable( $reg['bug-spotter']['callback'] ), 'exporter registered' );
-		assert_true( is_callable( Privacy::register_eraser( array() )['bug-spotter']['callback'] ), 'eraser registered' );
+		assert_true( is_callable( $reg['fixthisplz']['callback'] ), 'exporter registered' );
+		assert_true( is_callable( Privacy::register_eraser( array() )['fixthisplz']['callback'] ), 'eraser registered' );
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'privacy: exporter_paginates_by_fifty',
 	function () {
 		$repo = new Reports_Repository();
@@ -71,7 +71,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'privacy: eraser_deletes_reports_and_screenshots',
 	function () {
 		$repo  = new Reports_Repository();
@@ -93,7 +93,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'privacy: eraser_flags_retained_and_stops_when_deletes_fail',
 	function () {
 		global $wpdb;
@@ -102,7 +102,7 @@ bugspot_test(
 			$repo->insert( array( 'description' => 'f' . $i, 'page_url' => 'https://example.test/f', 'reporter_email' => 'fail@example.test' ) );
 		}
 		// Turns every DELETE into invalid SQL so wpdb::delete() returns false.
-		$break = static fn( $q ) => 0 === strpos( ltrim( $q ), 'DELETE FROM `' . Installer::table() . '`' ) ? 'DELETE FROM bugspot_no_such_table' : $q;
+		$break = static fn( $q ) => 0 === strpos( ltrim( $q ), 'DELETE FROM `' . Installer::table() . '`' ) ? 'DELETE FROM fixthisplz_no_such_table' : $q;
 		$wpdb->suppress_errors( true );
 		add_filter( 'query', $break );
 		try {
@@ -119,7 +119,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'privacy: policy_content_is_registered',
 	function () {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -140,7 +140,7 @@ bugspot_test(
 		}
 		$found = false;
 		foreach ( WP_Privacy_Policy_Content::get_suggested_policy_text() as $entry ) {
-			if ( 'Bug Spotter' === $entry['plugin_name'] ) {
+			if ( 'FixThisPlz' === $entry['plugin_name'] ) {
 				$found = true;
 				assert_true( false !== strpos( $entry['policy_text'], 'legitimate interest' ), 'legal basis present' );
 			}
@@ -149,7 +149,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'privacy: retention_run_uses_setting',
 	function () {
 		with_settings_option(
@@ -163,11 +163,11 @@ bugspot_test(
 				$id   = $repo->insert( array( 'description' => 'old closed', 'page_url' => 'https://example.test/o' ) );
 				$wpdb->update( Installer::table(), array( 'status' => 'fixed', 'status_changed_at' => $old ), array( 'id' => $id ) );
 
-				update_option( 'bugspot_settings', array( 'data' => array( 'retention_months' => 0 ) ) );
+				update_option( 'fixthisplz_settings', array( 'data' => array( 'retention_months' => 0 ) ) );
 				assert_same( 0, Retention::run(), 'disabled retention deletes nothing' );
 				assert_true( null !== $repo->find( $id ) );
 
-				update_option( 'bugspot_settings', array( 'data' => array( 'retention_months' => 3 ) ) );
+				update_option( 'fixthisplz_settings', array( 'data' => array( 'retention_months' => 3 ) ) );
 				assert_true( Retention::run() >= 1, 'closed report older than 3 months purged' );
 				assert_same( null, $repo->find( $id ) );
 				Retention::register_hooks();
@@ -177,7 +177,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'privacy: uninstall_keeps_data_by_default',
 	function () {
 		global $wpdb;
@@ -185,17 +185,17 @@ bugspot_test(
 			function () {
 				global $wpdb;
 				if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-					define( 'WP_UNINSTALL_PLUGIN', 'bug-spotter/bug-spotter.php' );
+					define( 'WP_UNINSTALL_PLUGIN', 'fixthisplz/fixthisplz.php' );
 				}
-				$secret = get_option( 'bugspot_secret' );
-				include BUGSPOT_DIR . 'uninstall.php';
+				$secret = get_option( 'fixthisplz_secret' );
+				include FIXTHISPLZ_DIR . 'uninstall.php';
 				assert_same( Installer::table(), $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', Installer::table() ) ), 'table kept' );
 				assert_same( Activity::table(), $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', Activity::table() ) ), 'activity table kept' );
-				assert_same( $secret, get_option( 'bugspot_secret' ), 'secret kept' );
+				assert_same( $secret, get_option( 'fixthisplz_secret' ), 'secret kept' );
 				assert_true( is_dir( Installer::private_dir() ), 'private dir kept' );
 
-				update_option( 'bugspot_settings', array( 'data' => array( 'delete_on_uninstall' => false ) ) );
-				include BUGSPOT_DIR . 'uninstall.php';
+				update_option( 'fixthisplz_settings', array( 'data' => array( 'delete_on_uninstall' => false ) ) );
+				include FIXTHISPLZ_DIR . 'uninstall.php';
 				assert_same( Installer::table(), $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', Installer::table() ) ), 'table kept when off' );
 			}
 		);
@@ -219,21 +219,21 @@ function privacy_remove_dir( string $dir ): void {
 }
 
 /** Options the uninstall deletes; the uninstall test parks their values (and the caps) in PRIVACY_BACKUP_OPTION. */
-const PRIVACY_PLUGIN_OPTIONS = array( 'bugspot_settings', 'bugspot_secret', 'bugspot_db_version' );
-const PRIVACY_BACKUP_OPTION  = 'bugspot_test_backup';
+const PRIVACY_PLUGIN_OPTIONS = array( 'fixthisplz_settings', 'fixthisplz_secret', 'fixthisplz_db_version' );
+const PRIVACY_BACKUP_OPTION  = 'fixthisplz_test_backup';
 
 /** The list's screen option, removed for every user by the uninstall; parked with the options. */
-const PRIVACY_PER_PAGE_META = 'bugspot_per_page';
+const PRIVACY_PER_PAGE_META = 'fixthisplz_per_page';
 
 function privacy_table_exists( string $table ): bool {
 	global $wpdb;
 	return $table === $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) );
 }
 
-/** The plugin's tables, which the uninstall test parks as `{table}_bugspot_test_backup`. */
+/** The plugin's tables, which the uninstall test parks as `{table}_fixthisplz_test_backup`. */
 function privacy_plugin_tables(): array {
 	global $wpdb;
-	return array( $wpdb->prefix . 'bugspot_reports', $wpdb->prefix . 'bugspot_activity' );
+	return array( $wpdb->prefix . 'fixthisplz_reports', $wpdb->prefix . 'fixthisplz_activity' );
 }
 
 /**
@@ -243,7 +243,7 @@ function privacy_plugin_tables(): array {
 function privacy_restore_backup(): void {
 	global $wpdb;
 	foreach ( privacy_plugin_tables() as $table ) {
-		$backup_table = $table . '_bugspot_test_backup';
+		$backup_table = $table . '_fixthisplz_test_backup';
 		if ( ! privacy_table_exists( $backup_table ) ) {
 			continue;
 		}
@@ -263,7 +263,7 @@ function privacy_restore_backup(): void {
 	}
 	foreach ( PRIVACY_PLUGIN_OPTIONS as $opt ) {
 		if ( array_key_exists( $opt, $saved['options'] ) ) {
-			update_option( $opt, $saved['options'][ $opt ], 'bugspot_secret' === $opt ? false : null );
+			update_option( $opt, $saved['options'][ $opt ], 'fixthisplz_secret' === $opt ? false : null );
 		} else {
 			delete_option( $opt );
 		}
@@ -274,9 +274,9 @@ function privacy_restore_backup(): void {
 	}
 	foreach ( wp_roles()->role_objects as $name => $role ) {
 		if ( ! empty( $saved['caps'][ $name ] ) ) {
-			$role->add_cap( 'bugspot_manage' );
+			$role->add_cap( 'fixthisplz_manage' );
 		} else {
-			$role->remove_cap( 'bugspot_manage' );
+			$role->remove_cap( 'fixthisplz_manage' );
 		}
 	}
 	delete_option( PRIVACY_BACKUP_OPTION );
@@ -288,21 +288,21 @@ function privacy_restore_backup(): void {
  * and caps are parked in a stored option, the private dir is renamed. A crashed run leaves those backups in place;
  * the next run restores them and stops.
  */
-bugspot_test(
+fixthisplz_test(
 	'privacy: uninstall_removes_everything_when_enabled',
 	function () {
 		global $wpdb;
 		$tables       = privacy_plugin_tables();
-		$dir          = wp_upload_dir( null, false )['basedir'] . '/bug-spotter';
+		$dir          = wp_upload_dir( null, false )['basedir'] . '/fixthisplz';
 		$missing      = new stdClass();
 
 		// Backups left by a crashed run hold the real data: put them back and stop here.
-		$parked_tables = array_filter( $tables, static fn( string $t ): bool => privacy_table_exists( $t . '_bugspot_test_backup' ) );
+		$parked_tables = array_filter( $tables, static fn( string $t ): bool => privacy_table_exists( $t . '_fixthisplz_test_backup' ) );
 		if ( $parked_tables || false !== get_option( PRIVACY_BACKUP_OPTION ) ) {
 			privacy_restore_backup();
 			throw new RuntimeException( 'Restored the plugin tables / options from a previous crashed run; run the tests again.' );
 		}
-		$left = glob( $dir . '.bugspot-test-backup-*' );
+		$left = glob( $dir . '.fixthisplz-test-backup-*' );
 		if ( $left ) {
 			if ( 1 !== count( $left ) || file_exists( $dir ) || ! rename( $left[0], $dir ) ) {
 				throw new RuntimeException( 'Leftover private dir backup next to ' . $dir . ': restore it by hand.' );
@@ -319,7 +319,7 @@ bugspot_test(
 			}
 		}
 		foreach ( wp_roles()->role_objects as $name => $role ) {
-			$saved['caps'][ $name ] = $role->has_cap( 'bugspot_manage' );
+			$saved['caps'][ $name ] = $role->has_cap( 'fixthisplz_manage' );
 		}
 		foreach ( $wpdb->get_results( $wpdb->prepare( "SELECT user_id, meta_value FROM {$wpdb->usermeta} WHERE meta_key = %s", PRIVACY_PER_PAGE_META ) ) as $row ) {
 			$saved['per_page'][ (int) $row->user_id ] = maybe_unserialize( $row->meta_value );
@@ -327,13 +327,13 @@ bugspot_test(
 		if ( ! add_option( PRIVACY_BACKUP_OPTION, $saved, '', false ) ) {
 			throw new RuntimeException( 'Could not store the options backup.' );
 		}
-		$backup = $dir . '.bugspot-test-backup-' . time();
+		$backup = $dir . '.fixthisplz-test-backup-' . time();
 		$parked = false; // True once $dir holds only test files (real dir renamed away, or there was none).
 
 		try {
 			try {
 				foreach ( $tables as $table ) {
-					$backup_table = $table . '_bugspot_test_backup';
+					$backup_table = $table . '_fixthisplz_test_backup';
 					if ( false === $wpdb->query( "RENAME TABLE {$table} TO {$backup_table}" ) || false === $wpdb->query( "CREATE TABLE {$table} LIKE {$backup_table}" ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 						throw new RuntimeException( 'Could not move ' . $table . ' aside.' );
 					}
@@ -347,30 +347,30 @@ bugspot_test(
 				file_put_contents( $dir . '/sub-test.txt', 'x' );
 				mkdir( $dir . '/nested' );
 				file_put_contents( $dir . '/nested/deep.txt', 'x' );
-				set_transient( 'bugspot_rl_h_test', 1, HOUR_IN_SECONDS );
+				set_transient( 'fixthisplz_rl_h_test', 1, HOUR_IN_SECONDS );
 				$someone = (int) get_users( array( 'number' => 1, 'fields' => 'ID' ) )[0];
 				update_user_meta( $someone, PRIVACY_PER_PAGE_META, 37 );
-				wp_roles()->get_role( 'administrator' )->add_cap( 'bugspot_manage' );
+				wp_roles()->get_role( 'administrator' )->add_cap( 'fixthisplz_manage' );
 
 				if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-					define( 'WP_UNINSTALL_PLUGIN', 'bug-spotter/bug-spotter.php' );
+					define( 'WP_UNINSTALL_PLUGIN', 'fixthisplz/fixthisplz.php' );
 				}
-				update_option( 'bugspot_settings', array( 'data' => array( 'delete_on_uninstall' => true ) ) );
-				include BUGSPOT_DIR . 'uninstall.php';
+				update_option( 'fixthisplz_settings', array( 'data' => array( 'delete_on_uninstall' => true ) ) );
+				include FIXTHISPLZ_DIR . 'uninstall.php';
 
 				foreach ( $tables as $table ) {
 					assert_true( ! privacy_table_exists( $table ), $table . ' dropped' );
 				}
-				assert_same( $missing, get_option( 'bugspot_settings', $missing ), 'settings removed' );
-				assert_same( $missing, get_option( 'bugspot_secret', $missing ), 'secret removed' );
-				assert_same( $missing, get_option( 'bugspot_db_version', $missing ), 'db version removed' );
-				assert_same( false, get_transient( 'bugspot_rl_h_test' ), 'rate-limit transient removed' );
+				assert_same( $missing, get_option( 'fixthisplz_settings', $missing ), 'settings removed' );
+				assert_same( $missing, get_option( 'fixthisplz_secret', $missing ), 'secret removed' );
+				assert_same( $missing, get_option( 'fixthisplz_db_version', $missing ), 'db version removed' );
+				assert_same( false, get_transient( 'fixthisplz_rl_h_test' ), 'rate-limit transient removed' );
 				assert_same( '', get_user_meta( $someone, PRIVACY_PER_PAGE_META, true ), 'per-page screen option removed' );
 				foreach ( wp_roles()->role_objects as $role ) {
-					assert_true( ! $role->has_cap( 'bugspot_manage' ), 'capability removed from ' . $role->name );
+					assert_true( ! $role->has_cap( 'fixthisplz_manage' ), 'capability removed from ' . $role->name );
 				}
 				assert_true( ! file_exists( $dir ), 'private dir removed' );
-				assert_same( false, wp_next_scheduled( 'bugspot_daily_purge' ), 'cron cleared' );
+				assert_same( false, wp_next_scheduled( 'fixthisplz_daily_purge' ), 'cron cleared' );
 			} finally {
 				privacy_restore_backup();
 			}
@@ -393,7 +393,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'privacy: exporter_query_count_does_not_grow_with_reports',
 	function () {
 		global $wpdb;

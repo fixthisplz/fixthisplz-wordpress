@@ -96,7 +96,7 @@ test('listMaskTargets lists value-bearing fields but leaves buttons, check boxes
 
 test('listMaskTargets includes sensitive zones and their descendants, built-in and configured', () => {
 	const root = node('body', {}, [
-		node('section', { id: 'marked', 'data-bugspot-sensitive': '' }, [node('span', { id: 'inner' }, [node('b', { id: 'deep' })])]),
+		node('section', { id: 'marked', 'data-fixthisplz-sensitive': '' }, [node('span', { id: 'inner' }, [node('b', { id: 'deep' })])]),
 		node('div', { id: 'configured', class: 'iban' }),
 		node('div', { id: 'other' }),
 	]);
@@ -119,6 +119,6 @@ test('listMaskTargets walks open shadow roots and same-origin frames, and covers
 });
 
 test('listMaskTargets ignores the plugin UI', () => {
-	const root = node('body', {}, [node('div', { id: 'ui', 'data-bugspot-ui': '' }, [node('textarea', { id: 'desc' })]), node('input', { id: 'page' })]);
+	const root = node('body', {}, [node('div', { id: 'ui', 'data-fixthisplz-ui': '' }, [node('textarea', { id: 'desc' })]), node('input', { id: 'page' })]);
 	assert.deepEqual(names(listMaskTargets(root)), ['page']);
 });

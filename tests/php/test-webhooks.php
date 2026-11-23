@@ -1,11 +1,11 @@
 <?php
 
-use Bug_Spotter\Admin\Settings_Page;
-use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Secret;
-use Bug_Spotter\Settings;
-use Bug_Spotter\Webhook_Payload;
-use Bug_Spotter\Webhooks;
+use FixThisPlz\Admin\Settings_Page;
+use FixThisPlz\Reports_Repository;
+use FixThisPlz\Secret;
+use FixThisPlz\Settings;
+use FixThisPlz\Webhook_Payload;
+use FixThisPlz\Webhooks;
 
 require_once __DIR__ . '/test-settings-page.php';
 require_once __DIR__ . '/test-admin-list.php';
@@ -13,14 +13,14 @@ require_once __DIR__ . '/test-admin-list.php';
 /** A public address: an IP literal, so validating it needs no DNS lookup (and nothing is ever sent, see lib.php). */
 const WEBHOOK_PUBLIC_URL = 'https://93.184.215.14/hook';
 
-/** Runs $fn with development hosts allowed or not (`bugspot_allow_dev_webhooks`), whatever the environment type. */
+/** Runs $fn with development hosts allowed or not (`fixthisplz_allow_dev_webhooks`), whatever the environment type. */
 function webhook_dev_hosts( bool $allowed, callable $fn ): void {
 	$filter = $allowed ? '__return_true' : '__return_false';
-	add_filter( 'bugspot_allow_dev_webhooks', $filter );
+	add_filter( 'fixthisplz_allow_dev_webhooks', $filter );
 	try {
 		$fn();
 	} finally {
-		remove_filter( 'bugspot_allow_dev_webhooks', $filter );
+		remove_filter( 'fixthisplz_allow_dev_webhooks', $filter );
 	}
 }
 
@@ -75,7 +75,7 @@ function webhook_requests( callable $fn, $answer = null ): array {
 	return $sent;
 }
 
-bugspot_test(
+fixthisplz_test(
 	'webhooks: sanitize_accepts_https_public_and_development_addresses_only',
 	function () {
 		$urls = array(
@@ -143,7 +143,7 @@ settings_page_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'webhooks: sanitize_keeps_five_rows_known_formats_and_events',
 	function () {
 		$rows = array();
@@ -173,7 +173,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'webhooks: secret_is_generated_kept_and_regenerated',
 	function () {
 		$row    = Webhooks::sanitize( array( webhook_row() ) )[0];
@@ -208,10 +208,10 @@ settings_page_test(
 				$html  = settings_page_tab_html( 'alerts' );
 				$add   = $count < Webhooks::MAX;
 				$total = $count + ( $add ? 1 : 0 );
-				assert_same( $total, substr_count( $html, '<fieldset class="bugspot-webhook">' ), "$count saved: blocks" );
-				assert_same( $count, substr_count( $html, 'bugspot-webhook-test' ), "$count saved: test buttons" );
-				assert_same( $add ? 1 : 0, substr_count( $html, '<summary><h3 class="bugspot-summary-title">Add a webhook</h3></summary>' ), "$count saved: add block" );
-				assert_same( $add ? 1 : 0, preg_match( '#<summary><h3 class="bugspot-summary-title">Add a webhook</h3></summary><fieldset class="bugspot-webhook"><legend>Webhook ' . ( $count + 1 ) . '</legend>#', $html ), "$count saved: the add block is the next number" );
+				assert_same( $total, substr_count( $html, '<fieldset class="fixthisplz-webhook">' ), "$count saved: blocks" );
+				assert_same( $count, substr_count( $html, 'fixthisplz-webhook-test' ), "$count saved: test buttons" );
+				assert_same( $add ? 1 : 0, substr_count( $html, '<summary><h3 class="fixthisplz-summary-title">Add a webhook</h3></summary>' ), "$count saved: add block" );
+				assert_same( $add ? 1 : 0, preg_match( '#<summary><h3 class="fixthisplz-summary-title">Add a webhook</h3></summary><fieldset class="fixthisplz-webhook"><legend>Webhook ' . ( $count + 1 ) . '</legend>#', $html ), "$count saved: the add block is the next number" );
 				assert_true( str_contains( $html, '<summary>What does a webhook receive?</summary>' ), "$count saved: what is sent" );
 				assert_true( str_contains( $html, 'name="' . Settings::OPTION . '[webhooks][]" value=""' ), "$count saved: list marker" );
 
@@ -238,8 +238,8 @@ function webhook_round_trip(): void {
 		assert_true( 'Alerts' === ( Settings_Page::tabs()['alerts'] ?? null ), 'tab listed' );
 
 		$html = settings_page_tab_html( 'alerts' );
-		assert_same( 3, substr_count( $html, '<fieldset class="bugspot-webhook">' ), 'the two saved webhooks and one empty block' );
-		assert_same( 2, substr_count( $html, 'bugspot-webhook-test' ), 'a test button per saved webhook' );
+		assert_same( 3, substr_count( $html, '<fieldset class="fixthisplz-webhook">' ), 'the two saved webhooks and one empty block' );
+		assert_same( 2, substr_count( $html, 'fixthisplz-webhook-test' ), 'a test button per saved webhook' );
 		assert_true( str_contains( $html, 'data-index="0"' ) && str_contains( $html, 'data-index="1"' ), 'test buttons point at Webhooks::all()' );
 		assert_true( str_contains( $html, Webhooks::secret( $before['webhooks'][0] ) ), 'secret shown to the administrator' );
 		assert_true( str_contains( $html, '<legend>Webhook 1: Generic JSON (signed), enabled</legend>' ), 'title of a saved webhook' );
@@ -281,7 +281,7 @@ function webhook_round_trip(): void {
 
 /** A stored report with every private field filled. */
 function webhook_report(): array {
-	$id = bugspot_admin_insert(
+	$id = fixthisplz_admin_insert(
 		'Broken <b>cart</b> & @everyone',
 		array(
 			'reporter_email' => 'private.reporter@example.test',
@@ -293,7 +293,7 @@ function webhook_report(): array {
 	return ( new Reports_Repository() )->find( $id );
 }
 
-bugspot_test(
+fixthisplz_test(
 	'webhooks: payload_shapes_per_format_without_private_data',
 	function () {
 		$report = webhook_report();
@@ -303,7 +303,7 @@ bugspot_test(
 		assert_same( 'Bug #' . $report['id'], $data['report']['title'] );
 		assert_same( array( 'key' => 'new', 'label' => 'New' ), $data['report']['status'] );
 		assert_same( null, $data['report']['assignee'] );
-		assert_true( str_ends_with( $data['report']['admin_url'], 'page=bug-spotter&report=' . $report['id'] ) );
+		assert_true( str_ends_with( $data['report']['admin_url'], 'page=fixthisplz&report=' . $report['id'] ) );
 
 		$bodies = array();
 		foreach ( Webhooks::FORMATS as $format ) {
@@ -332,7 +332,7 @@ bugspot_test(
 		$summary = Webhook_Payload::summary( 'status_changed', 12, 'Fixed' );
 		assert_same( '12 reports: status → Fixed', json_decode( Webhook_Payload::body( 'slack', $summary ), true )['text'] );
 		assert_true( str_contains( Webhook_Payload::body( 'slack', $summary ), '|Open the list>' ), 'slack summary links the list' );
-		assert_same( Bug_Spotter\Report_Format::list_link(), json_decode( Webhook_Payload::body( 'discord', $summary ), true )['embeds'][0]['url'] );
+		assert_same( FixThisPlz\Report_Format::list_link(), json_decode( Webhook_Payload::body( 'discord', $summary ), true )['embeds'][0]['url'] );
 		$card = json_decode( Webhook_Payload::body( 'teams', $summary ), true )['attachments'][0]['content'];
 		assert_same( array( 1, 'Open the list' ), array( count( $card['body'] ), $card['actions'][0]['title'] ), 'teams summary: no facts, list link' );
 		assert_same( '3 reports assigned to Ada', Webhook_Payload::summary( 'assigned', 3, 'Ada' )['summary']['text'] );
@@ -340,7 +340,7 @@ bugspot_test(
 		$test = Webhook_Payload::data( 'test', null );
 		assert_same( array( 'test', null ), array( $test['event'], $test['report'] ) );
 		foreach ( Webhooks::FORMATS as $format ) {
-			assert_true( str_contains( Webhook_Payload::body( $format, $test ), 'Test message from Bug Spotter' ) || 'generic' === $format, "$format test" );
+			assert_true( str_contains( Webhook_Payload::body( $format, $test ), 'Test message from FixThisPlz' ) || 'generic' === $format, "$format test" );
 		}
 	}
 );

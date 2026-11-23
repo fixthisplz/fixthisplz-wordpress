@@ -6,7 +6,7 @@ let session = null;
 
 function end() {
 	session = null;
-	const button = document.getElementById('bugspot-button');
+	const button = document.getElementById('fixthisplz-button');
 	if (button) {
 		button.focus();
 	}
@@ -43,5 +43,5 @@ export function open(config) {
 		return;
 	}
 	session = { dialog: null };
-	run(config || {}).catch((error) => console.warn('[bug-spotter]', error));
+	run(config || {}).catch((error) => console.warn('[fixthisplz]', error));
 }

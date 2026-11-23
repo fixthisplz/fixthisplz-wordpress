@@ -1,6 +1,6 @@
 <?php
 
-namespace Bug_Spotter\Captcha;
+namespace FixThisPlz\Captcha;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -13,8 +13,8 @@ interface Provider {
 	public function script_url(): string;
 
 	/**
-	 * @return bool|\WP_Error true when the token is accepted; bugspot_captcha_failed (403) or
-	 *                        bugspot_captcha_unavailable (503, fail-closed) otherwise.
+	 * @return bool|\WP_Error true when the token is accepted; fixthisplz_captcha_failed (403) or
+	 *                        fixthisplz_captcha_unavailable (503, fail-closed) otherwise.
 	 */
 	public function verify( string $token, string $ip ): bool|\WP_Error;
 }

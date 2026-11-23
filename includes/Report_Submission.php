@@ -1,9 +1,9 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
-use Bug_Spotter\Captcha\Factory;
-use Bug_Spotter\Frontend\Visibility;
+use FixThisPlz\Captcha\Factory;
+use FixThisPlz\Frontend\Visibility;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -63,13 +63,13 @@ final class Report_Submission {
 	 */
 	private static function check_sender( array $settings, array $input, ?\WP_User $user, string $ip ) {
 		if ( ! Visibility::user_allowed( $settings, $user ) ) {
-			return new \WP_Error( 'bugspot_not_allowed', __( 'You are not allowed to send bug reports.', 'bug-spotter' ), array( 'status' => 403 ) );
+			return new \WP_Error( 'fixthisplz_not_allowed', __( 'You are not allowed to send bug reports.', 'fixthisplz' ), array( 'status' => 403 ) );
 		}
 
 		$protection = $settings['protection'];
 		$ip_hash    = Secret::hmac( Rate_Limiter::bucket( $ip ) );
 		if ( ! ( new Rate_Limiter( (int) $protection['per_hour'], (int) $protection['per_day'] ) )->attempt( $ip_hash ) ) {
-			return new \WP_Error( 'bugspot_rate_limited', __( 'Too many reports. Please try again later.', 'bug-spotter' ), array( 'status' => 429 ) );
+			return new \WP_Error( 'fixthisplz_rate_limited', __( 'Too many reports. Please try again later.', 'fixthisplz' ), array( 'status' => 429 ) );
 		}
 
 		$captcha = Factory::from_settings( $settings['captcha'] )->verify( self::string( $input, 'captcha_token' ), $ip );
@@ -77,7 +77,7 @@ final class Report_Submission {
 			return $captcha;
 		}
 		if ( true !== $captcha ) {
-			return new \WP_Error( 'bugspot_captcha_failed', __( 'The anti-bot check failed.', 'bug-spotter' ), array( 'status' => 403 ) );
+			return new \WP_Error( 'fixthisplz_captcha_failed', __( 'The anti-bot check failed.', 'fixthisplz' ), array( 'status' => 403 ) );
 		}
 		return $ip_hash;
 	}
@@ -88,19 +88,19 @@ final class Report_Submission {
 		$description = '' === $description || mb_strlen( $description ) > self::MAX_DESCRIPTION ? '' : self::clean_description( $description );
 		if ( '' === $description ) {
 			/* translators: %s: maximum number of characters, for example "5,000". */
-			return self::invalid( sprintf( __( 'The description is required (%s characters maximum).', 'bug-spotter' ), number_format_i18n( self::MAX_DESCRIPTION ) ) );
+			return self::invalid( sprintf( __( 'The description is required (%s characters maximum).', 'fixthisplz' ), number_format_i18n( self::MAX_DESCRIPTION ) ) );
 		}
 
 		// Only a visitor gives an e-mail address: a logged-in sender is known by their account.
 		$email = 0 === $user_id ? trim( self::string( $input, 'reporter_email' ) ) : '';
 		if ( '' !== $email && ( mb_strlen( $email ) > self::MAX_EMAIL || ! is_email( $email ) ) ) {
-			return self::invalid( __( 'The contact e-mail address is not valid.', 'bug-spotter' ) );
+			return self::invalid( __( 'The contact e-mail address is not valid.', 'fixthisplz' ) );
 		}
 
 		$raw_context  = $input['context'] ?? null;
 		$context_size = is_string( $raw_context ) ? strlen( $raw_context ) : strlen( (string) wp_json_encode( $raw_context ) );
 		if ( $context_size > self::MAX_CONTEXT_BYTES ) {
-			return self::invalid( __( 'The report context is too large.', 'bug-spotter' ) );
+			return self::invalid( __( 'The report context is too large.', 'fixthisplz' ) );
 		}
 		$context = Context_Validator::validate( $raw_context );
 		if ( is_wp_error( $context ) ) {
@@ -128,7 +128,7 @@ final class Report_Submission {
 			return Screenshot_Store::too_large();
 		}
 		if ( UPLOAD_ERR_OK !== $error ) {
-			return new \WP_Error( 'bugspot_upload_failed', __( 'The screenshot could not be uploaded.', 'bug-spotter' ), array( 'status' => 422 ) );
+			return new \WP_Error( 'fixthisplz_upload_failed', __( 'The screenshot could not be uploaded.', 'fixthisplz' ), array( 'status' => 422 ) );
 		}
 		return Screenshot_Store::store( is_string( $file['tmp_name'] ?? null ) ? $file['tmp_name'] : '' );
 	}
@@ -150,15 +150,15 @@ final class Report_Submission {
 			if ( '' !== $row['screenshot'] ) {
 				Screenshot_Store::delete( $row['screenshot'] );
 			}
-			return new \WP_Error( 'bugspot_save_failed', __( 'The report could not be saved.', 'bug-spotter' ), array( 'status' => 500 ) );
+			return new \WP_Error( 'fixthisplz_save_failed', __( 'The report could not be saved.', 'fixthisplz' ), array( 'status' => 500 ) );
 		}
 
 		try {
 			// Mailer (e-mail) and Webhook_Sender (webhooks) listen to it.
-			do_action( 'bugspot_report_created', $id );
+			do_action( 'fixthisplz_report_created', $id );
 		} catch ( \Throwable $e ) {
 			// The report is stored; a failing notification must not turn that into an error.
-			error_log( 'Bug Spotter: notification failed: ' . $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
+			error_log( 'FixThisPlz: notification failed: ' . $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
 		}
 		return $id;
 	}
@@ -169,6 +169,6 @@ final class Report_Submission {
 
 	/** The plugin's 422 "invalid input" error, shared with the REST controllers. */
 	public static function invalid( string $message ): \WP_Error {
-		return new \WP_Error( 'bugspot_invalid', $message, array( 'status' => 422 ) );
+		return new \WP_Error( 'fixthisplz_invalid', $message, array( 'status' => 422 ) );
 	}
 }

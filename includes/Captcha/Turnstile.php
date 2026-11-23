@@ -1,6 +1,6 @@
 <?php
 
-namespace Bug_Spotter\Captcha;
+namespace FixThisPlz\Captcha;
 
 defined( 'ABSPATH' ) || exit;
 

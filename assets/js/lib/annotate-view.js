@@ -34,24 +34,24 @@ export function pressOnly(buttons, value) {
  *   (colour => button) and sizeButtons (SIZES key => button).
  */
 export function buildEditorView(t, width, height) {
-	const button = (key, extra = '') => make('button', { type: 'button', class: `bugspot-btn ${extra}`.trim(), text: t(key) });
+	const button = (key, extra = '') => make('button', { type: 'button', class: `fixthisplz-btn ${extra}`.trim(), text: t(key) });
 	const toolButtons = new Map(TOOLS.map(([name, key]) => [name, button(key)]));
 	const colorButtons = new Map(
 		PALETTE.map(([value, key]) => {
-			const swatch = make('span', { class: 'bugspot-annot-swatch' });
+			const swatch = make('span', { class: 'fixthisplz-annot-swatch' });
 			swatch.style.background = value;
-			return [value, make('button', { type: 'button', class: 'bugspot-btn bugspot-annot-choice', 'aria-label': t(key), title: t(key) }, [swatch])];
+			return [value, make('button', { type: 'button', class: 'fixthisplz-btn fixthisplz-annot-choice', 'aria-label': t(key), title: t(key) }, [swatch])];
 		})
 	);
 	const sizeButtons = new Map(
 		Object.entries(SIZE_LABELS).map(([size, key]) => {
-			const dot = make('span', { class: 'bugspot-annot-dot' });
+			const dot = make('span', { class: 'fixthisplz-annot-dot' });
 			dot.style.width = dot.style.height = `${Math.round(DOT * SIZES[size])}px`;
-			return [size, make('button', { type: 'button', class: 'bugspot-btn bugspot-annot-choice', 'aria-label': t(key), title: t(key) }, [dot])];
+			return [size, make('button', { type: 'button', class: 'fixthisplz-btn fixthisplz-annot-choice', 'aria-label': t(key), title: t(key) }, [dot])];
 		})
 	);
 	const view = {
-		canvas: make('canvas', { class: 'bugspot-annot-canvas', width, height, role: 'img', 'aria-label': t('screenshotPreview') }),
+		canvas: make('canvas', { class: 'fixthisplz-annot-canvas', width, height, role: 'img', 'aria-label': t('screenshotPreview') }),
 		toolButtons,
 		colorButtons,
 		sizeButtons,
@@ -59,21 +59,21 @@ export function buildEditorView(t, width, height) {
 		undoButton: button('undoShape'),
 		clearButton: button('clearShapes'),
 		cancelButton: button('cancel'),
-		applyButton: button('applyAnnotations', 'bugspot-btn-primary'),
+		applyButton: button('applyAnnotations', 'fixthisplz-btn-primary'),
 	};
-	view.fitBox = make('div', { class: 'bugspot-annot-fit' }, [view.canvas]);
-	view.panel = make('div', { class: 'bugspot-annot', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('annotate') }, [
-		make('div', { class: 'bugspot-annot-bar' }, [
-			make('div', { class: 'bugspot-row' }, [...toolButtons.values()]),
-			make('div', { class: 'bugspot-row' }, [
-				make('div', { class: 'bugspot-row', role: 'group', 'aria-label': t('annotationColor') }, [...colorButtons.values()]),
-				make('div', { class: 'bugspot-row', role: 'group', 'aria-label': t('annotationSize') }, [...sizeButtons.values()]),
+	view.fitBox = make('div', { class: 'fixthisplz-annot-fit' }, [view.canvas]);
+	view.panel = make('div', { class: 'fixthisplz-annot', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('annotate') }, [
+		make('div', { class: 'fixthisplz-annot-bar' }, [
+			make('div', { class: 'fixthisplz-row' }, [...toolButtons.values()]),
+			make('div', { class: 'fixthisplz-row' }, [
+				make('div', { class: 'fixthisplz-row', role: 'group', 'aria-label': t('annotationColor') }, [...colorButtons.values()]),
+				make('div', { class: 'fixthisplz-row', role: 'group', 'aria-label': t('annotationSize') }, [...sizeButtons.values()]),
 			]),
-			make('div', { class: 'bugspot-row' }, [view.deleteButton, view.undoButton, view.clearButton]),
+			make('div', { class: 'fixthisplz-row' }, [view.deleteButton, view.undoButton, view.clearButton]),
 		]),
-		make('div', { class: 'bugspot-annot-stage' }, [view.fitBox]),
-		make('div', { class: 'bugspot-annot-bar bugspot-annot-actions' }, [view.cancelButton, view.applyButton]),
+		make('div', { class: 'fixthisplz-annot-stage' }, [view.fitBox]),
+		make('div', { class: 'fixthisplz-annot-bar fixthisplz-annot-actions' }, [view.cancelButton, view.applyButton]),
 	]);
-	view.root = make('div', { id: 'bugspot-annotator', class: 'bugspot-ui', [UI_ATTR]: true }, [view.panel]);
+	view.root = make('div', { id: 'fixthisplz-annotator', class: 'fixthisplz-ui', [UI_ATTR]: true }, [view.panel]);
 	return view;
 }

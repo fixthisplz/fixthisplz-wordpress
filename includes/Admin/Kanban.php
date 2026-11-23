@@ -1,13 +1,13 @@
 <?php
 
-namespace Bug_Spotter\Admin;
+namespace FixThisPlz\Admin;
 
-use Bug_Spotter\Priorities;
-use Bug_Spotter\Report_Format;
-use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Rest\Reports_Controller;
-use Bug_Spotter\Statuses;
-use Bug_Spotter\Team;
+use FixThisPlz\Priorities;
+use FixThisPlz\Report_Format;
+use FixThisPlz\Reports_Repository;
+use FixThisPlz\Rest\Reports_Controller;
+use FixThisPlz\Statuses;
+use FixThisPlz\Team;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -19,14 +19,14 @@ final class Kanban {
 	private const EXCERPT_LENGTH = 100;
 
 	public static function enqueue_assets(): void {
-		wp_enqueue_script( 'bug-spotter-kanban', BUGSPOT_URL . 'assets/js/admin-kanban.js', array( 'jquery', 'jquery-ui-sortable', 'wp-api-fetch' ), BUGSPOT_VERSION, true );
+		wp_enqueue_script( 'fixthisplz-kanban', FIXTHISPLZ_URL . 'assets/js/admin-kanban.js', array( 'jquery', 'jquery-ui-sortable', 'wp-api-fetch' ), FIXTHISPLZ_VERSION, true );
 		wp_localize_script(
-			'bug-spotter-kanban',
-			'bugspotKanban',
+			'fixthisplz-kanban',
+			'fixThisPlzKanban',
 			array(
 				'path'         => '/' . Reports_Controller::NAMESPACE . '/reports/',
-				'genericError' => __( 'The report could not be moved. Please try again.', 'bug-spotter' ),
-				'dismiss'      => __( 'Dismiss this notice.', 'bug-spotter' ),
+				'genericError' => __( 'The report could not be moved. Please try again.', 'fixthisplz' ),
+				'dismiss'      => __( 'Dismiss this notice.', 'fixthisplz' ),
 			)
 		);
 	}
@@ -49,7 +49,7 @@ final class Kanban {
 		}
 		cache_users( array_filter( array_column( array_merge( ...array_values( $columns ) ), 'assigned_to' ) ) ); // One query for the initials.
 
-		echo '<div class="bugspot-board-wrap"><div class="bugspot-board">';
+		echo '<div class="fixthisplz-board-wrap"><div class="fixthisplz-board">';
 		foreach ( $columns as $status => $items ) {
 			self::render_column( $criteria, $status, $items, $counts[ $status ] ?? 0 );
 		}
@@ -60,9 +60,9 @@ final class Kanban {
 	private static function render_column( array $criteria, string $status, array $items, int $total ): void {
 		$limit = self::column_limit( $status );
 
-		echo '<section class="bugspot-column" data-status="' . esc_attr( $status ) . '">';
-		echo '<h2 class="bugspot-column-title">' . Report_Format::pill( Statuses::class, $status ) . ' <span class="bugspot-count" data-status="' . esc_attr( $status ) . '">' . esc_html( (string) $total ) . '</span></h2>'; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
-		echo '<ul class="bugspot-cards" data-status="' . esc_attr( $status ) . '">';
+		echo '<section class="fixthisplz-column" data-status="' . esc_attr( $status ) . '">';
+		echo '<h2 class="fixthisplz-column-title">' . Report_Format::pill( Statuses::class, $status ) . ' <span class="fixthisplz-count" data-status="' . esc_attr( $status ) . '">' . esc_html( (string) $total ) . '</span></h2>'; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
+		echo '<ul class="fixthisplz-cards" data-status="' . esc_attr( $status ) . '">';
 		foreach ( $items as $item ) {
 			self::render_card( $item );
 		}
@@ -72,7 +72,7 @@ final class Kanban {
 			$args = self::current_limits();
 			$args[ $status . '_limit' ] = min( self::MAX_LIMIT, $limit + self::STEP );
 			$url  = Report_Format::list_link( array_merge( Report_Query_Args::filter_query_args( $criteria ), array( 'view' => 'kanban' ), $args ) );
-			echo '<p class="bugspot-more"><a href="' . esc_url( $url ) . '">' . esc_html__( 'Show more', 'bug-spotter' ) . '</a></p>';
+			echo '<p class="fixthisplz-more"><a href="' . esc_url( $url ) . '">' . esc_html__( 'Show more', 'fixthisplz' ) . '</a></p>';
 		}
 		echo '</section>';
 	}
@@ -113,24 +113,24 @@ final class Kanban {
 		$path     = is_string( $path ) && '' !== $path ? $path : (string) $item['page_url'];
 		$created  = Reports_Repository::timestamp( $item['created_at'] );
 
-		echo '<li class="bugspot-card" data-id="' . esc_attr( (string) $id ) . '" data-status="' . esc_attr( (string) $item['status'] ) . '">';
-		echo '<div class="bugspot-card-head"><a class="bugspot-card-id" href="' . esc_url( Report_Format::link( $id ) ) . '">#' . esc_html( (string) $id ) . '</a>';
+		echo '<li class="fixthisplz-card" data-id="' . esc_attr( (string) $id ) . '" data-status="' . esc_attr( (string) $item['status'] ) . '">';
+		echo '<div class="fixthisplz-card-head"><a class="fixthisplz-card-id" href="' . esc_url( Report_Format::link( $id ) ) . '">#' . esc_html( (string) $id ) . '</a>';
 		if ( is_string( $item['screenshot'] ?? null ) && '' !== $item['screenshot'] ) {
-			echo ' <span class="dashicons dashicons-camera" title="' . esc_attr__( 'Has a screenshot', 'bug-spotter' ) . '" aria-label="' . esc_attr__( 'Has a screenshot', 'bug-spotter' ) . '"></span>';
+			echo ' <span class="dashicons dashicons-camera" title="' . esc_attr__( 'Has a screenshot', 'fixthisplz' ) . '" aria-label="' . esc_attr__( 'Has a screenshot', 'fixthisplz' ) . '"></span>';
 		}
 		echo ' ' . Report_Format::pill( Priorities::class, (string) $item['priority'] ); // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
 		if ( null !== $item['assigned_to'] ) {
 			$name = Team::name( $item['assigned_to'] );
 			/* translators: %s: name of the person the report is assigned to. */
-			$label = sprintf( __( 'Assigned to %s', 'bug-spotter' ), $name );
-			echo '<span class="bugspot-assignee" title="' . esc_attr( $label ) . '" role="img" aria-label="' . esc_attr( $label ) . '">' . esc_html( Team::initials( $name ) ) . '</span>';
+			$label = sprintf( __( 'Assigned to %s', 'fixthisplz' ), $name );
+			echo '<span class="fixthisplz-assignee" title="' . esc_attr( $label ) . '" role="img" aria-label="' . esc_attr( $label ) . '">' . esc_html( Team::initials( $name ) ) . '</span>';
 		}
 		echo '</div>';
-		echo '<p class="bugspot-card-text">' . esc_html( $excerpt ) . '</p>';
-		echo '<p class="bugspot-card-meta bugspot-muted"><span class="bugspot-card-page">' . esc_html( $path ) . '</span>';
+		echo '<p class="fixthisplz-card-text">' . esc_html( $excerpt ) . '</p>';
+		echo '<p class="fixthisplz-card-meta fixthisplz-muted"><span class="fixthisplz-card-page">' . esc_html( $path ) . '</span>';
 		if ( null !== $created ) {
 			/* translators: %s: human-readable time difference, e.g. "2 hours". */
-			$ago = sprintf( __( '%s ago', 'bug-spotter' ), human_time_diff( $created, time() ) );
+			$ago = sprintf( __( '%s ago', 'fixthisplz' ), human_time_diff( $created, time() ) );
 			echo ' &middot; <span title="' . esc_attr( wp_date( 'Y-m-d H:i', $created ) ) . '">' . esc_html( $ago ) . '</span>';
 		}
 		echo '</p></li>';

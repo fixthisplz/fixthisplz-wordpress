@@ -1,16 +1,16 @@
 <?php
 
-use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Settings;
-use Bug_Spotter\Settings_Sanitizer;
-use Bug_Spotter\Statuses;
+use FixThisPlz\Reports_Repository;
+use FixThisPlz\Settings;
+use FixThisPlz\Settings_Sanitizer;
+use FixThisPlz\Statuses;
 
 /** Saves a "statuses" setting through the real sanitizer, as a settings form would. */
 function statuses_save( array $statuses ): void {
 	update_option( Settings::OPTION, Settings_Sanitizer::sanitize( array( 'statuses' => $statuses ) ) );
 }
 
-bugspot_test(
+fixthisplz_test(
 	'statuses: defaults_keep_the_former_keys_order_labels_and_closed_set',
 	function () {
 		with_settings_option(
@@ -27,7 +27,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'statuses: sanitize_drops_invalid_entries_and_keeps_new_and_seen_first_and_open',
 	function () {
 		$out = Statuses::sanitize(
@@ -54,7 +54,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'statuses: sanitize_caps_the_list_at_20_and_always_keeps_new_and_seen',
 	function () {
 		$many = array();
@@ -70,7 +70,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'statuses: reading_follows_the_saved_setting',
 	function () {
 		with_settings_option(
@@ -91,13 +91,13 @@ bugspot_test(
 
 				statuses_save( array( array( 'key' => 'new' ), array( 'key' => 'seen' ) ) );
 				assert_same( array(), Statuses::closed() );
-				assert_same( 0, Bug_Spotter\Retention::purge_closed_older_than( 1 ), 'no closed status: nothing purged' );
+				assert_same( 0, FixThisPlz\Retention::purge_closed_older_than( 1 ), 'no closed status: nothing purged' );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'statuses: purge_only_removes_the_statuses_set_as_closed',
 	function () {
 		with_settings_option(
@@ -108,7 +108,7 @@ bugspot_test(
 				$old    = gmdate( 'Y-m-d H:i:s', strtotime( '-13 months' ) );
 				$closed = repo_make( $repo, 'STPRG', array(), array( 'status' => 'zz_test_closed', 'status_changed_at' => $old ) );
 				$fixed  = repo_make( $repo, 'STPRG', array(), array( 'status' => 'fixed', 'status_changed_at' => $old ) );
-				assert_same( 1, Bug_Spotter\Retention::purge_closed_older_than( 12 ) );
+				assert_same( 1, FixThisPlz\Retention::purge_closed_older_than( 12 ) );
 				assert_same( null, $repo->find( $closed ) );
 				assert_true( null !== $repo->find( $fixed ), '"fixed" is no longer closed here' );
 			}
@@ -116,7 +116,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'statuses: a_stored_status_unknown_to_the_settings_is_counted_kept_and_changeable',
 	function () {
 		with_settings_option(
@@ -134,14 +134,14 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'statuses: the_pill_is_tinted_from_the_validated_color_and_escapes_the_label',
 	function () {
 		with_settings_option(
 			function () {
 				statuses_save( array( array( 'key' => 'new', 'label' => 'A & B', 'color' => '#aa00cc' ), array( 'key' => 'seen' ) ) );
-				assert_same( '<span class="bugspot-pill bugspot-status" style="--bugspot-color:#aa00cc">A &amp; B</span>', Bug_Spotter\Report_Format::pill( Statuses::class, 'new' ) );
-				assert_same( '<span class="bugspot-pill bugspot-status" style="--bugspot-color:' . Statuses::FALLBACK_COLOR . '">zz_gone</span>', Bug_Spotter\Report_Format::pill( Statuses::class, 'zz_gone' ) );
+				assert_same( '<span class="fixthisplz-pill fixthisplz-status" style="--fixthisplz-color:#aa00cc">A &amp; B</span>', FixThisPlz\Report_Format::pill( Statuses::class, 'new' ) );
+				assert_same( '<span class="fixthisplz-pill fixthisplz-status" style="--fixthisplz-color:' . Statuses::FALLBACK_COLOR . '">zz_gone</span>', FixThisPlz\Report_Format::pill( Statuses::class, 'zz_gone' ) );
 			}
 		);
 	}

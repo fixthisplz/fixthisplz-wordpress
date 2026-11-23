@@ -1,21 +1,21 @@
 <?php
 
-namespace Bug_Spotter\Rest;
+namespace FixThisPlz\Rest;
 
-use Bug_Spotter\Client_Ip;
-use Bug_Spotter\Installer;
-use Bug_Spotter\Report_Changes;
-use Bug_Spotter\Report_Submission;
-use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Screenshot_Store;
-use Bug_Spotter\Settings;
+use FixThisPlz\Client_Ip;
+use FixThisPlz\Installer;
+use FixThisPlz\Report_Changes;
+use FixThisPlz\Report_Submission;
+use FixThisPlz\Reports_Repository;
+use FixThisPlz\Screenshot_Store;
+use FixThisPlz\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
-/** REST API bug-spotter/v1, HTTP layer only: public report creation (flow in Report_Submission), and capability-gated status/priority + screenshot access. */
+/** REST API fixthisplz/v1, HTTP layer only: public report creation (flow in Report_Submission), and capability-gated status/priority + screenshot access. */
 final class Reports_Controller {
 
-	public const NAMESPACE = 'bug-spotter/v1';
+	public const NAMESPACE = 'fixthisplz/v1';
 
 	public static function register_hooks(): void {
 		add_action( 'rest_api_init', array( self::class, 'register_routes' ) );
@@ -86,7 +86,7 @@ final class Reports_Controller {
 	public static function create( \WP_REST_Request $request ) {
 		$settings = Settings::get();
 		if ( empty( $settings['enabled'] ) ) {
-			return new \WP_Error( 'bugspot_disabled', __( 'Bug reporting is disabled.', 'bug-spotter' ), array( 'status' => 404 ) );
+			return new \WP_Error( 'fixthisplz_disabled', __( 'Bug reporting is disabled.', 'fixthisplz' ), array( 'status' => 404 ) );
 		}
 
 		// A body over post_max_size is dropped whole by PHP (no params, no files): say so instead of a misleading
@@ -148,7 +148,7 @@ final class Reports_Controller {
 		$id     = (int) $request['id'];
 		$report = $repo->find( $id );
 		if ( null === $report ) {
-			return new \WP_Error( 'bugspot_not_found', __( 'Report not found.', 'bug-spotter' ), array( 'status' => 404 ) );
+			return new \WP_Error( 'fixthisplz_not_found', __( 'Report not found.', 'fixthisplz' ), array( 'status' => 404 ) );
 		}
 
 		$fields = array();
@@ -160,15 +160,15 @@ final class Reports_Controller {
 			// The rule of every edit (Report_Changes): an unknown value is rejected, unless it is the stored one.
 			if ( ! is_string( $value ) || null === Report_Changes::from( $report, array( $key => $value ) ) ) {
 				/* translators: %s: field name (status or priority) */
-				return Report_Submission::invalid( sprintf( __( 'Invalid value for "%s".', 'bug-spotter' ), $key ) );
+				return Report_Submission::invalid( sprintf( __( 'Invalid value for "%s".', 'fixthisplz' ), $key ) );
 			}
 			$fields[ $key ] = $value;
 		}
 		if ( ! $fields ) {
-			return Report_Submission::invalid( __( 'Nothing to update: send a status and/or a priority.', 'bug-spotter' ) );
+			return Report_Submission::invalid( __( 'Nothing to update: send a status and/or a priority.', 'fixthisplz' ) );
 		}
 		if ( null === $repo->update( $id, $fields, $report ) ) {
-			return new \WP_Error( 'bugspot_save_failed', __( 'The report could not be saved.', 'bug-spotter' ), array( 'status' => 500 ) );
+			return new \WP_Error( 'fixthisplz_save_failed', __( 'The report could not be saved.', 'fixthisplz' ), array( 'status' => 500 ) );
 		}
 
 		return new \WP_REST_Response(
@@ -187,7 +187,7 @@ final class Reports_Controller {
 		$name   = is_array( $report ) && is_string( $report['screenshot'] ?? null ) ? $report['screenshot'] : '';
 		$path   = '' !== $name ? Screenshot_Store::path( $name ) : null;
 		if ( null === $path || ! is_file( $path ) ) {
-			return new \WP_Error( 'bugspot_not_found', __( 'Screenshot not found.', 'bug-spotter' ), array( 'status' => 404 ) );
+			return new \WP_Error( 'fixthisplz_not_found', __( 'Screenshot not found.', 'fixthisplz' ), array( 'status' => 404 ) );
 		}
 
 		$response = new \WP_REST_Response( null, 200 );

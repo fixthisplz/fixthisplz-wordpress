@@ -14,7 +14,7 @@ const EXPORTS = {
 	json: { mime: 'application/json;charset=utf-8', build: toJson },
 	txt: { mime: 'text/plain;charset=utf-8', build: toText },
 };
-const DIAGNOSTICS_KEY = Symbol.for('bugspot.diagnostics');
+const DIAGNOSTICS_KEY = Symbol.for('fixthisplz.diagnostics');
 
 /** Frozen copy: the panel, the request and the downloads all use the same diagnostics. */
 function snapshotDiagnostics() {
@@ -75,7 +75,7 @@ export function openDialog({ config, element, onRetakeElement, onClose }) {
 	function fillDownloads(container, draft) {
 		container.replaceChildren();
 		for (const format of formats) {
-			const button = make('button', { type: 'button', class: 'bugspot-btn', text: `${t('download')} .${format}` });
+			const button = make('button', { type: 'button', class: 'fixthisplz-btn', text: `${t('download')} .${format}` });
 			button.addEventListener('click', () => {
 				const spec = EXPORTS[format];
 				download(reportFileName(new Date(), format), spec.build(draft, labels), spec.mime);
@@ -84,7 +84,7 @@ export function openDialog({ config, element, onRetakeElement, onClose }) {
 		}
 		if (shots.blob) {
 			const blob = shots.blob;
-			const button = make('button', { type: 'button', class: 'bugspot-btn', text: t('downloadScreenshot') });
+			const button = make('button', { type: 'button', class: 'fixthisplz-btn', text: t('downloadScreenshot') });
 			button.addEventListener('click', () => download(reportFileName(new Date(), 'jpg'), blob, 'image/jpeg'));
 			container.append(button);
 		}

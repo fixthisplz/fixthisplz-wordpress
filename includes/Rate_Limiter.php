@@ -1,6 +1,6 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -38,8 +38,8 @@ final class Rate_Limiter {
 	/** True when allowed (and counted); false when either window is exhausted (nothing counted). */
 	public function attempt( string $ip_hash ): bool {
 		$short = substr( $ip_hash, 0, 16 );
-		$hour  = array( 'bugspot_rl_h_' . $short, HOUR_IN_SECONDS, $this->per_hour );
-		$day   = array( 'bugspot_rl_d_' . $short, DAY_IN_SECONDS, $this->per_day );
+		$hour  = array( 'fixthisplz_rl_h_' . $short, HOUR_IN_SECONDS, $this->per_hour );
+		$day   = array( 'fixthisplz_rl_d_' . $short, DAY_IN_SECONDS, $this->per_day );
 
 		$states = array();
 		foreach ( array( $hour, $day ) as list( $key, $window, $limit ) ) {

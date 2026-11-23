@@ -1,26 +1,26 @@
 <?php
 
-use Bug_Spotter\Admin\Bugs_Page;
-use Bug_Spotter\Report_Submission;
-use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Settings;
-use Bug_Spotter\Webhooks;
+use FixThisPlz\Admin\Bugs_Page;
+use FixThisPlz\Report_Submission;
+use FixThisPlz\Reports_Repository;
+use FixThisPlz\Settings;
+use FixThisPlz\Webhooks;
 
 require_once __DIR__ . '/test-webhooks.php';
 require_once __DIR__ . '/test-activity.php';
 require_once __DIR__ . '/test-submission.php';
 
-/** Runs $fn and counts the `bugspot_report_changed` actions it fires. */
+/** Runs $fn and counts the `fixthisplz_report_changed` actions it fires. */
 function webhook_changed_count( callable $fn ): int {
 	$count   = 0;
 	$counter = static function () use ( &$count ): void {
 		++$count;
 	};
-	add_action( 'bugspot_report_changed', $counter );
+	add_action( 'fixthisplz_report_changed', $counter );
 	try {
 		$fn();
 	} finally {
-		remove_action( 'bugspot_report_changed', $counter );
+		remove_action( 'fixthisplz_report_changed', $counter );
 	}
 	return $count;
 }
@@ -30,13 +30,13 @@ function webhook_events( array $sent ): array {
 	return array_map( static fn( array $r ): string => (string) json_decode( $r['args']['body'], true )['event'], $sent );
 }
 
-bugspot_test(
+fixthisplz_test(
 	'webhook-events: every_real_change_fires_once_on_every_path',
 	function () {
 		$me   = activity_user( 'editor', true, 'Hook Tester' );
 		$repo = new Reports_Repository();
-		$id   = bugspot_admin_insert( 'hook-paths' );
-		$two  = bugspot_admin_insert( 'hook-paths-2' );
+		$id   = fixthisplz_admin_insert( 'hook-paths' );
+		$two  = fixthisplz_admin_insert( 'hook-paths-2' );
 		wp_set_current_user( $me );
 
 		assert_same( 1, webhook_changed_count( fn() => $repo->update( $id, array( 'status' => 'confirmed' ) ) ), 'update' );
@@ -50,7 +50,7 @@ bugspot_test(
 
 		rest_get_server();
 		$kanban = static function ( string $status ) use ( $id ): void {
-			$req = new WP_REST_Request( 'PATCH', '/bug-spotter/v1/reports/' . $id );
+			$req = new WP_REST_Request( 'PATCH', '/fixthisplz/v1/reports/' . $id );
 			$req->set_body_params( array( 'status' => $status ) );
 			assert_same( 200, rest_do_request( $req )->get_status() );
 		};
@@ -60,7 +60,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'webhook-events: a_new_report_is_posted_once_and_signed',
 	function () {
 		submission_env(
@@ -69,20 +69,20 @@ bugspot_test(
 				$count   = static function () use ( &$created ): void {
 					++$created;
 				};
-				add_action( 'bugspot_report_created', $count );
+				add_action( 'fixthisplz_report_created', $count );
 				try {
 					$sent = webhook_requests( fn() => assert_true( is_int( Report_Submission::submit( Settings::get(), submission_input( array( 'reporter_email' => 'private.reporter@example.test' ) ), null, $ip ) ) ) );
 				} finally {
-					remove_action( 'bugspot_report_created', $count );
+					remove_action( 'fixthisplz_report_created', $count );
 				}
-				assert_same( 1, $created, 'bugspot_report_created fired once' );
+				assert_same( 1, $created, 'fixthisplz_report_created fired once' );
 				assert_same( 1, count( $sent ) );
 				assert_same( WEBHOOK_PUBLIC_URL, $sent[0]['url'] );
 				$args = $sent[0]['args'];
 				assert_same( array( false, 2, 0, true ), array( $args['blocking'], $args['timeout'], $args['redirection'], $args['reject_unsafe_urls'] ) );
-				assert_same( 'report.created', $args['headers']['X-Bug-Spotter-Event'] );
+				assert_same( 'report.created', $args['headers']['X-FixThisPlz-Event'] );
 				$secret = Webhooks::secret( Webhooks::all()[0] );
-				assert_same( 'sha256=' . hash_hmac( 'sha256', $args['body'], (string) $secret ), $args['headers']['X-Bug-Spotter-Signature'], 'signature verifies' );
+				assert_same( 'sha256=' . hash_hmac( 'sha256', $args['body'], (string) $secret ), $args['headers']['X-FixThisPlz-Signature'], 'signature verifies' );
 				assert_true( ! str_contains( $args['body'], 'private.reporter' ), 'no reporter e-mail' );
 			},
 			array( 'webhooks' => Webhooks::sanitize( array( webhook_row() ) ) )
@@ -90,7 +90,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'webhook-events: events_follow_each_webhook_choice_and_switch',
 	function () {
 		$me = activity_user( 'editor', true, 'Event Picker' );
@@ -102,7 +102,7 @@ bugspot_test(
 			),
 			function () use ( $me ) {
 				$repo = new Reports_Repository();
-				$id   = bugspot_admin_insert( 'hook-events' );
+				$id   = fixthisplz_admin_insert( 'hook-events' );
 				wp_set_current_user( $me );
 
 				$sent = webhook_requests( fn() => $repo->update( $id, array( 'status' => 'confirmed', 'assigned_to' => $me ) ) );
@@ -115,17 +115,17 @@ bugspot_test(
 				assert_same( array(), webhook_requests( fn() => $repo->update( $id, array( 'assigned_to' => 0, 'priority' => 'high' ) ) ), 'unassign and priority: no event' );
 				assert_same( array(), webhook_requests( fn() => $repo->update( $id, array( 'status' => 'confirmed' ) ) ), 'no-op: nothing sent' );
 
-				$created = webhook_requests( fn() => do_action( 'bugspot_report_created', $id ) );
+				$created = webhook_requests( fn() => do_action( 'fixthisplz_report_created', $id ) );
 				assert_same( array( WEBHOOK_PUBLIC_URL, 'http://localhost:8765/created-only' ), array_column( $created, 'url' ), 'disabled webhook never called' );
 				assert_same( false, $created[1]['args']['reject_unsafe_urls'], 'development host' );
-				assert_true( ! isset( $created[1]['args']['headers']['X-Bug-Spotter-Signature'] ), 'only the generic JSON is signed' );
+				assert_true( ! isset( $created[1]['args']['headers']['X-FixThisPlz-Signature'] ), 'only the generic JSON is signed' );
 				wp_set_current_user( 0 );
 			}
 		);
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'webhook-events: new_to_seen_sends_nothing_but_an_assignment_still_goes_out',
 	function () {
 		$me = activity_user( 'editor', true, 'Seen Opener' );
@@ -133,8 +133,8 @@ bugspot_test(
 			array( webhook_row() ),
 			function () use ( $me ) {
 				$repo = new Reports_Repository();
-				$id   = bugspot_admin_insert( 'hook-seen' );
-				$two  = bugspot_admin_insert( 'hook-seen-2' );
+				$id   = fixthisplz_admin_insert( 'hook-seen' );
+				$two  = fixthisplz_admin_insert( 'hook-seen-2' );
 				wp_set_current_user( $me );
 				$fired = 0;
 				$sent  = webhook_requests(
@@ -154,7 +154,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'webhook-events: bulk_actions_send_one_summary_per_chat_webhook_and_every_generic_event',
 	function () {
 		$me = activity_user( 'editor', true, 'Bulk Boss' );
@@ -165,7 +165,7 @@ bugspot_test(
 				webhook_row( array( 'url' => 'http://localhost:8765/teams', 'format' => 'teams', 'events' => array( 'assigned' ) ) ),
 			),
 			function () use ( $me ) {
-				$ids = array( bugspot_admin_insert( 'bulk-1' ), bugspot_admin_insert( 'bulk-2' ), bugspot_admin_insert( 'bulk-3' ) );
+				$ids = array( fixthisplz_admin_insert( 'bulk-1' ), fixthisplz_admin_insert( 'bulk-2' ), fixthisplz_admin_insert( 'bulk-3' ) );
 				wp_set_current_user( $me );
 
 				$sent = webhook_requests( fn() => Bugs_Page::apply_bulk( 'status_fixed', $ids ) );
@@ -173,7 +173,7 @@ bugspot_test(
 				assert_same( array( WEBHOOK_PUBLIC_URL => 3, 'http://localhost:8765/slack' => 1 ), $by, 'generic: one per report; slack: one summary' );
 				$slack = json_decode( end( $sent )['args']['body'], true );
 				assert_same( '3 reports: status → Fixed', $slack['text'] );
-				assert_true( str_contains( $slack['blocks'][0]['text']['text'], 'page=bug-spotter|Open the list>' ), 'summary links the list' );
+				assert_true( str_contains( $slack['blocks'][0]['text']['text'], 'page=fixthisplz|Open the list>' ), 'summary links the list' );
 
 				$sent = webhook_requests( fn() => Bugs_Page::apply_bulk( 'assign_' . $me, $ids ) );
 				$teams = array_values( array_filter( $sent, static fn( array $r ): bool => 'http://localhost:8765/teams' === $r['url'] ) );
@@ -192,13 +192,13 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'webhook-events: bulk_actions_call_the_webhooks_only_after_every_report_is_saved',
 	function () {
 		webhook_env(
 			array( webhook_row(), webhook_row( array( 'url' => 'http://localhost:8765/slack', 'format' => 'slack' ) ) ),
 			function () {
-				$ids     = array( bugspot_admin_insert( 'after-1' ), bugspot_admin_insert( 'after-2' ), bugspot_admin_insert( 'after-3' ) );
+				$ids     = array( fixthisplz_admin_insert( 'after-1' ), fixthisplz_admin_insert( 'after-2' ), fixthisplz_admin_insert( 'after-3' ) );
 				$repo    = new Reports_Repository();
 				$unsaved = array();
 				$check   = static function ( $pre ) use ( $ids, $repo, &$unsaved ) {
@@ -220,13 +220,13 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'webhook-events: a_failing_webhook_breaks_neither_the_change_nor_the_others',
 	function () {
 		webhook_env(
 			array( webhook_row( array( 'url' => 'http://localhost:8765/broken' ) ), webhook_row() ),
 			function () {
-				$id    = bugspot_admin_insert( 'hook-broken' );
+				$id    = fixthisplz_admin_insert( 'hook-broken' );
 				$calls = array();
 				$boom  = static function ( $pre, $args, $url ) use ( &$calls ) {
 					$calls[] = $url;
@@ -248,7 +248,7 @@ bugspot_test(
 	}
 );
 
-bugspot_test(
+fixthisplz_test(
 	'webhook-events: test_endpoint_needs_manage_options_and_reports_the_answer',
 	function () {
 		$editor = activity_user( 'editor', true );
@@ -258,7 +258,7 @@ bugspot_test(
 			function () use ( $editor, $admins ) {
 				rest_get_server();
 				$call = static function ( $index ): WP_REST_Response {
-					$req = new WP_REST_Request( 'POST', '/bug-spotter/v1/webhook-test' );
+					$req = new WP_REST_Request( 'POST', '/fixthisplz/v1/webhook-test' );
 					$req->set_body_params( array( 'index' => $index ) );
 					return rest_do_request( $req );
 				};

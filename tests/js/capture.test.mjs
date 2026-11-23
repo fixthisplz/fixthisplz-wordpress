@@ -114,7 +114,7 @@ test('createCutFilter keeps the path to a hidden SVG sprite and drops its off-sc
 });
 
 test('createCutFilter drops the plugin UI and lets iframe documents through', () => {
-	const ui = node('div', [], { attrs: { 'data-bugspot-ui': '' } });
+	const ui = node('div', [], { attrs: { 'data-fixthisplz-ui': '' } });
 	const frameChild = { ...node('p'), ownerDocument: { name: 'frame' } };
 	const body = node('body', [ui]);
 	const cut = createCutFilter({ visible: new WeakSet([body]), needed: new WeakSet(), ownerDocument: page, isInline });
@@ -165,11 +165,11 @@ test('createPseudoRepair re-applies url() and alt-text pseudo content exactly, l
 	const css = style.textContent;
 	const boxClone = root.childNodes[0].childNodes[0];
 	const iconClone = root.childNodes[1];
-	const id = (n) => n.getAttribute('data-bugspot-pseudo');
+	const id = (n) => n.getAttribute('data-fixthisplz-pseudo');
 	assert.ok(id(boxClone) && id(iconClone) && id(boxClone) !== id(iconClone));
-	assert.ok(css.includes(`[data-bugspot-pseudo="${id(boxClone)}"]::before{content:${CHECKMARK} !important}`), css);
-	assert.ok(css.includes(`[data-bugspot-pseudo="${id(iconClone)}"]::before{content:${ALT_ICON} !important}`), css);
-	assert.equal(root.childNodes[0].childNodes[1].getAttribute('data-bugspot-pseudo'), null, 'plain strings are copied fine');
+	assert.ok(css.includes(`[data-fixthisplz-pseudo="${id(boxClone)}"]::before{content:${CHECKMARK} !important}`), css);
+	assert.ok(css.includes(`[data-fixthisplz-pseudo="${id(iconClone)}"]::before{content:${ALT_ICON} !important}`), css);
+	assert.equal(root.childNodes[0].childNodes[1].getAttribute('data-fixthisplz-pseudo'), null, 'plain strings are copied fine');
 	assert.ok(!css.includes('Premium'));
 });
 
@@ -199,7 +199,7 @@ test('createPseudoRepair blanks pseudo content inside sensitive boxes and skips 
 	repair2.leave(afterClone);
 	repair2.leave(el('body', {}));
 	assert.deepEqual([...new Set(calls)], [after], 'the <i> is paired with its own clone');
-	assert.ok(afterClone.getAttribute('data-bugspot-pseudo'));
+	assert.ok(afterClone.getAttribute('data-fixthisplz-pseudo'));
 });
 
 test('createPseudoRepair empties every pseudo-element of a sensitive box and of its descendants', () => {
@@ -214,9 +214,9 @@ test('createPseudoRepair empties every pseudo-element of a sensitive box and of 
 	const style = libraryStyle();
 	repair.apply(style, [secretClone]);
 	const css = style.textContent;
-	assert.equal(secretClone.getAttribute('data-bugspot-masked'), '');
-	assert.equal(otherClone.getAttribute('data-bugspot-masked'), null);
-	for (const sel of ['[data-bugspot-masked]::before', '[data-bugspot-masked]::after', '[data-bugspot-masked] *::before', '[data-bugspot-masked] *::after']) {
+	assert.equal(secretClone.getAttribute('data-fixthisplz-masked'), '');
+	assert.equal(otherClone.getAttribute('data-fixthisplz-masked'), null);
+	for (const sel of ['[data-fixthisplz-masked]::before', '[data-fixthisplz-masked]::after', '[data-fixthisplz-masked] *::before', '[data-fixthisplz-masked] *::after']) {
 		assert.ok(css.includes(sel), `${sel} in ${css}`);
 	}
 	assert.ok(/\{content:"" !important\}/.test(css));
@@ -231,8 +231,8 @@ test('createPseudoRepair empties every pseudo-element of a sensitive box and of 
 	boxClone.contains = (n) => n === deepClone;
 	const style2 = libraryStyle();
 	repair2.apply(style2, [boxClone]);
-	const id = deepClone.getAttribute('data-bugspot-pseudo');
-	assert.ok(style2.textContent.includes(`[data-bugspot-pseudo="${id}"]::before{content:"" !important}`), style2.textContent);
+	const id = deepClone.getAttribute('data-fixthisplz-pseudo');
+	assert.ok(style2.textContent.includes(`[data-fixthisplz-pseudo="${id}"]::before{content:"" !important}`), style2.textContent);
 	assert.ok(!style2.textContent.includes('data:image'));
 });
 
@@ -278,21 +278,21 @@ test('captureVisible embeds the page fonts: the library font option is not disab
 	globalThis.window = { innerWidth: 800, innerHeight: 600, scrollX: 0, scrollY: 0 };
 	globalThis.document = { documentElement: html, body: null, styleSheets: [], querySelectorAll: () => [] };
 	globalThis.getComputedStyle = () => ({ backgroundColor: 'rgb(255, 255, 255)' });
-	globalThis.__bugspotVendorOptions = null;
+	globalThis.__fixThisPlzVendorOptions = null;
 	const vendorUrl = `data:text/javascript,${encodeURIComponent(
-		'export const createContext = async (node, options) => (globalThis.__bugspotVendorOptions = options, {});' +
+		'export const createContext = async (node, options) => (globalThis.__fixThisPlzVendorOptions = options, {});' +
 			'export const domToCanvas = async () => { throw new Error("stop"); };' +
 			'export const destroyContext = () => {};'
 	)}`;
 	try {
 		const { captureVisible } = await import('../../assets/js/lib/capture.js');
 		await assert.rejects(captureVisible({ vendorUrl }), /stop/);
-		const options = globalThis.__bugspotVendorOptions;
+		const options = globalThis.__fixThisPlzVendorOptions;
 		assert.ok(options, 'createContext was called');
 		assert.notEqual(options.font, false, 'fonts must be embedded');
 	} finally {
 		Object.assign(globalThis, saved);
-		delete globalThis.__bugspotVendorOptions;
+		delete globalThis.__fixThisPlzVendorOptions;
 	}
 });
 

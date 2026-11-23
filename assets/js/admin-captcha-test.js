@@ -1,19 +1,19 @@
-/* Bug Spotter settings, Spam protection tab: the anti-bot "Test" button. It mounts the widget of the provider chosen
+/* FixThisPlz settings, Spam protection tab: the anti-bot "Test" button. It mounts the widget of the provider chosen
  * in the form (assets/js/lib/captcha.js, imported on click) and checks the typed keys with the server. No build step.
- * Every user-visible string comes from bugspotSettings.i18n or from the server answer. */
+ * Every user-visible string comes from fixThisPlzSettings.i18n or from the server answer. */
 ( function ( $, apiFetch ) {
 	'use strict';
 
-	var config = window.bugspotSettings || {};
+	var config = window.fixThisPlzSettings || {};
 	var i18n = config.i18n || {};
-	var $form = $( '.bugspot-settings-form' );
+	var $form = $( '.fixthisplz-settings-form' );
 	if ( ! $form.length ) {
 		return;
 	}
 
-	var $test = $form.find( '.bugspot-captcha-test' );
-	var $widget = $( '.bugspot-captcha-widget' ).first();
-	var $result = $form.find( '.bugspot-captcha-result' );
+	var $test = $form.find( '.fixthisplz-captcha-test' );
+	var $widget = $( '.fixthisplz-captcha-widget' ).first();
+	var $result = $form.find( '.fixthisplz-captcha-result' );
 	var mounted = null;
 	var testRun = 0;
 	var TOKEN_WAIT_MS = 120000;
@@ -29,7 +29,7 @@
 	}
 
 	function captchaField( key ) {
-		return $form.find( '[name="' + ( config.option || 'bugspot_settings' ) + '[captcha][' + key + ']"]' ).not( '[type="hidden"]' );
+		return $form.find( '[name="' + ( config.option || 'fixthisplz_settings' ) + '[captcha][' + key + ']"]' ).not( '[type="hidden"]' );
 	}
 
 	function stopWidget() {

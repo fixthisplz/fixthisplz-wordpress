@@ -1,12 +1,12 @@
 <?php
 
-namespace Bug_Spotter\Admin;
+namespace FixThisPlz\Admin;
 
-use Bug_Spotter\List_Editor;
-use Bug_Spotter\Priorities;
-use Bug_Spotter\Settings;
-use Bug_Spotter\Settings_Sanitizer;
-use Bug_Spotter\Statuses;
+use FixThisPlz\List_Editor;
+use FixThisPlz\Priorities;
+use FixThisPlz\Settings;
+use FixThisPlz\Settings_Sanitizer;
+use FixThisPlz\Statuses;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  */
 final class Settings_Page {
 
-	public const GROUP = 'bugspot_settings_group';
+	public const GROUP = 'fixthisplz_settings_group';
 
 	public static function register_hooks(): void {
 		add_action( 'admin_init', array( self::class, 'register_setting' ) );
@@ -57,22 +57,22 @@ final class Settings_Page {
 	/** @return array<string,string> Tab slug => label, in display order. */
 	public static function tabs(): array {
 		return array(
-			'general'  => __( 'General', 'bug-spotter' ),
-			'button'   => __( 'Button', 'bug-spotter' ),
-			'form'     => __( 'Form', 'bug-spotter' ),
-			'tracking' => __( 'Tracking', 'bug-spotter' ),
-			'alerts'   => __( 'Alerts', 'bug-spotter' ),
-			'spam'     => __( 'Spam protection', 'bug-spotter' ),
-			'privacy'  => __( 'Privacy', 'bug-spotter' ),
+			'general'  => __( 'General', 'fixthisplz' ),
+			'button'   => __( 'Button', 'fixthisplz' ),
+			'form'     => __( 'Form', 'fixthisplz' ),
+			'tracking' => __( 'Tracking', 'fixthisplz' ),
+			'alerts'   => __( 'Alerts', 'fixthisplz' ),
+			'spam'     => __( 'Spam protection', 'fixthisplz' ),
+			'privacy'  => __( 'Privacy', 'fixthisplz' ),
 		);
 	}
 
 	/** @return array<string,string> Views of the Tracking tab (one form each: admin-lists.js handles one list per page). */
 	public static function tracking_views(): array {
 		return array(
-			'team'       => __( 'Team and menu', 'bug-spotter' ),
-			'statuses'   => __( 'Statuses', 'bug-spotter' ),
-			'priorities' => __( 'Priorities', 'bug-spotter' ),
+			'team'       => __( 'Team and menu', 'fixthisplz' ),
+			'statuses'   => __( 'Statuses', 'fixthisplz' ),
+			'priorities' => __( 'Priorities', 'fixthisplz' ),
 		);
 	}
 
@@ -124,15 +124,15 @@ final class Settings_Page {
 
 	public static function render(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Sorry, you are not allowed to manage these settings.', 'bug-spotter' ), 403 );
+			wp_die( esc_html__( 'Sorry, you are not allowed to manage these settings.', 'fixthisplz' ), 403 );
 		}
 		list( $tab, $view ) = self::current();
 
-		echo '<div class="wrap bugspot-admin bugspot-settings">';
-		echo '<h1>' . esc_html__( 'Bug Spotter settings', 'bug-spotter' ) . '</h1>';
+		echo '<div class="wrap fixthisplz-admin fixthisplz-settings">';
+		echo '<h1>' . esc_html__( 'FixThisPlz settings', 'fixthisplz' ) . '</h1>';
 		settings_errors();
 
-		echo '<nav class="nav-tab-wrapper" aria-label="' . esc_attr__( 'Settings sections', 'bug-spotter' ) . '">';
+		echo '<nav class="nav-tab-wrapper" aria-label="' . esc_attr__( 'Settings sections', 'fixthisplz' ) . '">';
 		foreach ( self::tabs() as $slug => $label ) {
 			printf(
 				'<a href="%1$s" class="nav-tab%2$s"%3$s>%4$s</a>',
@@ -155,7 +155,7 @@ final class Settings_Page {
 	private static function tracking_nav( string $view ): void {
 		$views = self::tracking_views();
 		$last  = array_key_last( $views );
-		echo '<nav class="bugspot-subnav" aria-label="' . esc_attr__( 'Tracking pages', 'bug-spotter' ) . '"><ul class="subsubsub">';
+		echo '<nav class="fixthisplz-subnav" aria-label="' . esc_attr__( 'Tracking pages', 'fixthisplz' ) . '"><ul class="subsubsub">';
 		foreach ( $views as $slug => $label ) {
 			// The separator sits inside the item, like the WordPress core views (WP_List_Table::views()).
 			printf(
@@ -178,7 +178,7 @@ final class Settings_Page {
 			return;
 		}
 		$view = self::view_of( $tab, $view );
-		echo '<form method="post" action="options.php" class="bugspot-settings-form" data-tab="' . esc_attr( $tab ) . '">';
+		echo '<form method="post" action="options.php" class="fixthisplz-settings-form" data-tab="' . esc_attr( $tab ) . '">';
 		// settings_fields(), except that the page shown after saving is the canonical address of this tab (not an old slug).
 		echo '<input type="hidden" name="option_page" value="' . esc_attr( self::GROUP ) . '"><input type="hidden" name="action" value="update">';
 		wp_nonce_field( self::GROUP . '-options', '_wpnonce', false );
@@ -200,7 +200,7 @@ final class Settings_Page {
 		echo '</form>';
 		if ( 'spam' === $tab ) {
 			// The provider widget adds its own hidden inputs: kept outside the form so they are never posted.
-			echo '<div class="bugspot-captcha-widget"></div>';
+			echo '<div class="fixthisplz-captcha-widget"></div>';
 		}
 	}
 
@@ -229,9 +229,9 @@ final class Settings_Page {
 			return;
 		}
 		echo '<div class="notice notice-warning"><p>';
-		esc_html_e( 'Guests (not logged in) can send bug reports, but no spam check is configured. Expect spam.', 'bug-spotter' );
+		esc_html_e( 'Guests (not logged in) can send bug reports, but no spam check is configured. Expect spam.', 'fixthisplz' );
 		if ( current_user_can( 'manage_options' ) ) {
-			echo ' <a href="' . esc_url( self::tab_url( 'spam' ) ) . '">' . esc_html__( 'Set up spam protection', 'bug-spotter' ) . '</a>';
+			echo ' <a href="' . esc_url( self::tab_url( 'spam' ) ) . '">' . esc_html__( 'Set up spam protection', 'fixthisplz' ) . '</a>';
 		}
 		echo '</p></div>';
 	}

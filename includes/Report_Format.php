@@ -1,6 +1,6 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,7 +21,7 @@ final class Report_Format {
 				return array( 'name' => $user->display_name, 'url' => (string) get_edit_user_link( $uid ), 'email' => '', 'is_user' => true );
 			}
 		}
-		return array( 'name' => __( 'Visitor', 'bug-spotter' ), 'url' => '', 'email' => $email, 'is_user' => false );
+		return array( 'name' => __( 'Visitor', 'fixthisplz' ), 'url' => '', 'email' => $email, 'is_user' => false );
 	}
 
 	/** One-line reporter: WP display name, or "Visitor (e-mail)" when a contact e-mail was given. */
@@ -36,13 +36,13 @@ final class Report_Format {
 	}
 
 	/**
-	 * A status or priority pill tinted from the choice color (see .bugspot-pill in admin.css).
+	 * A status or priority pill tinted from the choice color (see .fixthisplz-pill in admin.css).
 	 *
 	 * @param class-string<Choice_List> $list Statuses::class or Priorities::class.
 	 */
 	public static function pill( string $list, string $key ): string {
 		return sprintf(
-			'<span class="bugspot-pill bugspot-%1$s" style="--bugspot-color:%2$s">%3$s</span>',
+			'<span class="fixthisplz-pill fixthisplz-%1$s" style="--fixthisplz-color:%2$s">%3$s</span>',
 			esc_attr( $list::FIELD ),
 			esc_attr( $list::color( $key ) ),
 			esc_html( $list::label( $key ) )
@@ -52,7 +52,7 @@ final class Report_Format {
 	/** "{singular name} #12" (Settings › Tracking › Team and menu), raw: each output escapes it its own way. */
 	public static function title( int $id ): string {
 		/* translators: 1: singular name of a report (default "Bug"), 2: report number. */
-		return sprintf( __( '%1$s #%2$d', 'bug-spotter' ), Settings::text( 'management.item_label' ), $id );
+		return sprintf( __( '%1$s #%2$d', 'fixthisplz' ), Settings::text( 'management.item_label' ), $id );
 	}
 
 	/** Address of the report's detail screen in the administration, with extra query $args. */
@@ -78,23 +78,23 @@ final class Report_Format {
 
 	/** Author of an activity entry: 0 is the plugin itself ("System"), null an erased author ("Deleted user"). */
 	public static function author( ?int $user_id ): string {
-		return 0 === $user_id ? __( 'System', 'bug-spotter' ) : Team::name( (int) $user_id );
+		return 0 === $user_id ? __( 'System', 'fixthisplz' ) : Team::name( (int) $user_id );
 	}
 
 	/** A history entry, such as "Status: New → Fixed", with the names of the settings (unknown keys shown as is). */
 	public static function change( string $field, ?string $old, ?string $new ): string {
 		$labels = array(
-			'status'      => __( 'Status', 'bug-spotter' ),
-			'priority'    => __( 'Priority', 'bug-spotter' ),
-			'assigned_to' => __( 'Assigned to', 'bug-spotter' ),
+			'status'      => __( 'Status', 'fixthisplz' ),
+			'priority'    => __( 'Priority', 'fixthisplz' ),
+			'assigned_to' => __( 'Assigned to', 'fixthisplz' ),
 		);
 		/* translators: 1: changed field (Status, Priority or Assigned to), 2: old value, 3: new value. */
-		return sprintf( __( '%1$s: %2$s → %3$s', 'bug-spotter' ), $labels[ $field ] ?? $field, self::change_value( $field, $old ), self::change_value( $field, $new ) );
+		return sprintf( __( '%1$s: %2$s → %3$s', 'fixthisplz' ), $labels[ $field ] ?? $field, self::change_value( $field, $old ), self::change_value( $field, $new ) );
 	}
 
 	private static function change_value( string $field, ?string $value ): string {
 		if ( 'assigned_to' === $field ) {
-			return null === $value ? __( 'Unassigned', 'bug-spotter' ) : Team::name( (int) $value );
+			return null === $value ? __( 'Unassigned', 'fixthisplz' ) : Team::name( (int) $value );
 		}
 		return match ( $field ) {
 			'status'   => Statuses::label( (string) $value ),

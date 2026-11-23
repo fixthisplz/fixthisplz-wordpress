@@ -1,9 +1,9 @@
 <?php
 // Minimal assertion helpers for the home-grown test runner.
 
-function bugspot_test( string $name, callable $fn ): void {
-	global $bugspot_tests;
-	$bugspot_tests[] = array( $name, $fn );
+function fixthisplz_test( string $name, callable $fn ): void {
+	global $fixthisplz_tests;
+	$fixthisplz_tests[] = array( $name, $fn );
 }
 
 function assert_same( mixed $expected, mixed $actual, string $msg = '' ): void {
@@ -28,23 +28,23 @@ function assert_wp_error( mixed $v, string $code ): void {
 }
 
 /**
- * Run $fn with the bugspot_settings option isolated: the original value (or its absence)
+ * Run $fn with the fixthisplz_settings option isolated: the original value (or its absence)
  * is restored afterwards, so tests never wipe real settings on the test site.
  */
 function with_settings_option( callable $fn ): void {
 	$missing  = new stdClass();
-	$original = get_option( 'bugspot_settings', $missing );
-	delete_option( 'bugspot_settings' );
+	$original = get_option( 'fixthisplz_settings', $missing );
+	delete_option( 'fixthisplz_settings' );
 	try {
 		$fn();
 	} finally {
 		if ( $missing === $original ) {
-			delete_option( 'bugspot_settings' );
+			delete_option( 'fixthisplz_settings' );
 		} else {
-			update_option( 'bugspot_settings', $original );
+			update_option( 'fixthisplz_settings', $original );
 		}
 	}
 }
 
 // Tests never reach the network: a request that no test stubs with pre_http_request fails here.
-add_filter( 'pre_http_request', static fn( $pre ) => false === $pre ? new WP_Error( 'bugspot_test_offline', 'Network blocked in tests.' ) : $pre, PHP_INT_MAX );
+add_filter( 'pre_http_request', static fn( $pre ) => false === $pre ? new WP_Error( 'fixthisplz_test_offline', 'Network blocked in tests.' ) : $pre, PHP_INT_MAX );

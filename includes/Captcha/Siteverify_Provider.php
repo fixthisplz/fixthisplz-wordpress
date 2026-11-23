@@ -1,6 +1,6 @@
 <?php
 
-namespace Bug_Spotter\Captcha;
+namespace FixThisPlz\Captcha;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -65,10 +65,10 @@ abstract class Siteverify_Provider implements Provider {
 	}
 
 	protected function failed(): \WP_Error {
-		return new \WP_Error( 'bugspot_captcha_failed', __( 'The anti-bot check failed. Please try again.', 'bug-spotter' ), array( 'status' => 403 ) );
+		return new \WP_Error( 'fixthisplz_captcha_failed', __( 'The anti-bot check failed. Please try again.', 'fixthisplz' ), array( 'status' => 403 ) );
 	}
 
 	protected function unavailable(): \WP_Error {
-		return new \WP_Error( 'bugspot_captcha_unavailable', __( 'The anti-bot check is currently unavailable. Please try again later.', 'bug-spotter' ), array( 'status' => 503 ) );
+		return new \WP_Error( 'fixthisplz_captcha_unavailable', __( 'The anti-bot check is currently unavailable. Please try again later.', 'fixthisplz' ), array( 'status' => 503 ) );
 	}
 }

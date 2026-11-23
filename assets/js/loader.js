@@ -1,15 +1,15 @@
-/* Bug Spotter loader: diagnostics buffers + button. Classic script. */
+/* FixThisPlz loader: diagnostics buffers + button. Classic script. */
 (function () {
 	'use strict';
 	var w = window;
-	var cfg = w.bugSpotterConfig;
-	if (!cfg || w.__bugSpotterLoader) { return; }
+	var cfg = w.fixThisPlzConfig;
+	if (!cfg || w.__fixThisPlzLoader) { return; }
 	if (cfg.hideOnMobile && w.matchMedia && w.matchMedia(cfg.mobileQuery).matches) { return; }
-	w.__bugSpotterLoader = true;
+	w.__fixThisPlzLoader = true;
 
 	var LIMIT = 20;
 	var collect = cfg.collect || {};
-	var key = Symbol.for('bugspot.diagnostics');
+	var key = Symbol.for('fixthisplz.diagnostics');
 	var store = (globalThis[key] = globalThis[key] || { console: [], network: [] });
 	var ownUrl = String(cfg.restUrl || '');
 
@@ -91,7 +91,7 @@
 			var nativeFetch = w.fetch;
 			w.fetch = function (input, init) {
 				var promise = nativeFetch.apply(this, arguments);
-				if (init && init.bugspotInternal) { return promise; }
+				if (init && init.fixThisPlzInternal) { return promise; }
 				try {
 					var target = typeof input === 'string' ? input : (input && input.url) || String(input);
 					var method = (init && init.method) || (input && input.method) || 'GET';
@@ -108,12 +108,12 @@
 			var nativeOpen = proto.open;
 			var nativeSend = proto.send;
 			proto.open = function (method, target) {
-				this.__bugspot = { method: method, url: target };
+				this.__fixthisplz = { method: method, url: target };
 				return nativeOpen.apply(this, arguments);
 			};
 			proto.send = function () {
 				var xhr = this;
-				var info = xhr.__bugspot;
+				var info = xhr.__fixthisplz;
 				if (info) {
 					xhr.addEventListener('abort', function () { info.aborted = true; });
 					xhr.addEventListener('loadend', function () {
@@ -129,10 +129,10 @@
 		var b = cfg.button || {};
 		var i18n = cfg.i18n || {};
 		var el = document.createElement('button');
-		el.id = 'bugspot-button';
+		el.id = 'fixthisplz-button';
 		el.type = 'button';
 		el.setAttribute('aria-label', b.label || '');
-		el.setAttribute('data-bugspot-ui', '');
+		el.setAttribute('data-fixthisplz-ui', '');
 		if (b.tooltip) { el.title = b.tooltip; }
 
 		if (b.iconType === 'svg' && b.svgUrl) {
@@ -148,7 +148,7 @@
 		}
 		if (b.shape === 'pill') {
 			var label = document.createElement('span');
-			label.className = 'bugspot-label';
+			label.className = 'fixthisplz-label';
 			label.textContent = b.label || '';
 			el.appendChild(label);
 		}
@@ -161,7 +161,7 @@
 			import(cfg.moduleUrl).then(function (m) {
 				return m.open(cfg);
 			}).catch(function () {
-				if (!warned) { warned = true; console.warn('[bug-spotter] ' + (i18n.errorLoad || 'Reporter module failed to load.')); }
+				if (!warned) { warned = true; console.warn('[fixthisplz] ' + (i18n.errorLoad || 'Reporter module failed to load.')); }
 			}).then(function () {
 				el.disabled = false;
 				el.removeAttribute('aria-busy');

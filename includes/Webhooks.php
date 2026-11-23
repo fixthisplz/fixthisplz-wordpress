@@ -1,6 +1,6 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,19 +20,19 @@ final class Webhooks {
 	/** @return array<string,string> Format => label. */
 	public static function format_labels(): array {
 		return array(
-			'generic' => __( 'Generic JSON (signed)', 'bug-spotter' ),
-			'slack'   => __( 'Slack', 'bug-spotter' ),
-			'discord' => __( 'Discord', 'bug-spotter' ),
-			'teams'   => __( 'Microsoft Teams', 'bug-spotter' ),
+			'generic' => __( 'Generic JSON (signed)', 'fixthisplz' ),
+			'slack'   => __( 'Slack', 'fixthisplz' ),
+			'discord' => __( 'Discord', 'fixthisplz' ),
+			'teams'   => __( 'Microsoft Teams', 'fixthisplz' ),
 		);
 	}
 
 	/** @return array<string,string> Event => label. */
 	public static function event_labels(): array {
 		return array(
-			'created'        => __( 'New report', 'bug-spotter' ),
-			'status_changed' => __( 'Status changed', 'bug-spotter' ),
-			'assigned'       => __( 'Report assigned', 'bug-spotter' ),
+			'created'        => __( 'New report', 'fixthisplz' ),
+			'status_changed' => __( 'Status changed', 'fixthisplz' ),
+			'assigned'       => __( 'Report assigned', 'fixthisplz' ),
 		);
 	}
 
@@ -89,10 +89,10 @@ final class Webhooks {
 
 	/**
 	 * Whether development hosts are accepted: by default only when the WordPress environment type is "local" or
-	 * "development"; the `bugspot_allow_dev_webhooks` filter decides otherwise.
+	 * "development"; the `fixthisplz_allow_dev_webhooks` filter decides otherwise.
 	 */
 	public static function dev_hosts_allowed(): bool {
-		return (bool) apply_filters( 'bugspot_allow_dev_webhooks', in_array( wp_get_environment_type(), array( 'local', 'development' ), true ) );
+		return (bool) apply_filters( 'fixthisplz_allow_dev_webhooks', in_array( wp_get_environment_type(), array( 'local', 'development' ), true ) );
 	}
 
 	/** A development host (localhost, 127.0.0.1, *.localhost, *.test) while they are allowed: http and no public-address check. */
@@ -120,14 +120,14 @@ final class Webhooks {
 		}
 		$message = self::dev_hosts_allowed()
 			/* translators: %s: the address typed for a webhook. The notice is printed as HTML: the address is escaped. */
-			? __( 'The webhook %s was not saved: its address must start with https:// and point to a public server (http://localhost and *.test addresses are accepted for development).', 'bug-spotter' )
+			? __( 'The webhook %s was not saved: its address must start with https:// and point to a public server (http://localhost and *.test addresses are accepted for development).', 'fixthisplz' )
 			/* translators: %s: the address typed for a webhook. The notice is printed as HTML: the address is escaped. */
-			: __( 'The webhook %s was not saved: its address must start with https:// and point to a public server.', 'bug-spotter' );
+			: __( 'The webhook %s was not saved: its address must start with https:// and point to a public server.', 'fixthisplz' );
 		$message = sprintf( $message, esc_html( $url ) );
 		// WordPress sanitizes a new option twice (update_option() then add_option()): one notice is enough.
 		if ( in_array( $message, array_column( get_settings_errors( Settings::OPTION ), 'message' ), true ) ) {
 			return;
 		}
-		add_settings_error( Settings::OPTION, 'bugspot_webhook_url', $message );
+		add_settings_error( Settings::OPTION, 'fixthisplz_webhook_url', $message );
 	}
 }

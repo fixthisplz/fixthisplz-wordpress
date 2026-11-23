@@ -20,7 +20,7 @@ function loadScript(url) {
 			const script = document.createElement('script');
 			script.src = url;
 			script.async = true;
-			script.setAttribute('data-bugspot-ui', '');
+			script.setAttribute('data-fixthisplz-ui', '');
 			script.onload = () => resolve();
 			script.onerror = () => reject(new CaptchaUnavailableError());
 			document.head.appendChild(script);

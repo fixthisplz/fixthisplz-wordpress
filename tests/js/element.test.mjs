@@ -104,7 +104,7 @@ test('describeElement returns tag, role, name, visible text and integer rect', (
 
 test('describeElement masks sensitive subtree', () => {
 	const inner = el('span', {}, ['IBAN FR76 3000']);
-	el('div', { 'data-bugspot-sensitive': '' }, [inner]);
+	el('div', { 'data-fixthisplz-sensitive': '' }, [inner]);
 	assert.equal(describeElement(inner, {}).text, '[masked]');
 
 	const viaSetting = el('strong', {}, ['1 234,56 €']);
@@ -175,7 +175,7 @@ test('describeElement names links and buttons from their content', () => {
 	d = describeElement(el('a', { href: '/x' }, ['Pay ', el('span', { class: 'balance' }, ['999 €'])]), { sensitiveSelectors: ['.balance'] });
 	assert.ok(!d.name.includes('999'), d.name);
 	const hidden = el('a', { href: '/x' }, ['Account 1234']);
-	el('div', { 'data-bugspot-sensitive': '' }, [hidden]);
+	el('div', { 'data-fixthisplz-sensitive': '' }, [hidden]);
 	d = describeElement(hidden, {});
 	assert.equal(d.name, '[masked]');
 	assert.equal(d.text, '[masked]');

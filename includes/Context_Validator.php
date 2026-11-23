@@ -1,6 +1,6 @@
 <?php
 
-namespace Bug_Spotter;
+namespace FixThisPlz;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -19,12 +19,12 @@ final class Context_Validator {
 			$raw = json_decode( $raw, true );
 		}
 		if ( ! is_array( $raw ) ) {
-			return self::invalid( __( 'The report context is missing or malformed.', 'bug-spotter' ) );
+			return self::invalid( __( 'The report context is missing or malformed.', 'fixthisplz' ) );
 		}
 
 		$url = Redactor::url( self::scalar( $raw['url'] ?? null ), 2048 );
 		if ( 1 !== preg_match( '#^https?://#', $url ) ) {
-			return self::invalid( __( 'The report context needs a valid http(s) URL.', 'bug-spotter' ) );
+			return self::invalid( __( 'The report context needs a valid http(s) URL.', 'fixthisplz' ) );
 		}
 
 		$context = array(
@@ -57,7 +57,7 @@ final class Context_Validator {
 	}
 
 	private static function invalid( string $message ): \WP_Error {
-		return new \WP_Error( 'bugspot_invalid_context', $message, array( 'status' => 422 ) );
+		return new \WP_Error( 'fixthisplz_invalid_context', $message, array( 'status' => 422 ) );
 	}
 
 	/** Scalars are cast to string; null, bools and arrays become ''. */

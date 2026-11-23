@@ -1,9 +1,9 @@
 <?php
 
-use Bug_Spotter\Admin\Settings_Page;
-use Bug_Spotter\Installer;
-use Bug_Spotter\Settings;
-use Bug_Spotter\Settings_Sanitizer;
+use FixThisPlz\Admin\Settings_Page;
+use FixThisPlz\Installer;
+use FixThisPlz\Settings;
+use FixThisPlz\Settings_Sanitizer;
 
 /**
  * What a browser would post for the first <form> of $html: every named input/select/textarea, in document
@@ -71,7 +71,7 @@ function settings_page_tab_html( string $tab, string $view = '' ): string {
 
 /** Runs $fn with the setting registered (sanitize callback active), the option isolated and an admin user. */
 function settings_page_test( string $name, callable $fn ): void {
-	bugspot_test(
+	fixthisplz_test(
 		$name,
 		static function () use ( $fn ) {
 			$user   = get_current_user_id();
@@ -181,7 +181,7 @@ settings_page_test(
 		rest_get_server();
 		$editor = wp_insert_user(
 			array(
-				'user_login' => 'bugspot_' . wp_generate_password( 8, false ),
+				'user_login' => 'fixthisplz_' . wp_generate_password( 8, false ),
 				'user_pass'  => wp_generate_password(),
 				'user_email' => wp_generate_password( 8, false ) . '@example.org',
 				'role'       => 'editor',
@@ -191,7 +191,7 @@ settings_page_test(
 		$admin = get_current_user_id();
 
 		$request = static function ( string $route, array $body ): WP_REST_Response {
-			$req = new WP_REST_Request( 'POST', '/bug-spotter/v1/' . $route );
+			$req = new WP_REST_Request( 'POST', '/fixthisplz/v1/' . $route );
 			$req->set_body_params( $body );
 			return rest_do_request( $req );
 		};
@@ -210,10 +210,10 @@ settings_page_test(
 		$preview = $request( 'button-preview', array( 'button' => array( 'shape' => 'pill', 'color_bg' => 'red;}body{x:y' ) ) );
 		assert_same( 200, $preview->get_status(), 'preview for admin' );
 		$css = $preview->get_data()['css'];
-		assert_true( str_contains( $css, '#bugspot-button{' ), 'preview uses the front-end CSS' );
+		assert_true( str_contains( $css, '#fixthisplz-button{' ), 'preview uses the front-end CSS' );
 		assert_true( str_contains( $css, 'min-width:52px' ), 'pill shape applied' );
 		assert_true( ! str_contains( $css, 'body{' ), 'no CSS injection' );
-		$expected = Bug_Spotter\Frontend\Button_Style::css( Settings_Sanitizer::sanitize( array( 'button' => array( 'shape' => 'pill', 'color_bg' => 'red;}body{x:y' ) ) )['button'] );
+		$expected = FixThisPlz\Frontend\Button_Style::css( Settings_Sanitizer::sanitize( array( 'button' => array( 'shape' => 'pill', 'color_bg' => 'red;}body{x:y' ) ) )['button'] );
 		assert_same( $expected, $css, 'preview CSS is exactly the front-end CSS' );
 	}
 );
@@ -226,7 +226,7 @@ settings_page_test(
 		assert_true( ! str_contains( $html, 'very-secret-value' ), 'secret leaked into the page' );
 		assert_true( str_contains( $html, 'pub-key' ), 'site key shown' );
 		$form_end = strpos( $html, '</form>' );
-		$widget   = strpos( $html, 'bugspot-captcha-widget' );
+		$widget   = strpos( $html, 'fixthisplz-captcha-widget' );
 		assert_true( false !== $widget && $widget > $form_end, 'provider widget container is outside the form' );
 	}
 );
@@ -243,14 +243,14 @@ settings_page_test(
 			};
 			update_option( Settings::OPTION, array( 'enabled' => true, 'visibility' => array( 'guests' => true ), 'captcha' => array( 'provider' => 'none' ) ) );
 
-			$_GET['page'] = 'bug-spotter-settings';
+			$_GET['page'] = 'fixthisplz-settings';
 			assert_true( str_contains( $notice(), 'notice-warning' ), 'settings screen' );
-			$_GET['page'] = 'bug-spotter';
+			$_GET['page'] = 'fixthisplz';
 			assert_true( str_contains( $notice(), 'notice-warning' ), 'bugs screen' );
 			$_GET['page'] = 'some-other-plugin';
 			assert_same( '', $notice(), 'other screens untouched' );
 
-			$_GET['page'] = 'bug-spotter';
+			$_GET['page'] = 'fixthisplz';
 			update_option( Settings::OPTION, array( 'captcha' => array( 'provider' => 'turnstile', 'site_key' => 'a', 'secret_key' => 'b' ) ) );
 			assert_same( '', $notice(), 'anti-bot configured' );
 			update_option( Settings::OPTION, array( 'enabled' => true, 'visibility' => array( 'guests' => false ), 'captcha' => array( 'provider' => 'none' ) ) );
@@ -281,7 +281,7 @@ settings_page_test(
 		add_filter( 'pre_http_request', $fake, 10, 3 );
 		try {
 			$test = static function ( array $body ): WP_REST_Response {
-				$req = new WP_REST_Request( 'POST', '/bug-spotter/v1/captcha-test' );
+				$req = new WP_REST_Request( 'POST', '/fixthisplz/v1/captcha-test' );
 				$req->set_body_params( $body );
 				return rest_do_request( $req );
 			};
@@ -308,14 +308,14 @@ settings_page_test(
 	'settings-page: form_tab_offers_the_capture_method_and_masking',
 	function () {
 		$html = settings_page_tab_html( 'form' );
-		assert_true( 1 === preg_match( '/<input type="radio"[^>]*name="bugspot_settings\[dialog\]\[capture_method\]"[^>]*value="tab"[^>]* checked/', $html ), 'tab radio checked by default' );
-		assert_true( 1 === preg_match( '/<input type="radio"[^>]*name="bugspot_settings\[dialog\]\[capture_method\]"[^>]*value="dom"(?![^>]* checked)/', $html ), 'dom radio present, unchecked' );
+		assert_true( 1 === preg_match( '/<input type="radio"[^>]*name="fixthisplz_settings\[dialog\]\[capture_method\]"[^>]*value="tab"[^>]* checked/', $html ), 'tab radio checked by default' );
+		assert_true( 1 === preg_match( '/<input type="radio"[^>]*name="fixthisplz_settings\[dialog\]\[capture_method\]"[^>]*value="dom"(?![^>]* checked)/', $html ), 'dom radio present, unchecked' );
 		assert_true( str_contains( $html, 'Real capture of the tab (recommended)' ) && str_contains( $html, 'Page reconstruction — no permission prompt' ), 'both choices labelled' );
 		assert_true( str_contains( $html, 'On phones and in browsers without screen sharing, the reconstruction is always used.' ), 'permanent mobile notice' );
 		assert_true( str_contains( $html, 'Hide typed fields and sensitive areas in the screenshot' ), 'mask checkbox' );
 		assert_true( str_contains( $html, 'masking works only when the visitor shares this tab' ), 'mask help text' );
-		assert_true( str_contains( $html, 'data-bugspot-show-if="bugspot_settings[dialog][allow_screenshot]"' ), 'shown only when screenshots are allowed' );
-		assert_true( ! str_contains( $html, 'mask_capture][]' ) && 1 === preg_match( '/type="hidden" name="bugspot_settings\[dialog\]\[mask_capture\]" value="0"/', $html ), 'hidden 0 marker' );
+		assert_true( str_contains( $html, 'data-fixthisplz-show-if="fixthisplz_settings[dialog][allow_screenshot]"' ), 'shown only when screenshots are allowed' );
+		assert_true( ! str_contains( $html, 'mask_capture][]' ) && 1 === preg_match( '/type="hidden" name="fixthisplz_settings\[dialog\]\[mask_capture\]" value="0"/', $html ), 'hidden 0 marker' );
 
 		update_option( Settings::OPTION, array( 'dialog' => array( 'capture_method' => 'dom', 'mask_capture' => true ) ) );
 		$post = settings_page_form_post( settings_page_tab_html( 'form' ) );
@@ -331,8 +331,8 @@ settings_page_test(
 		foreach ( array( 'position', 'position_mobile' ) as $key ) {
 			foreach ( array( 'x', 'y' ) as $axis ) {
 				foreach ( array( $axis, $axis . '_unit', 'edge_' . $axis ) as $field ) {
-					$name = 'bugspot_settings[button][' . $key . '][' . $field . ']';
-					$id   = Bug_Spotter\Admin\Settings_Fields::id( array( 'button', $key, $field ) );
+					$name = 'fixthisplz_settings[button][' . $key . '][' . $field . ']';
+					$id   = FixThisPlz\Admin\Settings_Fields::id( array( 'button', $key, $field ) );
 					assert_true( 1 === preg_match( '/<(input|select)[^>]*id="' . preg_quote( $id, '/' ) . '"[^>]*name="' . preg_quote( $name, '/' ) . '"/', $html ), "$name control with id $id" );
 					assert_true( str_contains( $html, '<label class="screen-reader-text" for="' . $id . '">' ), "$name has a label for $id" );
 				}
@@ -367,7 +367,7 @@ settings_page_test(
 				array( '', '', 'general', '' ),
 			);
 			foreach ( $cases as list( $tab, $view, $want_tab, $want_view ) ) {
-				$_GET = array( 'page' => 'bug-spotter-settings', 'tab' => $tab, 'view' => $view );
+				$_GET = array( 'page' => 'fixthisplz-settings', 'tab' => $tab, 'view' => $view );
 				assert_same( $want_tab, Settings_Page::current_tab(), "tab=$tab view=$view: tab" );
 				assert_same( $want_view, Settings_Page::current_view(), "tab=$tab view=$view: view" );
 			}
@@ -412,7 +412,7 @@ settings_page_test(
 		// show_if only links fields of the same form.
 		foreach ( $forms as list( $tab, $view ) ) {
 			$html = settings_page_tab_html( $tab, $view );
-			preg_match_all( '/data-bugspot-show-if="([^"]+)"/', $html, $m );
+			preg_match_all( '/data-fixthisplz-show-if="([^"]+)"/', $html, $m );
 			foreach ( array_unique( $m[1] ) as $name ) {
 				assert_true( str_contains( $html, 'name="' . html_entity_decode( $name ) . '"' ), "$tab $view: show_if target $name in the same form" );
 			}
@@ -465,18 +465,18 @@ settings_page_test(
 				preg_match( '/name="_wp_http_referer" value="([^"]*)"/', $html, $m );
 				return html_entity_decode( $m[1] ?? '' );
 			};
-			assert_true( str_ends_with( $referer( settings_page_tab_html( 'spam' ) ), 'admin.php?page=bug-spotter-settings&tab=spam' ), 'spam: back to the spam tab' );
+			assert_true( str_ends_with( $referer( settings_page_tab_html( 'spam' ) ), 'admin.php?page=fixthisplz-settings&tab=spam' ), 'spam: back to the spam tab' );
 			assert_true( str_ends_with( $referer( settings_page_tab_html( 'tracking', 'priorities' ) ), '&tab=tracking&view=priorities' ), 'tracking view kept after saving' );
 			assert_true( str_ends_with( $referer( settings_page_tab_html( 'tracking' ) ), '&tab=tracking&view=team' ), 'tracking defaults to its first view' );
 			assert_same( 1, substr_count( settings_page_tab_html( 'general' ), 'name="_wp_http_referer"' ), 'one referer field' );
 
 			update_option( Settings::OPTION, array( 'enabled' => true, 'visibility' => array( 'guests' => true ), 'captcha' => array( 'provider' => 'none' ) ) );
-			$_GET = array( 'page' => 'bug-spotter' );
+			$_GET = array( 'page' => 'fixthisplz' );
 			ob_start();
 			Settings_Page::guest_warning();
 			assert_true( str_contains( (string) ob_get_clean(), 'tab=spam' ), 'the guest warning links to the spam tab' );
 
-			$_GET = array( 'page' => 'bug-spotter-settings', 'tab' => 'tracking', 'view' => 'statuses' );
+			$_GET = array( 'page' => 'fixthisplz-settings', 'tab' => 'tracking', 'view' => 'statuses' );
 			ob_start();
 			Settings_Page::render();
 			$page = (string) ob_get_clean();
@@ -484,7 +484,7 @@ settings_page_test(
 			assert_true( 1 === preg_match( '#<ul class="subsubsub">.*view=statuses" class="current" aria-current="page">Statuses</a>#s', $page ), 'current view marked' );
 			assert_same( 2, substr_count( $page, 'aria-current="page"' ), 'one current tab, one current view' );
 			assert_true( 1 === preg_match( '#<ul class="subsubsub"><li><a [^>]+>[^<]+</a> \|</li><li><a [^>]+>[^<]+</a> \|</li><li><a [^>]+>[^<]+</a></li></ul>#', $page ), 'separators inside the items, none after the last' );
-			assert_true( ! str_contains( $page, 'bugspot-captcha-widget' ), 'captcha widget only on the spam tab' );
+			assert_true( ! str_contains( $page, 'fixthisplz-captcha-widget' ), 'captcha widget only on the spam tab' );
 		} finally {
 			$_GET = $saved_get;
 		}
@@ -495,24 +495,24 @@ settings_page_test(
 	'settings-page: scripts_follow_the_tab_and_view',
 	function () {
 		$saved_get = $_GET;
-		$handles   = array( 'bug-spotter-settings', 'bug-spotter-lists', 'bug-spotter-webhooks', 'bug-spotter-captcha-test' );
+		$handles   = array( 'fixthisplz-settings', 'fixthisplz-lists', 'fixthisplz-webhooks', 'fixthisplz-captcha-test' );
 		$enqueued  = static function ( array $get ) use ( $handles ): array {
-			$_GET = $get + array( 'page' => 'bug-spotter-settings' );
+			$_GET = $get + array( 'page' => 'fixthisplz-settings' );
 			foreach ( $handles as $handle ) {
 				wp_dequeue_script( $handle );
 			}
-			Bug_Spotter\Admin\Settings_Assets::enqueue();
+			FixThisPlz\Admin\Settings_Assets::enqueue();
 			return array_values( array_filter( $handles, static fn( $h ) => wp_script_is( $h, 'enqueued' ) ) );
 		};
 		try {
-			assert_same( array( 'bug-spotter-settings' ), $enqueued( array( 'tab' => 'general' ) ) );
-			assert_same( array( 'bug-spotter-settings' ), $enqueued( array( 'tab' => 'tracking' ) ), 'team view: no list script' );
-			assert_same( array( 'bug-spotter-settings', 'bug-spotter-lists' ), $enqueued( array( 'tab' => 'tracking', 'view' => 'statuses' ) ) );
-			assert_same( array( 'bug-spotter-settings', 'bug-spotter-lists' ), $enqueued( array( 'tab' => 'priorities' ) ), 'old slug' );
-			assert_same( array( 'bug-spotter-settings', 'bug-spotter-webhooks' ), $enqueued( array( 'tab' => 'alerts' ) ) );
-			assert_same( array( 'bug-spotter-settings', 'bug-spotter-webhooks' ), $enqueued( array( 'tab' => 'integrations' ) ), 'old slug' );
-			assert_same( array( 'bug-spotter-settings', 'bug-spotter-captcha-test' ), $enqueued( array( 'tab' => 'spam' ) ) );
-			assert_same( array( 'bug-spotter-settings', 'bug-spotter-captcha-test' ), $enqueued( array( 'tab' => 'captcha' ) ), 'old slug' );
+			assert_same( array( 'fixthisplz-settings' ), $enqueued( array( 'tab' => 'general' ) ) );
+			assert_same( array( 'fixthisplz-settings' ), $enqueued( array( 'tab' => 'tracking' ) ), 'team view: no list script' );
+			assert_same( array( 'fixthisplz-settings', 'fixthisplz-lists' ), $enqueued( array( 'tab' => 'tracking', 'view' => 'statuses' ) ) );
+			assert_same( array( 'fixthisplz-settings', 'fixthisplz-lists' ), $enqueued( array( 'tab' => 'priorities' ) ), 'old slug' );
+			assert_same( array( 'fixthisplz-settings', 'fixthisplz-webhooks' ), $enqueued( array( 'tab' => 'alerts' ) ) );
+			assert_same( array( 'fixthisplz-settings', 'fixthisplz-webhooks' ), $enqueued( array( 'tab' => 'integrations' ) ), 'old slug' );
+			assert_same( array( 'fixthisplz-settings', 'fixthisplz-captcha-test' ), $enqueued( array( 'tab' => 'spam' ) ) );
+			assert_same( array( 'fixthisplz-settings', 'fixthisplz-captcha-test' ), $enqueued( array( 'tab' => 'captcha' ) ), 'old slug' );
 		} finally {
 			foreach ( $handles as $handle ) {
 				wp_dequeue_script( $handle );
@@ -525,8 +525,8 @@ settings_page_test(
 settings_page_test(
 	'settings-page: advanced_blocks_fold_unless_a_value_differs_from_its_default',
 	function () {
-		$open = static fn( string $html ): int => substr_count( $html, '<details class="bugspot-advanced" open><summary><h2 class="bugspot-summary-title">Advanced settings</h2></summary>' );
-		$shut = static fn( string $html ): int => substr_count( $html, '<details class="bugspot-advanced"><summary><h2 class="bugspot-summary-title">Advanced settings</h2></summary>' );
+		$open = static fn( string $html ): int => substr_count( $html, '<details class="fixthisplz-advanced" open><summary><h2 class="fixthisplz-summary-title">Advanced settings</h2></summary>' );
+		$shut = static fn( string $html ): int => substr_count( $html, '<details class="fixthisplz-advanced"><summary><h2 class="fixthisplz-summary-title">Advanced settings</h2></summary>' );
 
 		// The sanitizer merges a save onto the saved settings: start each case from the defaults.
 		delete_option( Settings::OPTION );
@@ -535,13 +535,13 @@ settings_page_test(
 			assert_same( array( 0, 1 ), array( $open( $html ), $shut( $html ) ), "$tab: folded with the defaults" );
 		}
 		$html = settings_page_tab_html( 'button' );
-		$fold = substr( $html, strpos( $html, '<summary><h2 class="bugspot-summary-title">Advanced settings</h2></summary>' ) );
+		$fold = substr( $html, strpos( $html, '<summary><h2 class="fixthisplz-summary-title">Advanced settings</h2></summary>' ) );
 		foreach ( array( '[button][shadow]', '[button][shadow_custom][x]', '[button][radius_mode]', '[button][radius_px]', '[button][z_index]' ) as $field ) {
 			assert_true( str_contains( $fold, 'name="' . Settings::OPTION . $field . '"' ), "button: $field folded" );
 		}
-		assert_true( 1 === preg_match( '#<summary><h2 class="bugspot-summary-title">Advanced settings</h2></summary><p class="description">[^<]+</p><table class="form-table"#', $html ), 'sentence then form-table' );
+		assert_true( 1 === preg_match( '#<summary><h2 class="fixthisplz-summary-title">Advanced settings</h2></summary><p class="description">[^<]+</p><table class="form-table"#', $html ), 'sentence then form-table' );
 		$html = settings_page_tab_html( 'spam' );
-		$fold = substr( $html, strpos( $html, '<summary><h2 class="bugspot-summary-title">Advanced settings</h2></summary>' ) );
+		$fold = substr( $html, strpos( $html, '<summary><h2 class="fixthisplz-summary-title">Advanced settings</h2></summary>' ) );
 		assert_true( str_contains( $fold, 'name="' . Settings::OPTION . '[protection][proxy_header]"' ), 'spam: proxy header folded' );
 		assert_true( str_contains( $fold, '>Visitors’ IP address<' ) && str_contains( $fold, '>CF-Connecting-IP header (Cloudflare)<' ), 'spam: new labels' );
 
@@ -572,7 +572,7 @@ settings_page_test(
 	'settings-page: email_and_mobile_fields_follow_their_switch',
 	function () {
 		$rows = static function ( string $html, string $target, string $value ): array {
-			$attrs = 'data-bugspot-show-if="' . esc_attr( Settings::OPTION . $target ) . '" data-bugspot-op="=" data-bugspot-value="' . $value . '"';
+			$attrs = 'data-fixthisplz-show-if="' . esc_attr( Settings::OPTION . $target ) . '" data-fixthisplz-op="=" data-fixthisplz-value="' . $value . '"';
 			preg_match_all( '#<tr' . preg_quote( ' ' . $attrs, '#' ) . '><th scope="row">(?:<label[^>]*>)?([^<]+)<#', $html, $m );
 			return $m[1];
 		};

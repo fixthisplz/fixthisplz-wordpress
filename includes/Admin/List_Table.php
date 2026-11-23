@@ -1,12 +1,12 @@
 <?php
 
-namespace Bug_Spotter\Admin;
+namespace FixThisPlz\Admin;
 
-use Bug_Spotter\Priorities;
-use Bug_Spotter\Report_Format;
-use Bug_Spotter\Reports_Repository;
-use Bug_Spotter\Statuses;
-use Bug_Spotter\Team;
+use FixThisPlz\Priorities;
+use FixThisPlz\Report_Format;
+use FixThisPlz\Reports_Repository;
+use FixThisPlz\Statuses;
+use FixThisPlz\Team;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -35,14 +35,14 @@ final class List_Table extends \WP_List_Table {
 	public static function columns(): array {
 		return array(
 			'cb'          => '<input type="checkbox" />',
-			'id'          => __( 'No.', 'bug-spotter' ),
-			'description' => __( 'Description', 'bug-spotter' ),
-			'page'        => __( 'Page', 'bug-spotter' ),
-			'reporter'    => __( 'Reporter', 'bug-spotter' ),
-			'priority'    => __( 'Priority', 'bug-spotter' ),
-			'status'      => __( 'Status', 'bug-spotter' ),
-			'assigned'    => __( 'Assigned to', 'bug-spotter' ),
-			'created_at'  => __( 'Date', 'bug-spotter' ),
+			'id'          => __( 'No.', 'fixthisplz' ),
+			'description' => __( 'Description', 'fixthisplz' ),
+			'page'        => __( 'Page', 'fixthisplz' ),
+			'reporter'    => __( 'Reporter', 'fixthisplz' ),
+			'priority'    => __( 'Priority', 'fixthisplz' ),
+			'status'      => __( 'Status', 'fixthisplz' ),
+			'assigned'    => __( 'Assigned to', 'fixthisplz' ),
+			'created_at'  => __( 'Date', 'fixthisplz' ),
 		);
 	}
 
@@ -65,18 +65,18 @@ final class List_Table extends \WP_List_Table {
 		$actions = array();
 		foreach ( Statuses::all() as $key => $label ) {
 			/* translators: %s: status label. */
-			$actions[ 'status_' . $key ] = sprintf( __( 'Set status: %s', 'bug-spotter' ), $label );
+			$actions[ 'status_' . $key ] = sprintf( __( 'Set status: %s', 'fixthisplz' ), $label );
 		}
 		foreach ( Priorities::all() as $key => $label ) {
 			/* translators: %s: priority label. */
-			$actions[ 'priority_' . $key ] = sprintf( __( 'Set priority: %s', 'bug-spotter' ), $label );
+			$actions[ 'priority_' . $key ] = sprintf( __( 'Set priority: %s', 'fixthisplz' ), $label );
 		}
 		foreach ( Team::members() as $id => $name ) {
 			/* translators: %s: name of a person who manages bugs. */
-			$actions[ 'assign_' . $id ] = sprintf( __( 'Assign to: %s', 'bug-spotter' ), $name );
+			$actions[ 'assign_' . $id ] = sprintf( __( 'Assign to: %s', 'fixthisplz' ), $name );
 		}
-		$actions['unassign'] = __( 'Unassign', 'bug-spotter' );
-		$actions['delete']   = __( 'Delete', 'bug-spotter' );
+		$actions['unassign'] = __( 'Unassign', 'fixthisplz' );
+		$actions['delete']   = __( 'Delete', 'fixthisplz' );
 		return $actions;
 	}
 
@@ -124,7 +124,7 @@ final class List_Table extends \WP_List_Table {
 			);
 		};
 
-		$views = array( 'all' => $make( '', __( 'All', 'bug-spotter' ), array_sum( $counts ) ) );
+		$views = array( 'all' => $make( '', __( 'All', 'fixthisplz' ), array_sum( $counts ) ) );
 		foreach ( Statuses::all() as $key => $label ) {
 			$views[ $key ] = $make( $key, $label, $counts[ $key ] ?? 0 );
 		}
@@ -132,7 +132,7 @@ final class List_Table extends \WP_List_Table {
 	}
 
 	public function no_items(): void {
-		esc_html_e( 'No reports found.', 'bug-spotter' );
+		esc_html_e( 'No reports found.', 'fixthisplz' );
 	}
 
 	protected function column_cb( $item ): string {
@@ -149,19 +149,19 @@ final class List_Table extends \WP_List_Table {
 		$excerpt = Report_Format::excerpt( $text, self::EXCERPT_LENGTH );
 		$view    = Report_Format::link( $id );
 		$delete  = wp_nonce_url(
-			Report_Format::list_link( array_merge( Report_Query_Args::filter_query_args( $this->filters ), array( 'bugspot_action' => 'delete', 'bug' => $id ) ) ),
-			'bugspot_delete_' . $id
+			Report_Format::list_link( array_merge( Report_Query_Args::filter_query_args( $this->filters ), array( 'fixthisplz_action' => 'delete', 'bug' => $id ) ) ),
+			'fixthisplz_delete_' . $id
 		);
 
 		$title = sprintf( '<strong><a class="row-title" href="%s">%s</a></strong>', esc_url( $view ), esc_html( $excerpt ) );
 		$rows  = $this->row_actions(
 			array(
-				'view'   => sprintf( '<a href="%s">%s</a>', esc_url( $view ), esc_html__( 'View', 'bug-spotter' ) ),
+				'view'   => sprintf( '<a href="%s">%s</a>', esc_url( $view ), esc_html__( 'View', 'fixthisplz' ) ),
 				'delete' => sprintf(
 					'<a href="%s" class="submitdelete" onclick="return confirm(\'%s\');">%s</a>',
 					esc_url( $delete ),
-					esc_js( __( 'Delete this report permanently?', 'bug-spotter' ) ),
-					esc_html__( 'Delete', 'bug-spotter' )
+					esc_js( __( 'Delete this report permanently?', 'fixthisplz' ) ),
+					esc_html__( 'Delete', 'fixthisplz' )
 				),
 			)
 		);
@@ -186,7 +186,7 @@ final class List_Table extends \WP_List_Table {
 		}
 		$html = esc_html( $who['name'] );
 		if ( '' !== $who['email'] ) {
-			$html .= '<br><span class="bugspot-muted">' . esc_html( $who['email'] ) . '</span>';
+			$html .= '<br><span class="fixthisplz-muted">' . esc_html( $who['email'] ) . '</span>';
 		}
 		return $html;
 	}
@@ -200,7 +200,7 @@ final class List_Table extends \WP_List_Table {
 	}
 
 	protected function column_assigned( $item ): string {
-		return null !== $item['assigned_to'] ? esc_html( Team::name( $item['assigned_to'] ) ) : '<span class="bugspot-muted" aria-hidden="true">—</span><span class="screen-reader-text">' . esc_html__( 'Unassigned', 'bug-spotter' ) . '</span>';
+		return null !== $item['assigned_to'] ? esc_html( Team::name( $item['assigned_to'] ) ) : '<span class="fixthisplz-muted" aria-hidden="true">—</span><span class="screen-reader-text">' . esc_html__( 'Unassigned', 'fixthisplz' ) . '</span>';
 	}
 
 	protected function column_created_at( $item ): string {

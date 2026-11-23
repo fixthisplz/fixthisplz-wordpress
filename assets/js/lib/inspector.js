@@ -44,17 +44,17 @@ export function inspect({ labels = {}, sensitiveSelectors = [] } = {}) {
 	let frame = 0;
 	const history = [];
 
-	const box = make('div', { class: 'bugspot-highlight', 'aria-hidden': 'true' });
-	const status = make('p', { class: 'bugspot-inspect-status', role: 'status', 'aria-live': 'polite', text: t('inspectHint') });
-	const selectButton = make('button', { type: 'button', class: 'bugspot-btn bugspot-btn-primary', text: t('select') });
-	const pageButton = make('button', { type: 'button', class: 'bugspot-btn', text: t('wholePage') });
-	const cancelButton = make('button', { type: 'button', class: 'bugspot-btn', text: t('cancel') });
+	const box = make('div', { class: 'fixthisplz-highlight', 'aria-hidden': 'true' });
+	const status = make('p', { class: 'fixthisplz-inspect-status', role: 'status', 'aria-live': 'polite', text: t('inspectHint') });
+	const selectButton = make('button', { type: 'button', class: 'fixthisplz-btn fixthisplz-btn-primary', text: t('select') });
+	const pageButton = make('button', { type: 'button', class: 'fixthisplz-btn', text: t('wholePage') });
+	const cancelButton = make('button', { type: 'button', class: 'fixthisplz-btn', text: t('cancel') });
 	selectButton.disabled = true;
-	const bar = make('div', { class: 'bugspot-inspect-bar', role: 'group', 'aria-label': t('inspectHint'), tabindex: '-1' }, [
+	const bar = make('div', { class: 'fixthisplz-inspect-bar', role: 'group', 'aria-label': t('inspectHint'), tabindex: '-1' }, [
 		status,
-		make('div', { class: 'bugspot-inspect-actions' }, [selectButton, pageButton, cancelButton]),
+		make('div', { class: 'fixthisplz-inspect-actions' }, [selectButton, pageButton, cancelButton]),
 	]);
-	const root = make('div', { id: 'bugspot-inspector', class: 'bugspot-ui', [UI_ATTR]: true }, [box, bar]);
+	const root = make('div', { id: 'fixthisplz-inspector', class: 'fixthisplz-ui', [UI_ATTR]: true }, [box, bar]);
 
 	function place() {
 		frame = 0;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Bug_Spotter\Admin;
+namespace FixThisPlz\Admin;
 
-use Bug_Spotter\Settings;
+use FixThisPlz\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -16,7 +16,7 @@ final class Settings_Fields {
 
 	/** @param string[] $path */
 	public static function id( array $path ): string {
-		return 'bugspot-' . str_replace( '_', '-', implode( '-', $path ) );
+		return 'fixthisplz-' . str_replace( '_', '-', implode( '-', $path ) );
 	}
 
 	/**
@@ -26,7 +26,7 @@ final class Settings_Fields {
 	 * @param string[] $path
 	 */
 	public static function show_if( array $path, string $operator, string $value ): string {
-		return ' data-bugspot-show-if="' . esc_attr( self::name( $path ) ) . '" data-bugspot-op="' . esc_attr( $operator ) . '" data-bugspot-value="' . esc_attr( $value ) . '"';
+		return ' data-fixthisplz-show-if="' . esc_attr( self::name( $path ) ) . '" data-fixthisplz-op="' . esc_attr( $operator ) . '" data-fixthisplz-value="' . esc_attr( $value ) . '"';
 	}
 
 	/** Start of a settings section: heading(), then its form-table (closed by table_close()). */
@@ -49,13 +49,13 @@ final class Settings_Fields {
 	 * Start of a folded block: a native <details> (keyboard accessible, no JavaScript), open when $open.
 	 * Closed by details_close(). show_if() works inside it: hidden fields are still posted.
 	 *
-	 * @param string $class "bugspot-advanced" (framed block) or "bugspot-disclosure" (inline link).
+	 * @param string $class "fixthisplz-advanced" (framed block) or "fixthisplz-disclosure" (inline link).
 	 * @param int    $level Heading level of the summary text (2 for a section, 3 below one) so that it stays in the
 	 *                      heading navigation of screen readers; 0 for plain text.
 	 */
-	public static function details_open( string $summary, bool $open, string $class = 'bugspot-advanced', int $level = 0 ): void {
+	public static function details_open( string $summary, bool $open, string $class = 'fixthisplz-advanced', int $level = 0 ): void {
 		$title = $level > 0
-			? sprintf( '<h%1$d class="bugspot-summary-title">%2$s</h%1$d>', $level, esc_html( $summary ) )
+			? sprintf( '<h%1$d class="fixthisplz-summary-title">%2$s</h%1$d>', $level, esc_html( $summary ) )
 			: esc_html( $summary );
 		echo '<details class="' . esc_attr( $class ) . '"' . ( $open ? ' open' : '' ) . '><summary>' . $title . '</summary>'; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped above.
 	}
@@ -78,7 +78,7 @@ final class Settings_Fields {
 		foreach ( $keys as $key ) {
 			$changed = $changed || $values[ $key ] !== $defaults[ $key ];
 		}
-		self::details_open( __( 'Advanced settings', 'bug-spotter' ), $changed, 'bugspot-advanced', 2 );
+		self::details_open( __( 'Advanced settings', 'fixthisplz' ), $changed, 'fixthisplz-advanced', 2 );
 		self::description( $intro );
 		self::table_open();
 	}

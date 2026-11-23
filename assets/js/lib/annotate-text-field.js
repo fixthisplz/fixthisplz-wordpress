@@ -17,7 +17,7 @@ const MIN_FIELD_FONT = 16;
  *   canvas); reposition() follows a new display size of the canvas.
  */
 export function openTextField({ host, canvas, imageWidth, at, fontSize, color, text, label, measure }, done) {
-	const field = make('input', { type: 'text', class: 'bugspot-annot-text', maxlength: TEXT_MAX_LENGTH, 'aria-label': label });
+	const field = make('input', { type: 'text', class: 'fixthisplz-annot-text', maxlength: TEXT_MAX_LENGTH, 'aria-label': label });
 	field.value = text;
 	const pad = textPadding(fontSize);
 
