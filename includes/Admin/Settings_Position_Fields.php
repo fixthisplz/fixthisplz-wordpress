@@ -33,39 +33,41 @@ final class Settings_Position_Fields {
 			'px' => 'px',
 			'%'  => '%',
 		);
-		echo '<fieldset class="fixthisplz-sub fixthisplz-inline-fields"' . F::show_if( $anchor, '=', 'custom' ) . '><legend>' . esc_html__( 'Custom position', 'fixthisplz' ) . '</legend>'; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
+		echo '<fieldset class="fixthisplz-sub fixthisplz-inline-fields"';
+		F::show_if( $anchor, '=', 'custom' );
+		echo '><legend>' . esc_html__( 'Custom position', 'fixthisplz' ) . '</legend>';
 		foreach ( array( 'x', 'y' ) as $axis ) {
 			$edge  = array( 'button', $key, 'edge_' . $axis );
 			$value = array( 'button', $key, $axis );
 			$unit  = array( 'button', $key, $axis . '_unit' );
 
-			// Each control is rendered (escaped) with its screen-reader label, then placed in one translatable sentence.
-			ob_start();
-			echo '<label class="screen-reader-text" for="' . esc_attr( F::id( $value ) ) . '">' . esc_html( 'x' === $axis ? __( 'Horizontal distance', 'fixthisplz' ) : __( 'Vertical distance', 'fixthisplz' ) ) . '</label>';
-			F::input( 'number', $value, (string) $p[ $axis ], array( 'min' => '0', 'max' => '10000', 'class' => 'small-text' ) );
-			$distance_html = (string) ob_get_clean();
-
-			ob_start();
-			echo '<label class="screen-reader-text" for="' . esc_attr( F::id( $unit ) ) . '">' . esc_html( 'x' === $axis ? __( 'Horizontal unit', 'fixthisplz' ) : __( 'Vertical unit', 'fixthisplz' ) ) . '</label>';
-			F::select( $unit, $p[ $axis . '_unit' ], $units );
-			$unit_html = (string) ob_get_clean();
-
-			ob_start();
-			echo '<label class="screen-reader-text" for="' . esc_attr( F::id( $edge ) ) . '">' . esc_html( 'x' === $axis ? __( 'Starting edge (left or right)', 'fixthisplz' ) : __( 'Starting edge (top or bottom)', 'fixthisplz' ) ) . '</label>';
-			F::select(
-				$edge,
-				$p[ 'edge_' . $axis ],
-				'x' === $axis
-					? array(
-						'left'  => _x( 'left', 'edge of the window', 'fixthisplz' ),
-						'right' => _x( 'right', 'edge of the window', 'fixthisplz' ),
-					)
-					: array(
-						'top'    => _x( 'top', 'edge of the window', 'fixthisplz' ),
-						'bottom' => _x( 'bottom', 'edge of the window', 'fixthisplz' ),
-					)
+			// Each control, with its screen-reader label, takes the place of its placeholder in one translatable sentence.
+			$controls = array(
+				'%1$s' => static function () use ( $axis, $value, $p ): void {
+					self::screen_reader_label( $value, 'x' === $axis ? __( 'Horizontal distance', 'fixthisplz' ) : __( 'Vertical distance', 'fixthisplz' ) );
+					F::input( 'number', $value, (string) $p[ $axis ], array( 'min' => '0', 'max' => '10000', 'class' => 'small-text' ) );
+				},
+				'%2$s' => static function () use ( $axis, $unit, $p, $units ): void {
+					self::screen_reader_label( $unit, 'x' === $axis ? __( 'Horizontal unit', 'fixthisplz' ) : __( 'Vertical unit', 'fixthisplz' ) );
+					F::select( $unit, $p[ $axis . '_unit' ], $units );
+				},
+				'%3$s' => static function () use ( $axis, $edge, $p ): void {
+					self::screen_reader_label( $edge, 'x' === $axis ? __( 'Starting edge (left or right)', 'fixthisplz' ) : __( 'Starting edge (top or bottom)', 'fixthisplz' ) );
+					F::select(
+						$edge,
+						$p[ 'edge_' . $axis ],
+						'x' === $axis
+							? array(
+								'left'  => _x( 'left', 'edge of the window', 'fixthisplz' ),
+								'right' => _x( 'right', 'edge of the window', 'fixthisplz' ),
+							)
+							: array(
+								'top'    => _x( 'top', 'edge of the window', 'fixthisplz' ),
+								'bottom' => _x( 'bottom', 'edge of the window', 'fixthisplz' ),
+							)
+					);
+				},
 			);
-			$edge_html = (string) ob_get_clean();
 
 			$sentence = 'x' === $axis
 				/* translators: 1: distance input, 2: unit select (px or %), 3: edge select (left or right). */
@@ -73,18 +75,22 @@ final class Settings_Position_Fields {
 				/* translators: 1: distance input, 2: unit select (px or %), 3: edge select (top or bottom). */
 				: __( 'Vertical: %1$s %2$s from the %3$s edge', 'fixthisplz' );
 			echo '<span class="fixthisplz-axis">';
-			// strtr() rather than printf(): a faulty translation (missing or extra placeholder) cannot cause a fatal error.
-			echo strtr( // phpcs:ignore WordPress.Security.EscapeOutput -- the sentence is escaped, the controls are built from escaped parts.
-				esc_html( $sentence ),
-				array(
-					'%1$s' => $distance_html,
-					'%2$s' => $unit_html,
-					'%3$s' => $edge_html,
-				)
-			);
+			// Split on the placeholders rather than printf(): a faulty translation (missing or extra placeholder) cannot cause a fatal error.
+			foreach ( preg_split( '/(%[1-3]\$s)/', $sentence, -1, PREG_SPLIT_DELIM_CAPTURE ) as $part ) {
+				if ( isset( $controls[ $part ] ) ) {
+					$controls[ $part ]();
+				} else {
+					echo esc_html( $part );
+				}
+			}
 			echo '</span>';
 		}
 		F::description( __( 'Percentages are relative to the browser window (0 to 100).', 'fixthisplz' ) );
 		echo '</fieldset>';
+	}
+
+	/** @param string[] $path */
+	private static function screen_reader_label( array $path, string $label ): void {
+		echo '<label class="screen-reader-text" for="' . esc_attr( F::id( $path ) ) . '">' . esc_html( $label ) . '</label>';
 	}
 }

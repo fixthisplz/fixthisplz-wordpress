@@ -249,7 +249,7 @@ test('createPseudoRepair.apply without a style element does nothing and does not
 import { readFileSync } from 'node:fs';
 
 test('vendored modern-screenshot 4.7.0 still has what createPseudoRepair relies on', () => {
-	const vendor = readFileSync(new URL('../../assets/vendor/modern-screenshot.mjs', import.meta.url), 'utf8');
+	const vendor = readFileSync(new URL('../../assets/vendor/modern-screenshot.js', import.meta.url), 'utf8');
 	assert.ok(vendor.includes('function copyPseudoClass('), 'copyPseudoClass renamed');
 	assert.ok(vendor.includes('content = content.replace(/(\')|(")|(counter\\(.+\\))/g, "");'), 'quote stripping changed');
 	assert.ok(vendor.includes('`content: \'${content}\';`'), 'pseudo content emission changed');

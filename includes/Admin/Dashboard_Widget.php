@@ -44,7 +44,7 @@ final class Dashboard_Widget {
 			printf(
 				'<li><a href="%1$s">%2$s <span class="fixthisplz-count">%3$s</span></a></li>',
 				esc_url( Report_Format::list_link( array( 'status' => $status ) ) ),
-				Report_Format::pill( Statuses::class, $status ), // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
+				wp_kses( Report_Format::pill( Statuses::class, $status ), Report_Format::PILL_HTML ),
 				esc_html( number_format_i18n( $counts[ $status ] ?? 0 ) )
 			);
 		}
@@ -62,7 +62,7 @@ final class Dashboard_Widget {
 					'<li><a href="%1$s">%2$s</a> %3$s <span class="fixthisplz-muted">%4$s</span></li>',
 					esc_url( Report_Format::link( $id ) ),
 					esc_html( Report_Format::title( $id ) ),
-					Report_Format::pill( Statuses::class, (string) $item['status'] ), // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
+					wp_kses( Report_Format::pill( Statuses::class, (string) $item['status'] ), Report_Format::PILL_HTML ),
 					esc_html( Report_Format::excerpt( trim( (string) preg_replace( '/\s+/u', ' ', (string) $item['description'] ) ), self::EXCERPT_LENGTH ) )
 				);
 			}

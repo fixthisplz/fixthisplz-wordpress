@@ -70,7 +70,7 @@ final class Settings_Spam_Tab {
 			self::provider_labels()
 		);
 
-		$keys = F::show_if( $provider, '!=', 'none' );
+		$keys = array( $provider, '!=', 'none' );
 
 		$id = F::id( array( 'captcha', 'site_key' ) );
 		F::row_open( __( 'Site key', 'fixthisplz' ), $id, false, $keys );
@@ -96,7 +96,7 @@ final class Settings_Spam_Tab {
 		F::row_close();
 
 		$id = F::id( array( 'captcha', 'v3_threshold' ) );
-		F::row_open( __( 'Minimum score', 'fixthisplz' ), $id, false, F::show_if( $provider, '=', 'recaptcha_v3' ) );
+		F::row_open( __( 'Minimum score', 'fixthisplz' ), $id, false, array( $provider, '=', 'recaptcha_v3' ) );
 		F::input( 'number', array( 'captcha', 'v3_threshold' ), (string) $c['v3_threshold'], array( 'min' => '0', 'max' => '1', 'step' => '0.1', 'class' => 'small-text' ), true );
 		F::description( __( 'Between 0 (accept everything) and 1 (strictest). Default: 0.5.', 'fixthisplz' ), $id . '-desc' );
 		F::row_close();

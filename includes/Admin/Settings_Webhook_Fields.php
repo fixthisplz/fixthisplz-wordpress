@@ -135,7 +135,7 @@ final class Settings_Webhook_Fields {
 	private static function secret_row( callable $path, array $w ): void {
 		$id     = F::id( $path( 'secret' ) );
 		$secret = Webhooks::secret( $w );
-		F::row_open( __( 'Signing secret', 'fixthisplz' ), '', true, F::show_if( $path( 'format' ), '=', 'generic' ) );
+		F::row_open( __( 'Signing secret', 'fixthisplz' ), '', true, array( $path( 'format' ), '=', 'generic' ) );
 		echo '<input type="hidden" name="' . esc_attr( F::name( $path( 'secret' ) ) ) . '" value="' . esc_attr( (string) $w['secret'] ) . '">';
 		// Open when the secret is unreadable: the administrator must see that a new one is coming.
 		F::details_open( __( 'Check the signature (developers)', 'fixthisplz' ), null === $secret, 'fixthisplz-disclosure' );

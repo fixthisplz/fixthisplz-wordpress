@@ -77,7 +77,7 @@ final class Detail_Page {
 		}
 
 		$context = $report['context'];
-		echo '<h1 class="wp-heading-inline">' . esc_html( Report_Format::title( $id ) ) . '</h1> ' . Report_Format::pill( Statuses::class, (string) $report['status'] ); // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
+		echo '<h1 class="wp-heading-inline">' . esc_html( Report_Format::title( $id ) ) . '</h1> ' . wp_kses( Report_Format::pill( Statuses::class, (string) $report['status'] ), Report_Format::PILL_HTML );
 		echo '<hr class="wp-header-end">';
 		self::render_back_link();
 		self::render_notice();

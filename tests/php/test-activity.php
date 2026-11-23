@@ -147,13 +147,17 @@ fixthisplz_test(
 		$repo->reassign( Statuses::class, 'confirmed', 'seen' );
 		assert_same( array( 'status', 'confirmed', 'seen', 0 ), activity_changes( $id )[0] );
 		assert_same( 5, count( activity_changes( $id ) ), 'one entry per change' );
+		$repo->update( $id, array( 'assigned_to' => $bob ) );
+		$repo->unassign_user( $bob );
+		assert_same( array( 'assigned_to', (string) $bob, null, 0 ), activity_changes( $id )[0], 'a removed member: "System" change to NULL' );
+		assert_same( null, $repo->find( $id )['assigned_to'] );
 
 		// An update that changes nothing writes and records nothing, and says so.
 		global $wpdb;
 		$wpdb->update( FixThisPlz\Installer::table(), array( 'updated_at' => '2000-01-01 00:00:00' ), array( 'id' => $id ) );
 		assert_same( array(), $repo->update( $id, array( 'status' => 'seen', 'assigned_to' => 0 ) ) );
 		assert_same( '2000-01-01 00:00:00', $repo->find( $id )['updated_at'], 'updated_at untouched' );
-		assert_same( 5, count( activity_changes( $id ) ) );
+		assert_same( 7, count( activity_changes( $id ) ) );
 		assert_same( array( '', 0 ), Bugs_Page::apply_bulk( 'unassign', array( $id ) ), 'not counted as updated' );
 		wp_set_current_user( 0 );
 	}
@@ -179,6 +183,9 @@ fixthisplz_test(
 		$notes = Activity::for_report( $id );
 		assert_same( 1, count( $notes ) );
 		assert_same( array( Activity::NOTE, $author, 'Checked on staging' ), array( $notes[0]['type'], $notes[0]['user_id'], $notes[0]['content'] ) );
+
+		$call( array( '_wpnonce' => $nonce, 'note' => "First line\nsecond <b>line</b> & more" ), $author );
+		assert_same( "First line\nsecond line & more", Activity::for_report( $id )[0]['content'], 'posted note sanitized, line breaks kept' );
 		wp_set_current_user( 0 );
 	}
 );

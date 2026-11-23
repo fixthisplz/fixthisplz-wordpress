@@ -27,4 +27,11 @@ final class Plugin {
 		// Just-in-time loading only reads wp-content/languages; this registers the bundled /languages folder too.
 		load_plugin_textdomain( 'fixthisplz', false, dirname( plugin_basename( FIXTHISPLZ_FILE ) ) . '/languages' ); // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- needed for the bundled translations.
 	}
+
+	/** Writes a failure that the plugin absorbs (the visitor's report is kept) to the PHP log, only when WP_DEBUG is on. */
+	public static function debug_log( string $message ): void {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			error_log( 'FixThisPlz: ' . $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- debugging aid, only when WP_DEBUG is on.
+		}
+	}
 }

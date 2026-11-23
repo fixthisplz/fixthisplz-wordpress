@@ -158,7 +158,7 @@ final class Report_Submission {
 			do_action( 'fixthisplz_report_created', $id );
 		} catch ( \Throwable $e ) {
 			// The report is stored; a failing notification must not turn that into an error.
-			error_log( 'FixThisPlz: notification failed: ' . $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
+			Plugin::debug_log( 'notification failed: ' . $e->getMessage() );
 		}
 		return $id;
 	}

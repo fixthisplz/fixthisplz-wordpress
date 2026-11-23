@@ -50,14 +50,16 @@ final class Activity {
 	/** One "System" change for every report whose $field is $from, before Reports_Repository moves them all to $to. */
 	public static function record_moves( string $field, string $from, ?string $to ): void {
 		global $wpdb;
-		$new = null === $to ? 'NULL' : $wpdb->prepare( '%s', $to );
 		$wpdb->query(
 			$wpdb->prepare(
-				"INSERT INTO %i (report_id, user_id, type, field, old_value, new_value, created_at) SELECT id, 0, %s, %s, %s, {$new}, %s FROM %i WHERE %i = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $new is NULL or a prepare() fragment.
+				// IF(): prepare() has no NULL placeholder; new_value is NULL when $to is null (unassigned).
+				'INSERT INTO %i (report_id, user_id, type, field, old_value, new_value, created_at) SELECT id, 0, %s, %s, %s, IF(%d, NULL, %s), %s FROM %i WHERE %i = %s',
 				self::table(),
 				self::CHANGE,
 				$field,
 				$from,
+				null === $to ? 1 : 0,
+				(string) $to,
 				Reports_Repository::now(),
 				Installer::table(),
 				$field,

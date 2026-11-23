@@ -31,7 +31,9 @@ final class Settings_General_Tab {
 		F::checkbox( array( 'visibility', 'guests' ), (bool) $v['guests'], __( 'Guests (not logged in)', 'fixthisplz' ) );
 		if ( Settings_Page::no_spam_check( $s ) ) {
 			// Shown while the box is ticked: the service is chosen in another tab, so the saved one is what counts.
-			echo '<p class="description fixthisplz-warning"' . F::show_if( array( 'visibility', 'guests' ), '=', '1' ) . '>' . esc_html__( 'No spam check is configured: expect unwanted reports.', 'fixthisplz' ) . ' <a href="' . esc_url( Settings_Page::tab_url( 'spam' ) ) . '">' . esc_html__( 'Set up spam protection', 'fixthisplz' ) . '</a></p>'; // phpcs:ignore WordPress.Security.EscapeOutput -- show_if() is escaped.
+			echo '<p class="description fixthisplz-warning"';
+			F::show_if( array( 'visibility', 'guests' ), '=', '1' );
+			echo '>' . esc_html__( 'No spam check is configured: expect unwanted reports.', 'fixthisplz' ) . ' <a href="' . esc_url( Settings_Page::tab_url( 'spam' ) ) . '">' . esc_html__( 'Set up spam protection', 'fixthisplz' ) . '</a></p>';
 		}
 		echo '</fieldset>';
 		F::row_close();

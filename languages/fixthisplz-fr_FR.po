@@ -77,7 +77,7 @@ msgstr "Au"
 #: includes/Admin/Csv_Export.php:71
 #: includes/Admin/Detail_Page.php:145
 #: includes/Admin/List_Table.php:42
-#: includes/Report_Format.php:88
+#: includes/Report_Format.php:96
 #: includes/Webhook_Payload.php:122
 msgid "Priority"
 msgstr "Priorité"
@@ -126,9 +126,9 @@ msgstr "Date"
 #: includes/Admin/Detail_Page.php:134
 #: includes/Admin/Detail_Page.php:140
 #: includes/Admin/List_Table.php:43
-#: includes/Admin/Report_Context_View.php:125
+#: includes/Admin/Report_Context_View.php:128
 #: includes/Privacy.php:57
-#: includes/Report_Format.php:87
+#: includes/Report_Format.php:95
 #: includes/Webhook_Payload.php:121
 msgid "Status"
 msgstr "Statut"
@@ -193,7 +193,7 @@ msgstr "Capture d’écran"
 msgid "Raw data"
 msgstr "Données brutes"
 
-#: includes/Admin/Report_Context_View.php:160
+#: includes/Admin/Report_Context_View.php:163
 msgid "Show the raw JSON"
 msgstr "Afficher le JSON brut"
 
@@ -210,7 +210,7 @@ msgid "The report could not be updated."
 msgstr "Le signalement n’a pas pu être mis à jour."
 
 #: includes/Admin/Report_Context_View.php:18
-#: includes/Admin/Settings_Button_Tab.php:196
+#: includes/Admin/Settings_Button_Tab.php:200
 #: includes/Admin/Settings_Spam_Tab.php:53
 msgid "None"
 msgstr "Aucun"
@@ -219,87 +219,87 @@ msgstr "Aucun"
 msgid "Contact e-mail:"
 msgstr "E-mail de contact :"
 
-#: includes/Admin/Report_Context_View.php:55
+#: includes/Admin/Report_Context_View.php:57
 msgid "Title"
 msgstr "Titre"
 
-#: includes/Admin/Report_Context_View.php:56
+#: includes/Admin/Report_Context_View.php:58
 msgid "WordPress page"
 msgstr "Page WordPress"
 
-#: includes/Admin/Report_Context_View.php:82
+#: includes/Admin/Report_Context_View.php:85
 msgid "Selector"
 msgstr "Sélecteur"
 
-#: includes/Admin/Report_Context_View.php:83
+#: includes/Admin/Report_Context_View.php:86
 msgid "Tag"
 msgstr "Balise"
 
-#: includes/Admin/Report_Context_View.php:84
+#: includes/Admin/Report_Context_View.php:87
 msgid "Role"
 msgstr "Rôle"
 
-#: includes/Admin/Report_Context_View.php:85
+#: includes/Admin/Report_Context_View.php:88
 #: includes/Admin/Settings_List_Tab.php:37
 msgid "Name"
 msgstr "Nom"
 
-#: includes/Admin/Report_Context_View.php:86
+#: includes/Admin/Report_Context_View.php:89
 #: includes/Frontend/Assets.php:190
 msgid "Text"
 msgstr "Texte"
 
-#: includes/Admin/Report_Context_View.php:87
+#: includes/Admin/Report_Context_View.php:90
 #: includes/Admin/Settings_Button_Tab.php:51
 msgid "Position"
 msgstr "Position"
 
-#: includes/Admin/Report_Context_View.php:96
+#: includes/Admin/Report_Context_View.php:99
 msgid "Language"
 msgstr "Langue"
 
-#: includes/Admin/Report_Context_View.php:97
+#: includes/Admin/Report_Context_View.php:100
 msgid "Time zone"
 msgstr "Fuseau horaire"
 
-#: includes/Admin/Report_Context_View.php:98
+#: includes/Admin/Report_Context_View.php:101
 msgid "User agent"
 msgstr "User-agent"
 
-#: includes/Admin/Report_Context_View.php:99
+#: includes/Admin/Report_Context_View.php:102
 msgid "Viewport"
 msgstr "Zone d’affichage"
 
-#: includes/Admin/Report_Context_View.php:100
+#: includes/Admin/Report_Context_View.php:103
 msgid "Plugin version"
 msgstr "Version de l’extension"
 
-#: includes/Admin/Report_Context_View.php:110
+#: includes/Admin/Report_Context_View.php:113
 msgid "Level"
 msgstr "Niveau"
 
-#: includes/Admin/Report_Context_View.php:110
+#: includes/Admin/Report_Context_View.php:113
 msgid "Message"
 msgstr "Message"
 
-#: includes/Admin/Report_Context_View.php:110
-#: includes/Admin/Report_Context_View.php:125
+#: includes/Admin/Report_Context_View.php:113
+#: includes/Admin/Report_Context_View.php:128
 msgid "Time"
 msgstr "Heure"
 
-#: includes/Admin/Report_Context_View.php:125
+#: includes/Admin/Report_Context_View.php:128
 msgid "Method"
 msgstr "Méthode"
 
-#: includes/Admin/Report_Context_View.php:125
+#: includes/Admin/Report_Context_View.php:128
 msgid "URL"
 msgstr "URL"
 
-#: includes/Admin/Report_Context_View.php:142
+#: includes/Admin/Report_Context_View.php:145
 msgid "No screenshot was attached."
 msgstr "Aucune capture d’écran n’était jointe."
 
-#: includes/Admin/Report_Context_View.php:154
+#: includes/Admin/Report_Context_View.php:157
 msgid "Screenshot of the page (click for full size)"
 msgstr "Capture d’écran de la page (cliquez pour l’agrandir)"
 
@@ -411,8 +411,8 @@ msgid "Settings"
 msgstr "Réglages"
 
 #: includes/Admin/Settings_Assets.php:67
-#: includes/Admin/Settings_Button_Tab.php:133
-#: includes/Admin/Settings_Button_Tab.php:139
+#: includes/Admin/Settings_Button_Tab.php:137
+#: includes/Admin/Settings_Button_Tab.php:143
 #: includes/Admin/Settings_Form_Tab.php:34
 #: includes/Settings.php:195
 #: includes/Settings.php:208
@@ -431,7 +431,7 @@ msgstr "Utiliser cette icône"
 msgid "Please choose an SVG file."
 msgstr "Veuillez choisir un fichier SVG."
 
-#: includes/Admin/Settings_Button_Tab.php:271
+#: includes/Admin/Settings_Button_Tab.php:281
 msgid "Button preview"
 msgstr "Aperçu du bouton"
 
@@ -489,21 +489,21 @@ msgstr "Icône WordPress (Dashicon)"
 msgid "SVG image from the media library"
 msgstr "Image SVG de la médiathèque"
 
-#: includes/Admin/Settings_Button_Tab.php:97
-#: includes/Admin/Settings_Button_Tab.php:108
+#: includes/Admin/Settings_Button_Tab.php:99
+#: includes/Admin/Settings_Button_Tab.php:110
 msgid "Choose an icon"
 msgstr "Choisir une icône"
 
-#: includes/Admin/Settings_Button_Tab.php:123
+#: includes/Admin/Settings_Button_Tab.php:127
 msgid "Choose an SVG"
 msgstr "Choisir un SVG"
 
-#: includes/Admin/Settings_Button_Tab.php:124
+#: includes/Admin/Settings_Button_Tab.php:128
 #: includes/Frontend/Assets.php:184
 msgid "Remove"
 msgstr "Retirer"
 
-#: includes/Admin/Settings_Button_Tab.php:125
+#: includes/Admin/Settings_Button_Tab.php:129
 msgid "Only SVG files already in the media library are listed. WordPress blocks SVG uploads by default; FixThisPlz does not change that. Without an SVG, the Dashicon is used."
 msgstr "Seuls les fichiers SVG déjà présents dans la médiathèque sont proposés. WordPress bloque l’envoi de SVG par défaut ; FixThisPlz ne change pas ce comportement. Sans SVG, l’icône WordPress est utilisée."
 
@@ -523,114 +523,114 @@ msgstr "Carré arrondi"
 msgid "Pill with text"
 msgstr "Bouton avec texte"
 
-#: includes/Admin/Settings_Button_Tab.php:134
+#: includes/Admin/Settings_Button_Tab.php:138
 msgid "Shown inside the pill shape, and read by screen readers for every shape."
 msgstr "Visible avec la forme « Bouton avec texte ». Toujours lu par les lecteurs d’écran, quelle que soit la forme."
 
-#: includes/Admin/Settings_Button_Tab.php:138
+#: includes/Admin/Settings_Button_Tab.php:142
 msgid "Tooltip"
 msgstr "Infobulle"
 
-#: includes/Admin/Settings_Button_Tab.php:147
+#: includes/Admin/Settings_Button_Tab.php:151
 #: includes/Frontend/Assets.php:200
 msgid "Size"
 msgstr "Taille"
 
-#: includes/Admin/Settings_Button_Tab.php:152
+#: includes/Admin/Settings_Button_Tab.php:156
 msgid "Small"
 msgstr "Petite"
 
-#: includes/Admin/Settings_Button_Tab.php:153
-#: includes/Admin/Settings_Button_Tab.php:198
+#: includes/Admin/Settings_Button_Tab.php:157
+#: includes/Admin/Settings_Button_Tab.php:202
 msgid "Medium"
 msgstr "Moyenne"
 
-#: includes/Admin/Settings_Button_Tab.php:154
+#: includes/Admin/Settings_Button_Tab.php:158
 msgid "Large"
 msgstr "Grande"
 
-#: includes/Admin/Settings_Button_Tab.php:168
+#: includes/Admin/Settings_Button_Tab.php:172
 msgid "Background color"
 msgstr "Couleur de fond"
 
-#: includes/Admin/Settings_Button_Tab.php:169
+#: includes/Admin/Settings_Button_Tab.php:173
 msgid "Icon and text color"
 msgstr "Couleur de l’icône et du texte"
 
-#: includes/Admin/Settings_Button_Tab.php:170
+#: includes/Admin/Settings_Button_Tab.php:174
 msgid "Background color on hover"
 msgstr "Couleur de fond au survol"
 
-#: includes/Admin/Settings_Button_Tab.php:191
+#: includes/Admin/Settings_Button_Tab.php:195
 msgid "Shadow"
 msgstr "Ombre"
 
-#: includes/Admin/Settings_Button_Tab.php:197
+#: includes/Admin/Settings_Button_Tab.php:201
 msgid "Light"
 msgstr "Légère"
 
-#: includes/Admin/Settings_Button_Tab.php:199
+#: includes/Admin/Settings_Button_Tab.php:203
 msgid "Strong"
 msgstr "Forte"
 
-#: includes/Admin/Settings_Button_Tab.php:200
-#: includes/Admin/Settings_Button_Tab.php:226
+#: includes/Admin/Settings_Button_Tab.php:204
+#: includes/Admin/Settings_Button_Tab.php:232
 #: includes/Admin/Settings_Position_Fields.php:28
 msgid "Custom"
 msgstr "Personnalisée"
 
-#: includes/Admin/Settings_Button_Tab.php:203
+#: includes/Admin/Settings_Button_Tab.php:209
 msgid "Custom shadow"
 msgstr "Ombre personnalisée"
 
-#: includes/Admin/Settings_Button_Tab.php:205
+#: includes/Admin/Settings_Button_Tab.php:211
 msgid "Offset X (px)"
 msgstr "Décalage horizontal (px)"
 
-#: includes/Admin/Settings_Button_Tab.php:206
+#: includes/Admin/Settings_Button_Tab.php:212
 msgid "Offset Y (px)"
 msgstr "Décalage vertical (px)"
 
-#: includes/Admin/Settings_Button_Tab.php:207
+#: includes/Admin/Settings_Button_Tab.php:213
 msgid "Blur (px)"
 msgstr "Flou (px)"
 
-#: includes/Admin/Settings_Button_Tab.php:208
+#: includes/Admin/Settings_Button_Tab.php:214
 msgid "Spread (px)"
 msgstr "Étendue (px)"
 
-#: includes/Admin/Settings_Button_Tab.php:210
+#: includes/Admin/Settings_Button_Tab.php:216
 #: includes/Admin/Settings_List_Tab.php:38
 #: includes/Frontend/Assets.php:193
 msgid "Color"
 msgstr "Couleur"
 
-#: includes/Admin/Settings_Button_Tab.php:212
+#: includes/Admin/Settings_Button_Tab.php:218
 msgid "Hex color (#rrggbb) or rgba(red, green, blue, opacity), for example rgba(0,0,0,0.25)."
 msgstr "Saisissez une couleur au format #rrggbb, ou rgba(rouge, vert, bleu, opacité) pour une couleur transparente, par exemple rgba(0,0,0,0.25)."
 
-#: includes/Admin/Settings_Button_Tab.php:220
+#: includes/Admin/Settings_Button_Tab.php:226
 msgid "Corner radius"
 msgstr "Arrondi des angles"
 
-#: includes/Admin/Settings_Button_Tab.php:225
+#: includes/Admin/Settings_Button_Tab.php:231
 msgid "Set by the shape"
 msgstr "Selon la forme"
 
-#: includes/Admin/Settings_Button_Tab.php:230
+#: includes/Admin/Settings_Button_Tab.php:238
 msgid "Radius (px)"
 msgstr "Rayon (px)"
 
-#: includes/Admin/Settings_Button_Tab.php:239
+#: includes/Admin/Settings_Button_Tab.php:247
 #: includes/Admin/Settings_Position_Fields.php:16
 msgid "Position on mobile"
 msgstr "Position sur mobile"
 
-#: includes/Admin/Settings_Button_Tab.php:250
+#: includes/Admin/Settings_Button_Tab.php:260
 msgid "Stacking order (z-index)"
 msgstr "Priorité d’affichage (z-index)"
 
-#: includes/Admin/Settings_Button_Tab.php:252
+#: includes/Admin/Settings_Button_Tab.php:262
 msgid "Raise it if a theme element covers the button."
 msgstr "Augmentez cette valeur si un élément du thème passe par-dessus le bouton."
 
@@ -658,39 +658,39 @@ msgstr "Au milieu à droite"
 msgid "Middle left"
 msgstr "Au milieu à gauche"
 
-#: includes/Admin/Settings_Position_Fields.php:36
+#: includes/Admin/Settings_Position_Fields.php:38
 msgid "Custom position"
 msgstr "Position personnalisée"
 
-#: includes/Admin/Settings_Position_Fields.php:44
+#: includes/Admin/Settings_Position_Fields.php:47
 msgid "Horizontal distance"
 msgstr "Distance horizontale"
 
-#: includes/Admin/Settings_Position_Fields.php:44
+#: includes/Admin/Settings_Position_Fields.php:47
 msgid "Vertical distance"
 msgstr "Distance verticale"
 
-#: includes/Admin/Settings_Position_Fields.php:87
+#: includes/Admin/Settings_Position_Fields.php:88
 msgid "Percentages are relative to the browser window (0 to 100)."
 msgstr "En %, la distance se compte par rapport à la taille de la fenêtre du navigateur (0 à 100)."
 
-#: includes/Admin/Settings_Button_Tab.php:266
+#: includes/Admin/Settings_Button_Tab.php:276
 msgid "Preview"
 msgstr "Aperçu"
 
-#: includes/Admin/Settings_Button_Tab.php:267
+#: includes/Admin/Settings_Button_Tab.php:277
 msgid "Preview screen size"
 msgstr "Taille d’écran de l’aperçu"
 
-#: includes/Admin/Settings_Button_Tab.php:268
+#: includes/Admin/Settings_Button_Tab.php:278
 msgid "Desktop"
 msgstr "Ordinateur"
 
-#: includes/Admin/Settings_Button_Tab.php:269
+#: includes/Admin/Settings_Button_Tab.php:279
 msgid "Mobile"
 msgstr "Mobile"
 
-#: includes/Admin/Settings_Button_Tab.php:272
+#: includes/Admin/Settings_Button_Tab.php:282
 msgid "Updated as you change the settings below. The frame stands for a browser window; save to apply."
 msgstr "L’aperçu suit vos réglages ci-dessous ; le cadre représente une fenêtre de navigateur. Enregistrez pour appliquer les réglages au site."
 
@@ -728,23 +728,23 @@ msgstr "Qui voit le bouton"
 msgid "Guests (not logged in)"
 msgstr "Visiteurs non connectés"
 
-#: includes/Admin/Settings_General_Tab.php:65
+#: includes/Admin/Settings_General_Tab.php:67
 msgid "Excluded pages"
 msgstr "Pages sans bouton"
 
-#: includes/Admin/Settings_General_Tab.php:77
+#: includes/Admin/Settings_General_Tab.php:79
 msgid "Hold Ctrl (or Cmd) to select several pages, or to unselect one."
 msgstr "Maintenez Ctrl (ou Cmd) pour choisir plusieurs pages ou en retirer une."
 
-#: includes/Admin/Settings_General_Tab.php:46
+#: includes/Admin/Settings_General_Tab.php:48
 msgid "One path per line, for example /checkout/ or /my-account/. The button is hidden on every URL that starts with one of them."
 msgstr "Saisissez une adresse par ligne, par exemple /commande/ ou /mon-compte/. Le bouton est masqué sur toutes les pages dont l’adresse commence ainsi."
 
-#: includes/Admin/Settings_General_Tab.php:49
+#: includes/Admin/Settings_General_Tab.php:51
 msgid "Administration"
 msgstr "Administration"
 
-#: includes/Admin/Settings_General_Tab.php:50
+#: includes/Admin/Settings_General_Tab.php:52
 msgid "Also show the button in the WordPress administration"
 msgstr "Afficher aussi le bouton dans l’administration WordPress"
 
@@ -921,7 +921,7 @@ msgid "Menu badge"
 msgstr "Compteur dans le menu"
 
 #. translators: %d: page ID.
-#: includes/Admin/Settings_General_Tab.php:84
+#: includes/Admin/Settings_General_Tab.php:86
 #, php-format
 msgid "Page #%d (no title)"
 msgstr "Page n° %d (sans titre)"
@@ -1564,7 +1564,7 @@ msgid "[%1$s] New report: %2$s"
 msgstr "[%1$s] Nouveau signalement : %2$s"
 
 #. translators: 1: singular name of a report (default "Bug"), 2: report number.
-#: includes/Report_Format.php:55
+#: includes/Report_Format.php:63
 #, php-format
 msgid "%1$s #%2$d"
 msgstr "%1$s n° %2$d"
@@ -1593,7 +1593,7 @@ msgstr "Supprimer cette note ?"
 msgid "Delete note"
 msgstr "Supprimer la note"
 
-#: includes/Report_Format.php:81
+#: includes/Report_Format.php:89
 msgid "System"
 msgstr "Système"
 
@@ -1601,14 +1601,14 @@ msgstr "Système"
 #: includes/Admin/Csv_Export.php:72
 #: includes/Admin/Detail_Page.php:147
 #: includes/Admin/List_Table.php:44
-#: includes/Report_Format.php:89
+#: includes/Report_Format.php:97
 #: includes/Webhook_Payload.php:123
 msgid "Assigned to"
 msgstr "Attribué à"
 
 #: includes/Admin/Bugs_Page.php:255
 #: includes/Admin/List_Table.php:203
-#: includes/Report_Format.php:97
+#: includes/Report_Format.php:105
 #: includes/Webhook_Payload.php:123
 msgid "Unassigned"
 msgstr "Non attribué"
@@ -1706,7 +1706,7 @@ msgid "Change"
 msgstr "Modification"
 
 #. translators: 1: changed field (Status, Priority or Assigned to), 2: old value, 3: new value.
-#: includes/Report_Format.php:92
+#: includes/Report_Format.php:100
 #, php-format
 msgid "%1$s: %2$s → %3$s"
 msgstr "%1$s : %2$s → %3$s"
@@ -1877,34 +1877,34 @@ msgstr "Ouvrir la liste"
 msgid "Recipients: the site administrators, the people they authorise to manage bug reports, and the chat or project services they connect through webhooks (see below)."
 msgstr "Destinataires : les administrateurs du site, les personnes qu’ils autorisent à traiter les signalements, et les services de discussion ou de gestion de projet qu’ils connectent par webhook (voir ci-dessous)."
 
-#: includes/Admin/Settings_Position_Fields.php:60
+#: includes/Admin/Settings_Position_Fields.php:61
 msgctxt "edge of the window"
 msgid "left"
 msgstr "gauche"
 
-#: includes/Admin/Settings_Position_Fields.php:61
+#: includes/Admin/Settings_Position_Fields.php:62
 msgctxt "edge of the window"
 msgid "right"
 msgstr "droit"
 
-#: includes/Admin/Settings_Position_Fields.php:64
+#: includes/Admin/Settings_Position_Fields.php:65
 msgctxt "edge of the window"
 msgid "top"
 msgstr "haut"
 
-#: includes/Admin/Settings_Position_Fields.php:65
+#: includes/Admin/Settings_Position_Fields.php:66
 msgctxt "edge of the window"
 msgid "bottom"
 msgstr "bas"
 
 #. translators: 1: distance input, 2: unit select (px or %), 3: edge select (left or right).
-#: includes/Admin/Settings_Position_Fields.php:72
+#: includes/Admin/Settings_Position_Fields.php:74
 #, php-format
 msgid "Horizontal: %1$s %2$s from the %3$s edge"
 msgstr "Horizontalement : %1$s %2$s du bord %3$s"
 
 #. translators: 1: distance input, 2: unit select (px or %), 3: edge select (top or bottom).
-#: includes/Admin/Settings_Position_Fields.php:74
+#: includes/Admin/Settings_Position_Fields.php:76
 #, php-format
 msgid "Vertical: %1$s %2$s from the %3$s edge"
 msgstr "Verticalement : %1$s %2$s du bord %3$s"
@@ -1915,7 +1915,7 @@ msgctxt "status flag: the report is handled"
 msgid "Done"
 msgstr "Traité"
 
-#: includes/Admin/Settings_General_Tab.php:44
+#: includes/Admin/Settings_General_Tab.php:46
 msgid "Hidden on URLs starting with"
 msgstr "Adresses sans bouton"
 
@@ -1923,19 +1923,19 @@ msgstr "Adresses sans bouton"
 msgid "Google reCAPTCHA v3 (invisible, score-based)"
 msgstr "Google reCAPTCHA v3 (invisible, par score)"
 
-#: includes/Admin/Settings_Position_Fields.php:49
+#: includes/Admin/Settings_Position_Fields.php:51
 msgid "Horizontal unit"
 msgstr "Unité horizontale"
 
-#: includes/Admin/Settings_Position_Fields.php:49
+#: includes/Admin/Settings_Position_Fields.php:51
 msgid "Vertical unit"
 msgstr "Unité verticale"
 
-#: includes/Admin/Settings_Position_Fields.php:54
+#: includes/Admin/Settings_Position_Fields.php:55
 msgid "Starting edge (left or right)"
 msgstr "Bord de départ (gauche ou droit)"
 
-#: includes/Admin/Settings_Position_Fields.php:54
+#: includes/Admin/Settings_Position_Fields.php:55
 msgid "Starting edge (top or bottom)"
 msgstr "Bord de départ (haut ou bas)"
 
@@ -1993,7 +1993,7 @@ msgstr "Sur les écrans de 782 px de large ou moins, masquez le bouton ou donnez
 msgid "Hide the button on mobile"
 msgstr "Masquer le bouton sur mobile"
 
-#: includes/Admin/Settings_Fields.php:81
+#: includes/Admin/Settings_Fields.php:89
 msgid "Advanced settings"
 msgstr "Réglages avancés"
 
@@ -2001,17 +2001,17 @@ msgstr "Réglages avancés"
 msgid "Shadow, corner radius and display order. The defaults suit most sites."
 msgstr "Ombre, arrondi des angles et priorité d’affichage. Les valeurs par défaut conviennent à la plupart des sites."
 
-#: includes/Admin/Settings_Button_Tab.php:132
+#: includes/Admin/Settings_Button_Tab.php:136
 msgid "Button text"
 msgstr "Texte du bouton"
 
 #. translators: 1: height of the small button, 2: of the medium one, 3: of the large one, in pixels.
-#: includes/Admin/Settings_Button_Tab.php:160
+#: includes/Admin/Settings_Button_Tab.php:164
 #, php-format
 msgid "Height: %1$d px (small), %2$d px (medium) or %3$d px (large)."
 msgstr "Hauteur : %1$d px (petite), %2$d px (moyenne) ou %3$d px (grande)."
 
-#: includes/Admin/Settings_Button_Tab.php:240
+#: includes/Admin/Settings_Button_Tab.php:248
 msgid "Use another position on mobile"
 msgstr "Utiliser une autre position sur mobile"
 
@@ -2101,11 +2101,11 @@ msgstr "Qui peut signaler"
 msgid "Choose who sees the button and can send a report."
 msgstr "Choisissez qui voit le bouton et peut envoyer un signalement."
 
-#: includes/Admin/Settings_General_Tab.php:40
+#: includes/Admin/Settings_General_Tab.php:42
 msgid "Where the button appears"
 msgstr "Où afficher le bouton"
 
-#: includes/Admin/Settings_General_Tab.php:40
+#: includes/Admin/Settings_General_Tab.php:42
 msgid "Hide the button on some pages, or also show it in the administration."
 msgstr "Masquez le bouton sur certaines pages, ou affichez-le aussi dans l’administration."
 
@@ -2243,7 +2243,7 @@ msgstr "Autoriser la capture"
 msgid "Guests (not logged in) can send bug reports, but no spam check is configured. Expect spam."
 msgstr "Les visiteurs non connectés peuvent envoyer des signalements, mais aucune vérification anti-spam n’est configurée. Attendez-vous à du spam."
 
-#: includes/Admin/Settings_General_Tab.php:34
+#: includes/Admin/Settings_General_Tab.php:36
 #: includes/Admin/Settings_Page.php:234
 msgid "Set up spam protection"
 msgstr "Configurer l’anti-spam"
@@ -2416,7 +2416,7 @@ msgstr[1] "%d mois"
 msgid "%s, but no status is marked Done: nothing is deleted."
 msgstr "%s, mais aucun statut n’est marqué « Traité » : rien n’est supprimé."
 
-#: includes/Admin/Settings_General_Tab.php:34
+#: includes/Admin/Settings_General_Tab.php:36
 msgid "No spam check is configured: expect unwanted reports."
 msgstr "Aucun anti-spam n’est configuré : attendez-vous à des envois indésirables."
 
@@ -2425,3 +2425,13 @@ msgstr "Aucun anti-spam n’est configuré : attendez-vous à des envois indési
 #, php-format
 msgid "%s: secret key missing, every report will fail."
 msgstr "%s : clé secrète manquante, tous les envois échoueront."
+
+#. Plugin URI of the plugin
+#: fixthisplz.php
+msgid "https://github.com/Heaume01/fixthisplz-wordpress"
+msgstr "https://github.com/Heaume01/fixthisplz-wordpress"
+
+#. Author of the plugin
+#: fixthisplz.php
+msgid "dlicha"
+msgstr "dlicha"

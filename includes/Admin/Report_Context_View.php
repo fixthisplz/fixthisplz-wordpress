@@ -47,7 +47,9 @@ final class Report_Context_View {
 	public static function render_page( array $report, array $context ): void {
 		$url = (string) $report['page_url'];
 		if ( '' !== $url ) {
-			echo '<p>' . self::link_or_text( $url ) . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput -- link_or_text() escapes.
+			echo '<p>';
+			self::link_or_text( $url );
+			echo '</p>';
 		}
 		$title = isset( $context['title'] ) && is_string( $context['title'] ) ? $context['title'] : '';
 		self::render_pairs(
@@ -59,11 +61,12 @@ final class Report_Context_View {
 	}
 
 	/** Only http(s) URLs become links; anything else (javascript:, data:…) stays inert text. */
-	private static function link_or_text( string $url ): string {
+	private static function link_or_text( string $url ): void {
 		if ( ! preg_match( '#^https?://#i', $url ) ) {
-			return esc_html( $url );
+			echo esc_html( $url );
+			return;
 		}
-		return '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $url ) . '</a>';
+		echo '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $url ) . '</a>';
 	}
 
 	public static function render_element( mixed $element ): void {

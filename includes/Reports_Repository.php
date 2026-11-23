@@ -12,7 +12,7 @@ final class Reports_Repository {
 	public const MAX_PER_PAGE = 200;
 
 	/** What list screens, exports and cards read: no `context` JSON, no hashes, no dates they never show. */
-	private const LIST_COLUMNS = 'id, status, priority, description, page_url, user_id, screenshot, created_at, assigned_to';
+	private const LIST_COLUMNS = array( 'id', 'status', 'priority', 'description', 'page_url', 'user_id', 'screenshot', 'created_at', 'assigned_to' );
 
 	/**
 	 * @param array $row Keys: description, page_url, context (array), user_id, reporter_email (plain), screenshot, ip_hash.
@@ -163,25 +163,28 @@ final class Reports_Repository {
 	 */
 	public function query( array $args ): array {
 		global $wpdb;
-		$table   = Installer::table();
-		$where   = Report_Query::where( $args );
-		$columns = self::LIST_COLUMNS . ( false === ( $args['with_email'] ?? true ) ? '' : ', reporter_email' );
+		list( $where, $values ) = Report_Query::where( $args );
 
+		$table    = Installer::table();
+		$columns  = false === ( $args['with_email'] ?? true ) ? self::LIST_COLUMNS : array_merge( self::LIST_COLUMNS, array( 'reporter_email' ) );
 		$per_page = max( 1, min( self::MAX_PER_PAGE, (int) ( $args['per_page'] ?? 20 ) ) );
 		$page     = max( 1, (int) ( $args['page'] ?? 1 ) );
 		$dir      = 'ASC' === strtoupper( (string) ( $args['order'] ?? 'DESC' ) ) ? 'ASC' : 'DESC';
-		$primary  = 'priority' === ( $args['orderby'] ?? '' ) ? Report_Query::priority_order( $dir ) : "created_at {$dir}";
+		$sort     = 'priority' === ( $args['orderby'] ?? '' )
+			? Report_Query::priority_order( $dir )
+			: array( 'ASC' === $dir ? 'created_at ASC' : 'created_at DESC', array() );
 
-		$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $table ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where is built from prepare() fragments.
-		$rows  = $wpdb->get_results( // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- see the prepare() below.
+		// $where and $sort[0] are fixed SQL with placeholders only (Report_Query), so their number varies; every value goes through prepare().
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
+		$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", array_merge( array( $table ), $values ) ) );
+		$rows  = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT {$columns} FROM %i {$where} ORDER BY {$primary}, id DESC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $columns comes from a fixed list, $primary and $where from fixed text or prepare() fragments.
-				$table,
-				$per_page,
-				( $page - 1 ) * $per_page
+				'SELECT ' . implode( ', ', array_fill( 0, count( $columns ), '%i' ) ) . " FROM %i {$where} ORDER BY {$sort[0]}, id DESC LIMIT %d OFFSET %d",
+				array_merge( $columns, array( $table ), $values, $sort[1], array( $per_page, ( $page - 1 ) * $per_page ) )
 			),
 			ARRAY_A
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		return array(
 			'items' => array_map( array( self::class, 'hydrate' ), is_array( $rows ) ? $rows : array() ),
@@ -201,10 +204,14 @@ final class Reports_Repository {
 		if ( ! $ids ) {
 			return array();
 		}
-		$table   = Installer::table();
-		$columns = self::LIST_COLUMNS . ', reporter_email';
-		$in      = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
-		$rows    = $wpdb->get_results( $wpdb->prepare( "SELECT {$columns} FROM %i WHERE id IN ({$in}) ORDER BY id", array_merge( array( $table ), $ids ) ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $columns is a fixed list, $in a list of %d placeholders.
+		$columns = array_merge( self::LIST_COLUMNS, array( 'reporter_email' ) );
+		$rows    = $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT ' . implode( ', ', array_fill( 0, count( $columns ), '%i' ) ) . ' FROM %i WHERE id IN (' . implode( ',', array_fill( 0, count( $ids ), '%d' ) ) . ') ORDER BY id',
+				array_merge( $columns, array( Installer::table() ), $ids )
+			),
+			ARRAY_A
+		);
 		return array_map( array( self::class, 'hydrate' ), is_array( $rows ) ? $rows : array() );
 	}
 
@@ -220,9 +227,13 @@ final class Reports_Repository {
 	 */
 	public function count_by( string $list, array $args ): array {
 		global $wpdb;
-		$where = Report_Query::where( array_diff_key( $args, array( $list::FIELD => true ) ) );
+		list( $where, $values ) = Report_Query::where( array_diff_key( $args, array( $list::FIELD => true ) ) );
 
-		$rows   = $wpdb->get_results( $wpdb->prepare( "SELECT %i AS k, COUNT(*) AS n FROM %i {$where} GROUP BY k", $list::FIELD, Installer::table() ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where is built from prepare() fragments.
+		// $where is fixed SQL with placeholders only (Report_Query), so their number varies; its values go through this prepare().
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
+		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT %i AS k, COUNT(*) AS n FROM %i {$where} GROUP BY k", array_merge( array( $list::FIELD, Installer::table() ), $values ) ), ARRAY_A );
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
 		$counts = array_fill_keys( array_keys( $list::all() ), 0 );
 		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
 			$counts[ $row['k'] ] = (int) $row['n'];
@@ -252,11 +263,13 @@ final class Reports_Repository {
 	 */
 	public function ids_closed_before( array $statuses, string $cutoff ): array {
 		global $wpdb;
-		$in = implode( ',', array_fill( 0, count( $statuses ), '%s' ) );
 		return array_map(
 			'intval',
 			$wpdb->get_col(
-				$wpdb->prepare( "SELECT id FROM %i WHERE status IN ({$in}) AND status_changed_at < %s ORDER BY id", array_merge( array( Installer::table() ), $statuses, array( $cutoff ) ) ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- $in is a list of %s placeholders, the values are passed as one array.
+				$wpdb->prepare(
+					'SELECT id FROM %i WHERE status_changed_at < %s AND status IN (' . implode( ',', array_fill( 0, count( $statuses ), '%s' ) ) . ') ORDER BY id',
+					array_merge( array( Installer::table(), $cutoff ), $statuses )
+				)
 			)
 		);
 	}

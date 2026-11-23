@@ -23,9 +23,9 @@ final class Assets {
 		$is_admin = is_admin();
 		$user     = wp_get_current_user();
 
-		$raw_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		$path    = is_string( $raw_uri ) ? wp_parse_url( $raw_uri, PHP_URL_PATH ) : '/';
-		$path    = is_string( $path ) && '' !== $path ? $path : '/';
+		$uri  = isset( $_SERVER['REQUEST_URI'] ) && is_string( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '/';
+		$path = wp_parse_url( $uri, PHP_URL_PATH );
+		$path = is_string( $path ) && '' !== $path ? $path : '/';
 
 		// On archives the queried object is a term or user: its ID must not be compared with post IDs.
 		$queried = ! $is_admin && get_queried_object() instanceof \WP_Post ? (int) get_queried_object_id() : 0;
@@ -103,7 +103,7 @@ final class Assets {
 			'restUrl'            => rest_url( Reports_Controller::NAMESPACE . '/' ),
 			'nonce'              => $logged_in ? wp_create_nonce( 'wp_rest' ) : '',
 			'moduleUrl'          => FIXTHISPLZ_URL . 'assets/js/reporter.js?ver=' . rawurlencode( FIXTHISPLZ_VERSION ),
-			'vendorUrl'          => FIXTHISPLZ_URL . 'assets/vendor/modern-screenshot.mjs?ver=' . rawurlencode( FIXTHISPLZ_VERSION ),
+			'vendorUrl'          => FIXTHISPLZ_URL . 'assets/vendor/modern-screenshot.js?ver=' . rawurlencode( FIXTHISPLZ_VERSION ),
 			'version'            => FIXTHISPLZ_VERSION,
 			'hideOnMobile'       => (bool) $settings['visibility']['hide_on_mobile'],
 			'mobileQuery'        => Button_Style::MOBILE_QUERY,

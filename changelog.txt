@@ -1,0 +1,18 @@
+=== FixThisPlz changelog ===
+
+= 1.2.0 =
+* Configurable priorities (**Tracking › Priorities** settings): name, color, order (sorting by priority follows it); add up to 10 or delete one, moving its reports to another priority. "Normal" cannot be deleted. Priority pills take the chosen color in the list, the Kanban board and the detail screen.
+* Name of one report (**Tracking › Team and menu** settings), used in titles such as "Bug #12" on the detail screen and in the notification e-mail.
+* Dashboard widget for bug managers: open reports per status and the five latest reports.
+* Settings reorganized in seven tabs (General, Button, Form, Tracking, Alerts, Spam protection, Privacy), each split into titled sections. Rarely used options are folded, the General tab opens on a summary of the active setup, and leaving a page with unsaved changes asks for confirmation. Old links to the former tabs still work.
+* Assignment: assign a report to a bug manager from its screen or with a bulk action; "Assigned to" column, initials on the Kanban cards, filter by person and "My reports". The new assignee gets an e-mail, in their own language (not when assigning yourself). The CSV export has an "Assigned to" column.
+* Internal notes and history on the report screen: notes visible only to the team (deleted by their author or an administrator), and every change of status, priority or assignment with its author and date. Deleting a user unassigns their reports; the personal data exporter and eraser cover the notes.
+* Webhooks (**Alerts › Webhooks** settings): up to five addresses, each with a format (generic signed JSON, Slack, Discord or Microsoft Teams), its events (new report, status changed, report assigned), an on/off switch and a "Send a test" button. Bulk actions send one summary message to chat services, after all their changes are saved.
+* Richer screenshot annotation: freehand pen, text, six colors and three sizes (stroke width or text size); select, move, resize, recolor, change the size of or delete each annotation.
+
+= 1.1.0 =
+* Screenshot annotation: before sending, the visitor can draw rectangles and arrows on the screenshot, or hide an area, and undo them at any time.
+* Fix: after an update, browsers no longer mix old and new script files (WordPress 7.0+).
+
+= 1.0.0 =
+* First public release: floating button with live preview, element picker, accessible report dialog, optional screenshot (real tab capture or page reconstruction, optional masking), report downloads, list and Kanban board, detail screen, CSV export, configurable statuses, menu name and position, e-mail notification, anti-bot providers and rate limits, privacy exporter and eraser, automatic purge of closed reports, French translation.

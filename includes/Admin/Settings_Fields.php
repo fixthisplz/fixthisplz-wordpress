@@ -20,13 +20,18 @@ final class Settings_Fields {
 	}
 
 	/**
-	 * data-* attribute read by admin-settings.js to show a block only for some values of another field.
-	 * Everything is visible without JavaScript.
+	 * Prints the data-* attributes (inside an opening tag) read by admin-settings.js to show a block only for some
+	 * values of another field. Everything is visible without JavaScript.
 	 *
 	 * @param string[] $path
 	 */
-	public static function show_if( array $path, string $operator, string $value ): string {
-		return ' data-fixthisplz-show-if="' . esc_attr( self::name( $path ) ) . '" data-fixthisplz-op="' . esc_attr( $operator ) . '" data-fixthisplz-value="' . esc_attr( $value ) . '"';
+	public static function show_if( array $path, string $operator, string $value ): void {
+		printf(
+			' data-fixthisplz-show-if="%1$s" data-fixthisplz-op="%2$s" data-fixthisplz-value="%3$s"',
+			esc_attr( self::name( $path ) ),
+			esc_attr( $operator ),
+			esc_attr( $value )
+		);
 	}
 
 	/** Start of a settings section: heading(), then its form-table (closed by table_close()). */
@@ -54,10 +59,13 @@ final class Settings_Fields {
 	 *                      heading navigation of screen readers; 0 for plain text.
 	 */
 	public static function details_open( string $summary, bool $open, string $class = 'fixthisplz-advanced', int $level = 0 ): void {
-		$title = $level > 0
-			? sprintf( '<h%1$d class="fixthisplz-summary-title">%2$s</h%1$d>', $level, esc_html( $summary ) )
-			: esc_html( $summary );
-		echo '<details class="' . esc_attr( $class ) . '"' . ( $open ? ' open' : '' ) . '><summary>' . $title . '</summary>'; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped above.
+		echo '<details class="' . esc_attr( $class ) . '"' . ( $open ? ' open' : '' ) . '><summary>';
+		if ( $level > 0 ) {
+			printf( '<h%1$d class="fixthisplz-summary-title">%2$s</h%1$d>', (int) $level, esc_html( $summary ) );
+		} else {
+			echo esc_html( $summary );
+		}
+		echo '</summary>';
 	}
 
 	public static function details_close(): void {
@@ -96,9 +104,13 @@ final class Settings_Fields {
 		echo '</tbody></table>';
 	}
 
-	/** @param string $attrs Pre-escaped attributes (from show_if()). */
-	public static function row_open( string $label, string $for = '', bool $group = false, string $attrs = '' ): void {
-		echo '<tr' . $attrs . '><th scope="row">'; // phpcs:ignore WordPress.Security.EscapeOutput -- $attrs comes from show_if().
+	/** @param array{0:string[],1:string,2:string}|array{} $show_if Arguments of show_if() for the row; none to always show it. */
+	public static function row_open( string $label, string $for = '', bool $group = false, array $show_if = array() ): void {
+		echo '<tr';
+		if ( $show_if ) {
+			self::show_if( ...$show_if );
+		}
+		echo '><th scope="row">';
 		if ( '' !== $for && ! $group ) {
 			echo '<label for="' . esc_attr( $for ) . '">' . esc_html( $label ) . '</label>';
 		} else {
@@ -121,15 +133,15 @@ final class Settings_Fields {
 	 * @param bool                 $described True when the caller prints a description with id "{id}-desc".
 	 */
 	public static function input( string $type, array $path, string $value, array $attrs = array(), bool $described = false ): void {
-		$id   = self::id( $path );
-		$html = '<input type="' . esc_attr( $type ) . '" id="' . esc_attr( $id ) . '" name="' . esc_attr( self::name( $path ) ) . '" value="' . esc_attr( $value ) . '"';
+		$id = self::id( $path );
+		echo '<input type="' . esc_attr( $type ) . '" id="' . esc_attr( $id ) . '" name="' . esc_attr( self::name( $path ) ) . '" value="' . esc_attr( $value ) . '"';
 		foreach ( $attrs as $key => $attr ) {
-			$html .= ' ' . esc_attr( $key ) . '="' . esc_attr( $attr ) . '"';
+			echo ' ' . esc_attr( $key ) . '="' . esc_attr( $attr ) . '"';
 		}
 		if ( $described ) {
-			$html .= ' aria-describedby="' . esc_attr( $id ) . '-desc"';
+			echo ' aria-describedby="' . esc_attr( $id ) . '-desc"';
 		}
-		echo $html . '>'; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped above.
+		echo '>';
 	}
 
 	/** @param string[] $path @param bool $described True when the caller prints a description with id "{id}-desc". */

@@ -35,6 +35,14 @@ final class Report_Format {
 		return mb_strlen( $text ) > $length ? mb_substr( $text, 0, $length ) . '…' : $text;
 	}
 
+	/** The markup of pill(), allowed by wp_kses() where a pill is printed (its color is a validated hex color). */
+	public const PILL_HTML = array(
+		'span' => array(
+			'class' => true,
+			'style' => true,
+		),
+	);
+
 	/**
 	 * A status or priority pill tinted from the choice color (see .fixthisplz-pill in admin.css).
 	 *

@@ -181,6 +181,35 @@ fixthisplz_test(
 );
 
 fixthisplz_test(
+	'enqueue_matches_excluded_prefixes_on_the_request_path',
+	function () {
+		with_settings_option(
+			function () {
+				$saved = $_SERVER['REQUEST_URI'] ?? null;
+				$prev  = wp_get_current_user();
+				wp_set_current_user( 0 );
+				update_option( Settings::OPTION, array( 'enabled' => true, 'visibility' => array( 'guests' => true, 'excluded_url_prefixes' => array( '/caf%C3%A9' ) ) ) );
+				$loads = static function ( string $uri ): bool {
+					$_SERVER['REQUEST_URI'] = $uri;
+					$loaded                 = false;
+					fe_with_clean_assets(
+						static function () use ( &$loaded ): void {
+							Assets::enqueue();
+							$loaded = wp_script_is( 'fixthisplz-loader', 'enqueued' );
+						}
+					);
+					return $loaded;
+				};
+				$results = array( $loads( '/caf%C3%A9/menu?x=1&y=<b>' ), $loads( '/shop/caf%C3%A9' ), $loads( '/' ) );
+				$_SERVER['REQUEST_URI'] = $saved;
+				wp_set_current_user( $prev->ID );
+				assert_same( array( false, true, true ), $results );
+			}
+		);
+	}
+);
+
+fixthisplz_test(
 	'enqueue_adds_loader_config_and_css_for_guests',
 	function () {
 		with_settings_option(
@@ -220,7 +249,7 @@ fixthisplz_test(
 						assert_same( 'pub', $config['captcha']['siteKey'] );
 						assert_true( '' !== $config['captcha']['scriptUrl'] );
 						assert_true( false !== strpos( $config['moduleUrl'], 'assets/js/reporter.js' ) );
-						assert_true( false !== strpos( $config['vendorUrl'], 'assets/vendor/modern-screenshot.mjs' ) );
+						assert_true( false !== strpos( $config['vendorUrl'], 'assets/vendor/modern-screenshot.js' ) );
 						assert_same( true, $config['dialog']['askEmail'] );
 					}
 				);

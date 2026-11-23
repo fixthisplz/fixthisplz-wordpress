@@ -20,7 +20,7 @@ final class Settings_Alerts_Tab {
 
 		$id    = F::id( array( 'notifications', 'recipients' ) );
 		$admin = (string) get_option( 'admin_email' );
-		$if_enabled = F::show_if( array( 'notifications', 'enabled' ), '=', '1' );
+		$if_enabled = array( array( 'notifications', 'enabled' ), '=', '1' );
 		F::row_open( __( 'Recipients', 'fixthisplz' ), $id, false, $if_enabled );
 		F::input( 'text', array( 'notifications', 'recipients' ), $n['recipients'], array( 'class' => 'large-text', 'placeholder' => $admin ), true );
 		/* translators: %s: the site administration e-mail address. */

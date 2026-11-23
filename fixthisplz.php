@@ -1,10 +1,12 @@
 <?php
 /**
  * Plugin Name:       FixThisPlz
+ * Plugin URI:        https://github.com/Heaume01/fixthisplz-wordpress
  * Description:       Lets visitors and editors report bugs from any page of a WordPress site.
  * Version:           1.2.0
  * Requires at least: 6.5
  * Requires PHP:      8.1
+ * Author:            dlicha
  * Text Domain:       fixthisplz
  * Domain Path:       /languages
  * License:           GPL-2.0-or-later

@@ -51,7 +51,7 @@ final class Settings_Form_Tab {
 		F::checkbox( array( 'dialog', 'allow_screenshot' ), (bool) $g['allow_screenshot'], __( 'Let reporters attach a screenshot of the page', 'fixthisplz' ) );
 		F::row_close();
 
-		$only_with_screenshot = F::show_if( array( 'dialog', 'allow_screenshot' ), '=', '1' );
+		$only_with_screenshot = array( array( 'dialog', 'allow_screenshot' ), '=', '1' );
 
 		F::row_open( __( 'Capture method', 'fixthisplz' ), '', true, $only_with_screenshot );
 		echo '<fieldset><legend class="screen-reader-text">' . esc_html__( 'Capture method', 'fixthisplz' ) . '</legend>';

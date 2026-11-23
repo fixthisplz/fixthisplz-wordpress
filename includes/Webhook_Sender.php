@@ -141,7 +141,7 @@ final class Webhook_Sender {
 				)
 			);
 		} catch ( \Throwable $e ) {
-			error_log( 'FixThisPlz: webhook failed: ' . $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
+			Plugin::debug_log( 'webhook failed: ' . $e->getMessage() );
 			return new \WP_Error( 'fixthisplz_webhook_failed', $e->getMessage() );
 		}
 	}

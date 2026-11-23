@@ -1,3 +1,4 @@
+/*! modern-screenshot 4.7.0 | MIT License | https://github.com/qq15725/modern-screenshot | unmodified dist/index.mjs */
 function changeJpegDpi(uint8Array, dpi) {
   uint8Array[13] = 1;
   uint8Array[14] = dpi >> 8;

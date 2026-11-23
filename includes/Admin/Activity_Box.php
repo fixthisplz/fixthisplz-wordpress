@@ -24,7 +24,7 @@ final class Activity_Box {
 		check_admin_referer( self::ADD_ACTION . '_' . $id );
 		Request::require_manager();
 
-		$note = isset( $_POST['note'] ) && is_string( $_POST['note'] ) ? wp_unslash( $_POST['note'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- verified above; Activity::add_note() checks the encoding, the text is escaped at output.
+		$note = isset( $_POST['note'] ) && is_string( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '';
 		$ok   = null !== ( new Reports_Repository() )->find( $id ) && Activity::add_note( $id, get_current_user_id(), $note ) > 0;
 		wp_safe_redirect( Report_Format::link( $id, array( 'fixthisplz_notice' => $ok ? 'note_added' : 'note_failed' ) ) );
 		exit;

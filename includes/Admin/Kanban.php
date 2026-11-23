@@ -61,7 +61,7 @@ final class Kanban {
 		$limit = self::column_limit( $status );
 
 		echo '<section class="fixthisplz-column" data-status="' . esc_attr( $status ) . '">';
-		echo '<h2 class="fixthisplz-column-title">' . Report_Format::pill( Statuses::class, $status ) . ' <span class="fixthisplz-count" data-status="' . esc_attr( $status ) . '">' . esc_html( (string) $total ) . '</span></h2>'; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
+		echo '<h2 class="fixthisplz-column-title">' . wp_kses( Report_Format::pill( Statuses::class, $status ), Report_Format::PILL_HTML ) . ' <span class="fixthisplz-count" data-status="' . esc_attr( $status ) . '">' . esc_html( (string) $total ) . '</span></h2>';
 		echo '<ul class="fixthisplz-cards" data-status="' . esc_attr( $status ) . '">';
 		foreach ( $items as $item ) {
 			self::render_card( $item );
@@ -118,7 +118,7 @@ final class Kanban {
 		if ( is_string( $item['screenshot'] ?? null ) && '' !== $item['screenshot'] ) {
 			echo ' <span class="dashicons dashicons-camera" title="' . esc_attr__( 'Has a screenshot', 'fixthisplz' ) . '" aria-label="' . esc_attr__( 'Has a screenshot', 'fixthisplz' ) . '"></span>';
 		}
-		echo ' ' . Report_Format::pill( Priorities::class, (string) $item['priority'] ); // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
+		echo ' ' . wp_kses( Report_Format::pill( Priorities::class, (string) $item['priority'] ), Report_Format::PILL_HTML );
 		if ( null !== $item['assigned_to'] ) {
 			$name = Team::name( $item['assigned_to'] );
 			/* translators: %s: name of the person the report is assigned to. */

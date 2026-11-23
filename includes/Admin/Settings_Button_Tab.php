@@ -87,7 +87,9 @@ final class Settings_Button_Tab {
 
 	/** Dashicon grid (JavaScript) with a select fallback. @param array<string,mixed> $b */
 	private static function dashicon_picker( array $b ): void {
-		echo '<div class="fixthisplz-sub"' . F::show_if( array( 'button', 'icon_type' ), '=', 'dashicon' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
+		echo '<div class="fixthisplz-sub"';
+		F::show_if( array( 'button', 'icon_type' ), '=', 'dashicon' );
+		echo '>';
 		$dashicon_id = F::id( array( 'button', 'dashicon' ) );
 		echo '<input type="hidden" id="' . esc_attr( $dashicon_id ) . '" name="' . esc_attr( F::name( array( 'button', 'dashicon' ) ) ) . '" value="' . esc_attr( $b['dashicon'] ) . '">';
 		$icons = self::DASHICONS;
@@ -117,7 +119,9 @@ final class Settings_Button_Tab {
 	private static function svg_picker( array $b ): void {
 		$svg_id  = (int) $b['svg_attachment_id'];
 		$svg_url = $svg_id > 0 && 'image/svg+xml' === get_post_mime_type( $svg_id ) ? (string) wp_get_attachment_url( $svg_id ) : '';
-		echo '<div class="fixthisplz-sub fixthisplz-svg-picker"' . F::show_if( array( 'button', 'icon_type' ), '=', 'svg' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
+		echo '<div class="fixthisplz-sub fixthisplz-svg-picker"';
+		F::show_if( array( 'button', 'icon_type' ), '=', 'svg' );
+		echo '>';
 		echo '<input type="hidden" id="' . esc_attr( F::id( array( 'button', 'svg_attachment_id' ) ) ) . '" name="' . esc_attr( F::name( array( 'button', 'svg_attachment_id' ) ) ) . '" value="' . esc_attr( (string) $svg_id ) . '">';
 		echo '<img class="fixthisplz-svg-thumb" alt="" src="' . esc_url( $svg_url ) . '"' . ( '' === $svg_url ? ' hidden' : '' ) . '>';
 		echo ' <button type="button" class="button fixthisplz-svg-choose">' . esc_html__( 'Choose an SVG', 'fixthisplz' ) . '</button>';
@@ -200,7 +204,9 @@ final class Settings_Button_Tab {
 				'custom' => __( 'Custom', 'fixthisplz' ),
 			)
 		);
-		echo '<fieldset class="fixthisplz-sub fixthisplz-inline-fields"' . F::show_if( $shadow, '=', 'custom' ) . '><legend>' . esc_html__( 'Custom shadow', 'fixthisplz' ) . '</legend>'; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
+		echo '<fieldset class="fixthisplz-sub fixthisplz-inline-fields"';
+		F::show_if( $shadow, '=', 'custom' );
+		echo '><legend>' . esc_html__( 'Custom shadow', 'fixthisplz' ) . '</legend>';
 		$sc = $b['shadow_custom'];
 		F::labelled_number( array( 'button', 'shadow_custom', 'x' ), $sc['x'], __( 'Offset X (px)', 'fixthisplz' ), -100, 100 );
 		F::labelled_number( array( 'button', 'shadow_custom', 'y' ), $sc['y'], __( 'Offset Y (px)', 'fixthisplz' ), -100, 100 );
@@ -226,7 +232,9 @@ final class Settings_Button_Tab {
 				'custom' => __( 'Custom', 'fixthisplz' ),
 			)
 		);
-		echo '<span class="fixthisplz-sub"' . F::show_if( $mode, '=', 'custom' ) . '> '; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
+		echo '<span class="fixthisplz-sub"';
+		F::show_if( $mode, '=', 'custom' );
+		echo '> ';
 		F::labelled_number( array( 'button', 'radius_px' ), $b['radius_px'], __( 'Radius (px)', 'fixthisplz' ), 0, 200 );
 		echo '</span>';
 		F::row_close();
@@ -236,9 +244,11 @@ final class Settings_Button_Tab {
 	private static function mobile_position_row( array $b ): void {
 		$mobile = array( 'button', 'mobile_position_enabled' );
 		// Pointless while the button is hidden on mobile.
-		F::row_open( __( 'Position on mobile', 'fixthisplz' ), '', true, F::show_if( array( 'visibility', 'hide_on_mobile' ), '=', '0' ) );
+		F::row_open( __( 'Position on mobile', 'fixthisplz' ), '', true, array( array( 'visibility', 'hide_on_mobile' ), '=', '0' ) );
 		F::checkbox( $mobile, (bool) $b['mobile_position_enabled'], __( 'Use another position on mobile', 'fixthisplz' ) );
-		echo '<div class="fixthisplz-sub"' . F::show_if( $mobile, '=', '1' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
+		echo '<div class="fixthisplz-sub"';
+		F::show_if( $mobile, '=', '1' );
+		echo '>';
 		Settings_Position_Fields::render( 'position_mobile', $b['position_mobile'] );
 		echo '</div>';
 		F::row_close();
