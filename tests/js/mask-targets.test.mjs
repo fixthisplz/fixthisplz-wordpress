@@ -96,7 +96,7 @@ test('listMaskTargets lists value-bearing fields but leaves buttons, check boxes
 
 test('listMaskTargets includes sensitive zones and their descendants, built-in and configured', () => {
 	const root = node('body', {}, [
-		node('section', { id: 'marked', 'data-fixthisplz-sensitive': '' }, [node('span', { id: 'inner' }, [node('b', { id: 'deep' })])]),
+		node('section', { id: 'marked', 'data-ftp-mask': '' }, [node('span', { id: 'inner' }, [node('b', { id: 'deep' })])]),
 		node('div', { id: 'configured', class: 'iban' }),
 		node('div', { id: 'other' }),
 	]);

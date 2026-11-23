@@ -56,7 +56,7 @@ test('maskClone replaces textarea, select and contenteditable content', () => {
 test('maskClone fills sensitive boxes and hides their whole subtree', () => {
 	const deep = el('span', {}, ['1 234 €']);
 	const inner = el('p', {}, ['IBAN ', deep]);
-	const marked = el('div', { 'data-fixthisplz-sensitive': '' }, [inner]);
+	const marked = el('div', { 'data-ftp-mask': '' }, [inner]);
 	const viaSetting = el('section', { class: 'balance' }, [el('em', {}, ['42'])]);
 	const other = el('div', {}, ['public']);
 	maskClone(el('main', {}, [marked, viaSetting, other]), ['.balance', '%%invalid']);
@@ -72,7 +72,7 @@ test('maskClone fills sensitive boxes and hides their whole subtree', () => {
 
 test('maskClone masks fields inside a sensitive box too', () => {
 	const input = el('input', { type: 'text', value: 'secret' });
-	const box = el('div', { 'data-fixthisplz-sensitive': '' }, [input]);
+	const box = el('div', { 'data-ftp-mask': '' }, [input]);
 	maskClone(el('main', {}, [box]));
 	assert.equal(input.getAttribute('value'), BULLETS);
 	assert.equal(input.style.get('visibility'), 'hidden');
@@ -81,7 +81,7 @@ test('maskClone masks fields inside a sensitive box too', () => {
 test('masking off (default): the clone keeps values and nothing is filled', () => {
 	const pwd = el('input', { type: 'password', value: 'motdepasse' });
 	const text = el('input', { type: 'text', value: 'secret' });
-	const marked = el('div', { 'data-fixthisplz-sensitive': '' }, [text]);
+	const marked = el('div', { 'data-ftp-mask': '' }, [text]);
 	for (const flag of [undefined, false, 'true']) {
 		assert.deepEqual(cloneMasker(flag, ['.x'])(el('form', {}, [pwd, marked])), []);
 	}

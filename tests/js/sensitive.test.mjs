@@ -25,9 +25,9 @@ function el(attrs = {}, parent = null) {
 }
 
 test('sensitiveList always holds the built-in marker and drops blanks and non-strings', () => {
-	assert.deepEqual(sensitiveList(), ['[data-fixthisplz-sensitive]']);
-	assert.deepEqual(sensitiveList('.x'), ['[data-fixthisplz-sensitive]']);
-	assert.deepEqual(sensitiveList(['.a', '', '  ', 3, null, '.b']), ['[data-fixthisplz-sensitive]', '.a', '.b']);
+	assert.deepEqual(sensitiveList(), ['[data-ftp-mask]']);
+	assert.deepEqual(sensitiveList('.x'), ['[data-ftp-mask]']);
+	assert.deepEqual(sensitiveList(['.a', '', '  ', 3, null, '.b']), ['[data-ftp-mask]', '.a', '.b']);
 });
 
 test('isEditable is true for any contenteditable value except "false"', () => {
@@ -38,7 +38,7 @@ test('isEditable is true for any contenteditable value except "false"', () => {
 });
 
 test('matchesAny tests the node itself, closestAny its ancestors too; invalid selectors are ignored', () => {
-	const parent = el({ 'data-fixthisplz-sensitive': '' });
+	const parent = el({ 'data-ftp-mask': '' });
 	const child = el({ class: 'card' }, parent);
 	const selectors = sensitiveList(['div >>> bad', '.card']);
 	assert.equal(matchesAny(child, selectors), true);

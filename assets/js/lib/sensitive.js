@@ -2,7 +2,7 @@
  * text (element.js, report.js) and the opt-in masks (clone-mask.js, mask-targets.js, tab-capture.js): if these
  * rules differed, the collected text and the masked image would not cover the same things. */
 
-const SENSITIVE_ATTR = '[data-fixthisplz-sensitive]';
+const SENSITIVE_ATTR = '[data-ftp-mask]';
 export const FIELD_TAGS = new Set(['INPUT', 'TEXTAREA', 'SELECT']);
 // Input types whose value attribute is page-authored (labels, flags) rather than chosen or typed.
 export const KEEP_VALUE_TYPES = new Set(['button', 'submit', 'reset', 'image', 'checkbox', 'radio']);
