@@ -3,10 +3,11 @@
 namespace Bug_Spotter\Admin;
 
 use Bug_Spotter\Admin\Settings_Fields as F;
+use Bug_Spotter\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
-/** "Spam protection" tab of the settings screen: the spam check service, the sending limits and the IP source. */
+/** "Spam protection" tab of the settings screen: the spam check service, the sending limits and, folded, the source of the visitors' IP address. */
 final class Settings_Spam_Tab {
 
 	/** @param array<string,mixed> $s */
@@ -28,22 +29,22 @@ final class Settings_Spam_Tab {
 		F::row_close();
 		F::table_close();
 
-		F::section( __( 'Advanced settings', 'bug-spotter' ), __( 'Change this only if your site is behind a proxy or Cloudflare.', 'bug-spotter' ) );
+		F::advanced_open( __( 'Change this only if your site is behind a proxy or Cloudflare.', 'bug-spotter' ), $p, Settings::defaults()['protection'], array( 'proxy_header' ) );
 		$id = F::id( array( 'protection', 'proxy_header' ) );
-		F::row_open( __( 'Trusted proxy header (advanced)', 'bug-spotter' ), $id );
+		F::row_open( __( 'Visitors’ IP address', 'bug-spotter' ), $id );
 		F::select(
 			array( 'protection', 'proxy_header' ),
 			$p['proxy_header'],
 			array(
-				''                 => __( 'None: use the connection address (recommended)', 'bug-spotter' ),
-				'x-forwarded-for'  => 'X-Forwarded-For',
-				'cf-connecting-ip' => 'CF-Connecting-IP (Cloudflare)',
+				''                 => __( 'Connection address (recommended)', 'bug-spotter' ),
+				'x-forwarded-for'  => __( 'X-Forwarded-For header (proxy)', 'bug-spotter' ),
+				'cf-connecting-ip' => __( 'CF-Connecting-IP header (Cloudflare)', 'bug-spotter' ),
 			),
 			true
 		);
 		echo '<div class="notice notice-warning inline" id="' . esc_attr( $id ) . '-desc"><p>' . esc_html__( 'Only choose a header if every request reaches this site through a proxy or CDN that sets it. Otherwise anyone can forge it and get around the per-IP limits.', 'bug-spotter' ) . '</p></div>';
 		F::row_close();
-		F::table_close();
+		F::advanced_close();
 	}
 
 	/** The provider, its keys and the "Test" button (its widget is printed after the form, see Settings_Page). @param array<string,mixed> $c */

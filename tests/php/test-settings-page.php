@@ -387,7 +387,7 @@ settings_page_test(
 			'tracking team'     => array( '[management][roles][]', '[management][item_label]', '[management][menu_label]', '[management][list_label]', '[management][menu_position]', '[management][menu_badge]' ),
 			'tracking statuses' => array( '[status_rows][0][key]' ),
 			'tracking priorities' => array( '[priority_rows][0][key]' ),
-			'alerts'            => array( '[notifications][enabled]', '[notifications][recipients]', '[notifications][attach_screenshot]', '[webhooks][0][url]', '[webhooks][4][url]' ),
+			'alerts'            => array( '[notifications][enabled]', '[notifications][recipients]', '[notifications][attach_screenshot]', '[webhooks][0][url]' ),
 			'spam'              => array( '[captcha][provider]', '[captcha][site_key]', '[captcha][secret_key]', '[captcha][v3_threshold]', '[protection][per_hour]', '[protection][per_day]', '[protection][proxy_header]' ),
 			'privacy'           => array( '[context][console]', '[context][network]', '[context][sensitive_selectors]', '[data][retention_months]', '[data][delete_on_uninstall]' ),
 		);
@@ -517,5 +517,65 @@ settings_page_test(
 			}
 			$_GET = $saved_get;
 		}
+	}
+);
+
+settings_page_test(
+	'settings-page: advanced_blocks_fold_unless_a_value_differs_from_its_default',
+	function () {
+		$open = static fn( string $html ): int => substr_count( $html, '<details class="bugspot-advanced" open><summary><h2 class="bugspot-summary-title">Advanced settings</h2></summary>' );
+		$shut = static fn( string $html ): int => substr_count( $html, '<details class="bugspot-advanced"><summary><h2 class="bugspot-summary-title">Advanced settings</h2></summary>' );
+
+		// The sanitizer merges a save onto the saved settings: start each case from the defaults.
+		delete_option( Settings::OPTION );
+		foreach ( array( 'button', 'spam' ) as $tab ) {
+			$html = settings_page_tab_html( $tab );
+			assert_same( array( 0, 1 ), array( $open( $html ), $shut( $html ) ), "$tab: folded with the defaults" );
+		}
+		$html = settings_page_tab_html( 'button' );
+		$fold = substr( $html, strpos( $html, '<summary><h2 class="bugspot-summary-title">Advanced settings</h2></summary>' ) );
+		foreach ( array( '[button][shadow]', '[button][shadow_custom][x]', '[button][radius_mode]', '[button][radius_px]', '[button][z_index]' ) as $field ) {
+			assert_true( str_contains( $fold, 'name="' . Settings::OPTION . $field . '"' ), "button: $field folded" );
+		}
+		assert_true( 1 === preg_match( '#<summary><h2 class="bugspot-summary-title">Advanced settings</h2></summary><p class="description">[^<]+</p><table class="form-table"#', $html ), 'sentence then form-table' );
+		$html = settings_page_tab_html( 'spam' );
+		$fold = substr( $html, strpos( $html, '<summary><h2 class="bugspot-summary-title">Advanced settings</h2></summary>' ) );
+		assert_true( str_contains( $fold, 'name="' . Settings::OPTION . '[protection][proxy_header]"' ), 'spam: proxy header folded' );
+		assert_true( str_contains( $fold, '>Visitors’ IP address<' ) && str_contains( $fold, '>CF-Connecting-IP header (Cloudflare)<' ), 'spam: new labels' );
+
+		$cases = array(
+			array( 'button', array( 'button' => array( 'shadow' => 'strong' ) ) ),
+			array( 'button', array( 'button' => array( 'radius_mode' => 'custom' ) ) ),
+			array( 'button', array( 'button' => array( 'z_index' => 5 ) ) ),
+			array( 'spam', array( 'protection' => array( 'proxy_header' => 'cf-connecting-ip' ) ) ),
+		);
+		foreach ( $cases as list( $tab, $option ) ) {
+			delete_option( Settings::OPTION );
+			update_option( Settings::OPTION, $option );
+			$html = settings_page_tab_html( $tab );
+			assert_same( array( 1, 0 ), array( $open( $html ), $shut( $html ) ), "$tab: open when " . wp_json_encode( $option ) );
+		}
+		// A setting outside the fold does not open it.
+		delete_option( Settings::OPTION );
+		update_option( Settings::OPTION, array( 'button' => array( 'shape' => 'pill' ), 'protection' => array( 'per_hour' => 3 ) ) );
+		assert_same( 0, $open( settings_page_tab_html( 'button' ) ) + $open( settings_page_tab_html( 'spam' ) ), 'other settings keep it folded' );
+		// Only effective values open it: a custom shadow or radius left unused (preset shadow, radius set by the shape) does not.
+		delete_option( Settings::OPTION );
+		update_option( Settings::OPTION, array( 'button' => array( 'shadow_custom' => array( 'blur' => 30 ), 'radius_px' => 20 ) ) );
+		assert_same( array( 0, 1 ), array( $open( settings_page_tab_html( 'button' ) ), $shut( settings_page_tab_html( 'button' ) ) ), 'unused custom values keep it folded' );
+	}
+);
+
+settings_page_test(
+	'settings-page: email_and_mobile_fields_follow_their_switch',
+	function () {
+		$rows = static function ( string $html, string $target, string $value ): array {
+			$attrs = 'data-bugspot-show-if="' . esc_attr( Settings::OPTION . $target ) . '" data-bugspot-op="=" data-bugspot-value="' . $value . '"';
+			preg_match_all( '#<tr' . preg_quote( ' ' . $attrs, '#' ) . '><th scope="row">(?:<label[^>]*>)?([^<]+)<#', $html, $m );
+			return $m[1];
+		};
+		$alerts = settings_page_tab_html( 'alerts' );
+		assert_same( array( 'Recipients', 'Attachment' ), $rows( $alerts, '[notifications][enabled]', '1' ), 'e-mail rows shown only when the e-mail is enabled' );
+		assert_same( array( 'Position on mobile' ), $rows( settings_page_tab_html( 'button' ), '[visibility][hide_on_mobile]', '0' ), 'mobile position hidden when the button is hidden on mobile' );
 	}
 );

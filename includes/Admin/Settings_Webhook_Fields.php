@@ -8,17 +8,74 @@ use Bug_Spotter\Webhooks;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Webhook blocks of the "Alerts" tab (Settings_Alerts_Tab, spec 7.12): Webhooks::MAX fixed blocks, the saved ones first, then empty ones.
- * A block with an empty address is not saved; the secret goes back encrypted in a hidden field and is kept.
+ * Webhook blocks of the "Alerts" tab (Settings_Alerts_Tab, spec 7.12): one open block per saved webhook (index i of
+ * Webhooks::all(), the index the "Send a test" button posts), then, while there is room, one empty block folded under
+ * "Add a webhook". The sanitizer drops a block with an empty address (so an untouched "Add" block and an emptied
+ * address save nothing) and keeps the secret posted back, encrypted, in each block's hidden field.
  */
 final class Settings_Webhook_Fields {
 
 	public static function render(): void {
-		F::description( __( 'Each new report, status change or assignment can be posted to a chat channel or to your own service. Only the addresses below are called. They receive the report number, an excerpt of the description, the page, the status, the priority, the name of the assignee and a link to the report, never the reporter’s e-mail address, IP address or screenshot.', 'bug-spotter' ) );
+		self::what_is_sent();
 		$saved = Webhooks::all();
-		for ( $i = 0; $i < Webhooks::MAX; $i++ ) {
-			self::block( $i, $saved[ $i ] ?? null );
+		foreach ( $saved as $i => $w ) {
+			self::block( $i, $w );
 		}
+		if ( count( $saved ) < Webhooks::MAX ) {
+			F::details_open( __( 'Add a webhook', 'bug-spotter' ), false, 'bugspot-advanced', 3 );
+			self::block( count( $saved ), null );
+			F::details_close();
+		}
+		// After the blocks (so it takes the next index): the list is always posted whole, even without any block.
+		F::list_marker( array( 'webhooks' ) );
+	}
+
+	/** Folded list of what a webhook message holds and what it never holds (Webhook_Payload). */
+	private static function what_is_sent(): void {
+		F::details_open( __( 'What does a webhook receive?', 'bug-spotter' ), false, 'bugspot-disclosure' );
+		F::description( __( 'Only the addresses below are called. Each message holds:', 'bug-spotter' ) );
+		self::items(
+			array(
+				__( 'the event, the name and address of the site, the date and time', 'bug-spotter' ),
+				__( 'the report number and the first 300 characters of its description', 'bug-spotter' ),
+				__( 'the address of the page, the status, the priority and the name of the assignee', 'bug-spotter' ),
+				__( 'the change made (old and new status, or old and new assignee) and a link to the report in the administration', 'bug-spotter' ),
+			)
+		);
+		F::description( __( 'When a bulk action changes several reports at once, Slack, Microsoft Teams and Discord receive a single summary instead: the number of reports, the new status or assignee and a link to the list. The generic JSON format still receives one message per report.', 'bug-spotter' ) );
+		F::description( __( 'It never holds:', 'bug-spotter' ) );
+		self::items(
+			array(
+				__( 'the name, e-mail address or IP address of the reporter', 'bug-spotter' ),
+				__( 'the screenshot', 'bug-spotter' ),
+				__( 'the technical data (browser, console errors, network requests) and the internal notes', 'bug-spotter' ),
+			)
+		);
+		F::details_close();
+	}
+
+	/** @param string[] $items */
+	private static function items( array $items ): void {
+		echo '<ul class="ul-disc">';
+		foreach ( $items as $item ) {
+			echo '<li>' . esc_html( $item ) . '</li>';
+		}
+		echo '</ul>';
+	}
+
+	/** Legend of a block: "Webhook 2", enriched for a saved webhook with its format and whether it is enabled. @param array<string,mixed>|null $w */
+	private static function title( int $i, ?array $w ): string {
+		if ( null === $w ) {
+			/* translators: %d: webhook number, 1 to 5. */
+			return sprintf( __( 'Webhook %d', 'bug-spotter' ), $i + 1 );
+		}
+		return sprintf(
+			/* translators: 1: webhook number, 1 to 5; 2: its format, such as "Slack"; 3: "enabled" or "paused". */
+			__( 'Webhook %1$d: %2$s, %3$s', 'bug-spotter' ),
+			$i + 1,
+			Webhooks::format_labels()[ $w['format'] ] ?? $w['format'],
+			empty( $w['enabled'] ) ? _x( 'paused', 'webhook state', 'bug-spotter' ) : _x( 'enabled', 'webhook state', 'bug-spotter' )
+		);
 	}
 
 	/** @param array<string,mixed>|null $w The saved webhook, null for an empty block. */
@@ -26,8 +83,7 @@ final class Settings_Webhook_Fields {
 		$path = static fn( string $key ): array => array( 'webhooks', (string) $i, $key );
 
 		echo '<fieldset class="bugspot-webhook">';
-		/* translators: %d: webhook number, 1 to 5. */
-		echo '<legend>' . esc_html( sprintf( __( 'Webhook %d', 'bug-spotter' ), $i + 1 ) ) . '</legend>';
+		echo '<legend>' . esc_html( self::title( $i, $w ) ) . '</legend>';
 		F::table_open();
 
 		$id = F::id( $path( 'url' ) );
@@ -69,14 +125,22 @@ final class Settings_Webhook_Fields {
 		echo '</fieldset>';
 	}
 
-	/** The signing secret of a saved generic JSON webhook, readable by administrators only (this screen). @param callable $path @param array<string,mixed> $w */
+	/**
+	 * The signing secret of a saved generic JSON webhook, readable by administrators only (this screen), folded for
+	 * developers. The encrypted secret goes back in a hidden field, outside the fold: it is kept unless "regenerate" is ticked.
+	 *
+	 * @param callable            $path
+	 * @param array<string,mixed> $w
+	 */
 	private static function secret_row( callable $path, array $w ): void {
 		$id     = F::id( $path( 'secret' ) );
 		$secret = Webhooks::secret( $w );
-		F::row_open( __( 'Signing secret', 'bug-spotter' ), $id, false, F::show_if( $path( 'format' ), '=', 'generic' ) );
+		F::row_open( __( 'Signing secret', 'bug-spotter' ), '', true, F::show_if( $path( 'format' ), '=', 'generic' ) );
 		echo '<input type="hidden" name="' . esc_attr( F::name( $path( 'secret' ) ) ) . '" value="' . esc_attr( (string) $w['secret'] ) . '">';
+		// Open when the secret is unreadable: the administrator must see that a new one is coming.
+		F::details_open( __( 'Check the signature (developers)', 'bug-spotter' ), null === $secret, 'bugspot-disclosure' );
 		if ( null !== $secret ) {
-			echo '<input type="text" readonly class="large-text code" id="' . esc_attr( $id ) . '" value="' . esc_attr( $secret ) . '" aria-describedby="' . esc_attr( $id ) . '-desc">';
+			echo '<p><input type="text" readonly class="large-text code" id="' . esc_attr( $id ) . '" value="' . esc_attr( $secret ) . '" aria-label="' . esc_attr__( 'Signing secret', 'bug-spotter' ) . '" aria-describedby="' . esc_attr( $id ) . '-desc"></p>';
 		}
 		echo '<label><input type="checkbox" name="' . esc_attr( F::name( $path( 'regenerate' ) ) ) . '" value="1"> ' . esc_html__( 'Make a new secret when saving', 'bug-spotter' ) . '</label>';
 		F::description(
@@ -85,6 +149,7 @@ final class Settings_Webhook_Fields {
 				: __( 'The secret can no longer be read (the BUGSPOT_SECRET key changed): a new one is made when saving.', 'bug-spotter' ),
 			$id . '-desc'
 		);
+		F::details_close();
 		F::row_close();
 	}
 }

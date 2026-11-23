@@ -183,7 +183,6 @@ msgid "Failed requests"
 msgstr "Requêtes réseau en erreur"
 
 #: includes/Admin/Detail_Page.php:98
-#: includes/Admin/Settings_Alerts_Tab.php:29
 #: includes/Admin/Settings_Form_Tab.php:48
 #: includes/Frontend/Assets.php:234
 #: includes/Mailer.php:159
@@ -211,8 +210,8 @@ msgid "The report could not be updated."
 msgstr "Le signalement n’a pas pu être mis à jour."
 
 #: includes/Admin/Report_Context_View.php:18
-#: includes/Admin/Settings_Button_Tab.php:191
-#: includes/Admin/Settings_Spam_Tab.php:59
+#: includes/Admin/Settings_Button_Tab.php:196
+#: includes/Admin/Settings_Spam_Tab.php:60
 msgid "None"
 msgstr "Aucun"
 
@@ -241,7 +240,7 @@ msgid "Role"
 msgstr "Rôle"
 
 #: includes/Admin/Report_Context_View.php:85
-#: includes/Admin/Settings_List_Tab.php:35
+#: includes/Admin/Settings_List_Tab.php:37
 msgid "Name"
 msgstr "Nom"
 
@@ -333,7 +332,7 @@ msgstr "Mis à jour"
 #: includes/Admin/Detail_Page.php:169
 #: includes/Admin/List_Table.php:79
 #: includes/Admin/List_Table.php:164
-#: includes/Admin/Settings_List_Tab.php:135
+#: includes/Admin/Settings_List_Tab.php:137
 #: includes/Frontend/Assets.php:204
 msgid "Delete"
 msgstr "Supprimer"
@@ -412,8 +411,8 @@ msgid "Settings"
 msgstr "Réglages"
 
 #: includes/Admin/Settings_Assets.php:63
-#: includes/Admin/Settings_Button_Tab.php:128
-#: includes/Admin/Settings_Button_Tab.php:134
+#: includes/Admin/Settings_Button_Tab.php:133
+#: includes/Admin/Settings_Button_Tab.php:139
 #: includes/Admin/Settings_Form_Tab.php:34
 #: includes/Settings.php:195
 #: includes/Settings.php:208
@@ -432,7 +431,7 @@ msgstr "Utiliser cette icône"
 msgid "Please choose an SVG file."
 msgstr "Veuillez choisir un fichier SVG."
 
-#: includes/Admin/Settings_Button_Tab.php:265
+#: includes/Admin/Settings_Button_Tab.php:271
 msgid "Button preview"
 msgstr "Aperçu du bouton"
 
@@ -474,37 +473,37 @@ msgstr "Aucune réponse de la vérification. Réessayez."
 msgid "Enter the site key first."
 msgstr "Saisissez d’abord la clé publique."
 
-#: includes/Admin/Settings_Button_Tab.php:72
+#: includes/Admin/Settings_Button_Tab.php:77
 msgid "Icon"
 msgstr "Icône"
 
-#: includes/Admin/Settings_Button_Tab.php:73
+#: includes/Admin/Settings_Button_Tab.php:78
 msgid "Icon type"
 msgstr "Type d’icône"
 
-#: includes/Admin/Settings_Button_Tab.php:74
+#: includes/Admin/Settings_Button_Tab.php:79
 msgid "Dashicon"
 msgstr "Icône WordPress (Dashicon)"
 
-#: includes/Admin/Settings_Button_Tab.php:75
+#: includes/Admin/Settings_Button_Tab.php:80
 msgid "SVG image from the media library"
 msgstr "Image SVG de la médiathèque"
 
-#: includes/Admin/Settings_Button_Tab.php:92
-#: includes/Admin/Settings_Button_Tab.php:103
+#: includes/Admin/Settings_Button_Tab.php:97
+#: includes/Admin/Settings_Button_Tab.php:108
 msgid "Choose an icon"
 msgstr "Choisir une icône"
 
-#: includes/Admin/Settings_Button_Tab.php:118
+#: includes/Admin/Settings_Button_Tab.php:123
 msgid "Choose an SVG"
 msgstr "Choisir un SVG"
 
-#: includes/Admin/Settings_Button_Tab.php:119
+#: includes/Admin/Settings_Button_Tab.php:124
 #: includes/Frontend/Assets.php:184
 msgid "Remove"
 msgstr "Retirer"
 
-#: includes/Admin/Settings_Button_Tab.php:120
+#: includes/Admin/Settings_Button_Tab.php:125
 msgid "Only SVG files already in the media library are listed. WordPress blocks SVG uploads by default; Bug Spotter does not change that. Without an SVG, the Dashicon is used."
 msgstr "Seuls les fichiers SVG déjà présents dans la médiathèque sont proposés. WordPress bloque l’envoi de SVG par défaut ; Bug Spotter ne change pas ce comportement. Sans SVG, l’icône WordPress est utilisée."
 
@@ -524,114 +523,114 @@ msgstr "Carré arrondi"
 msgid "Pill with text"
 msgstr "Bouton avec texte"
 
-#: includes/Admin/Settings_Button_Tab.php:129
+#: includes/Admin/Settings_Button_Tab.php:134
 msgid "Shown inside the pill shape, and read by screen readers for every shape."
 msgstr "Visible avec la forme « Bouton avec texte ». Toujours lu par les lecteurs d’écran, quelle que soit la forme."
 
-#: includes/Admin/Settings_Button_Tab.php:133
+#: includes/Admin/Settings_Button_Tab.php:138
 msgid "Tooltip"
 msgstr "Infobulle"
 
-#: includes/Admin/Settings_Button_Tab.php:142
+#: includes/Admin/Settings_Button_Tab.php:147
 #: includes/Frontend/Assets.php:200
 msgid "Size"
 msgstr "Taille"
 
-#: includes/Admin/Settings_Button_Tab.php:147
+#: includes/Admin/Settings_Button_Tab.php:152
 msgid "Small"
 msgstr "Petite"
 
-#: includes/Admin/Settings_Button_Tab.php:148
-#: includes/Admin/Settings_Button_Tab.php:193
+#: includes/Admin/Settings_Button_Tab.php:153
+#: includes/Admin/Settings_Button_Tab.php:198
 msgid "Medium"
 msgstr "Moyenne"
 
-#: includes/Admin/Settings_Button_Tab.php:149
+#: includes/Admin/Settings_Button_Tab.php:154
 msgid "Large"
 msgstr "Grande"
 
-#: includes/Admin/Settings_Button_Tab.php:163
+#: includes/Admin/Settings_Button_Tab.php:168
 msgid "Background color"
 msgstr "Couleur de fond"
 
-#: includes/Admin/Settings_Button_Tab.php:164
+#: includes/Admin/Settings_Button_Tab.php:169
 msgid "Icon and text color"
 msgstr "Couleur de l’icône et du texte"
 
-#: includes/Admin/Settings_Button_Tab.php:165
+#: includes/Admin/Settings_Button_Tab.php:170
 msgid "Background color on hover"
 msgstr "Couleur de fond au survol"
 
-#: includes/Admin/Settings_Button_Tab.php:186
+#: includes/Admin/Settings_Button_Tab.php:191
 msgid "Shadow"
 msgstr "Ombre"
 
-#: includes/Admin/Settings_Button_Tab.php:192
+#: includes/Admin/Settings_Button_Tab.php:197
 msgid "Light"
 msgstr "Légère"
 
-#: includes/Admin/Settings_Button_Tab.php:194
+#: includes/Admin/Settings_Button_Tab.php:199
 msgid "Strong"
 msgstr "Forte"
 
-#: includes/Admin/Settings_Button_Tab.php:195
-#: includes/Admin/Settings_Button_Tab.php:221
+#: includes/Admin/Settings_Button_Tab.php:200
+#: includes/Admin/Settings_Button_Tab.php:226
 #: includes/Admin/Settings_Position_Fields.php:28
 msgid "Custom"
 msgstr "Personnalisée"
 
-#: includes/Admin/Settings_Button_Tab.php:198
+#: includes/Admin/Settings_Button_Tab.php:203
 msgid "Custom shadow"
 msgstr "Ombre personnalisée"
 
-#: includes/Admin/Settings_Button_Tab.php:200
+#: includes/Admin/Settings_Button_Tab.php:205
 msgid "Offset X (px)"
 msgstr "Décalage horizontal (px)"
 
-#: includes/Admin/Settings_Button_Tab.php:201
+#: includes/Admin/Settings_Button_Tab.php:206
 msgid "Offset Y (px)"
 msgstr "Décalage vertical (px)"
 
-#: includes/Admin/Settings_Button_Tab.php:202
+#: includes/Admin/Settings_Button_Tab.php:207
 msgid "Blur (px)"
 msgstr "Flou (px)"
 
-#: includes/Admin/Settings_Button_Tab.php:203
+#: includes/Admin/Settings_Button_Tab.php:208
 msgid "Spread (px)"
 msgstr "Étendue (px)"
 
-#: includes/Admin/Settings_Button_Tab.php:205
-#: includes/Admin/Settings_List_Tab.php:36
+#: includes/Admin/Settings_Button_Tab.php:210
+#: includes/Admin/Settings_List_Tab.php:38
 #: includes/Frontend/Assets.php:193
 msgid "Color"
 msgstr "Couleur"
 
-#: includes/Admin/Settings_Button_Tab.php:207
+#: includes/Admin/Settings_Button_Tab.php:212
 msgid "Hex color (#rrggbb) or rgba(red, green, blue, opacity), for example rgba(0,0,0,0.25)."
 msgstr "Saisissez une couleur au format #rrggbb, ou rgba(rouge, vert, bleu, opacité) pour une couleur transparente, par exemple rgba(0,0,0,0.25)."
 
-#: includes/Admin/Settings_Button_Tab.php:215
+#: includes/Admin/Settings_Button_Tab.php:220
 msgid "Corner radius"
 msgstr "Arrondi des angles"
 
-#: includes/Admin/Settings_Button_Tab.php:220
+#: includes/Admin/Settings_Button_Tab.php:225
 msgid "Set by the shape"
 msgstr "Selon la forme"
 
-#: includes/Admin/Settings_Button_Tab.php:225
+#: includes/Admin/Settings_Button_Tab.php:230
 msgid "Radius (px)"
 msgstr "Rayon (px)"
 
-#: includes/Admin/Settings_Button_Tab.php:233
+#: includes/Admin/Settings_Button_Tab.php:239
 #: includes/Admin/Settings_Position_Fields.php:16
 msgid "Position on mobile"
 msgstr "Position sur mobile"
 
-#: includes/Admin/Settings_Button_Tab.php:244
+#: includes/Admin/Settings_Button_Tab.php:250
 msgid "Stacking order (z-index)"
 msgstr "Priorité d’affichage (z-index)"
 
-#: includes/Admin/Settings_Button_Tab.php:246
+#: includes/Admin/Settings_Button_Tab.php:252
 msgid "Raise it if a theme element covers the button."
 msgstr "Augmentez cette valeur si un élément du thème passe par-dessus le bouton."
 
@@ -675,23 +674,23 @@ msgstr "Distance verticale"
 msgid "Percentages are relative to the browser window (0 to 100)."
 msgstr "En %, la distance se compte par rapport à la taille de la fenêtre du navigateur (0 à 100)."
 
-#: includes/Admin/Settings_Button_Tab.php:260
+#: includes/Admin/Settings_Button_Tab.php:266
 msgid "Preview"
 msgstr "Aperçu"
 
-#: includes/Admin/Settings_Button_Tab.php:261
+#: includes/Admin/Settings_Button_Tab.php:267
 msgid "Preview screen size"
 msgstr "Taille d’écran de l’aperçu"
 
-#: includes/Admin/Settings_Button_Tab.php:262
+#: includes/Admin/Settings_Button_Tab.php:268
 msgid "Desktop"
 msgstr "Ordinateur"
 
-#: includes/Admin/Settings_Button_Tab.php:263
+#: includes/Admin/Settings_Button_Tab.php:269
 msgid "Mobile"
 msgstr "Mobile"
 
-#: includes/Admin/Settings_Button_Tab.php:266
+#: includes/Admin/Settings_Button_Tab.php:272
 msgid "Updated as you change the settings below. The frame stands for a browser window; save to apply."
 msgstr "L’aperçu suit vos réglages ci-dessous ; le cadre représente une fenêtre de navigateur. Enregistrez pour appliquer les réglages au site."
 
@@ -788,56 +787,56 @@ msgstr "JSON (.json)"
 msgid "Plain text (.txt)"
 msgstr "Texte brut (.txt)"
 
-#: includes/Admin/Settings_Spam_Tab.php:55
+#: includes/Admin/Settings_Spam_Tab.php:56
 msgid "Provider"
 msgstr "Service anti-spam"
 
-#: includes/Admin/Settings_Spam_Tab.php:60
+#: includes/Admin/Settings_Spam_Tab.php:61
 msgid "Cloudflare Turnstile"
 msgstr "Cloudflare Turnstile"
 
-#: includes/Admin/Settings_Spam_Tab.php:61
+#: includes/Admin/Settings_Spam_Tab.php:62
 msgid "Google reCAPTCHA v2 (checkbox)"
 msgstr "Google reCAPTCHA v2 (case à cocher)"
 
-#: includes/Admin/Settings_Spam_Tab.php:63
+#: includes/Admin/Settings_Spam_Tab.php:64
 msgid "hCaptcha"
 msgstr "hCaptcha"
 
-#: includes/Admin/Settings_Spam_Tab.php:70
+#: includes/Admin/Settings_Spam_Tab.php:71
 msgid "Site key"
 msgstr "Clé publique (clé du site)"
 
-#: includes/Admin/Settings_Spam_Tab.php:75
+#: includes/Admin/Settings_Spam_Tab.php:76
 msgid "Secret key"
 msgstr "Clé secrète"
 
-#: includes/Admin/Settings_Spam_Tab.php:85
+#: includes/Admin/Settings_Spam_Tab.php:86
 msgid "Saved — leave blank to keep it"
 msgstr "Enregistrée : laissez vide pour la garder"
 
-#: includes/Admin/Settings_Spam_Tab.php:89
+#: includes/Admin/Settings_Spam_Tab.php:90
 msgid "Kept on the server only, never sent to visitors."
 msgstr "Elle reste sur le serveur et n’est jamais envoyée aux visiteurs."
 
-#: includes/Admin/Settings_Spam_Tab.php:93
+#: includes/Admin/Settings_Spam_Tab.php:94
 msgid "Minimum score"
 msgstr "Score minimal"
 
-#: includes/Admin/Settings_Spam_Tab.php:95
+#: includes/Admin/Settings_Spam_Tab.php:96
 msgid "Between 0 (accept everything) and 1 (strictest). Default: 0.5."
 msgstr "Entre 0 (tout accepter) et 1 (le plus strict). Par défaut : 0,5."
 
-#: includes/Admin/Settings_Spam_Tab.php:98
+#: includes/Admin/Settings_Spam_Tab.php:99
 msgid "Test the keys"
 msgstr "Tester les clés"
 
-#: includes/Admin/Settings_Spam_Tab.php:99
-#: includes/Admin/Settings_Webhook_Fields.php:61
+#: includes/Admin/Settings_Spam_Tab.php:100
+#: includes/Admin/Settings_Webhook_Fields.php:117
 msgid "Test"
 msgstr "Tester"
 
-#: includes/Admin/Settings_Spam_Tab.php:101
+#: includes/Admin/Settings_Spam_Tab.php:102
 msgid "Uses the provider and keys typed above, even before saving. A blank secret key tests the saved one. Requires JavaScript."
 msgstr "Teste le service et les clés saisis ci-dessus, sans enregistrer. Si la clé secrète est vide, la clé enregistrée est testée. Nécessite JavaScript."
 
@@ -849,45 +848,37 @@ msgstr "Notification par e-mail"
 msgid "Send an e-mail for every new report"
 msgstr "Envoyer un e-mail à chaque nouveau signalement"
 
-#: includes/Admin/Settings_Alerts_Tab.php:23
+#: includes/Admin/Settings_Alerts_Tab.php:24
 msgid "Recipients"
 msgstr "Destinataires"
 
 #. translators: %s: the site administration e-mail address.
-#: includes/Admin/Settings_Alerts_Tab.php:26
+#: includes/Admin/Settings_Alerts_Tab.php:27
 #, php-format
 msgid "Several addresses separated by commas. Empty: %s (site administration address)."
 msgstr "Séparez les adresses par des virgules. Si le champ est vide : %s (e-mail d’administration du site)."
 
-#: includes/Admin/Settings_Alerts_Tab.php:30
+#: includes/Admin/Settings_Alerts_Tab.php:31
 msgid "Attach the screenshot to the e-mail"
 msgstr "Joindre la capture d’écran à l’e-mail (si le signalement en contient une)"
 
-#: includes/Admin/Settings_Spam_Tab.php:19
+#: includes/Admin/Settings_Spam_Tab.php:20
 msgid "Reports per hour"
 msgstr "Signalements par heure"
 
-#: includes/Admin/Settings_Spam_Tab.php:21
+#: includes/Admin/Settings_Spam_Tab.php:22
 msgid "Maximum per IP address."
 msgstr "Maximum par adresse IP."
 
-#: includes/Admin/Settings_Spam_Tab.php:25
+#: includes/Admin/Settings_Spam_Tab.php:26
 msgid "Reports per day"
 msgstr "Signalements par jour"
 
-#: includes/Admin/Settings_Spam_Tab.php:27
+#: includes/Admin/Settings_Spam_Tab.php:28
 msgid "Maximum per IP address. A hidden honeypot field also stops basic bots; it is always active."
 msgstr "Maximum par adresse IP. Un champ piège invisible bloque aussi les robots simples ; il est toujours actif."
 
-#: includes/Admin/Settings_Spam_Tab.php:33
-msgid "Trusted proxy header (advanced)"
-msgstr "Source de l’adresse IP (avancé)"
-
-#: includes/Admin/Settings_Spam_Tab.php:38
-msgid "None: use the connection address (recommended)"
-msgstr "Adresse de connexion (recommandé)"
-
-#: includes/Admin/Settings_Spam_Tab.php:44
+#: includes/Admin/Settings_Spam_Tab.php:45
 msgid "Only choose a header if every request reaches this site through a proxy or CDN that sets it. Otherwise anyone can forge it and get around the per-IP limits."
 msgstr "Ne choisissez un en-tête que si tout le trafic passe par un proxy ou un CDN qui le définit. Sinon, n’importe qui peut le falsifier et contourner les limites par adresse IP."
 
@@ -1350,48 +1341,48 @@ msgstr "La capture d’écran est trop volumineuse (%s Mo maximum)."
 msgid "The screenshot is too large (%s MB maximum). You can send the report without it."
 msgstr "La capture d’écran est trop volumineuse (%s Mo maximum). Vous pouvez envoyer le signalement sans elle."
 
-#: includes/Admin/Settings_List_Tab.php:66
+#: includes/Admin/Settings_List_Tab.php:68
 #: includes/Admin/Settings_Page.php:74
 msgid "Statuses"
 msgstr "Statuts"
 
-#: includes/Admin/Settings_List_Tab.php:34
+#: includes/Admin/Settings_List_Tab.php:36
 msgid "Order"
 msgstr "Ordre"
 
-#: includes/Admin/Settings_List_Tab.php:40
+#: includes/Admin/Settings_List_Tab.php:42
 msgid "Reports"
 msgstr "Signalements"
 
-#: includes/Admin/Settings_List_Tab.php:41
+#: includes/Admin/Settings_List_Tab.php:43
 msgid "Actions"
 msgstr "Actions"
 
-#: includes/Admin/Settings_List_Tab.php:69
+#: includes/Admin/Settings_List_Tab.php:71
 msgid "Add a status"
 msgstr "Ajouter un statut"
 
-#: includes/Admin/Settings_List_Tab.php:70
+#: includes/Admin/Settings_List_Tab.php:72
 msgid "Status name"
 msgstr "Nom du statut"
 
 #. translators: %d: number of reports that use the deleted status or priority.
-#: includes/Admin/Settings_List_Tab.php:107
+#: includes/Admin/Settings_List_Tab.php:109
 #, php-format
 msgid "Move its %d report to:"
 msgid_plural "Move its %d reports to:"
 msgstr[0] "Déplacer %d signalement vers :"
 msgstr[1] "Déplacer les %d signalements vers :"
 
-#: includes/Admin/Settings_List_Tab.php:109
+#: includes/Admin/Settings_List_Tab.php:111
 msgid "Drag to reorder"
 msgstr "Glisser pour déplacer"
 
-#: includes/Admin/Settings_List_Tab.php:71
+#: includes/Admin/Settings_List_Tab.php:73
 msgid "Status color"
 msgstr "Couleur du statut"
 
-#: includes/Admin/Settings_List_Tab.php:127
+#: includes/Admin/Settings_List_Tab.php:129
 msgid "Never"
 msgstr "Jamais"
 
@@ -1531,19 +1522,19 @@ msgstr "Grande taille"
 msgid "Latest reports"
 msgstr "Derniers signalements"
 
-#: includes/Admin/Settings_List_Tab.php:77
+#: includes/Admin/Settings_List_Tab.php:79
 msgid "Drag the rows to order the priorities from the lowest to the highest: sorting the list by priority follows this order. The original priorities keep their default name while their name is left empty. \"Normal\", given to every new report, cannot be deleted."
 msgstr "Glissez les lignes pour ranger les priorités de la plus basse à la plus haute : le tri de la liste par priorité suit cet ordre. Les priorités d’origine gardent leur nom par défaut tant que leur nom est laissé vide. « Normale », donnée à chaque nouveau signalement, ne peut pas être supprimée."
 
-#: includes/Admin/Settings_List_Tab.php:78
+#: includes/Admin/Settings_List_Tab.php:80
 msgid "Add a priority"
 msgstr "Ajouter une priorité"
 
-#: includes/Admin/Settings_List_Tab.php:79
+#: includes/Admin/Settings_List_Tab.php:81
 msgid "Priority name"
 msgstr "Nom de la priorité"
 
-#: includes/Admin/Settings_List_Tab.php:80
+#: includes/Admin/Settings_List_Tab.php:82
 msgid "Priority color"
 msgstr "Couleur de la priorité"
 
@@ -1560,7 +1551,7 @@ msgstr "Bug"
 msgid "Used in the title of a report, such as \"Bug #12\", on its page and in the notification e-mail. Leave empty for the default name."
 msgstr "Utilisé dans le titre d’un signalement, par exemple « Bug n° 12 », sur sa fiche et dans l’e-mail de notification. Laissez vide pour le nom par défaut."
 
-#: includes/Admin/Settings_List_Tab.php:75
+#: includes/Admin/Settings_List_Tab.php:77
 #: includes/Admin/Settings_Page.php:75
 msgid "Priorities"
 msgstr "Priorités"
@@ -1727,62 +1718,59 @@ msgstr "Envoi du test…"
 msgid "The test could not be sent."
 msgstr "Le test n’a pas pu être envoyé."
 
-#: includes/Admin/Settings_Webhook_Fields.php:17
-msgid "Each new report, status change or assignment can be posted to a chat channel or to your own service. Only the addresses below are called. They receive the report number, an excerpt of the description, the page, the status, the priority, the name of the assignee and a link to the report, never the reporter’s e-mail address, IP address or screenshot."
-msgstr "Envoyez chaque nouveau signalement, changement de statut ou attribution vers une messagerie d’équipe ou vers votre propre service. Seules les adresses ci-dessous sont appelées. Elles reçoivent le numéro du signalement, un extrait de la description, la page, le statut, la priorité, le nom du responsable et un lien vers le signalement. Elles ne reçoivent jamais l’adresse e-mail ni l’adresse IP de l’auteur du signalement, ni la capture d’écran."
-
 #. translators: %d: webhook number, 1 to 5.
-#: includes/Admin/Settings_Webhook_Fields.php:30
+#: includes/Admin/Settings_Webhook_Fields.php:70
 #, php-format
 msgid "Webhook %d"
 msgstr "Webhook %d"
 
-#: includes/Admin/Settings_Webhook_Fields.php:34
+#: includes/Admin/Settings_Webhook_Fields.php:90
 msgid "Address (URL)"
 msgstr "URL du webhook"
 
-#: includes/Admin/Settings_Webhook_Fields.php:39
+#: includes/Admin/Settings_Webhook_Fields.php:95
 msgid "Must start with https://. Leave empty to remove the webhook."
 msgstr "Doit commencer par https://. Videz le champ pour supprimer ce webhook."
 
-#: includes/Admin/Settings_Webhook_Fields.php:44
+#: includes/Admin/Settings_Webhook_Fields.php:100
 msgid "Format"
 msgstr "Format"
 
-#: includes/Admin/Settings_Webhook_Fields.php:46
-#: includes/Admin/Settings_Webhook_Fields.php:47
+#: includes/Admin/Settings_Webhook_Fields.php:102
+#: includes/Admin/Settings_Webhook_Fields.php:103
 msgid "Events"
 msgstr "Événements"
 
-#: includes/Admin/Settings_Webhook_Fields.php:55
+#: includes/Admin/Settings_Webhook_Fields.php:111
 msgid "Active"
 msgstr "Actif"
 
-#: includes/Admin/Settings_Webhook_Fields.php:56
+#: includes/Admin/Settings_Webhook_Fields.php:112
 msgid "Send the events ticked above"
 msgstr "Envoyer les événements cochés ci-dessus (décochez pour mettre le webhook en pause)"
 
-#: includes/Admin/Settings_Webhook_Fields.php:62
+#: includes/Admin/Settings_Webhook_Fields.php:118
 msgid "Send a test"
 msgstr "Envoyer un test"
 
-#: includes/Admin/Settings_Webhook_Fields.php:64
+#: includes/Admin/Settings_Webhook_Fields.php:120
 msgid "Sends a test message to the saved address, even when the webhook is inactive. Save your changes first. Requires JavaScript."
 msgstr "Envoie un message d’essai à l’adresse enregistrée, même si le webhook est en pause. Enregistrez d’abord vos modifications. Nécessite JavaScript."
 
-#: includes/Admin/Settings_Webhook_Fields.php:76
+#: includes/Admin/Settings_Webhook_Fields.php:138
+#: includes/Admin/Settings_Webhook_Fields.php:143
 msgid "Signing secret"
 msgstr "Secret de signature"
 
-#: includes/Admin/Settings_Webhook_Fields.php:81
+#: includes/Admin/Settings_Webhook_Fields.php:145
 msgid "Make a new secret when saving"
 msgstr "Générer un nouveau secret à l’enregistrement"
 
-#: includes/Admin/Settings_Webhook_Fields.php:84
+#: includes/Admin/Settings_Webhook_Fields.php:148
 msgid "Each request carries the header X-Bug-Spotter-Signature: sha256= followed by the HMAC-SHA256 of the raw body with this secret. Your service computes the same value to check that the request comes from this site."
 msgstr "Chaque requête porte l’en-tête X-Bug-Spotter-Signature : sha256= suivi du HMAC-SHA256 du corps brut avec ce secret. Votre service calcule la même valeur pour vérifier que la requête vient bien de ce site."
 
-#: includes/Admin/Settings_Webhook_Fields.php:85
+#: includes/Admin/Settings_Webhook_Fields.php:149
 msgid "The secret can no longer be read (the BUGSPOT_SECRET key changed): a new one is made when saving."
 msgstr "Le secret ne peut plus être lu (la clé BUGSPOT_SECRET a changé) : un nouveau sera créé à l’enregistrement."
 
@@ -1854,7 +1842,7 @@ msgstr "Message de test de Bug Spotter sur %s. Le webhook fonctionne."
 msgid "Webhooks: if the site administrators connect a chat or project service, it receives an excerpt of the description, the page address, the status, the priority and the name of the team member in charge, never your e-mail address, IP address or screenshot."
 msgstr "Webhooks : si les administrateurs du site connectent un service de discussion ou de gestion de projet, celui-ci reçoit un extrait de la description, l’adresse de la page, le statut, la priorité et le nom de la personne de l’équipe chargée du signalement, jamais votre adresse e-mail, votre adresse IP ni la capture d’écran."
 
-#: includes/Admin/Settings_Webhook_Fields.php:38
+#: includes/Admin/Settings_Webhook_Fields.php:94
 msgid "Must start with https:// (in this development environment, http://localhost and *.test addresses are also accepted). Leave empty to remove the webhook."
 msgstr "Doit commencer par https:// (dans cet environnement de développement, les adresses http://localhost et *.test sont aussi acceptées). Videz le champ pour supprimer ce webhook."
 
@@ -1920,8 +1908,8 @@ msgstr "Horizontalement : %1$s %2$s du bord %3$s"
 msgid "Vertical: %1$s %2$s from the %3$s edge"
 msgstr "Verticalement : %1$s %2$s du bord %3$s"
 
-#: includes/Admin/Settings_List_Tab.php:38
-#: includes/Admin/Settings_List_Tab.php:129
+#: includes/Admin/Settings_List_Tab.php:40
+#: includes/Admin/Settings_List_Tab.php:131
 msgctxt "status flag: the report is handled"
 msgid "Done"
 msgstr "Traité"
@@ -1930,7 +1918,7 @@ msgstr "Traité"
 msgid "Hidden on URLs starting with"
 msgstr "Adresses sans bouton"
 
-#: includes/Admin/Settings_Spam_Tab.php:62
+#: includes/Admin/Settings_Spam_Tab.php:63
 msgid "Google reCAPTCHA v3 (invisible, score-based)"
 msgstr "Google reCAPTCHA v3 (invisible, par score)"
 
@@ -1966,13 +1954,9 @@ msgstr "E-mail"
 msgid "Send an e-mail to your team for every new report."
 msgstr "Envoyez un e-mail à votre équipe pour chaque nouveau signalement."
 
-#: includes/Admin/Settings_Alerts_Tab.php:34
+#: includes/Admin/Settings_Alerts_Tab.php:35
 msgid "Webhooks"
 msgstr "Webhooks"
-
-#: includes/Admin/Settings_Alerts_Tab.php:34
-msgid "Post the events to Slack, Microsoft Teams, Discord or your own service."
-msgstr "Envoyez les événements vers Slack, Microsoft Teams, Discord ou votre propre service."
 
 #: includes/Admin/Settings_Button_Tab.php:31
 msgid "Appearance"
@@ -2006,26 +1990,25 @@ msgstr "Sur les écrans de 782 px de large ou moins, masquez le bouton ou donnez
 msgid "Hide the button on mobile"
 msgstr "Masquer le bouton sur mobile"
 
-#: includes/Admin/Settings_Button_Tab.php:62
-#: includes/Admin/Settings_Spam_Tab.php:31
+#: includes/Admin/Settings_Fields.php:77
 msgid "Advanced settings"
 msgstr "Réglages avancés"
 
-#: includes/Admin/Settings_Button_Tab.php:62
+#: includes/Admin/Settings_Button_Tab.php:63
 msgid "Shadow, corner radius and display order. The defaults suit most sites."
 msgstr "Ombre, arrondi des angles et priorité d’affichage. Les valeurs par défaut conviennent à la plupart des sites."
 
-#: includes/Admin/Settings_Button_Tab.php:127
+#: includes/Admin/Settings_Button_Tab.php:132
 msgid "Button text"
 msgstr "Texte du bouton"
 
 #. translators: 1: height of the small button, 2: of the medium one, 3: of the large one, in pixels.
-#: includes/Admin/Settings_Button_Tab.php:155
+#: includes/Admin/Settings_Button_Tab.php:160
 #, php-format
 msgid "Height: %1$d px (small), %2$d px (medium) or %3$d px (large)."
 msgstr "Hauteur : %1$d px (petite), %2$d px (moyenne) ou %3$d px (grande)."
 
-#: includes/Admin/Settings_Button_Tab.php:234
+#: includes/Admin/Settings_Button_Tab.php:240
 msgid "Use another position on mobile"
 msgstr "Utiliser une autre position sur mobile"
 
@@ -2122,15 +2105,15 @@ msgstr "Où afficher le bouton"
 msgid "Hide the button on some pages, or also show it in the administration."
 msgstr "Masquez le bouton sur certaines pages, ou affichez-le aussi dans l’administration."
 
-#: includes/Admin/Settings_List_Tab.php:67
+#: includes/Admin/Settings_List_Tab.php:69
 msgid "The steps a report goes through, in the order of the Kanban columns."
 msgstr "Les étapes d’un signalement, dans l’ordre des colonnes du Kanban."
 
-#: includes/Admin/Settings_List_Tab.php:68
+#: includes/Admin/Settings_List_Tab.php:70
 msgid "Drag the rows to change the order of the Kanban columns and of the status lists. Leave the name of an original status empty to keep its default name. A status marked Done counts as finished: its reports can be deleted automatically by the retention (Privacy › Retention)."
 msgstr "Glissez les lignes pour changer l’ordre des colonnes du Kanban et des listes de statuts. Laissez vide le nom d’un statut d’origine pour garder son nom par défaut. Un statut marqué « Traité » compte comme terminé : ses signalements peuvent être supprimés automatiquement à l’issue de la durée de conservation (Confidentialité › Conservation)."
 
-#: includes/Admin/Settings_List_Tab.php:76
+#: includes/Admin/Settings_List_Tab.php:78
 msgid "How urgent a report is, from the lowest to the highest."
 msgstr "L’urgence d’un signalement, de la plus basse à la plus haute."
 
@@ -2222,23 +2205,23 @@ msgstr "Ce que deviennent les données quand l’extension est supprimée."
 msgid "Data"
 msgstr "Données"
 
-#: includes/Admin/Settings_Spam_Tab.php:17
+#: includes/Admin/Settings_Spam_Tab.php:18
 msgid "Sending limits"
 msgstr "Limites d’envoi"
 
-#: includes/Admin/Settings_Spam_Tab.php:17
+#: includes/Admin/Settings_Spam_Tab.php:18
 msgid "Cap the number of reports one IP address can send."
 msgstr "Limitez le nombre de signalements qu’une même adresse IP peut envoyer."
 
-#: includes/Admin/Settings_Spam_Tab.php:31
+#: includes/Admin/Settings_Spam_Tab.php:32
 msgid "Change this only if your site is behind a proxy or Cloudflare."
 msgstr "Ne modifiez ce réglage que si votre site est derrière un proxy ou Cloudflare."
 
-#: includes/Admin/Settings_Spam_Tab.php:52
+#: includes/Admin/Settings_Spam_Tab.php:53
 msgid "Spam check"
 msgstr "Vérification anti-spam"
 
-#: includes/Admin/Settings_Spam_Tab.php:52
+#: includes/Admin/Settings_Spam_Tab.php:53
 msgid "Ask visitors to pass a check before sending, with the service of your choice."
 msgstr "Faites passer une vérification aux visiteurs avant l’envoi, avec le service de votre choix."
 
@@ -2257,3 +2240,95 @@ msgstr "Les visiteurs non connectés peuvent envoyer des signalements, mais aucu
 #: includes/Admin/Settings_Page.php:220
 msgid "Set up spam protection"
 msgstr "Configurer l’anti-spam"
+
+#: includes/Admin/Settings_Alerts_Tab.php:30
+msgid "Attachment"
+msgstr "Pièce jointe"
+
+#: includes/Admin/Settings_Alerts_Tab.php:35
+msgid "Post each event to Slack, Microsoft Teams, Discord or your own service."
+msgstr "Envoyez chaque événement vers Slack, Microsoft Teams, Discord ou votre propre service."
+
+#: includes/Admin/Settings_Spam_Tab.php:34
+msgid "Visitors’ IP address"
+msgstr "Adresse IP des visiteurs"
+
+#: includes/Admin/Settings_Spam_Tab.php:39
+msgid "Connection address (recommended)"
+msgstr "Adresse de connexion (recommandé)"
+
+#: includes/Admin/Settings_Spam_Tab.php:40
+msgid "X-Forwarded-For header (proxy)"
+msgstr "En-tête X-Forwarded-For (proxy)"
+
+#: includes/Admin/Settings_Spam_Tab.php:41
+msgid "CF-Connecting-IP header (Cloudflare)"
+msgstr "En-tête CF-Connecting-IP (Cloudflare)"
+
+#: includes/Admin/Settings_Webhook_Fields.php:25
+msgid "Add a webhook"
+msgstr "Ajouter un webhook"
+
+#: includes/Admin/Settings_Webhook_Fields.php:35
+msgid "What does a webhook receive?"
+msgstr "Que reçoit le webhook ?"
+
+#: includes/Admin/Settings_Webhook_Fields.php:36
+msgid "Only the addresses below are called. Each message holds:"
+msgstr "Seules les adresses ci-dessous sont appelées. Chaque message contient :"
+
+#: includes/Admin/Settings_Webhook_Fields.php:39
+msgid "the event, the name and address of the site, the date and time"
+msgstr "l’événement, le nom et l’adresse du site, la date et l’heure ;"
+
+#: includes/Admin/Settings_Webhook_Fields.php:40
+msgid "the report number and the first 300 characters of its description"
+msgstr "le numéro du signalement et les 300 premiers caractères de sa description ;"
+
+#: includes/Admin/Settings_Webhook_Fields.php:41
+msgid "the address of the page, the status, the priority and the name of the assignee"
+msgstr "l’adresse de la page, le statut, la priorité et le nom du responsable ;"
+
+#: includes/Admin/Settings_Webhook_Fields.php:42
+msgid "the change made (old and new status, or old and new assignee) and a link to the report in the administration"
+msgstr "la modification (ancien et nouveau statut, ou ancien et nouveau responsable) et un lien vers le signalement dans l’administration."
+
+#: includes/Admin/Settings_Webhook_Fields.php:46
+msgid "It never holds:"
+msgstr "Il ne contient jamais :"
+
+#: includes/Admin/Settings_Webhook_Fields.php:49
+msgid "the name, e-mail address or IP address of the reporter"
+msgstr "le nom, l’adresse e-mail ou l’adresse IP de l’auteur du signalement ;"
+
+#: includes/Admin/Settings_Webhook_Fields.php:50
+msgid "the screenshot"
+msgstr "la capture d’écran ;"
+
+#: includes/Admin/Settings_Webhook_Fields.php:51
+msgid "the technical data (browser, console errors, network requests) and the internal notes"
+msgstr "les données techniques (navigateur, erreurs de la console, requêtes réseau) et les notes internes."
+
+#. translators: 1: webhook number, 1 to 5; 2: its format, such as "Slack"; 3: "enabled" or "paused".
+#: includes/Admin/Settings_Webhook_Fields.php:74
+#, php-format
+msgid "Webhook %1$d: %2$s, %3$s"
+msgstr "Webhook %1$d : %2$s, %3$s"
+
+#: includes/Admin/Settings_Webhook_Fields.php:77
+msgctxt "webhook state"
+msgid "paused"
+msgstr "en pause"
+
+#: includes/Admin/Settings_Webhook_Fields.php:77
+msgctxt "webhook state"
+msgid "enabled"
+msgstr "activé"
+
+#: includes/Admin/Settings_Webhook_Fields.php:141
+msgid "Check the signature (developers)"
+msgstr "Vérifier la signature (développeurs)"
+
+#: includes/Admin/Settings_Webhook_Fields.php:45
+msgid "When a bulk action changes several reports at once, Slack, Microsoft Teams and Discord receive a single summary instead: the number of reports, the new status or assignee and a link to the list. The generic JSON format still receives one message per report."
+msgstr "Quand une action groupée modifie plusieurs signalements à la fois, Slack, Microsoft Teams et Discord reçoivent à la place un seul résumé : le nombre de signalements, le nouveau statut ou le nouveau responsable et un lien vers la liste. Le format JSON reçoit toujours un message par signalement."

@@ -195,6 +195,38 @@ bugspot_test(
 );
 
 settings_page_test(
+	'webhooks: saved_blocks_then_one_add_block_while_there_is_room',
+	fn() => webhook_dev_hosts(
+		true,
+		static function () {
+			foreach ( array( 0, 1, 5 ) as $count ) {
+				$rows = array();
+				for ( $i = 0; $i < $count; $i++ ) {
+					$rows[] = webhook_row( array( 'url' => 'http://hook' . $i . '.test/' ) );
+				}
+				update_option( Settings::OPTION, array( 'webhooks' => $rows ) );
+				$html  = settings_page_tab_html( 'alerts' );
+				$add   = $count < Webhooks::MAX;
+				$total = $count + ( $add ? 1 : 0 );
+				assert_same( $total, substr_count( $html, '<fieldset class="bugspot-webhook">' ), "$count saved: blocks" );
+				assert_same( $count, substr_count( $html, 'bugspot-webhook-test' ), "$count saved: test buttons" );
+				assert_same( $add ? 1 : 0, substr_count( $html, '<summary><h3 class="bugspot-summary-title">Add a webhook</h3></summary>' ), "$count saved: add block" );
+				assert_same( $add ? 1 : 0, preg_match( '#<summary><h3 class="bugspot-summary-title">Add a webhook</h3></summary><fieldset class="bugspot-webhook"><legend>Webhook ' . ( $count + 1 ) . '</legend>#', $html ), "$count saved: the add block is the next number" );
+				assert_true( str_contains( $html, '<summary>What does a webhook receive?</summary>' ), "$count saved: what is sent" );
+				assert_true( str_contains( $html, 'name="' . Settings::OPTION . '[webhooks][]" value=""' ), "$count saved: list marker" );
+
+				// Posting the rendered form keeps exactly the saved webhooks (the marker and the empty block add nothing).
+				$saved = Settings::get()['webhooks'];
+				$post  = settings_page_form_post( $html );
+				assert_same( $total + 1, count( $post[ Settings::OPTION ]['webhooks'] ), "$count saved: whole list posted" );
+				update_option( Settings::OPTION, $post[ Settings::OPTION ] );
+				assert_same( $saved, Settings::get()['webhooks'], "$count saved: round trip" );
+			}
+		}
+	)
+);
+
+settings_page_test(
 	'webhooks: integrations_tab_round_trips_and_other_tabs_keep_the_secret',
 	fn() => webhook_dev_hosts( true, 'webhook_round_trip' )
 );
@@ -206,13 +238,37 @@ function webhook_round_trip(): void {
 		assert_true( 'Alerts' === ( Settings_Page::tabs()['alerts'] ?? null ), 'tab listed' );
 
 		$html = settings_page_tab_html( 'alerts' );
-		assert_same( 5, substr_count( $html, '<fieldset class="bugspot-webhook">' ), 'five blocks' );
+		assert_same( 3, substr_count( $html, '<fieldset class="bugspot-webhook">' ), 'the two saved webhooks and one empty block' );
 		assert_same( 2, substr_count( $html, 'bugspot-webhook-test' ), 'a test button per saved webhook' );
+		assert_true( str_contains( $html, 'data-index="0"' ) && str_contains( $html, 'data-index="1"' ), 'test buttons point at Webhooks::all()' );
 		assert_true( str_contains( $html, Webhooks::secret( $before['webhooks'][0] ) ), 'secret shown to the administrator' );
+		assert_true( str_contains( $html, '<legend>Webhook 1: Generic JSON (signed), enabled</legend>' ), 'title of a saved webhook' );
+		assert_true( str_contains( $html, '<legend>Webhook 2: Slack, paused</legend>' ), 'title of a paused webhook' );
+		assert_true( str_contains( $html, '<summary>Check the signature (developers)</summary>' ), 'signature folded' );
 
+		// The untouched "Add a webhook" block is posted (webhooks[2], empty address) and creates nothing; the secrets are kept.
 		$post = settings_page_form_post( $html );
+		assert_same( '', $post[ Settings::OPTION ]['webhooks'][2]['url'], 'the empty block is posted' );
 		update_option( Settings::OPTION, $post[ Settings::OPTION ] );
 		assert_same( $before, Settings::get(), 're-posting the tab changes nothing' );
+
+		// Filling the "Add" block adds a third webhook with its own secret; the saved ones keep theirs.
+		$post = settings_page_form_post( settings_page_tab_html( 'alerts' ) );
+		$post[ Settings::OPTION ]['webhooks'][2]['url'] = 'http://third.test/';
+		update_option( Settings::OPTION, $post[ Settings::OPTION ] );
+		$after = Settings::get()['webhooks'];
+		assert_same( 3, count( $after ), 'third webhook added' );
+		assert_same( 'http://third.test/', $after[2]['url'] );
+		assert_same( array( $before['webhooks'][0]['secret'], $before['webhooks'][1]['secret'] ), array( $after[0]['secret'], $after[1]['secret'] ), 'secrets kept' );
+		assert_true( null !== Webhooks::secret( $after[2] ) && ! in_array( $after[2]['secret'], array( $after[0]['secret'], $after[1]['secret'] ), true ), 'new secret for the new webhook' );
+
+		// Removing the first webhook moves the others up: each keeps its own secret (posted with its block).
+		$post = settings_page_form_post( settings_page_tab_html( 'alerts' ) );
+		$post[ Settings::OPTION ]['webhooks'][0]['url'] = '';
+		update_option( Settings::OPTION, $post[ Settings::OPTION ] );
+		assert_same( array( $after[1], $after[2] ), Settings::get()['webhooks'], 'first removed, the others unchanged' );
+		update_option( Settings::OPTION, array( 'webhooks' => $before['webhooks'] ) );
+		assert_same( $before['webhooks'], Settings::get()['webhooks'] );
 
 		update_option( Settings::OPTION, settings_page_form_post( settings_page_tab_html( 'privacy' ) )[ Settings::OPTION ] );
 		assert_same( $before['webhooks'], Settings::get()['webhooks'], 'another tab keeps the webhooks' );

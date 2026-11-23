@@ -26,6 +26,8 @@ final class Settings_List_Tab {
 
 		F::heading( $text['title'], $text['intro'] );
 		F::description( $text['help'] );
+		// The table scrolls inside its own box on narrow screens, not the whole page.
+		echo '<div class="bugspot-list-scroll">';
 		printf(
 			'<table class="widefat bugspot-list-table" data-moves="%1$s" data-fallback="%2$s"><thead><tr>',
 			esc_attr( F::name( array( $list::FIELD . '_moves' ) ) ),
@@ -43,7 +45,7 @@ final class Settings_List_Tab {
 		foreach ( $list::sanitize( $s[ $list::SETTING ] ) as $index => $entry ) {
 			self::row( $list, $text, (string) $index, $entry, $counts[ $entry['key'] ] ?? 0 );
 		}
-		echo '</tbody></table>';
+		echo '</tbody></table></div>';
 
 		echo '<p><button type="button" class="button bugspot-list-add" data-max="' . (int) $list::MAX . '">' . esc_html( $text['add'] ) . '</button></p>';
 		echo '<div class="bugspot-list-moves"></div>';

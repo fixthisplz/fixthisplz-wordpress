@@ -32,13 +32,13 @@
 .bugspot-settings .bugspot-wide{min-width:320px;max-width:100%}
 .bugspot-settings .bugspot-sub{margin-top:8px}
 .bugspot-settings .bugspot-sub[hidden],.bugspot-settings tr[hidden]{display:none}
-.bugspot-settings .bugspot-inline-fields{border:1px solid #dcdcde;border-radius:4px;padding:8px 12px;max-width:640px}
+.bugspot-settings .bugspot-inline-fields{border:1px solid #dcdcde;border-radius:4px;padding:8px 12px;max-width:640px;min-width:0;box-sizing:border-box}
 .bugspot-settings .bugspot-inline-fields legend{padding:0 4px;font-weight:600}
 .bugspot-settings .bugspot-inline-fields label{margin-right:4px}
-.bugspot-settings .bugspot-axis{display:inline-block;margin:4px 16px 4px 0}
+.bugspot-settings .bugspot-axis{display:inline-flex;flex-wrap:wrap;align-items:center;gap:4px;max-width:100%;margin:4px 16px 4px 0}
 .bugspot-settings .bugspot-short{width:14em}
 .bugspot-settings .bugspot-medium{width:9em}
-.bugspot-icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:4px;max-width:520px}
+.bugspot-icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:4px;max-width:min(520px,100%)}
 .bugspot-icon-grid[hidden]{display:none}
 .bugspot-icon-choice.button{display:flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0}
 .bugspot-icon-choice[aria-pressed="true"]{background:#2271b1;border-color:#2271b1;color:#fff}
@@ -77,3 +77,27 @@
 .bugspot-admin .column-assigned{width:130px}
 .bugspot-webhook{max-width:900px;margin:0 0 16px;padding:0 16px;border:1px solid #c3c4c7;background:#fff}
 .bugspot-webhook>legend{padding:0 6px;font-weight:600;font-size:14px}
+.bugspot-settings-form>h2,.bugspot-settings-form>.bugspot-advanced{margin-top:2em}
+.bugspot-settings-form>h2:first-of-type{margin-top:1em}
+.bugspot-settings-form>h2+.description{margin-top:0}
+.bugspot-advanced{max-width:900px;margin:0 0 16px;padding:0 12px;border:1px solid #c3c4c7;border-radius:4px;background:#fff}
+.bugspot-advanced>summary{margin:0 -12px;padding:10px 12px;cursor:pointer;font-size:14px;font-weight:600;color:#1d2327}
+.bugspot-summary-title{display:inline;margin:0;padding:0;font-size:inherit;font-weight:inherit;line-height:inherit;color:inherit}
+.bugspot-advanced>summary:hover{color:#2271b1}
+.bugspot-advanced>summary:focus-visible,.bugspot-disclosure>summary:focus-visible{outline:2px solid #2271b1;outline-offset:1px;border-radius:2px}
+.bugspot-advanced[open]>summary{border-bottom:1px solid #dcdcde}
+.bugspot-advanced>.description{margin-top:12px}
+.bugspot-advanced>.bugspot-webhook{margin:12px 0}
+.bugspot-disclosure{margin:0 0 12px}
+.bugspot-disclosure>summary{display:list-item;cursor:pointer;color:#2271b1}
+.bugspot-disclosure>summary:hover{color:#135e96;text-decoration:underline}
+.bugspot-disclosure[open]>summary{margin-bottom:8px}
+.bugspot-disclosure .ul-disc{margin-top:4px}
+@media (max-width:782px){
+.bugspot-list-scroll{position:relative;overflow-x:auto}
+.bugspot-settings .bugspot-wide{min-width:0}
+.bugspot-settings .bugspot-axis select,.bugspot-settings .bugspot-axis input,.bugspot-settings .bugspot-inline-fields input{display:inline-block;width:auto;max-width:100%}
+.bugspot-advanced{padding:0 8px}
+.bugspot-advanced>summary{margin:0 -8px;padding:10px 8px}
+.bugspot-webhook{padding:0 8px}
+}

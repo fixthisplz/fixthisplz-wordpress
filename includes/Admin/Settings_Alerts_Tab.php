@@ -20,18 +20,19 @@ final class Settings_Alerts_Tab {
 
 		$id    = F::id( array( 'notifications', 'recipients' ) );
 		$admin = (string) get_option( 'admin_email' );
-		F::row_open( __( 'Recipients', 'bug-spotter' ), $id );
+		$if_enabled = F::show_if( array( 'notifications', 'enabled' ), '=', '1' );
+		F::row_open( __( 'Recipients', 'bug-spotter' ), $id, false, $if_enabled );
 		F::input( 'text', array( 'notifications', 'recipients' ), $n['recipients'], array( 'class' => 'large-text', 'placeholder' => $admin ), true );
 		/* translators: %s: the site administration e-mail address. */
 		F::description( sprintf( __( 'Several addresses separated by commas. Empty: %s (site administration address).', 'bug-spotter' ), $admin ), $id . '-desc' );
 		F::row_close();
 
-		F::row_open( __( 'Screenshot', 'bug-spotter' ) );
+		F::row_open( __( 'Attachment', 'bug-spotter' ), '', false, $if_enabled );
 		F::checkbox( array( 'notifications', 'attach_screenshot' ), (bool) $n['attach_screenshot'], __( 'Attach the screenshot to the e-mail', 'bug-spotter' ) );
 		F::row_close();
 		F::table_close();
 
-		F::heading( __( 'Webhooks', 'bug-spotter' ), __( 'Post the events to Slack, Microsoft Teams, Discord or your own service.', 'bug-spotter' ) );
+		F::heading( __( 'Webhooks', 'bug-spotter' ), __( 'Post each event to Slack, Microsoft Teams, Discord or your own service.', 'bug-spotter' ) );
 		Settings_Webhook_Fields::render();
 	}
 }

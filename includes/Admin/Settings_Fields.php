@@ -41,6 +41,49 @@ final class Settings_Fields {
 		self::description( $intro );
 	}
 
+	/**
+	 * Start of a folded block: a native <details> (keyboard accessible, no JavaScript), open when $open.
+	 * Closed by details_close(). show_if() works inside it: hidden fields are still posted.
+	 *
+	 * @param string $class "bugspot-advanced" (framed block) or "bugspot-disclosure" (inline link).
+	 * @param int    $level Heading level of the summary text (2 for a section, 3 below one) so that it stays in the
+	 *                      heading navigation of screen readers; 0 for plain text.
+	 */
+	public static function details_open( string $summary, bool $open, string $class = 'bugspot-advanced', int $level = 0 ): void {
+		$title = $level > 0
+			? sprintf( '<h%1$d class="bugspot-summary-title">%2$s</h%1$d>', $level, esc_html( $summary ) )
+			: esc_html( $summary );
+		echo '<details class="' . esc_attr( $class ) . '"' . ( $open ? ' open' : '' ) . '><summary>' . $title . '</summary>'; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped above.
+	}
+
+	public static function details_close(): void {
+		echo '</details>';
+	}
+
+	/**
+	 * "Advanced settings" of a tab: a folded section (its title is an <h2>, like the other sections) holding a sentence
+	 * and a form-table (closed by advanced_close()). It opens by itself when one of its settings differs from the
+	 * default, so an active advanced setting is seen at once. Only list settings that take effect on their own.
+	 *
+	 * @param array<string,mixed> $values   The saved block of settings, such as $s['button'].
+	 * @param array<string,mixed> $defaults The same block of Settings::defaults().
+	 * @param string[]            $keys     The keys of that block shown in the advanced settings.
+	 */
+	public static function advanced_open( string $intro, array $values, array $defaults, array $keys ): void {
+		$changed = false;
+		foreach ( $keys as $key ) {
+			$changed = $changed || $values[ $key ] !== $defaults[ $key ];
+		}
+		self::details_open( __( 'Advanced settings', 'bug-spotter' ), $changed, 'bugspot-advanced', 2 );
+		self::description( $intro );
+		self::table_open();
+	}
+
+	public static function advanced_close(): void {
+		self::table_close();
+		self::details_close();
+	}
+
 	public static function table_open(): void {
 		echo '<table class="form-table" role="presentation"><tbody>';
 	}

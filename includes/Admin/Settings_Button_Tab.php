@@ -8,7 +8,7 @@ use Bug_Spotter\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
-/** "Button" tab of the settings screen: appearance, colors, positions (computer and mobile), advanced settings and the live preview. */
+/** "Button" tab of the settings screen: appearance, colors, positions (computer and mobile), folded advanced settings and the live preview. */
 final class Settings_Button_Tab {
 
 	/** Curated Dashicons offered for the button. */
@@ -59,11 +59,16 @@ final class Settings_Button_Tab {
 		self::mobile_position_row( $b );
 		F::table_close();
 
-		F::section( __( 'Advanced settings', 'bug-spotter' ), __( 'Shadow, corner radius and display order. The defaults suit most sites.', 'bug-spotter' ) );
+		F::advanced_open(
+			__( 'Shadow, corner radius and display order. The defaults suit most sites.', 'bug-spotter' ),
+			$b,
+			Settings::defaults()['button'],
+			array( 'shadow', 'radius_mode', 'z_index' )
+		);
 		self::shadow_row( $b );
 		self::radius_row( $b );
 		self::z_index_row( $b );
-		F::table_close();
+		F::advanced_close();
 	}
 
 	/** Icon type, then the Dashicon grid or the SVG picker. @param array<string,mixed> $b */
@@ -230,7 +235,8 @@ final class Settings_Button_Tab {
 	/** @param array<string,mixed> $b */
 	private static function mobile_position_row( array $b ): void {
 		$mobile = array( 'button', 'mobile_position_enabled' );
-		F::row_open( __( 'Position on mobile', 'bug-spotter' ), '', true );
+		// Pointless while the button is hidden on mobile.
+		F::row_open( __( 'Position on mobile', 'bug-spotter' ), '', true, F::show_if( array( 'visibility', 'hide_on_mobile' ), '=', '0' ) );
 		F::checkbox( $mobile, (bool) $b['mobile_position_enabled'], __( 'Use another position on mobile', 'bug-spotter' ) );
 		echo '<div class="bugspot-sub"' . F::show_if( $mobile, '=', '1' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
 		Settings_Position_Fields::render( 'position_mobile', $b['position_mobile'] );
