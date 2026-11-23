@@ -142,7 +142,7 @@ The plugin adds suggested text to your privacy policy (Settings › Privacy), an
 * Configurable priorities (**Tracking › Priorities** settings): name, color, order (sorting by priority follows it); add up to 10 or delete one, moving its reports to another priority. "Normal" cannot be deleted. Priority pills take the chosen color in the list, the Kanban board and the detail screen.
 * Name of one report (**Tracking › Team and menu** settings), used in titles such as "Bug #12" on the detail screen and in the notification e-mail.
 * Dashboard widget for bug managers: open reports per status and the five latest reports.
-* Settings reorganized in seven tabs (General, Button, Form, Tracking, Alerts, Spam protection, Privacy), each split into titled sections. Old links to the former tabs still work.
+* Settings reorganized in seven tabs (General, Button, Form, Tracking, Alerts, Spam protection, Privacy), each split into titled sections. Rarely used options are folded, the General tab opens on a summary of the active setup, and leaving a page with unsaved changes asks for confirmation. Old links to the former tabs still work.
 * Assignment: assign a report to a bug manager from its screen or with a bulk action; "Assigned to" column, initials on the Kanban cards, filter by person and "My reports". The new assignee gets an e-mail, in their own language (not when assigning yourself). The CSV export has an "Assigned to" column.
 * Internal notes and history on the report screen: notes visible only to the team (deleted by their author or an administrator), and every change of status, priority or assignment with its author and date. Deleting a user unassigns their reports; the personal data exporter and eraser cover the notes.
 * Webhooks (**Alerts › Webhooks** settings): up to five addresses, each with a format (generic signed JSON, Slack, Discord or Microsoft Teams), its events (new report, status changed, report assigned), an on/off switch and a "Send a test" button. Bulk actions send one summary message to chat services, after all their changes are saved.
@@ -158,7 +158,7 @@ The plugin adds suggested text to your privacy policy (Settings › Privacy), an
 == Upgrade Notice ==
 
 = 1.2.0 =
-Adds configurable priorities, assignment, internal notes and history, a dashboard widget, webhooks and richer screenshot annotation. The database is upgraded automatically.
+Adds configurable priorities, assignment, internal notes and history, a dashboard widget, webhooks, richer screenshot annotation and reorganized settings. The database is upgraded automatically.
 
 = 1.1.0 =
 Adds screenshot annotation and makes updates safe for browsers that cached the previous script files.
