@@ -28,6 +28,7 @@
 .bugspot-card-text{margin:6px 0;word-break:break-word}
 .bugspot-card-meta{margin:0;font-size:12px;word-break:break-all}
 .bugspot-more{margin:0;text-align:center}
+.bugspot-settings .subsubsub{float:none;margin:4px 0 0}
 .bugspot-settings .bugspot-wide{min-width:320px;max-width:100%}
 .bugspot-settings .bugspot-sub{margin-top:8px}
 .bugspot-settings .bugspot-sub[hidden],.bugspot-settings tr[hidden]{display:none}

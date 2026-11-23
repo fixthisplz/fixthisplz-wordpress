@@ -16,7 +16,8 @@ final class Button_Style {
 	public const MOBILE_QUERY = '(max-width: 782px)';
 
 	private const SELECTOR = '#bugspot-button';
-	private const SIZES    = array(
+	/** Height in px of each size (also shown in the settings help). */
+	public const SIZES     = array(
 		's' => 40,
 		'm' => 52,
 		'l' => 64,

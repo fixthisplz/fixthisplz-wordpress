@@ -158,7 +158,7 @@ final class Settings {
 		return self::$memo['merged'];
 	}
 
-	/** @return array<int,string> The named admin-menu positions offered in the Management tab: position => label. */
+	/** @return array<int,string> The named admin-menu positions offered in Settings › Tracking › Team and menu: position => label. */
 	public static function menu_positions(): array {
 		return array(
 			3  => __( 'After Dashboard', 'bug-spotter' ),

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-23T14:48:43+00:00\n"
+"POT-Creation-Date: 2026-11-23T15:09:48+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: bug-spotter\n"
@@ -220,19 +220,19 @@ msgid "Browser"
 msgstr ""
 
 #: includes/Admin/Detail_Page.php:96
-#: includes/Admin/Settings_Tabs.php:261
+#: includes/Admin/Settings_Privacy_Tab.php:18
 msgid "Console errors"
 msgstr ""
 
 #: includes/Admin/Detail_Page.php:97
-#: includes/Admin/Settings_Tabs.php:265
+#: includes/Admin/Settings_Privacy_Tab.php:22
 #: includes/Frontend/Assets.php:227
 msgid "Failed requests"
 msgstr ""
 
 #: includes/Admin/Detail_Page.php:98
-#: includes/Admin/Settings_Tabs.php:98
-#: includes/Admin/Settings_Tabs.php:215
+#: includes/Admin/Settings_Alerts_Tab.php:29
+#: includes/Admin/Settings_Form_Tab.php:48
 #: includes/Frontend/Assets.php:234
 #: includes/Mailer.php:159
 msgid "Screenshot"
@@ -299,7 +299,7 @@ msgstr ""
 #: includes/Admin/Detail_Page.php:169
 #: includes/Admin/List_Table.php:79
 #: includes/Admin/List_Table.php:164
-#: includes/Admin/Settings_List_Tab.php:130
+#: includes/Admin/Settings_List_Tab.php:135
 #: includes/Frontend/Assets.php:204
 msgid "Delete"
 msgstr ""
@@ -375,7 +375,7 @@ msgid "Delete this report permanently?"
 msgstr ""
 
 #: includes/Admin/Menu.php:50
-#: includes/Admin/Settings_Page.php:72
+#: includes/Admin/Settings_Page.php:132
 msgid "Bug Spotter settings"
 msgstr ""
 
@@ -384,8 +384,8 @@ msgid "Settings"
 msgstr ""
 
 #: includes/Admin/Report_Context_View.php:18
-#: includes/Admin/Settings_Button_Tab.php:162
-#: includes/Admin/Settings_Tabs.php:150
+#: includes/Admin/Settings_Button_Tab.php:191
+#: includes/Admin/Settings_Spam_Tab.php:59
 msgid "None"
 msgstr ""
 
@@ -394,7 +394,6 @@ msgid "Contact e-mail:"
 msgstr ""
 
 #: includes/Admin/Report_Context_View.php:55
-#: includes/Admin/Settings_Tabs.php:77
 msgid "Title"
 msgstr ""
 
@@ -415,18 +414,17 @@ msgid "Role"
 msgstr ""
 
 #: includes/Admin/Report_Context_View.php:85
-#: includes/Admin/Settings_List_Tab.php:34
+#: includes/Admin/Settings_List_Tab.php:35
 msgid "Name"
 msgstr ""
 
 #: includes/Admin/Report_Context_View.php:86
-#: includes/Admin/Settings_Button_Tab.php:119
 #: includes/Frontend/Assets.php:190
 msgid "Text"
 msgstr ""
 
 #: includes/Admin/Report_Context_View.php:87
-#: includes/Admin/Settings_Button_Tab.php:55
+#: includes/Admin/Settings_Button_Tab.php:51
 msgid "Position"
 msgstr ""
 
@@ -487,10 +485,48 @@ msgstr ""
 msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
+#: includes/Admin/Settings_Alerts_Tab.php:16
+msgid "E-mail"
+msgstr ""
+
+#: includes/Admin/Settings_Alerts_Tab.php:16
+msgid "Send an e-mail to your team for every new report."
+msgstr ""
+
+#: includes/Admin/Settings_Alerts_Tab.php:17
+msgid "E-mail notification"
+msgstr ""
+
+#: includes/Admin/Settings_Alerts_Tab.php:18
+msgid "Send an e-mail for every new report"
+msgstr ""
+
+#: includes/Admin/Settings_Alerts_Tab.php:23
+msgid "Recipients"
+msgstr ""
+
+#. translators: %s: the site administration e-mail address.
+#: includes/Admin/Settings_Alerts_Tab.php:26
+#, php-format
+msgid "Several addresses separated by commas. Empty: %s (site administration address)."
+msgstr ""
+
+#: includes/Admin/Settings_Alerts_Tab.php:30
+msgid "Attach the screenshot to the e-mail"
+msgstr ""
+
+#: includes/Admin/Settings_Alerts_Tab.php:34
+msgid "Webhooks"
+msgstr ""
+
+#: includes/Admin/Settings_Alerts_Tab.php:34
+msgid "Post the events to Slack, Microsoft Teams, Discord or your own service."
+msgstr ""
+
 #: includes/Admin/Settings_Assets.php:63
-#: includes/Admin/Settings_Button_Tab.php:120
-#: includes/Admin/Settings_Button_Tab.php:126
-#: includes/Admin/Settings_Tabs.php:78
+#: includes/Admin/Settings_Button_Tab.php:128
+#: includes/Admin/Settings_Button_Tab.php:134
+#: includes/Admin/Settings_Form_Tab.php:34
 #: includes/Settings.php:195
 #: includes/Settings.php:208
 msgid "Report a bug"
@@ -554,416 +590,553 @@ msgstr ""
 msgid "The test could not be sent."
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:32
+#: includes/Admin/Settings_Button_Tab.php:31
+msgid "Appearance"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:31
+msgid "Icon, shape, text and size of the button."
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:34
 msgid "Shape"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:36
+#: includes/Admin/Settings_Button_Tab.php:38
 msgid "Circle"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:37
+#: includes/Admin/Settings_Button_Tab.php:39
 msgid "Rounded square"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:38
+#: includes/Admin/Settings_Button_Tab.php:40
 msgid "Pill with text"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:43
-#: includes/Frontend/Assets.php:200
-msgid "Size"
+#: includes/Admin/Settings_Button_Tab.php:47
+msgid "Colors"
 msgstr ""
 
 #: includes/Admin/Settings_Button_Tab.php:47
-msgid "Small"
+msgid "Colors of the button, at rest and on hover."
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:48
-#: includes/Admin/Settings_Button_Tab.php:164
-msgid "Medium"
+#: includes/Admin/Settings_Button_Tab.php:51
+msgid "Where the button sits on a computer screen."
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:49
-msgid "Large"
+#: includes/Admin/Settings_Button_Tab.php:52
+msgid "Placement"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:64
+#: includes/Admin/Settings_Button_Tab.php:55
+msgid "On mobile"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:55
+msgid "On screens 782 px wide or less, hide the button or give it another position."
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:56
+msgid "Visibility"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:57
+msgid "Hide the button on mobile"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:62
+#: includes/Admin/Settings_Spam_Tab.php:31
+msgid "Advanced settings"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:62
+msgid "Shadow, corner radius and display order. The defaults suit most sites."
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:72
 msgid "Icon"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:65
+#: includes/Admin/Settings_Button_Tab.php:73
 msgid "Icon type"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:66
+#: includes/Admin/Settings_Button_Tab.php:74
 msgid "Dashicon"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:67
+#: includes/Admin/Settings_Button_Tab.php:75
 msgid "SVG image from the media library"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:84
-#: includes/Admin/Settings_Button_Tab.php:95
+#: includes/Admin/Settings_Button_Tab.php:92
+#: includes/Admin/Settings_Button_Tab.php:103
 msgid "Choose an icon"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:110
+#: includes/Admin/Settings_Button_Tab.php:118
 msgid "Choose an SVG"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:111
+#: includes/Admin/Settings_Button_Tab.php:119
 #: includes/Frontend/Assets.php:184
 msgid "Remove"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:112
+#: includes/Admin/Settings_Button_Tab.php:120
 msgid "Only SVG files already in the media library are listed. WordPress blocks SVG uploads by default; Bug Spotter does not change that. Without an SVG, the Dashicon is used."
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:121
+#: includes/Admin/Settings_Button_Tab.php:127
+msgid "Button text"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:129
 msgid "Shown inside the pill shape, and read by screen readers for every shape."
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:125
+#: includes/Admin/Settings_Button_Tab.php:133
 msgid "Tooltip"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:134
-msgid "Background color"
+#: includes/Admin/Settings_Button_Tab.php:142
+#: includes/Frontend/Assets.php:200
+msgid "Size"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:135
-msgid "Icon and text color"
+#: includes/Admin/Settings_Button_Tab.php:147
+msgid "Small"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:136
-msgid "Background color on hover"
+#: includes/Admin/Settings_Button_Tab.php:148
+#: includes/Admin/Settings_Button_Tab.php:193
+msgid "Medium"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:157
-msgid "Shadow"
+#: includes/Admin/Settings_Button_Tab.php:149
+msgid "Large"
+msgstr ""
+
+#. translators: 1: height of the small button, 2: of the medium one, 3: of the large one, in pixels.
+#: includes/Admin/Settings_Button_Tab.php:155
+#, php-format
+msgid "Height: %1$d px (small), %2$d px (medium) or %3$d px (large)."
 msgstr ""
 
 #: includes/Admin/Settings_Button_Tab.php:163
-msgid "Light"
+msgid "Background color"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:164
+msgid "Icon and text color"
 msgstr ""
 
 #: includes/Admin/Settings_Button_Tab.php:165
+msgid "Background color on hover"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:186
+msgid "Shadow"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:192
+msgid "Light"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:194
 msgid "Strong"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:166
-#: includes/Admin/Settings_Button_Tab.php:192
-#: includes/Admin/Settings_Button_Tab.php:244
+#: includes/Admin/Settings_Button_Tab.php:195
+#: includes/Admin/Settings_Button_Tab.php:221
+#: includes/Admin/Settings_Position_Fields.php:28
 msgid "Custom"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:169
+#: includes/Admin/Settings_Button_Tab.php:198
 msgid "Custom shadow"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:171
+#: includes/Admin/Settings_Button_Tab.php:200
 msgid "Offset X (px)"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:172
+#: includes/Admin/Settings_Button_Tab.php:201
 msgid "Offset Y (px)"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:173
+#: includes/Admin/Settings_Button_Tab.php:202
 msgid "Blur (px)"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:174
+#: includes/Admin/Settings_Button_Tab.php:203
 msgid "Spread (px)"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:176
-#: includes/Admin/Settings_List_Tab.php:35
+#: includes/Admin/Settings_Button_Tab.php:205
+#: includes/Admin/Settings_List_Tab.php:36
 #: includes/Frontend/Assets.php:193
 msgid "Color"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:178
+#: includes/Admin/Settings_Button_Tab.php:207
 msgid "Hex color (#rrggbb) or rgba(red, green, blue, opacity), for example rgba(0,0,0,0.25)."
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:186
+#: includes/Admin/Settings_Button_Tab.php:215
 msgid "Corner radius"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:191
+#: includes/Admin/Settings_Button_Tab.php:220
 msgid "Set by the shape"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:196
+#: includes/Admin/Settings_Button_Tab.php:225
 msgid "Radius (px)"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:204
-#: includes/Admin/Settings_Button_Tab.php:232
+#: includes/Admin/Settings_Button_Tab.php:233
+#: includes/Admin/Settings_Position_Fields.php:16
 msgid "Position on mobile"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:205
-msgid "Use a different position on small screens (782 px wide or less)"
+#: includes/Admin/Settings_Button_Tab.php:234
+msgid "Use another position on mobile"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:215
+#: includes/Admin/Settings_Button_Tab.php:244
 msgid "Stacking order (z-index)"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:217
+#: includes/Admin/Settings_Button_Tab.php:246
 msgid "Raise it if a theme element covers the button."
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:238
-msgid "Bottom right"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:239
-msgid "Bottom left"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:240
-msgid "Top right"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:241
-msgid "Top left"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:242
-msgid "Middle right"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:243
-msgid "Middle left"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:252
-msgid "Custom position"
-msgstr ""
-
 #: includes/Admin/Settings_Button_Tab.php:260
-msgid "Horizontal distance"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:260
-msgid "Vertical distance"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:265
-msgid "Horizontal unit"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:265
-msgid "Vertical unit"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:270
-msgid "Starting edge (left or right)"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:270
-msgid "Starting edge (top or bottom)"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:276
-msgctxt "edge of the window"
-msgid "left"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:277
-msgctxt "edge of the window"
-msgid "right"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:280
-msgctxt "edge of the window"
-msgid "top"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:281
-msgctxt "edge of the window"
-msgid "bottom"
-msgstr ""
-
-#. translators: 1: distance input, 2: unit select (px or %), 3: edge select (left or right).
-#: includes/Admin/Settings_Button_Tab.php:288
-#, php-format
-msgid "Horizontal: %1$s %2$s from the %3$s edge"
-msgstr ""
-
-#. translators: 1: distance input, 2: unit select (px or %), 3: edge select (top or bottom).
-#: includes/Admin/Settings_Button_Tab.php:290
-#, php-format
-msgid "Vertical: %1$s %2$s from the %3$s edge"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:303
-msgid "Percentages are relative to the browser window (0 to 100)."
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:310
 msgid "Preview"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:311
+#: includes/Admin/Settings_Button_Tab.php:261
 msgid "Preview screen size"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:312
+#: includes/Admin/Settings_Button_Tab.php:262
 msgid "Desktop"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:313
-#: includes/Admin/Settings_Tabs.php:60
+#: includes/Admin/Settings_Button_Tab.php:263
 msgid "Mobile"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:315
+#: includes/Admin/Settings_Button_Tab.php:265
 msgid "Button preview"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:316
+#: includes/Admin/Settings_Button_Tab.php:266
 msgid "Updated as you change the settings below. The frame stands for a browser window; save to apply."
 msgstr ""
 
-#: includes/Admin/Settings_Integrations_Tab.php:17
-msgid "Each new report, status change or assignment can be posted to a chat channel or to your own service. Only the addresses below are called. They receive the report number, an excerpt of the description, the page, the status, the priority, the name of the assignee and a link to the report, never the reporter’s e-mail address, IP address or screenshot."
+#: includes/Admin/Settings_Form_Tab.php:18
+msgid "Form fields"
 msgstr ""
 
-#. translators: %d: webhook number, 1 to 5.
-#: includes/Admin/Settings_Integrations_Tab.php:30
+#: includes/Admin/Settings_Form_Tab.php:18
+msgid "Extra field offered to visitors who are not logged in."
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:19
+#: includes/Frontend/Assets.php:225
+#: includes/Privacy.php:60
+msgid "Contact e-mail"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:20
+msgid "Ask guests for an optional contact e-mail address"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:30
+msgid "Texts"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:30
+msgid "Texts shown at the top of the report form."
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:33
+msgid "Form title"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:38
+msgid "Prompt text"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:39
+#: includes/Settings.php:197
+msgid "Describe what went wrong and what you expected to happen."
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:40
+msgid "Shown above the description field."
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:48
+msgid "Let visitors attach an image of the page to their report."
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:50
+msgid "Allow screenshots"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:51
+msgid "Let reporters attach a screenshot of the page"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:56
+#: includes/Admin/Settings_Form_Tab.php:57
+msgid "Capture method"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:58
+msgid "Real capture of the tab (recommended) — exact image, the browser asks the visitor for permission"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:59
+msgid "Page reconstruction — no permission prompt, may differ slightly from the screen"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:60
+msgid "On phones and in browsers without screen sharing, the reconstruction is always used."
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:65
+msgid "Masking"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:66
+msgid "Hide typed fields and sensitive areas in the screenshot"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:67
+msgid "On a real capture, masking works only when the visitor shares this tab (not a window or the whole screen). Add other areas to mask in Privacy › Areas to mask."
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:75
+msgid "Downloadable copy"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:75
+msgid "Visitors can download a copy of their report once it is sent, or if sending fails."
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:76
+#: includes/Admin/Settings_Form_Tab.php:77
+msgid "Formats offered"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:80
+msgid "Markdown (.md)"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:81
+msgid "JSON (.json)"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:82
+msgid "Plain text (.txt)"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:87
+msgid "If none is checked, all of them are offered."
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:95
+msgid "Information notice (GDPR)"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:95
+msgid "Shown at the bottom of the form, before the send button, with a link to your privacy policy."
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:98
+msgid "Notice text"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:99
+#: includes/Settings.php:199
+msgid "Your report includes technical details about this page and your browser."
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:104
+msgid "Privacy policy link"
+msgstr ""
+
+#: includes/Admin/Settings_Form_Tab.php:106
+msgid "Leave empty to use the privacy policy page set in the WordPress settings (Settings › Privacy)."
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:16
+msgid "Activation"
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:16
+msgid "Turn the report button on or off for the whole site."
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:17
+msgid "Bug reporting"
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:18
+msgid "Show the bug report button"
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:22
+msgid "Who can report"
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:22
+msgid "Choose who sees the button and can send a report."
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:23
+#: includes/Admin/Settings_General_Tab.php:24
+msgid "Who sees the button"
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:29
+msgid "Guests (not logged in)"
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:34
+msgid "Where the button appears"
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:34
+msgid "Hide the button on some pages, or also show it in the administration."
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:38
+msgid "Hidden on URLs starting with"
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:40
+msgid "One path per line, for example /checkout/ or /my-account/. The button is hidden on every URL that starts with one of them."
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:43
+msgid "Administration"
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:44
+msgid "Also show the button in the WordPress administration"
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:59
+msgid "Excluded pages"
+msgstr ""
+
+#: includes/Admin/Settings_General_Tab.php:71
+msgid "Hold Ctrl (or Cmd) to select several pages, or to unselect one."
+msgstr ""
+
+#. translators: %d: page ID.
+#: includes/Admin/Settings_General_Tab.php:78
 #, php-format
-msgid "Webhook %d"
+msgid "Page #%d (no title)"
 msgstr ""
 
-#: includes/Admin/Settings_Integrations_Tab.php:34
-msgid "Address (URL)"
-msgstr ""
-
-#: includes/Admin/Settings_Integrations_Tab.php:38
-msgid "Must start with https:// (in this development environment, http://localhost and *.test addresses are also accepted). Leave empty to remove the webhook."
-msgstr ""
-
-#: includes/Admin/Settings_Integrations_Tab.php:39
-msgid "Must start with https://. Leave empty to remove the webhook."
-msgstr ""
-
-#: includes/Admin/Settings_Integrations_Tab.php:44
-msgid "Format"
-msgstr ""
-
-#: includes/Admin/Settings_Integrations_Tab.php:46
-#: includes/Admin/Settings_Integrations_Tab.php:47
-msgid "Events"
-msgstr ""
-
-#: includes/Admin/Settings_Integrations_Tab.php:55
-msgid "Active"
-msgstr ""
-
-#: includes/Admin/Settings_Integrations_Tab.php:56
-msgid "Send the events ticked above"
-msgstr ""
-
-#: includes/Admin/Settings_Integrations_Tab.php:61
-#: includes/Admin/Settings_Tabs.php:190
-msgid "Test"
-msgstr ""
-
-#: includes/Admin/Settings_Integrations_Tab.php:62
-msgid "Send a test"
-msgstr ""
-
-#: includes/Admin/Settings_Integrations_Tab.php:64
-msgid "Sends a test message to the saved address, even when the webhook is inactive. Save your changes first. Requires JavaScript."
-msgstr ""
-
-#: includes/Admin/Settings_Integrations_Tab.php:76
-msgid "Signing secret"
-msgstr ""
-
-#: includes/Admin/Settings_Integrations_Tab.php:81
-msgid "Make a new secret when saving"
-msgstr ""
-
-#: includes/Admin/Settings_Integrations_Tab.php:84
-msgid "Each request carries the header X-Bug-Spotter-Signature: sha256= followed by the HMAC-SHA256 of the raw body with this secret. Your service computes the same value to check that the request comes from this site."
-msgstr ""
-
-#: includes/Admin/Settings_Integrations_Tab.php:85
-msgid "The secret can no longer be read (the BUGSPOT_SECRET key changed): a new one is made when saving."
-msgstr ""
-
-#: includes/Admin/Settings_List_Tab.php:33
+#: includes/Admin/Settings_List_Tab.php:34
 msgid "Order"
 msgstr ""
 
-#: includes/Admin/Settings_List_Tab.php:37
-#: includes/Admin/Settings_List_Tab.php:124
+#: includes/Admin/Settings_List_Tab.php:38
+#: includes/Admin/Settings_List_Tab.php:129
 msgctxt "status flag: the report is handled"
 msgid "Done"
 msgstr ""
 
-#: includes/Admin/Settings_List_Tab.php:39
+#: includes/Admin/Settings_List_Tab.php:40
 msgid "Reports"
 msgstr ""
 
-#: includes/Admin/Settings_List_Tab.php:40
+#: includes/Admin/Settings_List_Tab.php:41
 msgid "Actions"
 msgstr ""
 
-#: includes/Admin/Settings_List_Tab.php:65
-msgid "Drag the rows to change the order of the Kanban columns and of the status lists. Leave the name of an original status empty to keep its default name. A status marked Done counts as finished: its reports can be deleted automatically by the retention (Data and privacy tab)."
-msgstr ""
-
 #: includes/Admin/Settings_List_Tab.php:66
-msgid "Add a status"
+#: includes/Admin/Settings_Page.php:74
+msgid "Statuses"
 msgstr ""
 
 #: includes/Admin/Settings_List_Tab.php:67
-msgid "Status name"
+msgid "The steps a report goes through, in the order of the Kanban columns."
 msgstr ""
 
 #: includes/Admin/Settings_List_Tab.php:68
+msgid "Drag the rows to change the order of the Kanban columns and of the status lists. Leave the name of an original status empty to keep its default name. A status marked Done counts as finished: its reports can be deleted automatically by the retention (Privacy › Retention)."
+msgstr ""
+
+#: includes/Admin/Settings_List_Tab.php:69
+msgid "Add a status"
+msgstr ""
+
+#: includes/Admin/Settings_List_Tab.php:70
+msgid "Status name"
+msgstr ""
+
+#: includes/Admin/Settings_List_Tab.php:71
 msgid "Status color"
 msgstr ""
 
-#: includes/Admin/Settings_List_Tab.php:72
+#: includes/Admin/Settings_List_Tab.php:75
+#: includes/Admin/Settings_Page.php:75
+msgid "Priorities"
+msgstr ""
+
+#: includes/Admin/Settings_List_Tab.php:76
+msgid "How urgent a report is, from the lowest to the highest."
+msgstr ""
+
+#: includes/Admin/Settings_List_Tab.php:77
 msgid "Drag the rows to order the priorities from the lowest to the highest: sorting the list by priority follows this order. The original priorities keep their default name while their name is left empty. \"Normal\", given to every new report, cannot be deleted."
 msgstr ""
 
-#: includes/Admin/Settings_List_Tab.php:73
+#: includes/Admin/Settings_List_Tab.php:78
 msgid "Add a priority"
 msgstr ""
 
-#: includes/Admin/Settings_List_Tab.php:74
+#: includes/Admin/Settings_List_Tab.php:79
 msgid "Priority name"
 msgstr ""
 
-#: includes/Admin/Settings_List_Tab.php:75
+#: includes/Admin/Settings_List_Tab.php:80
 msgid "Priority color"
 msgstr ""
 
 #. translators: %d: number of reports that use the deleted status or priority.
-#: includes/Admin/Settings_List_Tab.php:102
+#: includes/Admin/Settings_List_Tab.php:107
 #, php-format
 msgid "Move its %d report to:"
 msgid_plural "Move its %d reports to:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/Admin/Settings_List_Tab.php:104
+#: includes/Admin/Settings_List_Tab.php:109
 msgid "Drag to reorder"
 msgstr ""
 
-#: includes/Admin/Settings_List_Tab.php:122
+#: includes/Admin/Settings_List_Tab.php:127
 msgid "Never"
+msgstr ""
+
+#: includes/Admin/Settings_Management_Tab.php:17
+msgid "Who handles the reports"
+msgstr ""
+
+#: includes/Admin/Settings_Management_Tab.php:17
+msgid "Choose the roles that follow up the reports in the administration."
 msgstr ""
 
 #: includes/Admin/Settings_Management_Tab.php:18
@@ -975,12 +1148,25 @@ msgstr ""
 msgid "These roles can view the reports, assign them, change their status and priority, add notes, delete and export them. Only administrators can change these settings."
 msgstr ""
 
-#: includes/Admin/Settings_Management_Tab.php:29
-msgid "Menu badge"
+#: includes/Admin/Settings_Management_Tab.php:30
+msgid "Menu and naming"
 msgstr ""
 
 #: includes/Admin/Settings_Management_Tab.php:30
-msgid "Show the number of new reports next to the menu name"
+msgid "Name the reports and place their menu in the administration."
+msgstr ""
+
+#: includes/Admin/Settings_Management_Tab.php:32
+msgid "Name of one report"
+msgstr ""
+
+#: includes/Admin/Settings_Management_Tab.php:32
+#: includes/Settings.php:205
+msgid "Bug"
+msgstr ""
+
+#: includes/Admin/Settings_Management_Tab.php:32
+msgid "Used in the title of a report, such as \"Bug #12\", on its page and in the notification e-mail. Leave empty for the default name."
 msgstr ""
 
 #: includes/Admin/Settings_Management_Tab.php:33
@@ -1005,364 +1191,392 @@ msgstr ""
 msgid "All bugs"
 msgstr ""
 
-#: includes/Admin/Settings_Management_Tab.php:36
-msgid "Name of one report"
-msgstr ""
-
-#: includes/Admin/Settings_Management_Tab.php:36
-#: includes/Settings.php:205
-msgid "Bug"
-msgstr ""
-
-#: includes/Admin/Settings_Management_Tab.php:36
-msgid "Used in the title of a report, such as \"Bug #12\", on its page and in the notification e-mail. Leave empty for the default name."
-msgstr ""
-
-#: includes/Admin/Settings_Management_Tab.php:42
+#: includes/Admin/Settings_Management_Tab.php:41
 msgid "Menu position"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:45
-msgid "Visibility"
+#: includes/Admin/Settings_Management_Tab.php:43
+msgid "Menu badge"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:46
+#: includes/Admin/Settings_Management_Tab.php:44
+msgid "Show the number of new reports next to the menu name"
+msgstr ""
+
+#: includes/Admin/Settings_Page.php:60
+msgid "General"
+msgstr ""
+
+#: includes/Admin/Settings_Page.php:61
 msgid "Button"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:47
-msgid "Dialog"
+#: includes/Admin/Settings_Page.php:62
+msgid "Form"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:48
-msgid "Anti-bot"
+#: includes/Admin/Settings_Page.php:63
+msgid "Tracking"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:49
-msgid "Notifications"
+#: includes/Admin/Settings_Page.php:64
+msgid "Alerts"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:50
-msgid "Protection"
+#: includes/Admin/Settings_Page.php:65
+msgid "Spam protection"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:51
-msgid "Collected context"
+#: includes/Admin/Settings_Page.php:66
+msgid "Privacy"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:52
-msgid "Data and privacy"
+#: includes/Admin/Settings_Page.php:73
+msgid "Team and menu"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:53
-msgid "Management"
-msgstr ""
-
-#: includes/Admin/Settings_Page.php:54
-msgid "Statuses"
-msgstr ""
-
-#: includes/Admin/Settings_Page.php:55
-msgid "Priorities"
-msgstr ""
-
-#: includes/Admin/Settings_Page.php:56
-msgid "Integrations"
-msgstr ""
-
-#: includes/Admin/Settings_Page.php:67
+#: includes/Admin/Settings_Page.php:127
 msgid "Sorry, you are not allowed to manage these settings."
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:75
+#: includes/Admin/Settings_Page.php:135
 msgid "Settings sections"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:138
-msgid "Guests (not logged in) can send bug reports, but no anti-bot check is configured. Expect spam."
+#: includes/Admin/Settings_Page.php:158
+msgid "Tracking pages"
 msgstr ""
 
-#: includes/Admin/Settings_Page.php:147
-msgid "Configure an anti-bot provider"
+#: includes/Admin/Settings_Page.php:218
+msgid "Guests (not logged in) can send bug reports, but no spam check is configured. Expect spam."
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:17
-msgid "Bug reporting"
+#: includes/Admin/Settings_Page.php:220
+msgid "Set up spam protection"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:18
-msgid "Show the bug report button"
+#: includes/Admin/Settings_Position_Fields.php:22
+msgid "Bottom right"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:21
-#: includes/Admin/Settings_Tabs.php:22
-msgid "Who sees the button"
+#: includes/Admin/Settings_Position_Fields.php:23
+msgid "Bottom left"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:27
-msgid "Guests (not logged in)"
+#: includes/Admin/Settings_Position_Fields.php:24
+msgid "Top right"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:39
-msgid "Excluded pages"
+#: includes/Admin/Settings_Position_Fields.php:25
+msgid "Top left"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:51
-msgid "Hold Ctrl (or Cmd) to select several pages, or to unselect one."
+#: includes/Admin/Settings_Position_Fields.php:26
+msgid "Middle right"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:55
-msgid "Hidden on URLs starting with"
+#: includes/Admin/Settings_Position_Fields.php:27
+msgid "Middle left"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:57
-msgid "One path per line, for example /checkout/ or /my-account/. The button is hidden on every URL that starts with one of them."
+#: includes/Admin/Settings_Position_Fields.php:36
+msgid "Custom position"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:61
-msgid "Hide the button on small screens (782 px wide or less)"
+#: includes/Admin/Settings_Position_Fields.php:44
+msgid "Horizontal distance"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:64
-msgid "Administration"
+#: includes/Admin/Settings_Position_Fields.php:44
+msgid "Vertical distance"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:65
-msgid "Also show the button in the WordPress administration"
+#: includes/Admin/Settings_Position_Fields.php:49
+msgid "Horizontal unit"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:82
-msgid "Instructions"
+#: includes/Admin/Settings_Position_Fields.php:49
+msgid "Vertical unit"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:83
-#: includes/Settings.php:197
-msgid "Describe what went wrong and what you expected to happen."
+#: includes/Admin/Settings_Position_Fields.php:54
+msgid "Starting edge (left or right)"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:87
-msgid "Privacy notice"
+#: includes/Admin/Settings_Position_Fields.php:54
+msgid "Starting edge (top or bottom)"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:88
-#: includes/Settings.php:199
-msgid "Your report includes technical details about this page and your browser."
+#: includes/Admin/Settings_Position_Fields.php:60
+msgctxt "edge of the window"
+msgid "left"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:93
-msgid "Privacy policy link"
+#: includes/Admin/Settings_Position_Fields.php:61
+msgctxt "edge of the window"
+msgid "right"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:95
-msgid "Leave empty to use the privacy policy page set in Settings › Privacy."
+#: includes/Admin/Settings_Position_Fields.php:64
+msgctxt "edge of the window"
+msgid "top"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:99
-msgid "Let reporters attach a screenshot of the page"
+#: includes/Admin/Settings_Position_Fields.php:65
+msgctxt "edge of the window"
+msgid "bottom"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:104
-#: includes/Admin/Settings_Tabs.php:105
-msgid "Capture method"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:106
-msgid "Real capture of the tab (recommended) — exact image, the browser asks the visitor for permission"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:107
-msgid "Page reconstruction — no permission prompt, may differ slightly from the screen"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:108
-msgid "On phones and in browsers without screen sharing, the reconstruction is always used."
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:112
-msgid "Masking"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:113
-msgid "Hide typed fields and sensitive areas in the screenshot"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:114
-msgid "On a real capture, masking works only when the visitor shares this tab (not a window or the whole screen). Add other areas to mask in the Collected context tab."
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:117
-#: includes/Frontend/Assets.php:225
-#: includes/Privacy.php:60
-msgid "Contact e-mail"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:118
-msgid "Ask guests for an optional contact e-mail address"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:121
-#: includes/Admin/Settings_Tabs.php:122
-msgid "Download formats"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:125
-msgid "Markdown (.md)"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:126
-msgid "JSON (.json)"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:127
-msgid "Plain text (.txt)"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:132
-msgid "Formats offered to download a copy of the report. If none is checked, all of them are offered."
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:146
-msgid "Provider"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:151
-msgid "Cloudflare Turnstile"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:152
-msgid "Google reCAPTCHA v2 (checkbox)"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:153
-msgid "Google reCAPTCHA v3 (invisible, score-based)"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:154
-msgid "hCaptcha"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:161
-msgid "Site key"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:166
-msgid "Secret key"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:176
-msgid "Saved — leave blank to keep it"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:180
-msgid "Kept on the server only, never sent to visitors."
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:184
-msgid "Minimum score"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:186
-msgid "Between 0 (accept everything) and 1 (strictest). Default: 0.5."
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:189
-msgid "Test the keys"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:192
-msgid "Uses the provider and keys typed above, even before saving. A blank secret key tests the saved one. Requires JavaScript."
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:203
-msgid "E-mail notification"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:204
-msgid "Send an e-mail for every new report"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:209
-msgid "Recipients"
-msgstr ""
-
-#. translators: %s: the site administration e-mail address.
-#: includes/Admin/Settings_Tabs.php:212
+#. translators: 1: distance input, 2: unit select (px or %), 3: edge select (left or right).
+#: includes/Admin/Settings_Position_Fields.php:72
 #, php-format
-msgid "Several addresses separated by commas. Empty: %s (site administration address)."
+msgid "Horizontal: %1$s %2$s from the %3$s edge"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:216
-msgid "Attach the screenshot to the e-mail"
+#. translators: 1: distance input, 2: unit select (px or %), 3: edge select (top or bottom).
+#: includes/Admin/Settings_Position_Fields.php:74
+#, php-format
+msgid "Vertical: %1$s %2$s from the %3$s edge"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:228
-msgid "Reports per hour"
+#: includes/Admin/Settings_Position_Fields.php:87
+msgid "Percentages are relative to the browser window (0 to 100)."
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:230
-msgid "Maximum per IP address."
+#: includes/Admin/Settings_Privacy_Tab.php:17
+msgid "Technical data attached"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:234
-msgid "Reports per day"
+#: includes/Admin/Settings_Privacy_Tab.php:17
+msgid "These details help to reproduce the problem. The addresses (URLs) they contain may include personal data."
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:236
-msgid "Maximum per IP address. A hidden honeypot field also stops basic bots; it is always active."
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:240
-msgid "Trusted proxy header (advanced)"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:245
-msgid "None: use the connection address (recommended)"
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:250
-msgid "Only choose a header if every request reaches this site through a proxy or CDN that sets it. Otherwise anyone can forge it and get around the per-IP limits."
-msgstr ""
-
-#: includes/Admin/Settings_Tabs.php:262
+#: includes/Admin/Settings_Privacy_Tab.php:19
 msgid "Attach recent browser console errors and warnings"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:266
+#: includes/Admin/Settings_Privacy_Tab.php:23
 msgid "Attach recent failed network requests"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:270
+#: includes/Admin/Settings_Privacy_Tab.php:27
+msgid "Areas to mask"
+msgstr ""
+
+#: includes/Admin/Settings_Privacy_Tab.php:27
+msgid "Parts of your pages whose text is never written into the reports."
+msgstr ""
+
+#: includes/Admin/Settings_Privacy_Tab.php:29
 msgid "Extra sensitive elements"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:272
-msgid "One CSS selector per line. The text of these areas is never collected. When masking is on (Dialog tab), they are also masked on screenshots, like form fields."
+#: includes/Admin/Settings_Privacy_Tab.php:31
+msgid "One CSS selector per line. The text of these areas is never collected. When masking is on (Form › Screenshot), they are also masked on screenshots, like form fields."
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:284
+#: includes/Admin/Settings_Privacy_Tab.php:35
+msgid "Retention"
+msgstr ""
+
+#: includes/Admin/Settings_Privacy_Tab.php:35
+msgid "How long the handled reports are kept."
+msgstr ""
+
+#: includes/Admin/Settings_Privacy_Tab.php:37
 msgid "Automatic deletion"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:286
+#: includes/Admin/Settings_Privacy_Tab.php:39
 msgid "months"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:287
-msgid "Reports whose status is marked Done are deleted, with their screenshot, this many months after their last status change. 0 = keep without limit. Choose these statuses in the Statuses tab."
+#: includes/Admin/Settings_Privacy_Tab.php:40
+msgid "Reports whose status is marked Done are deleted, with their screenshot, this many months after their last status change. 0 = keep without limit. Choose these statuses in Tracking › Statuses."
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:290
+#: includes/Admin/Settings_Privacy_Tab.php:44
 msgid "Uninstall"
 msgstr ""
 
-#: includes/Admin/Settings_Tabs.php:291
+#: includes/Admin/Settings_Privacy_Tab.php:44
+msgid "What happens to the data when the plugin is deleted."
+msgstr ""
+
+#: includes/Admin/Settings_Privacy_Tab.php:45
+msgid "Data"
+msgstr ""
+
+#: includes/Admin/Settings_Privacy_Tab.php:46
 msgid "Delete all reports, screenshots and settings when the plugin is deleted"
 msgstr ""
 
-#. translators: %d: page ID.
-#: includes/Admin/Settings_Tabs.php:309
+#: includes/Admin/Settings_Spam_Tab.php:17
+msgid "Sending limits"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:17
+msgid "Cap the number of reports one IP address can send."
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:19
+msgid "Reports per hour"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:21
+msgid "Maximum per IP address."
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:25
+msgid "Reports per day"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:27
+msgid "Maximum per IP address. A hidden honeypot field also stops basic bots; it is always active."
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:31
+msgid "Change this only if your site is behind a proxy or Cloudflare."
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:33
+msgid "Trusted proxy header (advanced)"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:38
+msgid "None: use the connection address (recommended)"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:44
+msgid "Only choose a header if every request reaches this site through a proxy or CDN that sets it. Otherwise anyone can forge it and get around the per-IP limits."
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:52
+msgid "Spam check"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:52
+msgid "Ask visitors to pass a check before sending, with the service of your choice."
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:55
+msgid "Provider"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:60
+msgid "Cloudflare Turnstile"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:61
+msgid "Google reCAPTCHA v2 (checkbox)"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:62
+msgid "Google reCAPTCHA v3 (invisible, score-based)"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:63
+msgid "hCaptcha"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:70
+msgid "Site key"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:75
+msgid "Secret key"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:85
+msgid "Saved — leave blank to keep it"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:89
+msgid "Kept on the server only, never sent to visitors."
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:93
+msgid "Minimum score"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:95
+msgid "Between 0 (accept everything) and 1 (strictest). Default: 0.5."
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:98
+msgid "Test the keys"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:99
+#: includes/Admin/Settings_Webhook_Fields.php:61
+msgid "Test"
+msgstr ""
+
+#: includes/Admin/Settings_Spam_Tab.php:101
+msgid "Uses the provider and keys typed above, even before saving. A blank secret key tests the saved one. Requires JavaScript."
+msgstr ""
+
+#: includes/Admin/Settings_Webhook_Fields.php:17
+msgid "Each new report, status change or assignment can be posted to a chat channel or to your own service. Only the addresses below are called. They receive the report number, an excerpt of the description, the page, the status, the priority, the name of the assignee and a link to the report, never the reporter’s e-mail address, IP address or screenshot."
+msgstr ""
+
+#. translators: %d: webhook number, 1 to 5.
+#: includes/Admin/Settings_Webhook_Fields.php:30
 #, php-format
-msgid "Page #%d (no title)"
+msgid "Webhook %d"
+msgstr ""
+
+#: includes/Admin/Settings_Webhook_Fields.php:34
+msgid "Address (URL)"
+msgstr ""
+
+#: includes/Admin/Settings_Webhook_Fields.php:38
+msgid "Must start with https:// (in this development environment, http://localhost and *.test addresses are also accepted). Leave empty to remove the webhook."
+msgstr ""
+
+#: includes/Admin/Settings_Webhook_Fields.php:39
+msgid "Must start with https://. Leave empty to remove the webhook."
+msgstr ""
+
+#: includes/Admin/Settings_Webhook_Fields.php:44
+msgid "Format"
+msgstr ""
+
+#: includes/Admin/Settings_Webhook_Fields.php:46
+#: includes/Admin/Settings_Webhook_Fields.php:47
+msgid "Events"
+msgstr ""
+
+#: includes/Admin/Settings_Webhook_Fields.php:55
+msgid "Active"
+msgstr ""
+
+#: includes/Admin/Settings_Webhook_Fields.php:56
+msgid "Send the events ticked above"
+msgstr ""
+
+#: includes/Admin/Settings_Webhook_Fields.php:62
+msgid "Send a test"
+msgstr ""
+
+#: includes/Admin/Settings_Webhook_Fields.php:64
+msgid "Sends a test message to the saved address, even when the webhook is inactive. Save your changes first. Requires JavaScript."
+msgstr ""
+
+#: includes/Admin/Settings_Webhook_Fields.php:76
+msgid "Signing secret"
+msgstr ""
+
+#: includes/Admin/Settings_Webhook_Fields.php:81
+msgid "Make a new secret when saving"
+msgstr ""
+
+#: includes/Admin/Settings_Webhook_Fields.php:84
+msgid "Each request carries the header X-Bug-Spotter-Signature: sha256= followed by the HMAC-SHA256 of the raw body with this secret. Your service computes the same value to check that the request comes from this site."
+msgstr ""
+
+#: includes/Admin/Settings_Webhook_Fields.php:85
+msgid "The secret can no longer be read (the BUGSPOT_SECRET key changed): a new one is made when saving."
 msgstr ""
 
 #: includes/Captcha/Siteverify_Provider.php:63

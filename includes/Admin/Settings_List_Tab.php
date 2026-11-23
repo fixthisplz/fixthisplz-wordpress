@@ -9,7 +9,7 @@ use Bug_Spotter\Statuses;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * "Statuses" and "Priorities" tabs of the settings screen (spec 7.10, 7.11): one row per choice, in the order of
+ * "Tracking › Statuses" and "Tracking › Priorities" views of the settings screen (spec 7.10, 7.11): one row per choice, in the order of
  * the settings, reordered by drag and drop (admin-lists.js). The same row() markup serves the saved choices and
  * the <template> of a new one. The post is turned into the stored list by List_Editor.
  */
@@ -24,6 +24,7 @@ final class Settings_List_Tab {
 		$text     = self::texts( $list );
 		$closable = Statuses::class === $list;
 
+		F::heading( $text['title'], $text['intro'] );
 		F::description( $text['help'] );
 		printf(
 			'<table class="widefat bugspot-list-table" data-moves="%1$s" data-fallback="%2$s"><thead><tr>',
@@ -58,17 +59,21 @@ final class Settings_List_Tab {
 		echo '</template>';
 	}
 
-	/** @param class-string<\Bug_Spotter\Choice_List> $list @return array{help:string,add:string,name:string,color:string} */
+	/** @param class-string<\Bug_Spotter\Choice_List> $list @return array{title:string,intro:string,help:string,add:string,name:string,color:string} */
 	private static function texts( string $list ): array {
 		if ( Statuses::class === $list ) {
 			return array(
-				'help'  => __( 'Drag the rows to change the order of the Kanban columns and of the status lists. Leave the name of an original status empty to keep its default name. A status marked Done counts as finished: its reports can be deleted automatically by the retention (Data and privacy tab).', 'bug-spotter' ),
+				'title' => __( 'Statuses', 'bug-spotter' ),
+				'intro' => __( 'The steps a report goes through, in the order of the Kanban columns.', 'bug-spotter' ),
+				'help'  => __( 'Drag the rows to change the order of the Kanban columns and of the status lists. Leave the name of an original status empty to keep its default name. A status marked Done counts as finished: its reports can be deleted automatically by the retention (Privacy › Retention).', 'bug-spotter' ),
 				'add'   => __( 'Add a status', 'bug-spotter' ),
 				'name'  => __( 'Status name', 'bug-spotter' ),
 				'color' => __( 'Status color', 'bug-spotter' ),
 			);
 		}
 		return array(
+			'title' => __( 'Priorities', 'bug-spotter' ),
+			'intro' => __( 'How urgent a report is, from the lowest to the highest.', 'bug-spotter' ),
 			'help'  => __( 'Drag the rows to order the priorities from the lowest to the highest: sorting the list by priority follows this order. The original priorities keep their default name while their name is left empty. "Normal", given to every new report, cannot be deleted.', 'bug-spotter' ),
 			'add'   => __( 'Add a priority', 'bug-spotter' ),
 			'name'  => __( 'Priority name', 'bug-spotter' ),

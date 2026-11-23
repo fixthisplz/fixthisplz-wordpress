@@ -1,4 +1,4 @@
-/* Bug Spotter settings, Integrations tab: the "Send a test" button of each saved webhook. No build step.
+/* Bug Spotter settings, Alerts › Webhooks: the "Send a test" button of each saved webhook. No build step.
  * Every user-visible string comes from bugspotSettings.i18n or from the server answer. */
 ( function ( $, apiFetch ) {
 	'use strict';

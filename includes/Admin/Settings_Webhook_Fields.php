@@ -8,10 +8,10 @@ use Bug_Spotter\Webhooks;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * "Integrations" tab (spec 7.12): Webhooks::MAX fixed webhook blocks, the saved ones first, then empty ones.
+ * Webhook blocks of the "Alerts" tab (Settings_Alerts_Tab, spec 7.12): Webhooks::MAX fixed blocks, the saved ones first, then empty ones.
  * A block with an empty address is not saved; the secret goes back encrypted in a hidden field and is kept.
  */
-final class Settings_Integrations_Tab {
+final class Settings_Webhook_Fields {
 
 	public static function render(): void {
 		F::description( __( 'Each new report, status change or assignment can be posted to a chat channel or to your own service. Only the addresses below are called. They receive the report number, an excerpt of the description, the page, the status, the priority, the name of the assignee and a link to the report, never the reporter’s e-mail address, IP address or screenshot.', 'bug-spotter' ) );

@@ -126,7 +126,7 @@ settings_page_test(
 					$errors = get_settings_errors( Settings::OPTION );
 					assert_same( 1, count( $errors ), 'sanitized twice, one notice' );
 					assert_true( ! str_contains( $errors[0]['message'], '*.test' ), 'no development hint: ' . $errors[0]['message'] );
-					$html = settings_page_tab_html( 'integrations' );
+					$html = settings_page_tab_html( 'alerts' );
 					assert_true( ! str_contains( $html, 'localhost' ) && ! str_contains( $html, '*.test' ), 'tab text without development hosts' );
 				}
 			);
@@ -134,7 +134,7 @@ settings_page_test(
 				true,
 				function () {
 					assert_true( Webhooks::is_dev_url( 'http://127.0.0.1:8765/' ) );
-					assert_true( str_contains( settings_page_tab_html( 'integrations' ), 'http://localhost and *.test' ), 'tab mentions them when allowed' );
+					assert_true( str_contains( settings_page_tab_html( 'alerts' ), 'http://localhost and *.test' ), 'tab mentions them when allowed' );
 				}
 			);
 		} finally {
@@ -203,9 +203,9 @@ function webhook_round_trip(): void {
 		update_option( Settings::OPTION, array( 'webhooks' => array( webhook_row(), webhook_row( array( 'url' => 'http://receiver.test/', 'format' => 'slack', 'enabled' => '0' ) ) ) ) );
 		$before = Settings::get();
 		assert_same( 2, count( $before['webhooks'] ) );
-		assert_true( 'Integrations' === ( Settings_Page::tabs()['integrations'] ?? null ), 'tab listed' );
+		assert_true( 'Alerts' === ( Settings_Page::tabs()['alerts'] ?? null ), 'tab listed' );
 
-		$html = settings_page_tab_html( 'integrations' );
+		$html = settings_page_tab_html( 'alerts' );
 		assert_same( 5, substr_count( $html, '<fieldset class="bugspot-webhook">' ), 'five blocks' );
 		assert_same( 2, substr_count( $html, 'bugspot-webhook-test' ), 'a test button per saved webhook' );
 		assert_true( str_contains( $html, Webhooks::secret( $before['webhooks'][0] ) ), 'secret shown to the administrator' );
@@ -214,10 +214,10 @@ function webhook_round_trip(): void {
 		update_option( Settings::OPTION, $post[ Settings::OPTION ] );
 		assert_same( $before, Settings::get(), 're-posting the tab changes nothing' );
 
-		update_option( Settings::OPTION, settings_page_form_post( settings_page_tab_html( 'notifications' ) )[ Settings::OPTION ] );
+		update_option( Settings::OPTION, settings_page_form_post( settings_page_tab_html( 'privacy' ) )[ Settings::OPTION ] );
 		assert_same( $before['webhooks'], Settings::get()['webhooks'], 'another tab keeps the webhooks' );
 
-		$post = settings_page_form_post( settings_page_tab_html( 'integrations' ) );
+		$post = settings_page_form_post( settings_page_tab_html( 'alerts' ) );
 		$post[ Settings::OPTION ]['webhooks'][0]['url'] = '';
 		update_option( Settings::OPTION, $post[ Settings::OPTION ] );
 		assert_same( array( $before['webhooks'][1] ), Settings::get()['webhooks'], 'emptied address: removed' );

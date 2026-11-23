@@ -58,7 +58,7 @@ bugspot_test(
 status_editor_test(
 	'priorities: the_tab_round_trips_and_new_priorities_get_keys_from_their_name',
 	function () {
-		$html = settings_page_tab_html( 'priorities' );
+		$html = settings_page_tab_html( 'tracking', 'priorities' );
 		assert_true( ! str_contains( $html, '>Done<' ), 'no Done column' );
 		assert_same( 3 + 1, substr_count( $html, 'bugspot-list-delete' ), 'normal has no Delete button (+1: the new-row template)' );
 		assert_true( str_contains( $html, 'data-moves="bugspot_settings[priority_moves]"' ) && str_contains( $html, 'data-fallback="normal"' ) );

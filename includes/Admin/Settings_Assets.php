@@ -28,11 +28,11 @@ final class Settings_Assets {
 				'module_dependencies' => Assets::lib_module_ids(),
 			)
 		);
-		if ( in_array( Settings_Page::current_tab(), array( 'statuses', 'priorities' ), true ) ) {
+		if ( in_array( Settings_Page::current_view(), array( 'statuses', 'priorities' ), true ) ) {
 			wp_enqueue_script( 'bug-spotter-lists', BUGSPOT_URL . 'assets/js/admin-lists.js', array( 'jquery', 'jquery-ui-sortable', 'wp-color-picker' ), BUGSPOT_VERSION, true );
 		}
 
-		if ( 'integrations' === Settings_Page::current_tab() ) {
+		if ( 'alerts' === Settings_Page::current_tab() ) {
 			wp_enqueue_script( 'bug-spotter-webhooks', BUGSPOT_URL . 'assets/js/admin-webhooks.js', array( 'jquery', 'wp-api-fetch', self::SCRIPT ), BUGSPOT_VERSION, true );
 		}
 

@@ -9,9 +9,9 @@ use Bug_Spotter\Statuses;
 require_once __DIR__ . '/test-settings-page.php';
 require_once __DIR__ . '/test-repository.php';
 
-/** The rows a list tab ("statuses" or "priorities") posts as rendered (the <template> row has no name, so it is dropped on save). @return array<string,array> */
+/** The rows a Tracking list view ("statuses" or "priorities") posts as rendered (the <template> row has no name, so it is dropped on save). @return array<string,array> */
 function list_editor_rows( string $tab, string $field ): array {
-	$post = settings_page_form_post( settings_page_tab_html( $tab ) );
+	$post = settings_page_form_post( settings_page_tab_html( 'tracking', $tab ) );
 	assert_same( array( $field . '_rows' ), array_keys( $post[ Settings::OPTION ] ), 'the tab posts only its rows' );
 	return $post[ Settings::OPTION ][ $field . '_rows' ];
 }

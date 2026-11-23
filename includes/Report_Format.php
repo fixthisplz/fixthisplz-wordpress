@@ -49,7 +49,7 @@ final class Report_Format {
 		);
 	}
 
-	/** "{singular name} #12" (Management tab), raw: each output escapes it its own way. */
+	/** "{singular name} #12" (Settings › Tracking › Team and menu), raw: each output escapes it its own way. */
 	public static function title( int $id ): string {
 		/* translators: 1: singular name of a report (default "Bug"), 2: report number. */
 		return sprintf( __( '%1$s #%2$d', 'bug-spotter' ), Settings::text( 'management.item_label' ), $id );

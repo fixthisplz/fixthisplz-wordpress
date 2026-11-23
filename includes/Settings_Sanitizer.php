@@ -32,7 +32,7 @@ final class Settings_Sanitizer {
 			}
 		}
 
-		// The Statuses and Priorities tabs post editor rows (keys made or kept server-side) rather than the stored list.
+		// The Tracking › Statuses and Tracking › Priorities views post editor rows (keys made or kept server-side) rather than the stored list.
 		return self::validate( self::merge( $current, List_Editor::apply_post( $input ) ) );
 	}
 

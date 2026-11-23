@@ -29,6 +29,18 @@ final class Settings_Fields {
 		return ' data-bugspot-show-if="' . esc_attr( self::name( $path ) ) . '" data-bugspot-op="' . esc_attr( $operator ) . '" data-bugspot-value="' . esc_attr( $value ) . '"';
 	}
 
+	/** Start of a settings section: heading(), then its form-table (closed by table_close()). */
+	public static function section( string $title, string $intro ): void {
+		self::heading( $title, $intro );
+		self::table_open();
+	}
+
+	/** Title of a settings section: a short <h2> and one sentence about the section. */
+	public static function heading( string $title, string $intro ): void {
+		echo '<h2>' . esc_html( $title ) . '</h2>';
+		self::description( $intro );
+	}
+
 	public static function table_open(): void {
 		echo '<table class="form-table" role="presentation"><tbody>';
 	}
@@ -143,9 +155,11 @@ final class Settings_Fields {
 	/**
 	 * @param string[]             $path
 	 * @param array<string,string> $choices
+	 * @param bool                 $described True when the caller prints a description with id "{id}-desc".
 	 */
-	public static function select( array $path, string $current, array $choices ): void {
-		echo '<select id="' . esc_attr( self::id( $path ) ) . '" name="' . esc_attr( self::name( $path ) ) . '">';
+	public static function select( array $path, string $current, array $choices, bool $described = false ): void {
+		$id = self::id( $path );
+		echo '<select id="' . esc_attr( $id ) . '" name="' . esc_attr( self::name( $path ) ) . '"' . ( $described ? ' aria-describedby="' . esc_attr( $id ) . '-desc"' : '' ) . '>';
 		foreach ( $choices as $value => $label ) {
 			self::option( (string) $value, $label, (string) $value === $current );
 		}
@@ -160,6 +174,15 @@ final class Settings_Fields {
 		self::row_open( $label, self::id( $path ) );
 		self::select( $path, $current, $choices );
 		self::row_close();
+	}
+
+	/** @return array<string,string> Role slug => translated name. */
+	public static function role_names(): array {
+		$out = array();
+		foreach ( wp_roles()->get_names() as $role => $name ) {
+			$out[ $role ] = translate_user_role( $name );
+		}
+		return $out;
 	}
 
 	public static function option( string $value, string $label, bool $selected ): void {

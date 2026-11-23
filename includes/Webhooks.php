@@ -5,7 +5,7 @@ namespace Bug_Spotter;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The webhooks of the Integrations tab (spec 7.12): validation of the saved rows and their signing secret.
+ * The webhooks of Settings › Alerts › Webhooks (spec 7.12): validation of the saved rows and their signing secret.
  * Each saved row: url, format, events, enabled, secret (a random hex key, stored encrypted with Secret).
  * Sending: Webhook_Sender; what is sent: Webhook_Payload.
  */

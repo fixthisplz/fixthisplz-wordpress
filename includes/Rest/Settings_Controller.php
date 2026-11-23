@@ -117,7 +117,7 @@ final class Settings_Controller {
 	}
 
 	/**
-	 * Sends a test message to a saved webhook ("index": its place in the Integrations tab), even a disabled one,
+	 * Sends a test message to a saved webhook ("index": its place in Settings › Alerts › Webhooks), even a disabled one,
 	 * and waits for the answer.
 	 *
 	 * @return \WP_REST_Response|\WP_Error
