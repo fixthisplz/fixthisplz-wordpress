@@ -1,4 +1,4 @@
-/* Real screen capture on desktop (spec 5.2, revised 2026-11-20, decision David): the image is the pixels on screen.
+/* Real screen capture on desktop (spec 5.2): the image is the pixels on screen.
  * The visitor chooses what to share in the browser's own prompt (this tab is suggested first where supported) and
  * sees the preview before sending: any surface is accepted (tab, window, screen) and nothing is masked by default.
  * When the site enables masking (config.dialog.maskCapture), fields, [contenteditable] and sensitive zones are

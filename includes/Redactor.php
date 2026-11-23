@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 //
 // url() applies: control characters and whitespace removed; parse; scheme and host are required (else '');
 // user:pass@ and #fragment dropped; the path and each query parameter NAME are percent-decoded
-// (rawurldecode) and stripped of control characters again, so "jean%40ex.fr" is seen as an e-mail
+// (rawurldecode) and stripped of control characters again, so "name%40example.com" is seen as an e-mail
 // (the decoded, readable form is what is kept, not re-encoded); each query value is replaced by U+2026;
 // the rebuilt URL then goes through text() (rules 1-6) so e-mails and tokens in the path are masked too.
 final class Redactor {

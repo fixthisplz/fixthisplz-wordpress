@@ -21,7 +21,7 @@ msgstr ""
 
 #. Plugin URI of the plugin
 #: fixthisplz.php
-msgid "https://github.com/Heaume01/fixthisplz-wordpress"
+msgid "https://github.com/fixthisplz/fixthisplz-wordpress"
 msgstr ""
 
 #. Description of the plugin

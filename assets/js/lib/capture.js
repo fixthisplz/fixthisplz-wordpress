@@ -1,7 +1,6 @@
 /* Screenshot of the visible part of the page (spec 5.2), the fallback without real capture. Works on
- * modern-screenshot's CLONE only; the plugin UI is filtered out. When the site enables masking (opt-in, decision
- * David 2026-11-20), clone-mask.js masks the clone. This module and the vendored library are both imported lazily,
- * on first use.
+ * modern-screenshot's CLONE only; the plugin UI is filtered out. When the site enables masking (opt-in),
+ * clone-mask.js masks the clone. This module and the vendored library are both imported lazily, on first use.
  *
  * Speed: the library clones and styles every node it is given. Only boxes that intersect the viewport (and
  * their ancestors) are cloned deeply; any other element is cloned alone (its computed width/height are copied,

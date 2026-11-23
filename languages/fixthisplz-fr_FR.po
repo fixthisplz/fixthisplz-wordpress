@@ -2428,8 +2428,8 @@ msgstr "%s : clé secrète manquante, tous les envois échoueront."
 
 #. Plugin URI of the plugin
 #: fixthisplz.php
-msgid "https://github.com/Heaume01/fixthisplz-wordpress"
-msgstr "https://github.com/Heaume01/fixthisplz-wordpress"
+msgid "https://github.com/fixthisplz/fixthisplz-wordpress"
+msgstr "https://github.com/fixthisplz/fixthisplz-wordpress"
 
 #. Author of the plugin
 #: fixthisplz.php

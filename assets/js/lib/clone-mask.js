@@ -1,4 +1,4 @@
-/* Opt-in masking of the DOM-reconstruction screenshot (spec 5.2, decision David 2026-11-20): runs on the library's
+/* Opt-in masking of the DOM-reconstruction screenshot (spec 5.2): runs on the library's
  * CLONE only, never on the page. Field values become bullets, editable regions too, and sensitive parts get a solid
  * fill. The rules of what is masked come from sensitive.js. */
 import { FIELD_TAGS, KEEP_VALUE_TYPES, MASK_FILL, isEditable, matchesAny, sensitiveList } from './sensitive.js';

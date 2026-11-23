@@ -1,4 +1,4 @@
-/* Geometry of the OPT-IN masks on the real tab capture (decision David 2026-11-20: off by default, best effort):
+/* Geometry of the OPT-IN masks on the real tab capture (off by default, best effort):
  * which elements to cover and where they are on screen (CSS px of the viewport).
  * Known limits: fields inside CLOSED shadow roots are not reached; pinch-zoom and transformed frames are not
  * compensated. */
