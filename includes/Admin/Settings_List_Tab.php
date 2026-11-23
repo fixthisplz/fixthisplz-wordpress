@@ -34,7 +34,7 @@ final class Settings_List_Tab {
 		echo '<th>' . esc_html__( 'Name', 'bug-spotter' ) . '</th>';
 		echo '<th>' . esc_html__( 'Color', 'bug-spotter' ) . '</th>';
 		if ( $closable ) {
-			echo '<th>' . esc_html__( 'Closed', 'bug-spotter' ) . '</th>';
+			echo '<th>' . esc_html_x( 'Done', 'status flag: the report is handled', 'bug-spotter' ) . '</th>';
 		}
 		echo '<th>' . esc_html__( 'Reports', 'bug-spotter' ) . '</th>';
 		echo '<th><span class="screen-reader-text">' . esc_html__( 'Actions', 'bug-spotter' ) . '</span></th>';
@@ -62,7 +62,7 @@ final class Settings_List_Tab {
 	private static function texts( string $list ): array {
 		if ( Statuses::class === $list ) {
 			return array(
-				'help'  => __( 'Drag the rows to change the order of the Kanban columns and of the status lists. The original statuses keep their default name while their name is left empty. Reports with a "Closed" status are the ones the retention deletes (Data and privacy tab).', 'bug-spotter' ),
+				'help'  => __( 'Drag the rows to change the order of the Kanban columns and of the status lists. Leave the name of an original status empty to keep its default name. A status marked Done counts as finished: its reports can be deleted automatically by the retention (Data and privacy tab).', 'bug-spotter' ),
 				'add'   => __( 'Add a status', 'bug-spotter' ),
 				'name'  => __( 'Status name', 'bug-spotter' ),
 				'color' => __( 'Status color', 'bug-spotter' ),
@@ -121,7 +121,7 @@ final class Settings_List_Tab {
 			if ( $required ) {
 				echo '<span class="bugspot-muted">' . esc_html__( 'Never', 'bug-spotter' ) . '</span>';
 			} else {
-				F::checkbox( $path( 'closed' ), (bool) $entry['closed'], __( 'Closed', 'bug-spotter' ) );
+				F::checkbox( $path( 'closed' ), (bool) $entry['closed'], _x( 'Done', 'status flag: the report is handled', 'bug-spotter' ) );
 			}
 			echo '</td>';
 		}

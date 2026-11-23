@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-23T00:06:35+00:00\n"
+"POT-Creation-Date: 2026-11-23T14:48:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: bug-spotter\n"
@@ -747,68 +747,88 @@ msgstr ""
 msgid "Custom position"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:258
-msgid "Distance from the"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:258
-msgid "and from the"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:264
-msgid "left edge"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:265
-msgid "right edge"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:268
-msgid "top edge"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:269
-msgid "bottom edge"
-msgstr ""
-
-#: includes/Admin/Settings_Button_Tab.php:272
+#: includes/Admin/Settings_Button_Tab.php:260
 msgid "Horizontal distance"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:272
+#: includes/Admin/Settings_Button_Tab.php:260
 msgid "Vertical distance"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:274
-msgid "Unit"
+#: includes/Admin/Settings_Button_Tab.php:265
+msgid "Horizontal unit"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:278
+#: includes/Admin/Settings_Button_Tab.php:265
+msgid "Vertical unit"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:270
+msgid "Starting edge (left or right)"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:270
+msgid "Starting edge (top or bottom)"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:276
+msgctxt "edge of the window"
+msgid "left"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:277
+msgctxt "edge of the window"
+msgid "right"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:280
+msgctxt "edge of the window"
+msgid "top"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:281
+msgctxt "edge of the window"
+msgid "bottom"
+msgstr ""
+
+#. translators: 1: distance input, 2: unit select (px or %), 3: edge select (left or right).
+#: includes/Admin/Settings_Button_Tab.php:288
+#, php-format
+msgid "Horizontal: %1$s %2$s from the %3$s edge"
+msgstr ""
+
+#. translators: 1: distance input, 2: unit select (px or %), 3: edge select (top or bottom).
+#: includes/Admin/Settings_Button_Tab.php:290
+#, php-format
+msgid "Vertical: %1$s %2$s from the %3$s edge"
+msgstr ""
+
+#: includes/Admin/Settings_Button_Tab.php:303
 msgid "Percentages are relative to the browser window (0 to 100)."
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:285
+#: includes/Admin/Settings_Button_Tab.php:310
 msgid "Preview"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:286
+#: includes/Admin/Settings_Button_Tab.php:311
 msgid "Preview screen size"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:287
+#: includes/Admin/Settings_Button_Tab.php:312
 msgid "Desktop"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:288
+#: includes/Admin/Settings_Button_Tab.php:313
 #: includes/Admin/Settings_Tabs.php:60
 msgid "Mobile"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:290
+#: includes/Admin/Settings_Button_Tab.php:315
 msgid "Button preview"
 msgstr ""
 
-#: includes/Admin/Settings_Button_Tab.php:291
+#: includes/Admin/Settings_Button_Tab.php:316
 msgid "Updated as you change the settings below. The frame stands for a browser window; save to apply."
 msgstr ""
 
@@ -886,7 +906,8 @@ msgstr ""
 
 #: includes/Admin/Settings_List_Tab.php:37
 #: includes/Admin/Settings_List_Tab.php:124
-msgid "Closed"
+msgctxt "status flag: the report is handled"
+msgid "Done"
 msgstr ""
 
 #: includes/Admin/Settings_List_Tab.php:39
@@ -898,7 +919,7 @@ msgid "Actions"
 msgstr ""
 
 #: includes/Admin/Settings_List_Tab.php:65
-msgid "Drag the rows to change the order of the Kanban columns and of the status lists. The original statuses keep their default name while their name is left empty. Reports with a \"Closed\" status are the ones the retention deletes (Data and privacy tab)."
+msgid "Drag the rows to change the order of the Kanban columns and of the status lists. Leave the name of an original status empty to keep its default name. A status marked Done counts as finished: its reports can be deleted automatically by the retention (Data and privacy tab)."
 msgstr ""
 
 #: includes/Admin/Settings_List_Tab.php:66
@@ -951,7 +972,7 @@ msgid "Who can manage bugs"
 msgstr ""
 
 #: includes/Admin/Settings_Management_Tab.php:25
-msgid "These roles can see the reports, change their status and export them. Only administrators can change these settings."
+msgid "These roles can view the reports, assign them, change their status and priority, add notes, delete and export them. Only administrators can change these settings."
 msgstr ""
 
 #: includes/Admin/Settings_Management_Tab.php:29
@@ -1091,7 +1112,7 @@ msgid "Hold Ctrl (or Cmd) to select several pages, or to unselect one."
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:55
-msgid "Excluded URL prefixes"
+msgid "Hidden on URLs starting with"
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:57
@@ -1166,7 +1187,7 @@ msgid "Hide typed fields and sensitive areas in the screenshot"
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:114
-msgid "On a real capture, masking applies only when the visitor shares this tab."
+msgid "On a real capture, masking works only when the visitor shares this tab (not a window or the whole screen). Add other areas to mask in the Collected context tab."
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:117
@@ -1213,7 +1234,7 @@ msgid "Google reCAPTCHA v2 (checkbox)"
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:153
-msgid "Google reCAPTCHA v3 (score)"
+msgid "Google reCAPTCHA v3 (invisible, score-based)"
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:154
@@ -1315,7 +1336,7 @@ msgid "Extra sensitive elements"
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:272
-msgid "One CSS selector per line. Matching elements are masked in screenshots and their text is never collected, in addition to form fields and the built-in list."
+msgid "One CSS selector per line. The text of these areas is never collected. When masking is on (Dialog tab), they are also masked on screenshots, like form fields."
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:284
@@ -1327,7 +1348,7 @@ msgid "months"
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:287
-msgid "Reports marked Fixed, Won’t fix or Duplicate are deleted (with their screenshot) this many months after their last status change. 0 = never."
+msgid "Reports whose status is marked Done are deleted, with their screenshot, this many months after their last status change. 0 = keep without limit. Choose these statuses in the Statuses tab."
 msgstr ""
 
 #: includes/Admin/Settings_Tabs.php:290
@@ -1748,7 +1769,7 @@ msgid "Anti-bot check: when an anti-bot provider is enabled (Cloudflare Turnstil
 msgstr ""
 
 #: includes/Privacy.php:179
-msgid "Retention: closed reports are deleted automatically after the retention period set by the site administrators; otherwise reports are kept until they are deleted."
+msgid "Retention: reports whose status is marked Done are deleted automatically after the retention period set by the site administrators; otherwise reports are kept until they are deleted."
 msgstr ""
 
 #: includes/Privacy.php:180

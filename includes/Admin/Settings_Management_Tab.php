@@ -22,7 +22,7 @@ final class Settings_Management_Tab {
 			// Administrators always keep access (the sanitizer enforces it): shown checked and locked.
 			F::checkbox_item( array( 'management', 'roles' ), $role, 'administrator' === $role || in_array( $role, $m['roles'], true ), $label, 'administrator' === $role );
 		}
-		F::description( __( 'These roles can see the reports, change their status and export them. Only administrators can change these settings.', 'bug-spotter' ) );
+		F::description( __( 'These roles can view the reports, assign them, change their status and priority, add notes, delete and export them. Only administrators can change these settings.', 'bug-spotter' ) );
 		echo '</fieldset>';
 		F::row_close();
 

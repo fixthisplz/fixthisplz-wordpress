@@ -300,7 +300,7 @@ settings_page_test(
 		assert_true( str_contains( $html, 'Real capture of the tab (recommended)' ) && str_contains( $html, 'Page reconstruction — no permission prompt' ), 'both choices labelled' );
 		assert_true( str_contains( $html, 'On phones and in browsers without screen sharing, the reconstruction is always used.' ), 'permanent mobile notice' );
 		assert_true( str_contains( $html, 'Hide typed fields and sensitive areas in the screenshot' ), 'mask checkbox' );
-		assert_true( str_contains( $html, 'masking applies only when the visitor shares this tab' ), 'mask help text' );
+		assert_true( str_contains( $html, 'masking works only when the visitor shares this tab' ), 'mask help text' );
 		assert_true( str_contains( $html, 'data-bugspot-show-if="bugspot_settings[dialog][allow_screenshot]"' ), 'shown only when screenshots are allowed' );
 		assert_true( ! str_contains( $html, 'mask_capture][]' ) && 1 === preg_match( '/type="hidden" name="bugspot_settings\[dialog\]\[mask_capture\]" value="0"/', $html ), 'hidden 0 marker' );
 
@@ -308,5 +308,22 @@ settings_page_test(
 		$post = settings_page_form_post( settings_page_tab_html( 'dialog' ) );
 		assert_same( 'dom', $post[ Settings::OPTION ]['dialog']['capture_method'] );
 		assert_same( '1', $post[ Settings::OPTION ]['dialog']['mask_capture'] );
+	}
+);
+
+settings_page_test(
+	'settings-page: button_tab_position_sentences_keep_each_control_with_its_label',
+	function () {
+		$html = settings_page_tab_html( 'button' );
+		foreach ( array( 'position', 'position_mobile' ) as $key ) {
+			foreach ( array( 'x', 'y' ) as $axis ) {
+				foreach ( array( $axis, $axis . '_unit', 'edge_' . $axis ) as $field ) {
+					$name = 'bugspot_settings[button][' . $key . '][' . $field . ']';
+					$id   = Bug_Spotter\Admin\Settings_Fields::id( array( 'button', $key, $field ) );
+					assert_true( 1 === preg_match( '/<(input|select)[^>]*id="' . preg_quote( $id, '/' ) . '"[^>]*name="' . preg_quote( $name, '/' ) . '"/', $html ), "$name control with id $id" );
+					assert_true( str_contains( $html, '<label class="screen-reader-text" for="' . $id . '">' ), "$name has a label for $id" );
+				}
+			}
+		}
 	}
 );

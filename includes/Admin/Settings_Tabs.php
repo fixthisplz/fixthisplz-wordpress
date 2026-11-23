@@ -52,7 +52,7 @@ final class Settings_Tabs {
 		F::row_close();
 
 		$id = F::id( array( 'visibility', 'excluded_url_prefixes' ) );
-		F::row_open( __( 'Excluded URL prefixes', 'bug-spotter' ), $id );
+		F::row_open( __( 'Hidden on URLs starting with', 'bug-spotter' ), $id );
 		F::textarea( array( 'visibility', 'excluded_url_prefixes' ), implode( "\n", $v['excluded_url_prefixes'] ), 4, '/checkout/', true  );
 		F::description( __( 'One path per line, for example /checkout/ or /my-account/. The button is hidden on every URL that starts with one of them.', 'bug-spotter' ), $id . '-desc' );
 		F::row_close();
@@ -111,7 +111,7 @@ final class Settings_Tabs {
 
 		F::row_open( __( 'Masking', 'bug-spotter' ), '', true, $only_with_screenshot );
 		F::checkbox( array( 'dialog', 'mask_capture' ), (bool) $g['mask_capture'], __( 'Hide typed fields and sensitive areas in the screenshot', 'bug-spotter' ) );
-		F::description( __( 'On a real capture, masking applies only when the visitor shares this tab.', 'bug-spotter' ) );
+		F::description( __( 'On a real capture, masking works only when the visitor shares this tab (not a window or the whole screen). Add other areas to mask in the Collected context tab.', 'bug-spotter' ) );
 		F::row_close();
 
 		F::row_open( __( 'Contact e-mail', 'bug-spotter' ) );
@@ -150,7 +150,7 @@ final class Settings_Tabs {
 				'none'         => __( 'None', 'bug-spotter' ),
 				'turnstile'    => __( 'Cloudflare Turnstile', 'bug-spotter' ),
 				'recaptcha_v2' => __( 'Google reCAPTCHA v2 (checkbox)', 'bug-spotter' ),
-				'recaptcha_v3' => __( 'Google reCAPTCHA v3 (score)', 'bug-spotter' ),
+				'recaptcha_v3' => __( 'Google reCAPTCHA v3 (invisible, score-based)', 'bug-spotter' ),
 				'hcaptcha'     => __( 'hCaptcha', 'bug-spotter' ),
 			)
 		);
@@ -269,7 +269,7 @@ final class Settings_Tabs {
 		$id = F::id( array( 'context', 'sensitive_selectors' ) );
 		F::row_open( __( 'Extra sensitive elements', 'bug-spotter' ), $id );
 		F::textarea( array( 'context', 'sensitive_selectors' ), implode( "\n", $x['sensitive_selectors'] ), 5, '.account-balance', true  );
-		F::description( __( 'One CSS selector per line. Matching elements are masked in screenshots and their text is never collected, in addition to form fields and the built-in list.', 'bug-spotter' ), $id . '-desc' );
+		F::description( __( 'One CSS selector per line. The text of these areas is never collected. When masking is on (Dialog tab), they are also masked on screenshots, like form fields.', 'bug-spotter' ), $id . '-desc' );
 		F::row_close();
 
 		F::table_close();
@@ -284,7 +284,7 @@ final class Settings_Tabs {
 		F::row_open( __( 'Automatic deletion', 'bug-spotter' ), $id );
 		F::input( 'number', array( 'data', 'retention_months' ), (string) $t['retention_months'], array( 'min' => '0', 'max' => '120', 'class' => 'small-text' ), true  );
 		echo ' ' . esc_html__( 'months', 'bug-spotter' );
-		F::description( __( 'Reports marked Fixed, Won’t fix or Duplicate are deleted (with their screenshot) this many months after their last status change. 0 = never.', 'bug-spotter' ), $id . '-desc' );
+		F::description( __( 'Reports whose status is marked Done are deleted, with their screenshot, this many months after their last status change. 0 = keep without limit. Choose these statuses in the Statuses tab.', 'bug-spotter' ), $id . '-desc' );
 		F::row_close();
 
 		F::row_open( __( 'Uninstall', 'bug-spotter' ) );

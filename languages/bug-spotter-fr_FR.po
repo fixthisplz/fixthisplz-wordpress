@@ -146,7 +146,7 @@ msgstr "Page"
 #: includes/Admin/Detail_Page.php:92
 #: includes/Admin/List_Table.php:41
 msgid "Reporter"
-msgstr "Déclarant"
+msgstr "Auteur"
 
 #: includes/Admin/Csv_Export.php:75
 #: includes/Admin/Detail_Page.php:88
@@ -174,13 +174,13 @@ msgstr "Navigateur"
 #: includes/Admin/Detail_Page.php:96
 #: includes/Admin/Settings_Tabs.php:261
 msgid "Console errors"
-msgstr "Erreurs de la console"
+msgstr "Erreurs et avertissements JavaScript"
 
 #: includes/Admin/Detail_Page.php:97
 #: includes/Admin/Settings_Tabs.php:265
 #: includes/Frontend/Assets.php:227
 msgid "Failed requests"
-msgstr "Requêtes en échec"
+msgstr "Requêtes réseau en erreur"
 
 #: includes/Admin/Detail_Page.php:98
 #: includes/Admin/Settings_Tabs.php:98
@@ -434,7 +434,7 @@ msgstr "Utiliser cette icône"
 msgid "Please choose an SVG file."
 msgstr "Veuillez choisir un fichier SVG."
 
-#: includes/Admin/Settings_Button_Tab.php:290
+#: includes/Admin/Settings_Button_Tab.php:315
 msgid "Button preview"
 msgstr "Aperçu du bouton"
 
@@ -444,7 +444,7 @@ msgstr "L’aperçu n’a pas pu être mis à jour."
 
 #: includes/Admin/Settings_Assets.php:68
 msgid "Loading the provider widget…"
-msgstr "Chargement du widget du fournisseur…"
+msgstr "Chargement du widget du service…"
 
 #: includes/Admin/Settings_Assets.php:69
 msgid "Complete the check below to finish the test."
@@ -465,7 +465,7 @@ msgstr "Le test a échoué."
 
 #: includes/Admin/Settings_Assets.php:73
 msgid "The provider widget could not be loaded. Check the site key, the provider choice and your connection; reload the page before testing another Google key."
-msgstr "Le widget du fournisseur n’a pas pu être chargé. Vérifiez la clé du site, le choix du fournisseur et votre connexion ; rechargez la page avant de tester une autre clé Google."
+msgstr "Le widget du service n’a pas pu être chargé. Vérifiez la clé publique, le service choisi et votre connexion. Rechargez la page avant de tester une autre clé Google."
 
 #: includes/Admin/Settings_Assets.php:74
 msgid "No answer from the check. Try again."
@@ -474,7 +474,7 @@ msgstr "Aucune réponse de la vérification. Réessayez."
 #: includes/Admin/Settings_Assets.php:75
 #: includes/Rest/Settings_Controller.php:81
 msgid "Enter the site key first."
-msgstr "Saisissez d’abord la clé du site."
+msgstr "Saisissez d’abord la clé publique."
 
 #: includes/Admin/Settings_Button_Tab.php:64
 msgid "Icon"
@@ -486,7 +486,7 @@ msgstr "Type d’icône"
 
 #: includes/Admin/Settings_Button_Tab.php:66
 msgid "Dashicon"
-msgstr "Dashicon"
+msgstr "Icône WordPress (Dashicon)"
 
 #: includes/Admin/Settings_Button_Tab.php:67
 msgid "SVG image from the media library"
@@ -508,7 +508,7 @@ msgstr "Retirer"
 
 #: includes/Admin/Settings_Button_Tab.php:112
 msgid "Only SVG files already in the media library are listed. WordPress blocks SVG uploads by default; Bug Spotter does not change that. Without an SVG, the Dashicon is used."
-msgstr "Seuls les fichiers SVG déjà présents dans la médiathèque sont listés. WordPress bloque l’envoi de SVG par défaut ; Bug Spotter ne modifie pas ce comportement. Sans SVG, le Dashicon est utilisé."
+msgstr "Seuls les fichiers SVG déjà présents dans la médiathèque sont proposés. WordPress bloque l’envoi de SVG par défaut ; Bug Spotter ne change pas ce comportement. Sans SVG, l’icône WordPress est utilisée."
 
 #: includes/Admin/Settings_Button_Tab.php:32
 msgid "Shape"
@@ -524,11 +524,11 @@ msgstr "Carré arrondi"
 
 #: includes/Admin/Settings_Button_Tab.php:38
 msgid "Pill with text"
-msgstr "Pilule avec texte"
+msgstr "Bouton avec texte"
 
 #: includes/Admin/Settings_Button_Tab.php:121
 msgid "Shown inside the pill shape, and read by screen readers for every shape."
-msgstr "Affiché dans la forme pilule, et lu par les lecteurs d’écran pour toutes les formes."
+msgstr "Visible avec la forme « Bouton avec texte ». Toujours lu par les lecteurs d’écran, quelle que soit la forme."
 
 #: includes/Admin/Settings_Button_Tab.php:125
 msgid "Tooltip"
@@ -588,11 +588,11 @@ msgstr "Ombre personnalisée"
 
 #: includes/Admin/Settings_Button_Tab.php:171
 msgid "Offset X (px)"
-msgstr "Décalage X (px)"
+msgstr "Décalage horizontal (px)"
 
 #: includes/Admin/Settings_Button_Tab.php:172
 msgid "Offset Y (px)"
-msgstr "Décalage Y (px)"
+msgstr "Décalage vertical (px)"
 
 #: includes/Admin/Settings_Button_Tab.php:173
 msgid "Blur (px)"
@@ -600,7 +600,7 @@ msgstr "Flou (px)"
 
 #: includes/Admin/Settings_Button_Tab.php:174
 msgid "Spread (px)"
-msgstr "Étalement (px)"
+msgstr "Étendue (px)"
 
 #: includes/Admin/Settings_Button_Tab.php:176
 #: includes/Admin/Settings_List_Tab.php:35
@@ -610,7 +610,7 @@ msgstr "Couleur"
 
 #: includes/Admin/Settings_Button_Tab.php:178
 msgid "Hex color (#rrggbb) or rgba(red, green, blue, opacity), for example rgba(0,0,0,0.25)."
-msgstr "Couleur hexadécimale (#rrggbb) ou rgba(rouge, vert, bleu, opacité), par exemple rgba(0,0,0,0.25)."
+msgstr "Saisissez une couleur au format #rrggbb, ou rgba(rouge, vert, bleu, opacité) pour une couleur transparente, par exemple rgba(0,0,0,0.25)."
 
 #: includes/Admin/Settings_Button_Tab.php:186
 msgid "Corner radius"
@@ -618,7 +618,7 @@ msgstr "Arrondi des angles"
 
 #: includes/Admin/Settings_Button_Tab.php:191
 msgid "Set by the shape"
-msgstr "Défini par la forme"
+msgstr "Selon la forme"
 
 #: includes/Admin/Settings_Button_Tab.php:196
 msgid "Radius (px)"
@@ -631,104 +631,76 @@ msgstr "Position sur mobile"
 
 #: includes/Admin/Settings_Button_Tab.php:205
 msgid "Use a different position on small screens (782 px wide or less)"
-msgstr "Utiliser une position différente sur les petits écrans (782 px de large ou moins)"
+msgstr "Utiliser une autre position sur mobile (écrans de 782 px de large ou moins)"
 
 #: includes/Admin/Settings_Button_Tab.php:215
 msgid "Stacking order (z-index)"
-msgstr "Ordre d’empilement (z-index)"
+msgstr "Priorité d’affichage (z-index)"
 
 #: includes/Admin/Settings_Button_Tab.php:217
 msgid "Raise it if a theme element covers the button."
-msgstr "Augmentez-le si un élément du thème recouvre le bouton."
+msgstr "Augmentez cette valeur si un élément du thème passe par-dessus le bouton."
 
 #: includes/Admin/Settings_Button_Tab.php:238
 msgid "Bottom right"
-msgstr "Bas droite"
+msgstr "En bas à droite"
 
 #: includes/Admin/Settings_Button_Tab.php:239
 msgid "Bottom left"
-msgstr "Bas gauche"
+msgstr "En bas à gauche"
 
 #: includes/Admin/Settings_Button_Tab.php:240
 msgid "Top right"
-msgstr "Haut droite"
+msgstr "En haut à droite"
 
 #: includes/Admin/Settings_Button_Tab.php:241
 msgid "Top left"
-msgstr "Haut gauche"
+msgstr "En haut à gauche"
 
 #: includes/Admin/Settings_Button_Tab.php:242
 msgid "Middle right"
-msgstr "Milieu droite"
+msgstr "Au milieu à droite"
 
 #: includes/Admin/Settings_Button_Tab.php:243
 msgid "Middle left"
-msgstr "Milieu gauche"
+msgstr "Au milieu à gauche"
 
 #: includes/Admin/Settings_Button_Tab.php:252
 msgid "Custom position"
 msgstr "Position personnalisée"
 
-#: includes/Admin/Settings_Button_Tab.php:258
-msgid "Distance from the"
-msgstr "Distance depuis le bord"
-
-#: includes/Admin/Settings_Button_Tab.php:258
-msgid "and from the"
-msgstr "et depuis le bord"
-
-#: includes/Admin/Settings_Button_Tab.php:264
-msgid "left edge"
-msgstr "gauche"
-
-#: includes/Admin/Settings_Button_Tab.php:265
-msgid "right edge"
-msgstr "droit"
-
-#: includes/Admin/Settings_Button_Tab.php:268
-msgid "top edge"
-msgstr "haut"
-
-#: includes/Admin/Settings_Button_Tab.php:269
-msgid "bottom edge"
-msgstr "bas"
-
-#: includes/Admin/Settings_Button_Tab.php:272
+#: includes/Admin/Settings_Button_Tab.php:260
 msgid "Horizontal distance"
 msgstr "Distance horizontale"
 
-#: includes/Admin/Settings_Button_Tab.php:272
+#: includes/Admin/Settings_Button_Tab.php:260
 msgid "Vertical distance"
 msgstr "Distance verticale"
 
-#: includes/Admin/Settings_Button_Tab.php:274
-msgid "Unit"
-msgstr "Unité"
-
-#: includes/Admin/Settings_Button_Tab.php:278
+#: includes/Admin/Settings_Button_Tab.php:303
 msgid "Percentages are relative to the browser window (0 to 100)."
-msgstr "Les pourcentages sont relatifs à la fenêtre du navigateur (0 à 100)."
+msgstr "En %, la distance se compte par rapport à la taille de la fenêtre du navigateur (0 à 100)."
 
-#: includes/Admin/Settings_Button_Tab.php:285
+#: includes/Admin/Settings_Button_Tab.php:310
 msgid "Preview"
 msgstr "Aperçu"
 
-#: includes/Admin/Settings_Button_Tab.php:286
+#: includes/Admin/Settings_Button_Tab.php:311
 msgid "Preview screen size"
 msgstr "Taille d’écran de l’aperçu"
 
-#: includes/Admin/Settings_Button_Tab.php:287
+#: includes/Admin/Settings_Button_Tab.php:312
 msgid "Desktop"
 msgstr "Ordinateur"
 
-#: includes/Admin/Settings_Button_Tab.php:288
+#: includes/Admin/Settings_Button_Tab.php:313
 #: includes/Admin/Settings_Tabs.php:60
 msgid "Mobile"
 msgstr "Mobile"
 
-#: includes/Admin/Settings_Button_Tab.php:291
+#: includes/Admin/Settings_Button_Tab.php:316
 msgid "Updated as you change the settings below. The frame stands for a browser window; save to apply."
-msgstr "Mis à jour au fur et à mesure que vous modifiez les réglages ci-dessous. Le cadre représente une fenêtre de navigateur ; enregistrez pour appliquer."
+msgstr "L’aperçu suit vos réglages ci-dessous ; le cadre représente une fenêtre de navigateur. Enregistrez pour appliquer les réglages au site."
 
 #: includes/Admin/Settings_Page.php:45
 msgid "Visibility"
@@ -776,48 +748,44 @@ msgstr "Sections des réglages"
 
 #: includes/Admin/Settings_Page.php:138
 msgid "Guests (not logged in) can send bug reports, but no anti-bot check is configured. Expect spam."
-msgstr "Les visiteurs non connectés peuvent envoyer des signalements, mais aucune vérification anti-robot n’est configurée. Attendez-vous à du spam."
+msgstr "Les visiteurs non connectés peuvent envoyer des signalements, mais aucune vérification anti-spam n’est configurée. Attendez-vous à du spam."
 
 #: includes/Admin/Settings_Page.php:147
 msgid "Configure an anti-bot provider"
-msgstr "Configurer un fournisseur anti-robot"
+msgstr "Configurer un service anti-spam"
 
 #: includes/Admin/Settings_Tabs.php:17
 msgid "Bug reporting"
-msgstr "Signalement de bugs"
+msgstr "Activation"
 
 #: includes/Admin/Settings_Tabs.php:18
 msgid "Show the bug report button"
-msgstr "Afficher le bouton de signalement de bug"
+msgstr "Afficher le bouton de signalement sur le site"
 
 #: includes/Admin/Settings_Tabs.php:21
 #: includes/Admin/Settings_Tabs.php:22
 msgid "Who sees the button"
-msgstr "Qui voit le bouton"
+msgstr "Qui peut signaler"
 
 #: includes/Admin/Settings_Tabs.php:27
 msgid "Guests (not logged in)"
-msgstr "Visiteurs (non connectés)"
+msgstr "Visiteurs non connectés"
 
 #: includes/Admin/Settings_Tabs.php:39
 msgid "Excluded pages"
-msgstr "Pages exclues"
+msgstr "Pages sans bouton"
 
 #: includes/Admin/Settings_Tabs.php:51
 msgid "Hold Ctrl (or Cmd) to select several pages, or to unselect one."
-msgstr "Maintenez Ctrl (ou Cmd) pour sélectionner plusieurs pages ou en désélectionner une."
-
-#: includes/Admin/Settings_Tabs.php:55
-msgid "Excluded URL prefixes"
-msgstr "Préfixes d’URL exclus"
+msgstr "Maintenez Ctrl (ou Cmd) pour choisir plusieurs pages ou en retirer une."
 
 #: includes/Admin/Settings_Tabs.php:57
 msgid "One path per line, for example /checkout/ or /my-account/. The button is hidden on every URL that starts with one of them."
-msgstr "Un chemin par ligne, par exemple /commande/ ou /mon-compte/. Le bouton est masqué sur toutes les URL qui commencent par l’un d’eux."
+msgstr "Saisissez une adresse par ligne, par exemple /commande/ ou /mon-compte/. Le bouton est masqué sur toutes les pages dont l’adresse commence ainsi."
 
 #: includes/Admin/Settings_Tabs.php:61
 msgid "Hide the button on small screens (782 px wide or less)"
-msgstr "Masquer le bouton sur les petits écrans (782 px de large ou moins)"
+msgstr "Masquer le bouton sur mobile (écrans de 782 px de large ou moins)"
 
 #: includes/Admin/Settings_Tabs.php:64
 msgid "Administration"
@@ -829,7 +797,7 @@ msgstr "Afficher aussi le bouton dans l’administration WordPress"
 
 #: includes/Admin/Settings_Tabs.php:82
 msgid "Instructions"
-msgstr "Consigne"
+msgstr "Texte d’invite"
 
 #: includes/Admin/Settings_Tabs.php:83
 #: includes/Settings.php:197
@@ -838,7 +806,7 @@ msgstr "Décrivez ce qui n’a pas fonctionné et ce que vous attendiez."
 
 #: includes/Admin/Settings_Tabs.php:87
 msgid "Privacy notice"
-msgstr "Mention de confidentialité"
+msgstr "Mention d’information (RGPD)"
 
 #: includes/Admin/Settings_Tabs.php:88
 #: includes/Settings.php:199
@@ -851,11 +819,11 @@ msgstr "Lien vers la politique de confidentialité"
 
 #: includes/Admin/Settings_Tabs.php:95
 msgid "Leave empty to use the privacy policy page set in Settings › Privacy."
-msgstr "Laissez vide pour utiliser la page de politique de confidentialité définie dans Réglages › Confidentialité."
+msgstr "Laissez vide pour utiliser la page définie dans Réglages › Confidentialité."
 
 #: includes/Admin/Settings_Tabs.php:99
 msgid "Let reporters attach a screenshot of the page"
-msgstr "Permettre de joindre une capture d’écran de la page"
+msgstr "Proposer de joindre une capture d’écran de la page"
 
 #: includes/Admin/Settings_Tabs.php:117
 #: includes/Frontend/Assets.php:225
@@ -865,12 +833,12 @@ msgstr "E-mail de contact"
 
 #: includes/Admin/Settings_Tabs.php:118
 msgid "Ask guests for an optional contact e-mail address"
-msgstr "Demander aux visiteurs non connectés une adresse e-mail de contact facultative"
+msgstr "Demander un e-mail de contact (facultatif) aux visiteurs non connectés"
 
 #: includes/Admin/Settings_Tabs.php:121
 #: includes/Admin/Settings_Tabs.php:122
 msgid "Download formats"
-msgstr "Formats de téléchargement"
+msgstr "Copie téléchargeable"
 
 #: includes/Admin/Settings_Tabs.php:125
 msgid "Markdown (.md)"
@@ -886,11 +854,11 @@ msgstr "Texte brut (.txt)"
 
 #: includes/Admin/Settings_Tabs.php:132
 msgid "Formats offered to download a copy of the report. If none is checked, all of them are offered."
-msgstr "Formats proposés pour télécharger une copie du signalement. Si aucun n’est coché, tous sont proposés."
+msgstr "Le visiteur peut télécharger une copie de son signalement dans ces formats. Si rien n’est coché, tous sont proposés."
 
 #: includes/Admin/Settings_Tabs.php:146
 msgid "Provider"
-msgstr "Fournisseur"
+msgstr "Service anti-spam"
 
 #: includes/Admin/Settings_Tabs.php:151
 msgid "Cloudflare Turnstile"
@@ -900,17 +868,13 @@ msgstr "Cloudflare Turnstile"
 msgid "Google reCAPTCHA v2 (checkbox)"
 msgstr "Google reCAPTCHA v2 (case à cocher)"
 
-#: includes/Admin/Settings_Tabs.php:153
-msgid "Google reCAPTCHA v3 (score)"
-msgstr "Google reCAPTCHA v3 (score)"
-
 #: includes/Admin/Settings_Tabs.php:154
 msgid "hCaptcha"
 msgstr "hCaptcha"
 
 #: includes/Admin/Settings_Tabs.php:161
 msgid "Site key"
-msgstr "Clé du site"
+msgstr "Clé publique (clé du site)"
 
 #: includes/Admin/Settings_Tabs.php:166
 msgid "Secret key"
@@ -918,11 +882,11 @@ msgstr "Clé secrète"
 
 #: includes/Admin/Settings_Tabs.php:176
 msgid "Saved — leave blank to keep it"
-msgstr "Enregistrée — laissez vide pour la conserver"
+msgstr "Enregistrée : laissez vide pour la garder"
 
 #: includes/Admin/Settings_Tabs.php:180
 msgid "Kept on the server only, never sent to visitors."
-msgstr "Conservée uniquement sur le serveur, jamais envoyée aux visiteurs."
+msgstr "Elle reste sur le serveur et n’est jamais envoyée aux visiteurs."
 
 #: includes/Admin/Settings_Tabs.php:184
 msgid "Minimum score"
@@ -943,7 +907,7 @@ msgstr "Tester"
 
 #: includes/Admin/Settings_Tabs.php:192
 msgid "Uses the provider and keys typed above, even before saving. A blank secret key tests the saved one. Requires JavaScript."
-msgstr "Utilise le fournisseur et les clés saisis ci-dessus, même avant l’enregistrement. Une clé secrète vide teste celle qui est enregistrée. JavaScript est requis."
+msgstr "Teste le service et les clés saisis ci-dessus, sans enregistrer. Si la clé secrète est vide, la clé enregistrée est testée. Nécessite JavaScript."
 
 #: includes/Admin/Settings_Tabs.php:203
 msgid "E-mail notification"
@@ -951,7 +915,7 @@ msgstr "Notification par e-mail"
 
 #: includes/Admin/Settings_Tabs.php:204
 msgid "Send an e-mail for every new report"
-msgstr "Envoyer un e-mail pour chaque nouveau signalement"
+msgstr "Envoyer un e-mail à chaque nouveau signalement"
 
 #: includes/Admin/Settings_Tabs.php:209
 msgid "Recipients"
@@ -961,11 +925,11 @@ msgstr "Destinataires"
 #: includes/Admin/Settings_Tabs.php:212
 #, php-format
 msgid "Several addresses separated by commas. Empty: %s (site administration address)."
-msgstr "Plusieurs adresses séparées par des virgules. Vide : %s (adresse d’administration du site)."
+msgstr "Séparez les adresses par des virgules. Si le champ est vide : %s (e-mail d’administration du site)."
 
 #: includes/Admin/Settings_Tabs.php:216
 msgid "Attach the screenshot to the e-mail"
-msgstr "Joindre la capture d’écran à l’e-mail"
+msgstr "Joindre la capture d’écran à l’e-mail (si le signalement en contient une)"
 
 #: includes/Admin/Settings_Tabs.php:228
 msgid "Reports per hour"
@@ -981,47 +945,39 @@ msgstr "Signalements par jour"
 
 #: includes/Admin/Settings_Tabs.php:236
 msgid "Maximum per IP address. A hidden honeypot field also stops basic bots; it is always active."
-msgstr "Maximum par adresse IP. Un champ pot de miel masqué arrête aussi les robots basiques ; il est toujours actif."
+msgstr "Maximum par adresse IP. Un champ piège invisible bloque aussi les robots simples ; il est toujours actif."
 
 #: includes/Admin/Settings_Tabs.php:240
 msgid "Trusted proxy header (advanced)"
-msgstr "En-tête de proxy de confiance (avancé)"
+msgstr "Source de l’adresse IP (avancé)"
 
 #: includes/Admin/Settings_Tabs.php:245
 msgid "None: use the connection address (recommended)"
-msgstr "Aucun : utiliser l’adresse de connexion (recommandé)"
+msgstr "Adresse de connexion (recommandé)"
 
 #: includes/Admin/Settings_Tabs.php:250
 msgid "Only choose a header if every request reaches this site through a proxy or CDN that sets it. Otherwise anyone can forge it and get around the per-IP limits."
-msgstr "Ne choisissez un en-tête que si chaque requête atteint ce site via un proxy ou un CDN qui le définit. Sinon, n’importe qui peut le falsifier et contourner les limites par IP."
+msgstr "Ne choisissez un en-tête que si tout le trafic passe par un proxy ou un CDN qui le définit. Sinon, n’importe qui peut le falsifier et contourner les limites par adresse IP."
 
 #: includes/Admin/Settings_Tabs.php:262
 msgid "Attach recent browser console errors and warnings"
-msgstr "Joindre les erreurs et avertissements récents de la console du navigateur"
+msgstr "Joindre les erreurs et avertissements JavaScript récents (console du navigateur)"
 
 #: includes/Admin/Settings_Tabs.php:266
 msgid "Attach recent failed network requests"
-msgstr "Joindre les requêtes réseau en échec récentes"
+msgstr "Joindre les requêtes réseau récentes en erreur"
 
 #: includes/Admin/Settings_Tabs.php:270
 msgid "Extra sensitive elements"
-msgstr "Éléments sensibles supplémentaires"
-
-#: includes/Admin/Settings_Tabs.php:272
-msgid "One CSS selector per line. Matching elements are masked in screenshots and their text is never collected, in addition to form fields and the built-in list."
-msgstr "Un sélecteur CSS par ligne. Les éléments correspondants sont masqués dans les captures d’écran et leur texte n’est jamais collecté, en plus des champs de formulaire et de la liste intégrée."
+msgstr "Zones à masquer en plus"
 
 #: includes/Admin/Settings_Tabs.php:284
 msgid "Automatic deletion"
-msgstr "Suppression automatique"
+msgstr "Durée de conservation"
 
 #: includes/Admin/Settings_Tabs.php:286
 msgid "months"
 msgstr "mois"
-
-#: includes/Admin/Settings_Tabs.php:287
-msgid "Reports marked Fixed, Won’t fix or Duplicate are deleted (with their screenshot) this many months after their last status change. 0 = never."
-msgstr "Les signalements marqués Corrigé, Ne sera pas corrigé ou Doublon sont supprimés (avec leur capture d’écran) ce nombre de mois après leur dernier changement de statut. 0 = jamais."
 
 #: includes/Admin/Settings_Tabs.php:290
 msgid "Uninstall"
@@ -1029,20 +985,16 @@ msgstr "Désinstallation"
 
 #: includes/Admin/Settings_Tabs.php:291
 msgid "Delete all reports, screenshots and settings when the plugin is deleted"
-msgstr "Supprimer tous les signalements, captures d’écran et réglages lors de la suppression de l’extension"
+msgstr "Effacer tous les signalements, captures d’écran et réglages quand l’extension est supprimée (irréversible)"
 
 #: includes/Admin/Settings_Management_Tab.php:18
 #: includes/Admin/Settings_Management_Tab.php:19
 msgid "Who can manage bugs"
-msgstr "Qui peut gérer les bugs"
-
-#: includes/Admin/Settings_Management_Tab.php:25
-msgid "These roles can see the reports, change their status and export them. Only administrators can change these settings."
-msgstr "Ces rôles peuvent voir les signalements, modifier leur statut et les exporter. Seuls les administrateurs peuvent modifier ces réglages."
+msgstr "Qui traite les signalements"
 
 #: includes/Admin/Settings_Management_Tab.php:29
 msgid "Menu badge"
-msgstr "Pastille du menu"
+msgstr "Compteur dans le menu"
 
 #. translators: %d: page ID.
 #: includes/Admin/Settings_Tabs.php:309
@@ -1052,11 +1004,11 @@ msgstr "Page n° %d (sans titre)"
 
 #: includes/Captcha/Siteverify_Provider.php:63
 msgid "The anti-bot check failed. Please try again."
-msgstr "La vérification anti-robot a échoué. Veuillez réessayer."
+msgstr "La vérification anti-spam a échoué. Veuillez réessayer."
 
 #: includes/Captcha/Siteverify_Provider.php:67
 msgid "The anti-bot check is currently unavailable. Please try again later."
-msgstr "La vérification anti-robot est momentanément indisponible. Veuillez réessayer plus tard."
+msgstr "La vérification anti-spam est momentanément indisponible. Veuillez réessayer plus tard."
 
 #: includes/Context_Validator.php:22
 msgid "The report context is missing or malformed."
@@ -1297,11 +1249,7 @@ msgstr "Données collectées : la description que vous rédigez, l’adresse de 
 
 #: includes/Privacy.php:178
 msgid "Anti-bot check: when an anti-bot provider is enabled (Cloudflare Turnstile, Google reCAPTCHA or hCaptcha), that provider receives your IP address and browser data when you send a report, under its own privacy policy."
-msgstr "Vérification anti-robot : lorsqu’un fournisseur anti-robot est activé (Cloudflare Turnstile, Google reCAPTCHA ou hCaptcha), ce fournisseur reçoit votre adresse IP et des données de votre navigateur lors de l’envoi d’un signalement, selon sa propre politique de confidentialité."
-
-#: includes/Privacy.php:179
-msgid "Retention: closed reports are deleted automatically after the retention period set by the site administrators; otherwise reports are kept until they are deleted."
-msgstr "Conservation : les signalements clos sont supprimés automatiquement à l’issue de la durée de conservation définie par les administrateurs du site ; sinon, les signalements sont conservés jusqu’à leur suppression."
+msgstr "Vérification anti-spam : lorsqu’un service anti-spam est activé (Cloudflare Turnstile, Google reCAPTCHA ou hCaptcha), ce service reçoit votre adresse IP et des données de votre navigateur lors de l’envoi d’un signalement, selon sa propre politique de confidentialité."
 
 #: includes/Privacy.php:180
 msgid "Legal basis: legitimate interest in maintaining and improving the site."
@@ -1309,7 +1257,7 @@ msgstr "Base légale : intérêt légitime à maintenir et à améliorer le site
 
 #: includes/Rest/Settings_Controller.php:69
 msgid "Choose an anti-bot provider to test."
-msgstr "Choisissez un fournisseur anti-robot à tester."
+msgstr "Choisissez un service anti-spam à tester."
 
 #: includes/Rest/Settings_Controller.php:78
 msgid "The secret key is required."
@@ -1318,7 +1266,7 @@ msgstr "La clé secrète est requise."
 #: includes/Report_Submission.php:80
 #: includes/Rest/Settings_Controller.php:98
 msgid "The anti-bot check failed."
-msgstr "La vérification anti-robot a échoué."
+msgstr "La vérification anti-spam a échoué."
 
 #: includes/Rest/Reports_Controller.php:89
 msgid "Bug reporting is disabled."
@@ -1414,15 +1362,15 @@ msgstr "Méthode de capture"
 
 #: includes/Admin/Settings_Tabs.php:106
 msgid "Real capture of the tab (recommended) — exact image, the browser asks the visitor for permission"
-msgstr "Vraie capture de l’onglet (recommandé) — image exacte, le navigateur demande l’accord du visiteur"
+msgstr "Capture exacte de l’onglet (recommandé) : le navigateur demande l’accord du visiteur"
 
 #: includes/Admin/Settings_Tabs.php:107
 msgid "Page reconstruction — no permission prompt, may differ slightly from the screen"
-msgstr "Reconstruction de la page — sans demande d’accord, peut différer légèrement de l’écran"
+msgstr "Reproduction de la page : sans demande d’accord, le rendu peut différer légèrement de l’écran"
 
 #: includes/Admin/Settings_Tabs.php:108
 msgid "On phones and in browsers without screen sharing, the reconstruction is always used."
-msgstr "Sur mobile et dans les navigateurs sans partage d’écran, la reconstruction est toujours utilisée."
+msgstr "Sur mobile et dans les navigateurs sans partage d’écran, la reproduction de la page est toujours utilisée."
 
 #: includes/Admin/Settings_Tabs.php:112
 msgid "Masking"
@@ -1430,21 +1378,17 @@ msgstr "Masquage"
 
 #: includes/Admin/Settings_Tabs.php:113
 msgid "Hide typed fields and sensitive areas in the screenshot"
-msgstr "Masquer les champs saisis et les zones sensibles dans la capture"
-
-#: includes/Admin/Settings_Tabs.php:114
-msgid "On a real capture, masking applies only when the visitor shares this tab."
-msgstr "Sur une capture réelle, le masquage ne s’applique que si le visiteur partage cet onglet."
+msgstr "Masquer les champs remplis et les zones sensibles sur la capture"
 
 #: includes/Frontend/Assets.php:231
 #: includes/Screenshot_Store.php:136
 msgid "Real capture"
-msgstr "Vraie capture"
+msgstr "Capture exacte"
 
 #: includes/Frontend/Assets.php:232
 #: includes/Screenshot_Store.php:136
 msgid "Page reconstruction"
-msgstr "Reconstruction de la page"
+msgstr "Reproduction de la page"
 
 #. translators: %s: capture method, for example "Real capture".
 #: includes/Screenshot_Store.php:141
@@ -1482,11 +1426,6 @@ msgstr "Statuts"
 msgid "Order"
 msgstr "Ordre"
 
-#: includes/Admin/Settings_List_Tab.php:37
-#: includes/Admin/Settings_List_Tab.php:124
-msgid "Closed"
-msgstr "Clos"
-
 #: includes/Admin/Settings_List_Tab.php:39
 msgid "Reports"
 msgstr "Signalements"
@@ -1508,12 +1447,12 @@ msgstr "Nom du statut"
 #, php-format
 msgid "Move its %d report to:"
 msgid_plural "Move its %d reports to:"
-msgstr[0] "Déplacer son signalement vers :"
-msgstr[1] "Déplacer ses %d signalements vers :"
+msgstr[0] "Déplacer %d signalement vers :"
+msgstr[1] "Déplacer les %d signalements vers :"
 
 #: includes/Admin/Settings_List_Tab.php:104
 msgid "Drag to reorder"
-msgstr "Glisser pour réordonner"
+msgstr "Glisser pour déplacer"
 
 #: includes/Admin/Settings_List_Tab.php:68
 msgid "Status color"
@@ -1522,10 +1461,6 @@ msgstr "Couleur du statut"
 #: includes/Admin/Settings_List_Tab.php:122
 msgid "Never"
 msgstr "Jamais"
-
-#: includes/Admin/Settings_List_Tab.php:65
-msgid "Drag the rows to change the order of the Kanban columns and of the status lists. The original statuses keep their default name while their name is left empty. Reports with a \"Closed\" status are the ones the retention deletes (Data and privacy tab)."
-msgstr "Glissez les lignes pour changer l’ordre des colonnes du Kanban et des listes de statuts. Les statuts d’origine gardent leur nom par défaut tant que leur nom est laissé vide. Les signalements dont le statut est « Clos » sont ceux que supprime la durée de conservation (onglet Données et confidentialité)."
 
 #: includes/Settings.php:164
 msgid "After Dashboard"
@@ -1573,7 +1508,7 @@ msgstr "Nom du menu"
 
 #: includes/Admin/Settings_Management_Tab.php:35
 msgid "List sub-menu name"
-msgstr "Nom du sous-menu de la liste"
+msgstr "Nom de la page de liste"
 
 #: includes/Admin/Settings_Management_Tab.php:42
 msgid "Menu position"
@@ -1581,11 +1516,11 @@ msgstr "Position du menu"
 
 #: includes/Admin/Settings_Management_Tab.php:33
 msgid "Used for the menu and the titles of the management pages. Leave empty for the default name."
-msgstr "Utilisé pour le menu et les titres des pages de gestion. Laisser vide pour le nom par défaut."
+msgstr "Utilisé pour le menu et les titres des pages de gestion. Laissez vide pour le nom par défaut."
 
 #: includes/Admin/Settings_Management_Tab.php:30
 msgid "Show the number of new reports next to the menu name"
-msgstr "Afficher le nombre de nouveaux signalements à côté du nom du menu"
+msgstr "Afficher le nombre de signalements non vus à côté du nom du menu"
 
 #: includes/Frontend/Assets.php:186
 msgid "Annotate"
@@ -1681,7 +1616,7 @@ msgstr "Couleur de la priorité"
 
 #: includes/Admin/Settings_Management_Tab.php:36
 msgid "Name of one report"
-msgstr "Nom d’un signalement"
+msgstr "Nom d’un élément"
 
 #: includes/Admin/Settings_Management_Tab.php:36
 #: includes/Settings.php:205
@@ -1690,7 +1625,7 @@ msgstr "Bug"
 
 #: includes/Admin/Settings_Management_Tab.php:36
 msgid "Used in the title of a report, such as \"Bug #12\", on its page and in the notification e-mail. Leave empty for the default name."
-msgstr "Utilisé dans le titre d’un signalement, par exemple « Bug n° 12 », sur sa fiche et dans l’e-mail de notification. Laisser vide pour le nom par défaut."
+msgstr "Utilisé dans le titre d’un signalement, par exemple « Bug n° 12 », sur sa fiche et dans l’e-mail de notification. Laissez vide pour le nom par défaut."
 
 #: includes/Admin/Settings_Page.php:55
 msgid "Priorities"
@@ -1808,7 +1743,7 @@ msgstr "Note"
 
 #: includes/Privacy.php:181
 msgid "Internal notes: the people who manage bug reports can write notes on them and assign them to each other; notes and the history of changes are only shown to them, never to the reporter."
-msgstr "Notes internes : les personnes qui gèrent les signalements peuvent y écrire des notes et se les attribuer ; les notes et l’historique des modifications ne sont visibles que par elles, jamais par la personne qui a signalé le bug."
+msgstr "Notes internes : les personnes qui traitent les signalements peuvent y écrire des notes et se les attribuer ; les notes et l’historique des modifications ne sont visibles que par elles, jamais par l’auteur du signalement."
 
 #: includes/Team.php:39
 msgid "Deleted user"
@@ -1860,7 +1795,7 @@ msgstr "Le test n’a pas pu être envoyé."
 
 #: includes/Admin/Settings_Integrations_Tab.php:17
 msgid "Each new report, status change or assignment can be posted to a chat channel or to your own service. Only the addresses below are called. They receive the report number, an excerpt of the description, the page, the status, the priority, the name of the assignee and a link to the report, never the reporter’s e-mail address, IP address or screenshot."
-msgstr "Chaque nouveau signalement, changement de statut ou attribution peut être envoyé vers un canal de discussion ou vers votre propre service. Seules les adresses ci-dessous sont appelées. Elles reçoivent le numéro du signalement, un extrait de la description, la page, le statut, la priorité, le nom de la personne attribuée et un lien vers le signalement, jamais l’adresse e-mail du déclarant, son adresse IP ni la capture d’écran."
+msgstr "Envoyez chaque nouveau signalement, changement de statut ou attribution vers une messagerie d’équipe ou vers votre propre service. Seules les adresses ci-dessous sont appelées. Elles reçoivent le numéro du signalement, un extrait de la description, la page, le statut, la priorité, le nom du responsable et un lien vers le signalement. Elles ne reçoivent jamais l’adresse e-mail ni l’adresse IP de l’auteur du signalement, ni la capture d’écran."
 
 #. translators: %d: webhook number, 1 to 5.
 #: includes/Admin/Settings_Integrations_Tab.php:30
@@ -1870,11 +1805,11 @@ msgstr "Webhook %d"
 
 #: includes/Admin/Settings_Integrations_Tab.php:34
 msgid "Address (URL)"
-msgstr "Adresse (URL)"
+msgstr "URL du webhook"
 
 #: includes/Admin/Settings_Integrations_Tab.php:39
 msgid "Must start with https://. Leave empty to remove the webhook."
-msgstr "Doit commencer par https://. Laisser vide pour supprimer le webhook."
+msgstr "Doit commencer par https://. Videz le champ pour supprimer ce webhook."
 
 #: includes/Admin/Settings_Integrations_Tab.php:44
 msgid "Format"
@@ -1891,7 +1826,7 @@ msgstr "Actif"
 
 #: includes/Admin/Settings_Integrations_Tab.php:56
 msgid "Send the events ticked above"
-msgstr "Envoyer les événements cochés ci-dessus"
+msgstr "Envoyer les événements cochés ci-dessus (décochez pour mettre le webhook en pause)"
 
 #: includes/Admin/Settings_Integrations_Tab.php:62
 msgid "Send a test"
@@ -1899,7 +1834,7 @@ msgstr "Envoyer un test"
 
 #: includes/Admin/Settings_Integrations_Tab.php:64
 msgid "Sends a test message to the saved address, even when the webhook is inactive. Save your changes first. Requires JavaScript."
-msgstr "Envoie un message de test à l’adresse enregistrée, même si le webhook est inactif. Enregistrez d’abord vos modifications. Nécessite JavaScript."
+msgstr "Envoie un message d’essai à l’adresse enregistrée, même si le webhook est en pause. Enregistrez d’abord vos modifications. Nécessite JavaScript."
 
 #: includes/Admin/Settings_Integrations_Tab.php:76
 msgid "Signing secret"
@@ -1907,7 +1842,7 @@ msgstr "Secret de signature"
 
 #: includes/Admin/Settings_Integrations_Tab.php:81
 msgid "Make a new secret when saving"
-msgstr "Créer un nouveau secret à l’enregistrement"
+msgstr "Générer un nouveau secret à l’enregistrement"
 
 #: includes/Admin/Settings_Integrations_Tab.php:84
 msgid "Each request carries the header X-Bug-Spotter-Signature: sha256= followed by the HMAC-SHA256 of the raw body with this secret. Your service computes the same value to check that the request comes from this site."
@@ -1933,7 +1868,7 @@ msgstr "Le destinataire a répondu : HTTP %1$d %2$s"
 
 #: includes/Webhooks.php:23
 msgid "Generic JSON (signed)"
-msgstr "JSON générique (signé)"
+msgstr "JSON (signé, pour votre service)"
 
 #: includes/Webhooks.php:24
 msgid "Slack"
@@ -1991,7 +1926,7 @@ msgstr "Webhooks : si les administrateurs du site connectent un service de discu
 
 #: includes/Admin/Settings_Integrations_Tab.php:38
 msgid "Must start with https:// (in this development environment, http://localhost and *.test addresses are also accepted). Leave empty to remove the webhook."
-msgstr "Doit commencer par https:// (dans cet environnement de développement, les adresses http://localhost et *.test sont aussi acceptées). Laisser vide pour supprimer le webhook."
+msgstr "Doit commencer par https:// (dans cet environnement de développement, les adresses http://localhost et *.test sont aussi acceptées). Videz le champ pour supprimer ce webhook."
 
 #. translators: %s: the address typed for a webhook. The notice is printed as HTML: the address is escaped.
 #: includes/Webhooks.php:120
@@ -2021,4 +1956,90 @@ msgstr "Ouvrir la liste"
 
 #: includes/Privacy.php:182
 msgid "Recipients: the site administrators, the people they authorise to manage bug reports, and the chat or project services they connect through webhooks (see below)."
-msgstr "Destinataires : les administrateurs du site, les personnes qu’ils autorisent à gérer les signalements de bugs, et les services de discussion ou de gestion de projet qu’ils connectent par webhook (voir ci-dessous)."
+msgstr "Destinataires : les administrateurs du site, les personnes qu’ils autorisent à traiter les signalements, et les services de discussion ou de gestion de projet qu’ils connectent par webhook (voir ci-dessous)."
+
+#: includes/Admin/Settings_Button_Tab.php:276
+msgctxt "edge of the window"
+msgid "left"
+msgstr "gauche"
+
+#: includes/Admin/Settings_Button_Tab.php:277
+msgctxt "edge of the window"
+msgid "right"
+msgstr "droit"
+
+#: includes/Admin/Settings_Button_Tab.php:280
+msgctxt "edge of the window"
+msgid "top"
+msgstr "haut"
+
+#: includes/Admin/Settings_Button_Tab.php:281
+msgctxt "edge of the window"
+msgid "bottom"
+msgstr "bas"
+
+#. translators: 1: distance input, 2: unit select (px or %), 3: edge select (left or right).
+#: includes/Admin/Settings_Button_Tab.php:288
+#, php-format
+msgid "Horizontal: %1$s %2$s from the %3$s edge"
+msgstr "Horizontalement : %1$s %2$s du bord %3$s"
+
+#. translators: 1: distance input, 2: unit select (px or %), 3: edge select (top or bottom).
+#: includes/Admin/Settings_Button_Tab.php:290
+#, php-format
+msgid "Vertical: %1$s %2$s from the %3$s edge"
+msgstr "Verticalement : %1$s %2$s du bord %3$s"
+
+#: includes/Admin/Settings_List_Tab.php:37
+#: includes/Admin/Settings_List_Tab.php:124
+msgctxt "status flag: the report is handled"
+msgid "Done"
+msgstr "Traité"
+
+#: includes/Admin/Settings_List_Tab.php:65
+msgid "Drag the rows to change the order of the Kanban columns and of the status lists. Leave the name of an original status empty to keep its default name. A status marked Done counts as finished: its reports can be deleted automatically by the retention (Data and privacy tab)."
+msgstr "Glissez les lignes pour changer l’ordre des colonnes du Kanban et des listes de statuts. Laissez vide le nom d’un statut d’origine pour garder son nom par défaut. Un statut marqué « Traité » compte comme terminé : ses signalements peuvent être supprimés automatiquement à l’issue de la durée de conservation (onglet Données et confidentialité)."
+
+#: includes/Admin/Settings_Tabs.php:55
+msgid "Hidden on URLs starting with"
+msgstr "Adresses sans bouton"
+
+#: includes/Admin/Settings_Tabs.php:153
+msgid "Google reCAPTCHA v3 (invisible, score-based)"
+msgstr "Google reCAPTCHA v3 (invisible, par score)"
+
+#: includes/Admin/Settings_Tabs.php:287
+msgid "Reports whose status is marked Done are deleted, with their screenshot, this many months after their last status change. 0 = keep without limit. Choose these statuses in the Statuses tab."
+msgstr "Les signalements dont le statut est marqué « Traité » sont supprimés, avec leur capture d’écran, ce nombre de mois après leur dernier changement de statut. 0 = conserver sans limite. Choisissez ces statuts dans l’onglet Statuts."
+
+#: includes/Admin/Settings_Button_Tab.php:265
+msgid "Horizontal unit"
+msgstr "Unité horizontale"
+
+#: includes/Admin/Settings_Button_Tab.php:265
+msgid "Vertical unit"
+msgstr "Unité verticale"
+
+#: includes/Admin/Settings_Button_Tab.php:270
+msgid "Starting edge (left or right)"
+msgstr "Bord de départ (gauche ou droit)"
+
+#: includes/Admin/Settings_Button_Tab.php:270
+msgid "Starting edge (top or bottom)"
+msgstr "Bord de départ (haut ou bas)"
+
+#: includes/Admin/Settings_Management_Tab.php:25
+msgid "These roles can view the reports, assign them, change their status and priority, add notes, delete and export them. Only administrators can change these settings."
+msgstr "Ces rôles peuvent voir les signalements, les attribuer, changer leur statut et leur priorité, ajouter des notes, les supprimer et les exporter. Seuls les administrateurs accèdent aux réglages."
+
+#: includes/Admin/Settings_Tabs.php:114
+msgid "On a real capture, masking works only when the visitor shares this tab (not a window or the whole screen). Add other areas to mask in the Collected context tab."
+msgstr "Avec la capture exacte, le masquage ne fonctionne que si le visiteur partage cet onglet (et non une fenêtre ou tout l’écran). Ajoutez d’autres zones à masquer dans l’onglet Contexte collecté."
+
+#: includes/Admin/Settings_Tabs.php:272
+msgid "One CSS selector per line. The text of these areas is never collected. When masking is on (Dialog tab), they are also masked on screenshots, like form fields."
+msgstr "Saisissez un sélecteur CSS par ligne. Le texte de ces zones n’est jamais collecté. Quand le masquage est activé (onglet Fenêtre), elles sont aussi masquées sur les captures, comme les champs de formulaire."
+
+#: includes/Privacy.php:179
+msgid "Retention: reports whose status is marked Done are deleted automatically after the retention period set by the site administrators; otherwise reports are kept until they are deleted."
+msgstr "Conservation : les signalements dont le statut est marqué « Traité » sont supprimés automatiquement à l’issue de la durée de conservation définie par les administrateurs du site ; sinon, les signalements sont conservés jusqu’à leur suppression."
